@@ -1,0 +1,6 @@
+model Column {
+  id          Int @id() @default(autoincrement())
+  name        String
+  index       Int
+  tasks       Task[]
+}

@@ -1,0 +1,14 @@
+model Customer {
+  id                Int @id() @default(autoincrement())
+  name              String
+  siret             String?
+  tvaNumber         String?
+  address           String
+  city              String
+  country           Country @relation(fields: [countryId], references: [id])
+  countryId         Int
+  projects          Project[]
+  users             User[]
+  invoices          Invoice[]
+  opinions          Opinion[]
+}

@@ -1,0 +1,13 @@
+model Invoice {
+  id              Int @id()@default(autoincrement())
+  name            String 
+  date            DateTime
+  customer        Customer @relation(fields: [customerId], references: [id])
+  customerId      Int
+  enterprise      Enterprise @relation(fields: [enterpriseId], references: [id])
+  enterpriseId    Int
+  createdAt       DateTime
+  updatedAt       DateTime
+  media           Media @relation(fields: [mediaId], references: [id])
+  mediaId         Int
+}

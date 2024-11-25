@@ -1,0 +1,16 @@
+model Enterprise {
+  id              Int @id() @default(autoincrement())
+  name            String @unique()
+  siret           String @unique()
+  tvaNumber       String
+  address         String
+  city            String
+  country         Country @relation(fields: [countryId], references: [id])
+  countryId       Int
+  users           User[]
+  projects        Project[]
+  invoices        Invoice[]
+  expenses        Expense[]
+  contacts        Contact[]
+  opinions        Opinion[]
+}

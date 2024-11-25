@@ -1,0 +1,8 @@
+model Project {
+  id              Int @id() @default(autoincrement())
+  name            String
+  customer        Customer? @relation(fields: [customerId], references: [id])
+  customerId      Int?
+  enterprise      Enterprise  @relation(fields: [enterpriseId], references: [id])
+  enterpriseId      Int
+}
