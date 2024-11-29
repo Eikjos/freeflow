@@ -1,6 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
+import { AuthResponseData } from '@repo/shared-types';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma.service';
 import UserService from 'src/users/user.service';
@@ -31,13 +36,33 @@ export default class AuthService {
     return this.generateToken(user);
   }
 
-  public async generateToken(user: User) {
+  public async refresh(userId: number, refreshToken: string) {
+    const user = await this.userService.findUserById(userId);
+    if (!user || !user.refreshToken)
+      throw new ForbiddenException('Access Denied');
+    const refreshTokenMatches = await bcrypt.compareSync(
+      refreshToken,
+      user.refreshToken,
+    );
+    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
+    return this.generateToken(user);
+  }
+
+  public async generateToken(user: User): Promise<AuthResponseData> {
     const payload = { sub: user.id };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, passwordSalt, ...result } = user;
+
+    const access_token = await this.jwtService.signAsync(payload);
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      secret: process.env.JWT_REFRESH_SECRET,
+    });
+
+    this.userService.udpateRefreshToken(user.id, refreshToken);
+
     return {
-      ...result,
-      access_token: await this.jwtService.signAsync(payload),
+      firstName: user.firstName,
+      lastName: user.lastName,
+      access_token,
+      refreshToken,
     };
   }
 }

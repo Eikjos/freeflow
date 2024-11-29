@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.0",
-    "@repo/ui": "workspace:*",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.461.0",
@@ -25,6 +24,7 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@repo/shared-types": "workspace:*",
     "@types/node": "^20",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.0",
