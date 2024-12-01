@@ -36,6 +36,10 @@ export default class AuthService {
     return this.generateToken(user);
   }
 
+  public async logout(userId: number) {
+    return this.userService.udpateRefreshToken(userId, null);
+  }
+
   public async refresh(userId: number, refreshToken: string) {
     const user = await this.userService.findUserById(userId);
     if (!user || !user.refreshToken)
@@ -54,6 +58,7 @@ export default class AuthService {
     const access_token = await this.jwtService.signAsync(payload);
     const refreshToken = await this.jwtService.signAsync(payload, {
       secret: process.env.JWT_REFRESH_SECRET,
+      expiresIn: '7d',
     });
 
     this.userService.udpateRefreshToken(user.id, refreshToken);

@@ -1,15 +1,17 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import AuthDto from 'src/dtos/auth/auth.dto';
 import CreateUserDto from 'src/dtos/users/create-user.dto';
 import UserService from './user.service';
 
-@Controller('user')
+@Controller('users')
+@ApiTags('User')
 export default class UsersController {
   constructor(private readonly userService: UserService) {}
 
   // -
 
-  @Post('create')
+  @Post()
   @HttpCode(200)
   public async create(@Body() model: CreateUserDto): Promise<AuthDto> {
     return this.userService.create(model);
