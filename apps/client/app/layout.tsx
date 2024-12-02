@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -6,13 +7,31 @@ export const metadata: Metadata = {
   description: "Freeflow platform to manage the life's freelance",
 };
 
+const amica = localFont({
+  src: "./fonts/AmaticSC-Bold.ttf",
+  variable: "--font-amica",
+});
+
+const montserrat = localFont({
+  src: "./fonts/Montserrat-Regular.ttf",
+  variable: "--font-montserrat",
+});
+
+const montserratMedium = localFont({
+  src: "./fonts/Montserrat-Medium.ttf",
+  variable: "--font-montserrat-medium",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html
+      lang="fr"
+      className={`${amica.variable} ${montserrat.variable} ${montserratMedium.variable} bg-white`}
+    >
       <body>{children}</body>
     </html>
   );
