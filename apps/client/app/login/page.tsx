@@ -1,7 +1,9 @@
-import { Button } from "components/ui/button";
+"use client";
+
+import { LoginForm } from "@components/ui/templates/login-form";
 import Image from "next/image";
 
-export default function Home() {
+export default function LoginPage() {
   return (
     <div className="flex flew-row items-center h-screen">
       <div className="flex flex-col w-3/4 h-full justify-evenly">
@@ -12,7 +14,7 @@ export default function Home() {
           height={450}
           className="mx-auto"
         />
-        <p className="text-5xl w-1/2 mx-auto text-center font-display">
+        <p className="text-5xl w-1/2 mx-auto text-center">
           Gérer votre vie d'entrepreneur facilement
         </p>
       </div>
@@ -27,7 +29,7 @@ export default function Home() {
           <span className="font-amica text-5xl">Freeflow</span>
         </div>
         <h1 className="text-5xl mt-28 text-center font-amica">Connexion</h1>
-        <Button>TEST DU BUTTON</Button>
+        <LoginForm className="mt-12 px-20" />
       </div>
     </div>
   );

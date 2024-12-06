@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 const amica = localFont({
-  src: "./fonts/AmaticSC-Bold.ttf",
+  src: "./fonts/AmaticSC-Regular.ttf",
   variable: "--font-amica",
 });
 
@@ -32,7 +32,7 @@ export default function RootLayout({
       lang="fr"
       className={`${amica.variable} ${montserrat.variable} ${montserratMedium.variable} bg-white`}
     >
-      <body>{children}</body>
+      <body className="font-display">{children}</body>
     </html>
   );
 }
