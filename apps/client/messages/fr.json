@@ -1,0 +1,6 @@
+{
+  "signIn": "Connexion",
+  "credentials": {
+    "invalid": "Les identifiants sont invalides"
+  }
+}

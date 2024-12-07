@@ -1,16 +1,24 @@
+"use client";
+
+import { SecretInput } from "@components/ui/secret-input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { login } from "@lib/api/auth/login";
 import { cn } from "@lib/utils";
 import { LoginData, LoginDataValidation } from "@repo/shared-types";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "../button";
-import { Form } from "../form";
-import { Input } from "../input";
+import { Button } from "../ui/button";
+import { Form } from "../ui/form";
+import { Input } from "../ui/input";
 
 type LoginFormProps = {
   className?: string;
 };
 
 export const LoginForm = ({ className }: LoginFormProps) => {
+  const [error, setError] = useState<string>();
+  const t = useTranslations();
   const form = useForm<LoginData>({
     resolver: zodResolver(LoginDataValidation),
     defaultValues: {
@@ -18,23 +26,32 @@ export const LoginForm = ({ className }: LoginFormProps) => {
       password: "",
     },
   });
+  const onSubmit = (values: LoginData) => {
+    login(values.email, values.password)
+      .then((data) => console.log(data))
+      .catch((e: TypeError) => setError(e.message));
+  };
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(() => console.log("coucou"))}
+        onSubmit={form.handleSubmit(onSubmit)}
         className={cn("px-10 flex flex-col items-center gap-7", className)}
       >
+        {error && (
+          <p className="text-sm text-destructive w-full text-center">
+            {t(error)}
+          </p>
+        )}
         <Input
           {...form.register("email")}
           className="w-full"
           placeholder="Adresse mail"
           label="Adresse mail"
         />
-        <Input
+        <SecretInput
           {...form.register("password")}
           placeholder="Mot de passe"
-          type="password"
           label="Mot de passe"
         />
         <p className="text-sm">

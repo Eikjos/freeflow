@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { User } from '@prisma/client';
 import { CreateUserData } from '@repo/shared-types';
 import * as bcrypt from 'bcrypt';
@@ -9,6 +14,7 @@ import { PrismaService } from 'src/prisma.service';
 export default class UserService {
   constructor(
     private readonly prisma: PrismaService,
+    @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
   ) {}
 

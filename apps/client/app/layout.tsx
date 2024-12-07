@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -22,17 +24,27 @@ const montserratMedium = localFont({
   variable: "--font-montserrat-medium",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
+  // Providing all messages to the client
+  // side is the easiest way to get started
+  const messages = await getMessages();
+
   return (
     <html
-      lang="fr"
+      lang={locale}
       className={`${amica.variable} ${montserrat.variable} ${montserratMedium.variable} bg-white`}
     >
-      <body className="font-display">{children}</body>
+      <body className="font-display">
+        <NextIntlClientProvider messages={messages}>
+          {children}
+        </NextIntlClientProvider>
+      </body>
     </html>
   );
 }

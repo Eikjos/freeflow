@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from "./form";
 
-type InputProps = Omit<ComponentProps<"input">, "name"> & {
+export type InputProps = Omit<ComponentProps<"input">, "name"> & {
   name: string;
   description?: string;
   label?: string;

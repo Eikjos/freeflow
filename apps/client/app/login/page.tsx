@@ -1,9 +1,13 @@
 "use client";
 
-import { LoginForm } from "@components/ui/templates/login-form";
+import { LoginForm } from "@components/templates/login-form";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { Suspense } from "react";
 
 export default function LoginPage() {
+  const t = useTranslations();
+
   return (
     <div className="flex flew-row items-center h-screen">
       <div className="flex flex-col w-3/4 h-full justify-evenly">
@@ -28,8 +32,10 @@ export default function LoginPage() {
           />
           <span className="font-amica text-5xl">Freeflow</span>
         </div>
-        <h1 className="text-5xl mt-28 text-center font-amica">Connexion</h1>
-        <LoginForm className="mt-12 px-20" />
+        <h1 className="text-5xl mt-28 text-center font-amica">{t("signIn")}</h1>
+        <Suspense fallback={<p>Loading...</p>}>
+          <LoginForm className="mt-12 px-20" />
+        </Suspense>
       </div>
     </div>
   );
