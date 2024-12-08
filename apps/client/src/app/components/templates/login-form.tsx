@@ -1,16 +1,16 @@
 "use client";
 
-import { SecretInput } from "@components/ui/secret-input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { login } from "@lib/api/auth/login";
-import { cn } from "@lib/utils";
 import { LoginData, LoginDataValidation } from "@repo/shared-types";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { cn } from "../../../lib/utils";
+import { login } from "../../actions/login";
 import { Button } from "../ui/button";
 import { Form } from "../ui/form";
 import { Input } from "../ui/input";
+import { SecretInput } from "../ui/secret-input";
 
 type LoginFormProps = {
   className?: string;
@@ -27,9 +27,11 @@ export const LoginForm = ({ className }: LoginFormProps) => {
     },
   });
   const onSubmit = (values: LoginData) => {
-    login(values.email, values.password)
-      .then((data) => console.log(data))
-      .catch((e: TypeError) => setError(e.message));
+    login(values.email, values.password).then((data) => {
+      if (!data.success) {
+        setError(data.message);
+      }
+    });
   };
 
   return (
@@ -55,13 +57,13 @@ export const LoginForm = ({ className }: LoginFormProps) => {
           label="Mot de passe"
         />
         <p className="text-sm">
-          Pas encore de compte ?{" "}
+          {t("login.noAccount")}{" "}
           <a href="#" className="text-secondary">
-            Inscrivez-vous
+            {t("login.createAccount")}
           </a>
         </p>
         <Button type="submit" className="w-40">
-          Se connecter
+          {t("login.login")}
         </Button>
       </form>
     </Form>

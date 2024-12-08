@@ -1,9 +1,9 @@
 "use client";
 
-import { LoginForm } from "@components/templates/login-form";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Suspense } from "react";
+import { LoginForm } from "../components/templates/login-form";
 
 export default function LoginPage() {
   const t = useTranslations();
@@ -33,7 +33,7 @@ export default function LoginPage() {
           <span className="font-amica text-5xl">Freeflow</span>
         </div>
         <h1 className="text-5xl mt-28 text-center font-amica">{t("signIn")}</h1>
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense>
           <LoginForm className="mt-12 px-20" />
         </Suspense>
       </div>
