@@ -1,0 +1,12 @@
+{
+  "signIn": "Sign in",
+  "credentials": {
+    "invalid": "The credentials are invalid"
+  },
+  "login": {
+    "noAccount": "No account yet ?",
+    "createAccount": "Register",
+    "login": "Sign in",
+    "manageYourLife": "Manage your entrepreneurial life with ease"
+  }
+}

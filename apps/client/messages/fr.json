@@ -1,0 +1,12 @@
+{
+  "signIn": "Connexion",
+  "credentials": {
+    "invalid": "Les identifiants sont invalides"
+  },
+  "login": {
+    "noAccount": "Pas encore de compte ?",
+    "createAccount": "Inscrivez-vous",
+    "login": "Se connecter",
+    "manageYourLife": "Gérer votre vie d'entrepreneur facilement"
+  }
+}

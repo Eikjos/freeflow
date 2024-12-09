@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { User } from '@prisma/client';
 import { CreateUserData } from '@repo/shared-types';
 import * as bcrypt from 'bcrypt';
@@ -9,6 +14,7 @@ import { PrismaService } from 'src/prisma.service';
 export default class UserService {
   constructor(
     private readonly prisma: PrismaService,
+    @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
   ) {}
 
@@ -17,7 +23,7 @@ export default class UserService {
   public async create(model: CreateUserData) {
     // verify if user already exist
     const user = this.prisma.user.findFirst({ where: { email: model.email } });
-    if (user) {
+    if (!user) {
       throw new BadRequestException('User already exist', {
         description: 'User already exist',
       });

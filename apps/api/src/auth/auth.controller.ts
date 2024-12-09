@@ -6,7 +6,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import AuthDto from 'src/dtos/auth/auth.dto';
 import { LoginDto } from 'src/dtos/auth/login.dto';
@@ -15,11 +15,12 @@ import { RefreshTokenGuard } from 'src/guards/refresh-token.guard';
 import AuthService from './auth.service';
 
 @Controller('auth')
-@ApiTags('Authentication')
+@ApiTags('Auth')
 export default class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @ApiOperation({ summary: 'SignIn the user' })
   @HttpCode(200)
   async signIn(@Body() model: LoginDto): Promise<AuthDto> {
     return this.authService.signIn(model.email, model.password);

@@ -7,6 +7,7 @@ import UserService from './user.service';
 @Module({
   providers: [UserService, PrismaService],
   controllers: [UsersController],
+  exports: [UserService],
   imports: [forwardRef(() => AuthModule)],
 })
 export class UserModule {}
