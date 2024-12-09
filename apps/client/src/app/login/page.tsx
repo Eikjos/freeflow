@@ -1,11 +1,12 @@
 "use client";
 
+import EmptyLayout from "@components/layouts/EmptyLayout";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { Suspense } from "react";
+import { ReactNode, Suspense } from "react";
 import { LoginForm } from "../components/templates/login-form";
 
-export default function LoginPage() {
+const LoginPage = () => {
   const t = useTranslations();
 
   return (
@@ -39,4 +40,10 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}
+};
+
+LoginPage.getLayout = function getLayout(page: ReactNode) {
+  return <EmptyLayout>{page}</EmptyLayout>;
+};
+
+export default LoginPage;
