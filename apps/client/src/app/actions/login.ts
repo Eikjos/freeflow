@@ -1,17 +1,20 @@
 "use server";
 
-import { AuthResponseData } from "@repo/shared-types";
+import { AuthResponseData, LoginData } from "@repo/shared-types";
 import { cookies } from "next/headers";
 import { ServerActionsReturns } from "../../types/server-actions-type";
 
-export const login = async (
-  email: string,
-  password: string
-): Promise<ServerActionsReturns> => {
+export const login = async (data: LoginData): Promise<ServerActionsReturns> => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   return await fetch(`${process.env.API_URL}/auth/login`, {
     method: "post",
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({
+      email: data.email,
+      password: data.password,
+    } as LoginData),
+    headers: {
+      "Content-Type": "application/json",
+    },
   })
     .then(async (res) => {
       if (!res.ok) {

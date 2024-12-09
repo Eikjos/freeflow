@@ -1,7 +1,6 @@
 import { AuthResponseData } from "@repo/shared-types";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { client } from "../lib/client";
 
 export async function AuthMiddleware(req: NextRequest) {
   const authToken = req.cookies.get("refreshToken");
@@ -10,12 +9,13 @@ export async function AuthMiddleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  return client<AuthResponseData>("auth/refresh", {
+  return fetch(`${process.env.API_URL}/auth/refresh`, {
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
   })
-    .then(async (data) => {
+    .then(async (res) => {
+      const data = (await res.json()) as AuthResponseData;
       const cookiesStore = await cookies();
       cookiesStore.set("access_token", data.access_token);
       cookiesStore.set("refreshToken", data.refreshToken);

@@ -2,11 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginData, LoginDataValidation } from "@repo/shared-types";
+import { login } from "actions/login";
 import { useTranslations } from "next-intl";
+import { redirect, RedirectType } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { cn } from "../../../lib/utils";
-import { login } from "../../actions/login";
 import { Button } from "../ui/button";
 import { Form } from "../ui/form";
 import { Input } from "../ui/input";
@@ -27,10 +28,11 @@ export const LoginForm = ({ className }: LoginFormProps) => {
     },
   });
   const onSubmit = (values: LoginData) => {
-    login(values.email, values.password).then((data) => {
+    login(values).then((data) => {
       if (!data.success) {
         setError(data.message);
       }
+      redirect("/", RedirectType.push);
     });
   };
 
