@@ -1,5 +1,5 @@
-export type ServerActionsReturns = {
+export type ServerActionsReturns<T> = {
   success: boolean;
   message?: string;
-  data?: any;
+  data?: T;
 };

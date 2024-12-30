@@ -67,6 +67,8 @@ export default class AuthService {
     return {
       firstName: user.firstName,
       lastName: user.lastName,
+      role: user.isEnterprise ? 'enterprise' : 'customer',
+      enterpriseId: user.enterpriseId,
       access_token,
       refreshToken,
     };

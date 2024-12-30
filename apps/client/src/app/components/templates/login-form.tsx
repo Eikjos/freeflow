@@ -32,6 +32,9 @@ export const LoginForm = ({ className }: LoginFormProps) => {
       if (!data.success) {
         setError(data.message);
       }
+      if (data.data?.role == "enterprise" && data.data.enterpriseId == null) {
+        redirect("/enterprise/create", RedirectType.replace);
+      }
       redirect("/", RedirectType.push);
     });
   };

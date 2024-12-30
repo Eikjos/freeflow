@@ -3,6 +3,8 @@ import { z } from "zod";
 export type AuthResponseData = {
   firstName: string;
   lastName: string;
+  role: "enterprise" | "customer";
+  enterpriseId?: number;
   access_token: string;
   refreshToken: string;
 };

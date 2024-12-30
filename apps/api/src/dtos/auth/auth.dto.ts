@@ -8,6 +8,8 @@ export default class AuthDto implements AuthResponseData {
   lastName: string;
   @ApiProperty({ description: 'Access token for the user' })
   access_token: string;
+  @ApiProperty({ description: 'User role' })
+  role: 'enterprise' | 'customer';
   @ApiProperty({
     description: 'The refresh token for refresh the session of user',
   })

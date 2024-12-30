@@ -6,6 +6,8 @@ model User {
   password        String
   passwordSalt    String
   refreshToken    String?
+  isEnterprise    Boolean
+  isCustomer      Boolean
   enterprise      Enterprise?  @relation(fields: [enterpriseId], references: [id])
   enterpriseId    Int?
   customer        Customer?   @relation(fields: [customerId], references: [id])
