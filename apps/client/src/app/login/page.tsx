@@ -14,7 +14,7 @@ const LoginPage = () => {
       <div className="flex flex-col w-3/4 h-full justify-evenly">
         <Image
           src="/assets/login.png"
-          alt="Img"
+          alt="Auto entrepreneur"
           width={700}
           height={450}
           className="mx-auto"
@@ -26,7 +26,7 @@ const LoginPage = () => {
       <div className="w-1/4 border-l-[1px] border-secondary h-full bg-card">
         <div className="flex flex-row items-center gap-4 justify-center my-5">
           <Image
-            src="/assets/Freeflow.png"
+            src="/assets/freeflow.png"
             width={55}
             height={55}
             alt="freeflow logo"

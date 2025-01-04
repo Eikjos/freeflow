@@ -14,7 +14,7 @@ export default function Logo({ className }: LogoProps) {
       )}
     >
       <Image
-        src="/assets/Freeflow.png"
+        src="/assets/freeflow.png"
         width={55}
         height={55}
         alt="freeflow logo"
