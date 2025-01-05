@@ -3,6 +3,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import localFont from "next/font/local";
 import "./globals.css";
+import Header from "@components/templates/header";
+import Footer from "@components/templates/footer";
 
 export const metadata: Metadata = {
   title: "Freeflow",
@@ -42,7 +44,9 @@ export default async function RootLayout({
     >
       <body className="font-display">
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <Header />
+          <div className="h-[calc(100vh-135px)]">{children}</div>
+          <Footer />
         </NextIntlClientProvider>
       </body>
     </html>

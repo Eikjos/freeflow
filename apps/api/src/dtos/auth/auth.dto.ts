@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AuthResponseData } from '@repo/shared-types';
 
 export default class AuthDto implements AuthResponseData {
+  @ApiProperty({ description: 'User id' })
+  userId: number;
   @ApiProperty({ description: 'User first name' })
   firstName: string;
   @ApiProperty({ description: 'User last name' })

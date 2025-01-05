@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export type AuthResponseData = {
+  userId: number;
   firstName: string;
   lastName: string;
   role: "enterprise" | "customer";

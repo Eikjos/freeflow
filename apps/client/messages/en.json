@@ -195,6 +195,9 @@
     "zambia": "Zambia",
     "zimbabwe": "Zimbabwe"
   },
+  "enterprise": {
+    "create": "Create your enterprise"
+  },
   "signIn": "Sign in",
   "credentials": {
     "invalid": "The credentials are invalid"

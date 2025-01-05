@@ -65,6 +65,7 @@ export default class AuthService {
     this.userService.udpateRefreshToken(user.id, refreshToken);
 
     return {
+      userId: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.isEnterprise ? 'enterprise' : 'customer',

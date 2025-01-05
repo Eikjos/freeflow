@@ -1,6 +1,6 @@
 "use client";
 
-import EmptyLayout from "@components/layouts/EmptyLayout";
+import EmptyLayout from "@components/layouts/empty-layout";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { ReactNode, Suspense } from "react";

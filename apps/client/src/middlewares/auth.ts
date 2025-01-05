@@ -24,8 +24,15 @@ export async function AuthMiddleware(req: NextRequest) {
         JSON.stringify({
           firstName: data.firstName,
           lastName: data.lastName,
+          id: data.userId,
+          enterpriseId: data.enterpriseId,
         })
       );
+
+      // redirect if user is an enterprise and he's not in enterprise
+      if (data.role === "enterprise" && !data.enterpriseId) {
+        return NextResponse.redirect(new URL("/enterprise/create", req.url));
+      }
 
       return NextResponse.next();
     })
