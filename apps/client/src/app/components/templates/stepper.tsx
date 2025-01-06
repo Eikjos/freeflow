@@ -2,15 +2,17 @@
 
 import BadgeStepper from "@components/atoms/badge-stepper";
 import { Button } from "@components/ui/button";
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { cn } from "../../../lib/utils";
+import { ExecOptionsWithStringEncoding } from "child_process";
 
 type StepperProps = {
   labels: string[];
   components: React.ReactNode[];
+  className?: string;
 };
 
-const Stepper = ({ labels, components }: StepperProps) => {
+const Stepper = ({ labels, components, className }: StepperProps) => {
   const [step, setStep] = useState(0);
 
   const nextStep = () => setStep((prev) => prev + 1);
@@ -18,20 +20,24 @@ const Stepper = ({ labels, components }: StepperProps) => {
 
   return (
     <>
-      <div className="flex flex-row justify-center items-start">
+      <div
+        className={cn(
+          "flex flex-row justify-center items-start mb-5",
+          className
+        )}
+      >
         {labels.map((label, index) => {
           return (
-            <>
+            <Fragment key={index}>
               <BadgeStepper
                 label={label}
                 number={index + 1}
                 active={index === step}
-                key={index}
               />
               {index < labels.length - 1 && (
                 <div className="w-56 border-dashed-spaces h-20" />
               )}
-            </>
+            </Fragment>
           );
         })}
       </div>
