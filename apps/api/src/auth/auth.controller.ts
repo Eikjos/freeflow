@@ -1,12 +1,13 @@
 import {
   Body,
+  ConsoleLogger,
   Controller,
   HttpCode,
   Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import AuthDto from 'src/dtos/auth/auth.dto';
 import { LoginDto } from 'src/dtos/auth/login.dto';
@@ -35,6 +36,7 @@ export default class AuthController {
   }
 
   @UseGuards(RefreshTokenGuard)
+  @ApiBearerAuth()
   @Post('refresh')
   @HttpCode(200)
   async refresh(@Req() req: Request): Promise<AuthDto> {

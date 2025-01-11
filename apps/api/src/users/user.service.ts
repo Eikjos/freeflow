@@ -56,7 +56,7 @@ export default class UserService {
   }
 
   public async udpateRefreshToken(userId: number, refreshToken: string) {
-    this.prisma.user.update({
+    await this.prisma.user.update({
       where: {
         id: userId,
       },

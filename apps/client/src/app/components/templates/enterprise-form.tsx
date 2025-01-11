@@ -11,6 +11,7 @@ import {
   EnterpriseCreateValidation,
 } from "@repo/shared-types";
 import { Button } from "@components/ui/button";
+import { fetchEnterpriseInfo } from "actions/enterprise";
 
 const EnterpriseForm = () => {
   const form = useForm<EnterpriseCreateModel>({
@@ -19,6 +20,10 @@ const EnterpriseForm = () => {
       siret: "",
     },
   });
+
+  const fillFormWithEnterpriseinfo = () => {
+    fetchEnterpriseInfo(form.getValues().siret);
+  };
 
   return (
     <>
@@ -36,7 +41,9 @@ const EnterpriseForm = () => {
                   description="Peut pré-remplir tous les champs si possible"
                   {...form.register("siret")}
                 />
-                <Button className="mt-2">Remplir</Button>
+                <Button className="mt-2" type="button">
+                  Remplir
+                </Button>
                 <Input
                   type="text"
                   label="Nom de l'entreprise"

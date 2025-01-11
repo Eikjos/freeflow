@@ -44,9 +44,7 @@ export default async function RootLayout({
     >
       <body className="font-display">
         <NextIntlClientProvider messages={messages}>
-          <Header />
-          <div className="h-[calc(100vh-135px)]">{children}</div>
-          <Footer />
+          {children}
         </NextIntlClientProvider>
       </body>
     </html>
