@@ -18,6 +18,13 @@ const EnterpriseForm = () => {
     resolver: zodResolver(EnterpriseCreateValidation),
     defaultValues: {
       siret: "",
+      name: "",
+      address: "",
+      city: "",
+      phone: "",
+      TVANumber: "",
+      email: "",
+      zipCode: "",
     },
   });
 
@@ -41,7 +48,11 @@ const EnterpriseForm = () => {
                   description="Peut pré-remplir tous les champs si possible"
                   {...form.register("siret")}
                 />
-                <Button className="mt-2" type="button">
+                <Button
+                  className="mt-2"
+                  type="button"
+                  onClick={fillFormWithEnterpriseinfo}
+                >
                   Remplir
                 </Button>
                 <Input
@@ -49,14 +60,14 @@ const EnterpriseForm = () => {
                   label="Nom de l'entreprise"
                   placeholder="Nom de l'entreprise"
                   className="mt-[1.6rem]"
-                  {...form.register("siret")}
+                  {...form.register("name")}
                 />
                 <Input
                   type="text"
                   label="Numero de TVA"
                   placeholder="Numero de TVA"
                   className="mt-2"
-                  {...form.register("siret")}
+                  {...form.register("TVANumber")}
                 />
               </div>
               <div className="w-1/3 border-r-[3px] border-secondary pl-2 pr-5 py-3 flex flex-col items-center h-full">
@@ -66,28 +77,28 @@ const EnterpriseForm = () => {
                   label="Adresse Postale"
                   placeholder="Siret"
                   className="mt-4"
-                  {...form.register("siret")}
+                  {...form.register("address")}
                 />
                 <Input
                   type="text"
                   label="Code Postale"
                   placeholder="Nom de l'entreprise"
                   className="mt-4"
-                  {...form.register("siret")}
+                  {...form.register("zipCode")}
                 />
                 <Input
                   type="text"
                   label="Ville"
                   placeholder="Numero de TVA"
                   className="mt-4"
-                  {...form.register("siret")}
+                  {...form.register("city")}
                 />
                 <Input
                   type="text"
                   label="Pays"
                   placeholder="Numero de TVA"
                   className="mt-3"
-                  {...form.register("siret")}
+                  {...form.register("countryId")}
                 />
               </div>
               <div className="w-1/3 pl-2 pr-5 py-3 flex flex-col items-center h-full">
@@ -97,14 +108,14 @@ const EnterpriseForm = () => {
                   label="Adresse mail"
                   placeholder="Nom de l'entreprise"
                   className="mt-5"
-                  {...form.register("siret")}
+                  {...form.register("email")}
                 />
                 <Input
                   type="text"
                   label="Téléphone"
                   placeholder="Numero de TVA"
                   className="mt-5"
-                  {...form.register("siret")}
+                  {...form.register("phone")}
                 />
               </div>
             </form>

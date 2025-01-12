@@ -12,7 +12,7 @@ const CreateEnterprisePage = () => {
         {t("enterprise.create")}
       </h1>
       <Stepper
-        labels={["Les informations", "Verifications"]}
+        labels={["Les informations", "Logo", "Verifications"]}
         components={[<EnterpriseForm />]}
         className="mt-20"
       />
