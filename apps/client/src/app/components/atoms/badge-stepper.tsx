@@ -17,7 +17,11 @@ const BadgeStepper = ({ number, label, active }: BadgeStepperProps) => {
           }
         )}
       >
-        <span className="font-amica font-semibold text-4xl text-center">
+        <span
+          className={cn("font-amica font-semibold text-4xl text-center", {
+            "text-white": active,
+          })}
+        >
           {number}
         </span>
       </div>

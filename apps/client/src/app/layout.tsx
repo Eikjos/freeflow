@@ -3,8 +3,6 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import localFont from "next/font/local";
 import "./globals.css";
-import Header from "@components/templates/header";
-import Footer from "@components/templates/footer";
 
 export const metadata: Metadata = {
   title: "Freeflow",

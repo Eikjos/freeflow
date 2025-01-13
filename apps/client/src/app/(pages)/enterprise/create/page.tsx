@@ -8,13 +8,13 @@ const CreateEnterprisePage = () => {
   const t = useTranslations();
   return (
     <>
-      <h1 className="text-center font-bold font-amica text-5xl mt-24">
+      <h1 className="text-center font-bold font-amica text-5xl mt-10">
         {t("enterprise.create")}
       </h1>
       <Stepper
         labels={["Les informations", "Logo", "Verifications"]}
         components={[<EnterpriseForm />]}
-        className="mt-20"
+        className="mt-10"
       />
     </>
   );

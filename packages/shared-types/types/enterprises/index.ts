@@ -20,8 +20,10 @@ export type EnterpriseCreateModel = {
 
 export const EnterpriseCreateValidation = z.object({
   siret: z
-    .string()
-    .min(1, { message: "L'email est requis." })
-    .email({ message: "L'email est invalide." }),
+    .string({ required_error: "Le numéro SIRET est requis." })
+    .transform((val) => val.replace(/\s+/g, ""))
+    .refine((val) => /^\d{14}$/.test(val), {
+      message: "Le numéro SIRET doit contenir exactement 14 chiffres",
+    }),
   password: z.string().min(1, { message: "Le mot de passe est requis." }),
 });

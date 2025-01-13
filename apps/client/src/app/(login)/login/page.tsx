@@ -4,7 +4,7 @@ import EmptyLayout from "@components/layouts/empty-layout";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { ReactNode, Suspense } from "react";
-import { LoginForm } from "../components/templates/login-form";
+import { LoginForm } from "../../components/templates/login-form";
 
 const LoginPage = () => {
   const t = useTranslations();
@@ -35,7 +35,7 @@ const LoginPage = () => {
         </div>
         <h1 className="text-5xl mt-28 text-center font-amica">{t("signIn")}</h1>
         <Suspense>
-          <LoginForm className="mt-12 px-20" />
+          <LoginForm className="mt-12 px-10" />
         </Suspense>
       </div>
     </div>
