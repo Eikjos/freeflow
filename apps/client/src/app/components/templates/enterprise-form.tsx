@@ -3,15 +3,17 @@
 import { Button } from "@components/ui/button";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import Select from "@components/ui/select";
+import { Select } from "@components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CountryData,
   EnterpriseCreateModel,
   EnterpriseCreateValidation,
+  JuridicShapeData,
 } from "@repo/shared-types";
 import { getCountries } from "actions/countries";
 import { fetchEnterpriseInfo } from "actions/enterprise";
+import { getJuridicShapes } from "actions/juridic-shape";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -19,6 +21,7 @@ import { Card, CardContent } from "../ui/card";
 
 const EnterpriseForm = () => {
   const [countries, setCountries] = useState<CountryData[]>([]);
+  const [juridicShapes, setJuridicShapes] = useState<JuridicShapeData[]>([]);
   const t = useTranslations();
   const form = useForm<EnterpriseCreateModel>({
     resolver: zodResolver(EnterpriseCreateValidation),
@@ -38,6 +41,10 @@ const EnterpriseForm = () => {
     getCountries().then((data) => {
       setCountries(data);
     });
+    getJuridicShapes().then((data) => {
+      console.log(data);
+      setJuridicShapes(data);
+    });
   }, []);
 
   const fillFormWithEnterpriseinfo = () => {
@@ -49,6 +56,7 @@ const EnterpriseForm = () => {
           form.setValue("city", data.city);
           form.setValue("address", data.address);
           form.setValue("zipCode", data.zipCode);
+          console.log(data.juridicShape);
           form.setValue("juridicShape", data.juridicShape);
           form.setValue("countryId", 60);
           form.setValue("siret", data.siret);
@@ -91,7 +99,10 @@ const EnterpriseForm = () => {
                   label="Forme juridique"
                   className="mt-3"
                   placeholder="Forme juridique"
-                  values={[{ value: 1, name: "SAS" }]}
+                  values={juridicShapes.map((item) => ({
+                    value: item.code,
+                    textValue: item.designation,
+                  }))}
                   {...form.register("juridicShape")}
                 />
                 <Input
@@ -129,8 +140,8 @@ const EnterpriseForm = () => {
                   label="Pays"
                   placeholder="Pays"
                   values={countries.map((c) => ({
-                    value: c.id,
-                    name: t(c.name),
+                    value: c.id.toString(),
+                    textValue: t(c.name),
                   }))}
                   className="mt-3"
                   {...form.register("countryId")}

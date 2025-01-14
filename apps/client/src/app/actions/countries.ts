@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 
 export const getCountries = async () => {
   const token = (await cookies()).get("access_token");
-  return await fetch(`${process.env.API_URL}/countries`, {
+  return fetch(`${process.env.API_URL}/countries`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
