@@ -15,11 +15,11 @@ const LoginPage = () => {
         <Image
           src="/assets/login.png"
           alt="Auto entrepreneur"
-          width={700}
-          height={450}
+          width={600}
+          height={400}
           className="mx-auto"
         />
-        <p className="text-5xl w-1/2 mx-auto text-center">
+        <p className="text-3xl w-3/4 mx-auto text-center">
           Gérer votre vie d'entrepreneur facilement
         </p>
       </div>

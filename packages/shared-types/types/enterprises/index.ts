@@ -25,5 +25,4 @@ export const EnterpriseCreateValidation = z.object({
     .refine((val) => /^\d{14}$/.test(val), {
       message: "Le numéro SIRET doit contenir exactement 14 chiffres",
     }),
-  password: z.string().min(1, { message: "Le mot de passe est requis." }),
 });

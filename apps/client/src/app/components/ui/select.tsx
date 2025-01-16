@@ -169,7 +169,7 @@ const Select = ({ ...props }: SelectProps) => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>{props.label}</FormLabel>
-          <SelectRoot onValueChange={field.onChange} defaultValue={field.value}>
+          <SelectRoot onValueChange={field.onChange} value={field.value}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder={props.placeholder} />

@@ -25,4 +25,8 @@ export async function seedCountry() {
   if (country === 0) {
     executeSqlFile('./scripts/countries.sql');
   }
+  const juridicShapes = await prisma.juridicShape.count();
+  if (juridicShapes === 0) {
+    executeSqlFile('./scripts/juridic-shapes.sql');
+  }
 }

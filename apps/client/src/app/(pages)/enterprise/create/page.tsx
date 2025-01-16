@@ -1,6 +1,6 @@
 import CompleteLayoutWithoutSideBar from "@components/layouts/complete-layout";
 import EnterpriseForm from "@components/templates/enterprise-form";
-import Stepper from "@components/templates/stepper";
+import { Stepper } from "@components/templates/stepper";
 import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
 

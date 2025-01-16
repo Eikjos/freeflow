@@ -2,9 +2,8 @@
 
 import BadgeStepper from "@components/atoms/badge-stepper";
 import { Button } from "@components/ui/button";
-import React, { Fragment, useState } from "react";
+import React, { createContext, Fragment, useContext, useState } from "react";
 import { cn } from "../../../lib/utils";
-import { ExecOptionsWithStringEncoding } from "child_process";
 
 type StepperProps = {
   labels: string[];
@@ -12,14 +11,21 @@ type StepperProps = {
   className?: string;
 };
 
+type StepperContextType = {
+  isValid: boolean;
+  setIsValid: (value: boolean) => void;
+};
+
+const StepperContext = createContext<StepperContextType>(null!);
+
 const Stepper = ({ labels, components, className }: StepperProps) => {
   const [step, setStep] = useState(0);
-
+  const [isValid, setIsValid] = useState(false);
   const nextStep = () => setStep((prev) => prev + 1);
   const previousStep = () => setStep((prev) => prev - 1);
 
   return (
-    <>
+    <StepperContext.Provider value={{ setIsValid, isValid }}>
       <div
         className={cn(
           "flex flex-row justify-center items-start mb-5",
@@ -55,13 +61,23 @@ const Stepper = ({ labels, components, className }: StepperProps) => {
           </Button>
         )}
         {step < labels.length - 1 && (
-          <Button onClick={nextStep}>
+          <Button onClick={nextStep} disabled={!isValid}>
             Suivant <span className="text-2xl pb-1">&rsaquo;</span>
           </Button>
         )}
       </div>
-    </>
+    </StepperContext.Provider>
   );
 };
 
-export default Stepper;
+const useStepper = () => {
+  const context = useContext(StepperContext);
+  if (!context) {
+    throw new Error(
+      "useStepper doit être utilisé à l'intérieur de StepperProvider"
+    );
+  }
+  return context;
+};
+
+export { Stepper, useStepper };

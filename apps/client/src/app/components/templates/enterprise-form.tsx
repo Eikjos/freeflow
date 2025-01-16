@@ -9,6 +9,7 @@ import {
   CountryData,
   EnterpriseCreateModel,
   EnterpriseCreateValidation,
+  EnterpriseInformation,
   JuridicShapeData,
 } from "@repo/shared-types";
 import { getCountries } from "actions/countries";
@@ -18,11 +19,13 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Card, CardContent } from "../ui/card";
+import { useStepper } from "./stepper";
 
 const EnterpriseForm = () => {
   const [countries, setCountries] = useState<CountryData[]>([]);
   const [juridicShapes, setJuridicShapes] = useState<JuridicShapeData[]>([]);
   const t = useTranslations();
+  const { setIsValid } = useStepper();
   const form = useForm<EnterpriseCreateModel>({
     resolver: zodResolver(EnterpriseCreateValidation),
     defaultValues: {
@@ -37,29 +40,38 @@ const EnterpriseForm = () => {
     },
   });
 
+  const updateFormValues = (data: EnterpriseInformation) => {
+    form.reset({
+      name: data.name,
+      TVANumber: data.TVANumber,
+      city: data.city,
+      address: data.address,
+      zipCode: data.zipCode,
+      juridicShape: data.juridicShape,
+      countryId: 60,
+      siret: data.siret,
+    });
+  };
+
   useEffect(() => {
     getCountries().then((data) => {
       setCountries(data);
     });
     getJuridicShapes().then((data) => {
-      console.log(data);
       setJuridicShapes(data);
     });
   }, []);
+
+  useEffect(() => {
+    // Notifier au stepper que peut passer à la prochaine étape
+    setIsValid(form.formState.isValid);
+  }, [form.formState.isValid]);
 
   const fillFormWithEnterpriseinfo = () => {
     fetchEnterpriseInfo(form.getValues().siret.replace(" ", "")).then(
       (data) => {
         if (data !== null) {
-          form.setValue("name", data.name);
-          form.setValue("TVANumber", data.TVANumber);
-          form.setValue("city", data.city);
-          form.setValue("address", data.address);
-          form.setValue("zipCode", data.zipCode);
-          console.log(data.juridicShape);
-          form.setValue("juridicShape", data.juridicShape);
-          form.setValue("countryId", 60);
-          form.setValue("siret", data.siret);
+          updateFormValues(data);
         }
       }
     );
@@ -118,21 +130,21 @@ const EnterpriseForm = () => {
                 <Input
                   type="text"
                   label="Adresse Postale"
-                  placeholder="Siret"
+                  placeholder="Adresse Postale"
                   className="mt-4"
                   {...form.register("address")}
                 />
                 <Input
                   type="text"
                   label="Code Postale"
-                  placeholder="Nom de l'entreprise"
+                  placeholder="Code Postale"
                   className="mt-4"
                   {...form.register("zipCode")}
                 />
                 <Input
                   type="text"
                   label="Ville"
-                  placeholder="Numero de TVA"
+                  placeholder="Ville"
                   className="mt-4"
                   {...form.register("city")}
                 />
@@ -152,14 +164,14 @@ const EnterpriseForm = () => {
                 <Input
                   type="text"
                   label="Adresse mail"
-                  placeholder="Nom de l'entreprise"
+                  placeholder="Adresse mail"
                   className="mt-5"
                   {...form.register("email")}
                 />
                 <Input
                   type="text"
                   label="Téléphone"
-                  placeholder="Numero de TVA"
+                  placeholder="Téléphone"
                   className="mt-5"
                   {...form.register("phone")}
                 />
