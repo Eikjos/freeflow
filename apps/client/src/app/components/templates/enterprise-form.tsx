@@ -25,7 +25,7 @@ const EnterpriseForm = () => {
   const [countries, setCountries] = useState<CountryData[]>([]);
   const [juridicShapes, setJuridicShapes] = useState<JuridicShapeData[]>([]);
   const t = useTranslations();
-  const { setIsValid } = useStepper();
+  const { setIsValid, data, setData } = useStepper();
   const form = useForm<EnterpriseCreateModel>({
     resolver: zodResolver(EnterpriseCreateValidation),
     defaultValues: {
@@ -40,17 +40,21 @@ const EnterpriseForm = () => {
     },
   });
 
-  const updateFormValues = (data: EnterpriseInformation) => {
-    form.reset({
-      name: data.name,
-      TVANumber: data.TVANumber,
-      city: data.city,
-      address: data.address,
-      zipCode: data.zipCode,
-      juridicShape: data.juridicShape,
-      countryId: 60,
-      siret: data.siret,
-    });
+  const updateFormValues = async (
+    data: EnterpriseInformation,
+    email: string,
+    phone: string
+  ) => {
+    form.setValue("siret", data.siret, { shouldValidate: true });
+    form.setValue("name", data.name, { shouldValidate: true });
+    form.setValue("address", data.address, { shouldValidate: true });
+    form.setValue("city", data.city, { shouldValidate: true });
+    form.setValue("TVANumber", data.TVANumber, { shouldValidate: true });
+    form.setValue("zipCode", data.zipCode, { shouldValidate: true });
+    form.setValue("juridicShape", data.juridicShape, { shouldValidate: true });
+    form.setValue("countryId", "60", { shouldValidate: true });
+    form.setValue("email", email, { shouldValidate: true });
+    form.setValue("phone", phone, { shouldValidate: true });
   };
 
   useEffect(() => {
@@ -60,18 +64,28 @@ const EnterpriseForm = () => {
     getJuridicShapes().then((data) => {
       setJuridicShapes(data);
     });
+    if (data) {
+      updateFormValues(data, data.email, data.phone);
+    }
   }, []);
 
   useEffect(() => {
     // Notifier au stepper que peut passer à la prochaine étape
     setIsValid(form.formState.isValid);
+    if (form.formState.isValid) {
+      setData({ ...data, ...form.getValues() });
+    }
   }, [form.formState.isValid]);
 
   const fillFormWithEnterpriseinfo = () => {
     fetchEnterpriseInfo(form.getValues().siret.replace(" ", "")).then(
       (data) => {
         if (data !== null) {
-          updateFormValues(data);
+          updateFormValues(
+            data,
+            form.getValues().email,
+            form.getValues().phone
+          );
         }
       }
     );

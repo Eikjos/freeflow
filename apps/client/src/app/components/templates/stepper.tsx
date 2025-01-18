@@ -13,6 +13,8 @@ type StepperProps = {
 
 type StepperContextType = {
   isValid: boolean;
+  data: any;
+  setData: (value: any) => void;
   setIsValid: (value: boolean) => void;
 };
 
@@ -20,12 +22,13 @@ const StepperContext = createContext<StepperContextType>(null!);
 
 const Stepper = ({ labels, components, className }: StepperProps) => {
   const [step, setStep] = useState(0);
+  const [data, setData] = useState<any>();
   const [isValid, setIsValid] = useState(false);
   const nextStep = () => setStep((prev) => prev + 1);
   const previousStep = () => setStep((prev) => prev - 1);
 
   return (
-    <StepperContext.Provider value={{ setIsValid, isValid }}>
+    <StepperContext.Provider value={{ setIsValid, isValid, data, setData }}>
       <div
         className={cn(
           "flex flex-row justify-center items-start mb-5",

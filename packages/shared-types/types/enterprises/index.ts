@@ -10,7 +10,7 @@ export type EnterpriseInformation = {
   TVANumber: string;
   juridicShape: string;
   socialCapital?: number;
-  countryId: number;
+  countryId: string;
 };
 
 export type EnterpriseCreateModel = {
@@ -25,4 +25,18 @@ export const EnterpriseCreateValidation = z.object({
     .refine((val) => /^\d{14}$/.test(val), {
       message: "Le numéro SIRET doit contenir exactement 14 chiffres",
     }),
+  name: z.string().min(1, "Le nom est requis"),
+  address: z.string().min(1, "L'adresse est requis"),
+  city: z.string().min(1, "La ville est requis"),
+  zipCode: z.string().min(1, "Le nom est requis"),
+  countryId: z
+    .string({ required_error: "Le pays est requis." })
+    .transform((val) => Number(val)),
+  TVANumber: z.string().min(1, "Le numero de TVA est requis."),
+  juridicShape: z.string({ required_error: "La forme juridique est requis." }),
+  email: z
+    .string()
+    .email("L'email est invalide.")
+    .min(1, "L'email est requis."),
+  phone: z.string().min(1, "Le numeor de telephone est requis."),
 });
