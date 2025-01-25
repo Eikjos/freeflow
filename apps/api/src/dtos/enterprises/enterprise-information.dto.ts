@@ -21,5 +21,5 @@ export class EnterpriseInformationDto implements EnterpriseInformation {
   @ApiProperty({ description: 'Enterprise social capital' })
   socialCapital?: number;
   @ApiProperty({ description: 'The country Id' })
-  countryId: number;
+  countryId: string;
 }

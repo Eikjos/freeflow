@@ -52,9 +52,9 @@ const EnterpriseForm = () => {
     form.setValue("TVANumber", data.TVANumber, { shouldValidate: true });
     form.setValue("zipCode", data.zipCode, { shouldValidate: true });
     form.setValue("juridicShape", data.juridicShape, { shouldValidate: true });
-    form.setValue("countryId", "60", { shouldValidate: true });
-    form.setValue("email", email, { shouldValidate: true });
-    form.setValue("phone", phone, { shouldValidate: true });
+    form.setValue("countryId", data.countryId, { shouldValidate: true });
+    if (email) form.setValue("email", email, { shouldValidate: true });
+    if (phone) form.setValue("phone", phone, { shouldValidate: true });
   };
 
   useEffect(() => {

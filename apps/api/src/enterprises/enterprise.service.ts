@@ -43,7 +43,7 @@ export default class EnterpriseService {
       juridicShape:
         insee.etablissement.uniteLegale.categorieJuridiqueUniteLegale,
       socialCapital: insee.etablissement.uniteLegale.capitalSocialUniteLegale,
-      countryId: 1,
+      countryId: '60',
       TVANumber:
         'FR' +
         this.getCleControleTVANumber(insee.etablissement.siren) +
