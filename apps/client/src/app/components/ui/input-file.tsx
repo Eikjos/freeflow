@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ComponentProps, useEffect, useState } from "react";
 import { Label } from "./label";
+import { CloudUpload } from "lucide-react";
 
 type InputFileProps = {
-  onFilesSelected: (file: File[]) => void;
-};
+  onFilesSelected: (files: Blob[]) => void;
+} & Omit<ComponentProps<"input">, "name" | "type">;
 
-const InputFile = ({ onFilesSelected }: InputFileProps) => {
-  const [files, setFiles] = useState<File[]>([]);
+const InputFile = ({ onFilesSelected, ...props }: InputFileProps) => {
+  const [files, setFiles] = useState<Blob[]>([]);
 
   const handleFileChange = (event: any) => {
     const selectedFiles: File[] = event.target.files;
@@ -40,20 +41,22 @@ const InputFile = ({ onFilesSelected }: InputFileProps) => {
         onDragOver={(event) => event.preventDefault()}
       >
         <>
-          <div className="border-dashed border-2 p-4 rounded-lg border-accent bg-gray-100 text-sm text-center">
-            <p>Drag and drop your files here</p>
-            <p>
-              Limit 15MB per file. Supported files: .PDF, .DOCX, .PPTX, .TXT,
-              .XLSX
-            </p>
-            <Label htmlFor="browse">Browse files</Label>
+          <div className="border-dashed border-2 p-4 rounded-lg border-orange-500/50 bg-orange-50 text-sm text-center">
+            <p>Glisser vos fichiers ici</p>
+            <p>Fichier supporté: {props.accept}</p>
+            <Label
+              htmlFor="browse"
+              className="flex flew-row justify-center mt-2"
+            >
+              <CloudUpload className="hover:text-primary" />
+            </Label>
           </div>
           <input
             type="file"
             hidden
             id="browse"
             onChange={handleFileChange}
-            accept=".pdf,.docx,.pptx,.txt,.xlsx"
+            accept={props.accept}
           />
         </>
       </div>
