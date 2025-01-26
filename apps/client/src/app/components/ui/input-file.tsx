@@ -1,42 +1,34 @@
 "use client";
 
-import { ComponentProps, useEffect, useState } from "react";
-import { Label } from "./label";
 import { CloudUpload } from "lucide-react";
+import { ComponentProps } from "react";
+import { Label } from "./label";
 
 type InputFileProps = {
   onFilesSelected: (files: Blob[]) => void;
 } & Omit<ComponentProps<"input">, "name" | "type">;
 
 const InputFile = ({ onFilesSelected, ...props }: InputFileProps) => {
-  const [files, setFiles] = useState<Blob[]>([]);
-
   const handleFileChange = (event: any) => {
     const selectedFiles: File[] = event.target.files;
-    if (selectedFiles && selectedFiles.length > 0) {
-      const newFiles = Array.from(selectedFiles);
-      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    }
+    // if (selectedFiles && selectedFiles.length > 0) {
+    //   const newFiles = Array.from(selectedFiles);
+    //   setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    // }
+    onFilesSelected(selectedFiles);
   };
   const handleDrop = (event: any) => {
     event.preventDefault();
     const droppedFiles = event.dataTransfer.files;
     if (droppedFiles.length > 0) {
-      const newFiles: File[] = Array.from(droppedFiles);
-      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+      onFilesSelected(droppedFiles);
     }
   };
-
-  useEffect(() => {
-    onFilesSelected(files);
-  }, [files, onFilesSelected]);
 
   return (
     <section>
       <div
-        className={`document-uploader ${
-          files.length > 0 ? "upload-box active" : "upload-box"
-        }`}
+        className={`document-uploader`}
         onDrop={handleDrop}
         onDragOver={(event) => event.preventDefault()}
       >
@@ -57,6 +49,7 @@ const InputFile = ({ onFilesSelected, ...props }: InputFileProps) => {
             id="browse"
             onChange={handleFileChange}
             accept={props.accept}
+            multiple={props.multiple}
           />
         </>
       </div>

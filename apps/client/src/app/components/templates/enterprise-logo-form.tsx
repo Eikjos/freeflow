@@ -3,13 +3,18 @@
 import { Card, CardContent } from "@components/ui/card";
 import InputFile from "@components/ui/input-file";
 import Image from "next/image";
-import { useCallback, useMemo, useState } from "react";
+import { useStepper } from "./stepper";
 
 const EnterpriseLogoForm = () => {
-  const [logo, setLogo] = useState<Blob>();
+  const { data, setData } = useStepper();
 
   const onChangeInput = (files: Blob[]) => {
-    setLogo(files[0]);
+    var file = files[files.length - 1];
+    if (file) {
+      setData({ ...data, logo: URL.createObjectURL(file) });
+    } else {
+      setData({ ...data, logo: null });
+    }
   };
 
   return (
@@ -20,16 +25,17 @@ const EnterpriseLogoForm = () => {
           multiple={false}
           accept=".png, .jpeg, .jpg"
         />
-        <div className="h-44 border-l-2 border-secondary pl-24 pb-10 ml-10 flex flex-row justify-center items-center">
-          {logo && (
+        <div className="h-44 border-l-2 border-secondary pl-24 ml-10 flex flex-row justify-center items-center">
+          {data.logo && (
             <Image
-              src={URL.createObjectURL(logo)}
-              width={300}
-              height={0}
+              src={data.logo}
+              width={500}
+              height={150}
+              className="object-contain w-96 h-32"
               alt="Logo de votre entreprise"
             />
           )}
-          {!logo && (
+          {!data.logo && (
             <div className="w-56 ml-16 mt-9">
               <p className="text-sm text-center">
                 Vous pouvez pre-visualiser l'image.

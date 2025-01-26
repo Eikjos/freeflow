@@ -22,3 +22,23 @@ export const getJuridicShapes = async () => {
       return [];
     });
 };
+
+export const getJuridicShapeById = async (id: number) => {
+  const cookiesStore = await cookies();
+  const token = cookiesStore.get("access_token");
+  if (token == null) return undefined;
+  return fetch(`${process.env.API_URL}/juridic-shapes/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token.value}`,
+    },
+  })
+    .then(async (res) => {
+      if (res.status === 200) {
+        return (await res.json()) as JuridicShapeData;
+      }
+      return undefined;
+    })
+    .catch(() => {
+      return undefined;
+    });
+};

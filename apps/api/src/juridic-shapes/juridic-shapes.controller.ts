@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import JuridicShapeService from './juridic-shapes.service';
@@ -13,5 +13,11 @@ export default class JuridicShapesController {
   @UseGuards(AccessTokenGuard)
   async findAll() {
     return await this.juridicShapeService.findAll();
+  }
+
+  @Get(':code')
+  @UseGuards(AccessTokenGuard)
+  async findByCode(@Param('code') code: string) {
+    return await this.juridicShapeService.findByCode(code);
   }
 }
