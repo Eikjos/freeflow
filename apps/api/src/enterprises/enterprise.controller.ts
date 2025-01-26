@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
@@ -17,4 +17,8 @@ export default class EnterprisesController {
   ): Promise<Omit<EnterpriseInformationDto, 'id'>> {
     return await this.enterpriseService.getInformationBySiret(siret);
   }
+
+  @UseGuards(AccessTokenGuard)
+  @Post()
+  async createEnterprise() {}
 }

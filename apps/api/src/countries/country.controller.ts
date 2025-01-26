@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import CountryService from './country.service';
 
@@ -14,7 +14,9 @@ export default class CountryController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: number) {
-    return await this.countryService.findById(id);
+  async findById(@Param('id', new ParseIntPipe()) id: number) {
+    const country = await this.countryService.findById(id);
+    console.log('country', country);
+    return country;
   }
 }

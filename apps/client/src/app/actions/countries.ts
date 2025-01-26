@@ -31,6 +31,7 @@ export const getCountryById = async (id: number) => {
     },
   })
     .then(async (res) => {
+      console.log(res);
       if (res.status === 200) {
         return (await res.json()) as CountryData;
       }

@@ -17,6 +17,7 @@ export default function RecapEnterpriseForm() {
 
   useEffect(() => {
     getCountryById(data.countryId).then((res) => {
+      console.log(res);
       setCountry(res);
     });
 
