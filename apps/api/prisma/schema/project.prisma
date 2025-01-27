@@ -4,5 +4,7 @@ model Project {
   customer        Customer? @relation(fields: [customerId], references: [id])
   customerId      Int?
   enterprise      Enterprise  @relation(fields: [enterpriseId], references: [id])
-  enterpriseId      Int
+  enterpriseId    Int
+  media           Media? @relation(fields: [mediaId], references: [id])
+  mediaId         Int?  @unique
 }

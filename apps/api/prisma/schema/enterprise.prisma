@@ -4,15 +4,20 @@ model Enterprise {
   siret           String @unique()
   tvaNumber       String
   address         String
+  zipCode         String
   city            String
   country         Country @relation(fields: [countryId], references: [id])
   countryId       Int
   juridicShape    JuridicShape @relation(fields: [juridicShapeId], references: [code])
   juridicShapeId  String
+  phone           String
+  email           String
   users           User[]
   projects        Project[]
   invoices        Invoice[]
   expenses        Expense[]
   contacts        Contact[]
   opinions        Opinion[]
+  mediaId         Int? @unique
+  media           Media? @relation(fields: [mediaId], references: [id])
 }

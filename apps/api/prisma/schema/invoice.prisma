@@ -8,6 +8,6 @@ model Invoice {
   enterpriseId    Int
   createdAt       DateTime
   updatedAt       DateTime
-  media           Media @relation(fields: [mediaId], references: [id])
-  mediaId         Int
+  media           Media? @relation(fields: [mediaId], references: [id])
+  mediaId         Int? @unique
 }

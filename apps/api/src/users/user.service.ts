@@ -28,7 +28,6 @@ export default class UserService {
         description: 'User already exist',
       });
     }
-    console.log(isEnterprise);
     // create user
     const passwordSalt = bcrypt.genSaltSync(10);
     const hashPassword = bcrypt.hashSync(model.password, passwordSalt);

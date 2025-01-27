@@ -1,6 +1,9 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import AuthService from 'src/auth/auth.service';
+import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
+import { MediaService } from 'src/media/media.service';
 import { PrismaService } from 'src/prisma.service';
 import {
   EtablissementResponse,
@@ -10,11 +13,43 @@ import {
 @Injectable()
 export default class EnterpriseService {
   constructor(
+    private readonly mediaService: MediaService,
     private readonly prisma: PrismaService,
+    private readonly authService: AuthService,
     private readonly httpService: HttpService,
   ) {}
 
   // -- Methods --
+
+  async createEnterprise(
+    model: CreateEnterpriseDto,
+    file: Express.Multer.File,
+    userId: number,
+  ) {
+    // save media
+    const mediaId = await this.mediaService.upload(file);
+    // save enterprise
+    await this.prisma.enterprise.create({
+      data: {
+        name: model.name,
+        siret: model.siret,
+        address: model.address,
+        city: model.city,
+        zipCode: model.zipCode,
+        phone: model.phone,
+        email: model.email,
+        juridicShapeId: model.juridicShape,
+        users: {
+          connect: [{ id: userId }],
+        },
+        tvaNumber: model.TVANumber,
+        countryId: parseInt(model.countryId),
+        mediaId: mediaId > 0 ? mediaId : null,
+      },
+    });
+    const user = await this.prisma.user.findFirst({ where: { id: userId } });
+    return this.authService.generateToken(user);
+  }
 
   async findByid(id: number) {
     return await this.prisma.enterprise.findFirst({
