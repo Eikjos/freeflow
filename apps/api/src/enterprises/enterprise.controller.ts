@@ -15,8 +15,6 @@ import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-inform
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import EnterpriseService from './enterprise.service';
 import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
-import { ZodPipe } from 'src/pipe/zod.pipe';
-import { EnterpriseCreateValidation } from '@repo/shared-types';
 
 @Controller('enterprises')
 @ApiTags('Enterprise')
@@ -37,7 +35,7 @@ export default class EnterprisesController {
   @HttpCode(200)
   async createEnterprise(
     @UploadedFile() file: Express.Multer.File,
-    @Body(new ZodPipe(EnterpriseCreateValidation)) model: CreateEnterpriseDto,
+    @Body() model: CreateEnterpriseDto,
     @Req() req: Request,
   ) {
     return await this.enterpriseService.createEnterprise(

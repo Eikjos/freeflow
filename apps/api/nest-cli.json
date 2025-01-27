@@ -3,9 +3,6 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "assets": [
-      { "include": "prisma/scripts/*.sql", "outDir": "dist/prisma/scripts" }
-    ],
-    "deleteOutDir": false
+    "deleteOutDir": true
   }
 }
