@@ -9,12 +9,12 @@ import {
   UploadedFile,
   UseGuards,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
+import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import EnterpriseService from './enterprise.service';
-import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 
 @Controller('enterprises')
 @ApiTags('Enterprise')

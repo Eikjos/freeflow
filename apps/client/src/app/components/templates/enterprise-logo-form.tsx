@@ -25,7 +25,7 @@ const EnterpriseLogoForm = () => {
           multiple={false}
           accept=".png, .jpeg, .jpg"
         />
-        <div className="h-44 border-l-2 border-secondary pl-24 ml-10 flex flex-row justify-center items-center">
+        <div className="h-44 border-l-2 border-secondary ml-10 flex flex-row justify-center items-center w-full">
           {data.logo && (
             <Image
               src={data.logo}
@@ -36,7 +36,7 @@ const EnterpriseLogoForm = () => {
             />
           )}
           {!data.logo && (
-            <div className="w-56 ml-16 mt-9">
+            <div className="w-48 mx-auto">
               <p className="text-sm text-center">
                 Vous pouvez pre-visualiser l'image.
               </p>

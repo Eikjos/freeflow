@@ -8,7 +8,7 @@ type BadgeStepperProps = {
 
 const BadgeStepper = ({ number, label, active }: BadgeStepperProps) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col items-center">
       <div
         className={cn(
           "flex flex-row justify-center items-center bg-[#E1CEBE] rounded-full w-20 h-20",
