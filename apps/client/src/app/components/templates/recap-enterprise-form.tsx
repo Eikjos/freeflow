@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@components/ui/card";
 import { Input } from "@components/ui/input";
 import { CountryData, JuridicShapeData } from "@repo/shared-types";
 import { getCountryById } from "actions/countries";
+import { createEnterprise } from "actions/enterprise";
 import { getJuridicShapeById } from "actions/juridic-shape";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -14,6 +15,17 @@ export default function RecapEnterpriseForm() {
   const { data } = useStepper();
   const [country, setCountry] = useState<CountryData>();
   const [juridicShape, setJuridicShape] = useState<JuridicShapeData>();
+
+  const onCreateEnterprise = () => {
+    const { Logo, logoBlob, ...enterprise } = data;
+    createEnterprise(enterprise, logoBlob)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
   useEffect(() => {
     getCountryById(data.countryId).then((res) => {
@@ -135,7 +147,9 @@ export default function RecapEnterpriseForm() {
         </form>
       </CardContent>
       <CardFooter>
-        <Button className="mx-auto">Creer mon entreprise</Button>
+        <Button className="mx-auto" onClick={onCreateEnterprise}>
+          Creer mon entreprise
+        </Button>
       </CardFooter>
     </Card>
   );

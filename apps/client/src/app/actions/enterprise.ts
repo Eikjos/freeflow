@@ -31,15 +31,17 @@ export const fetchEnterpriseInfo = async (siret: string) => {
 
 export const createEnterprise = async (
   enterprise: EnterpriseCreateModel,
-  logo: Blob
+  logo: File
 ) => {
   const cookiesStore = await cookies();
   const token = cookiesStore.get("access_token");
   if (token == null) return null;
 
   const formData = new FormData();
-  formData.append("model", JSON.stringify(enterprise)); // Ajouter l'objet sous forme de chaîne
-  formData.append("file", logo);
+  Object.keys(enterprise).forEach((key) =>
+    formData.append(key, enterprise[key])
+  );
+  formData.append("logo", logo);
   return await fetch(`${process.env.API_URL}/enterprises`, {
     method: "POST",
     headers: {

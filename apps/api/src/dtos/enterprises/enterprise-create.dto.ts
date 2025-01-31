@@ -25,3 +25,12 @@ export class CreateEnterpriseDto implements EnterpriseCreateModel {
   @ApiProperty({ description: 'The country Id of enterprise' })
   countryId: string;
 }
+
+export class CreateEnterpriseWithLogoDto extends CreateEnterpriseDto {
+  @ApiProperty({
+    description: 'Enterprise logo',
+    type: 'string',
+    format: 'binary',
+  })
+  logo: Express.Multer.File;
+}

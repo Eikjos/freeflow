@@ -8,10 +8,15 @@ import {
   Req,
   UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
+import {
+  CreateEnterpriseDto,
+  CreateEnterpriseWithLogoDto,
+} from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import EnterpriseService from './enterprise.service';
@@ -32,15 +37,22 @@ export default class EnterprisesController {
 
   @UseGuards(AccessTokenGuard)
   @Post()
+  @ApiConsumes('multipart/form-data')
   @HttpCode(200)
+  @ApiBody({
+    description: 'Créer une entreprise avec un fichier (logo)',
+    type: CreateEnterpriseWithLogoDto,
+  })
+  @UseInterceptors(FileInterceptor('logo'))
   async createEnterprise(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() model: CreateEnterpriseDto,
+    @Body() body: CreateEnterpriseDto,
+    @UploadedFile()
+    logo: Express.Multer.File,
     @Req() req: Request,
   ) {
     return await this.enterpriseService.createEnterprise(
-      model,
-      file,
+      body,
+      logo,
       parseInt(req.user['sub']),
     );
   }

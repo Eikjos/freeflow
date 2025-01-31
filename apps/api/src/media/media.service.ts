@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import * as path from 'path';
 import * as fs from 'fs';
-import { PrismaService } from 'src/prisma.service';
+import * as path from 'path';
 import { MediaDto } from 'src/dtos/media/media-dto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class MediaService {
@@ -12,7 +12,7 @@ export class MediaService {
   async upload(file: Express.Multer.File) {
     try {
       const extension = path.extname(file.originalname);
-      const fileName = `${file.filename}-${Date.now()}${extension}`;
+      const fileName = `${path.parse(file.originalname).name}-${Date.now()}${extension}`;
       const uploadPath = this.getUploadPath(extension);
       const filePath = path.join(uploadPath, fileName);
 

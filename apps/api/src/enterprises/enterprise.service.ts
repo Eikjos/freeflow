@@ -23,11 +23,11 @@ export default class EnterpriseService {
 
   async createEnterprise(
     model: CreateEnterpriseDto,
-    file: Express.Multer.File,
+    logo: Express.Multer.File,
     userId: number,
   ) {
     // save media
-    const mediaId = await this.mediaService.upload(file);
+    const mediaId = await this.mediaService.upload(logo);
     // save enterprise
     await this.prisma.enterprise.create({
       data: {

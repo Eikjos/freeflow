@@ -5,7 +5,7 @@ import { ComponentProps } from "react";
 import { Label } from "./label";
 
 type InputFileProps = {
-  onFilesSelected: (files: Blob[]) => void;
+  onFilesSelected: (files: File[]) => void;
 } & Omit<ComponentProps<"input">, "name" | "type">;
 
 const InputFile = ({ onFilesSelected, ...props }: InputFileProps) => {

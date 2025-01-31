@@ -16,6 +16,7 @@ export type EnterpriseInformation = {
 export type EnterpriseCreateModel = {
   email: string;
   phone: string;
+  [key: string]: any;
 } & Omit<EnterpriseInformation, "id">;
 
 export const EnterpriseCreateValidation = z.object({

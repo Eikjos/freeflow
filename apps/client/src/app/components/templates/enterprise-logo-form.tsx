@@ -8,12 +8,12 @@ import { useStepper } from "./stepper";
 const EnterpriseLogoForm = () => {
   const { data, setData } = useStepper();
 
-  const onChangeInput = (files: Blob[]) => {
+  const onChangeInput = (files: File[]) => {
     var file = files[files.length - 1];
     if (file) {
-      setData({ ...data, logo: URL.createObjectURL(file) });
+      setData({ ...data, logo: URL.createObjectURL(file), logoBlob: file });
     } else {
-      setData({ ...data, logo: null });
+      setData({ ...data, logo: null, logoBlob: null });
     }
   };
 
