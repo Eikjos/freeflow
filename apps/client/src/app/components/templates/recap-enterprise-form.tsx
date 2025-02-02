@@ -10,8 +10,10 @@ import { getJuridicShapeById } from "actions/juridic-shape";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useStepper } from "./stepper";
+import { useTranslations } from "next-intl";
 
 export default function RecapEnterpriseForm() {
+  const t = useTranslations();
   const { data } = useStepper();
   const [country, setCountry] = useState<CountryData>();
   const [juridicShape, setJuridicShape] = useState<JuridicShapeData>();
@@ -40,7 +42,7 @@ export default function RecapEnterpriseForm() {
   return (
     <Card className="w-1/2 mx-auto">
       <CardHeader>
-        <h2 className="text-3xl font-bold">Recapitulalif</h2>
+        <h2 className="text-3xl font-bold">{t("enterprise.recap")}</h2>
       </CardHeader>
       <CardContent>
         {data.logo && (
@@ -54,35 +56,37 @@ export default function RecapEnterpriseForm() {
         )}
         <form>
           <div>
-            <h4 className="text-xl font-bold w-full">Informations</h4>
+            <h4 className="text-xl font-bold w-full">
+              {t("common.informations")}
+            </h4>
             <Input
               type="text"
-              label="Siret"
-              placeholder="Siret"
+              label={t("enterprise.siret")}
+              placeholder={t("enterprise.siret")}
               className="mt-4"
               value={data.siret}
               disabled
             />
             <Input
               type="text"
-              label="Nom"
-              placeholder="Siret"
+              label={t("enterprise.name")}
+              placeholder={t("enterprise.name")}
               className="mt-4"
               value={data.name}
               disabled
             />
             <Input
               type="text"
-              label="Forme juridique"
-              placeholder="Siret"
+              label={t("enterprise.juridicShape")}
+              placeholder={t("enterprise.juridicShape")}
               className="mt-4"
               value={juridicShape?.designation ?? ""}
               disabled
             />
             <Input
               type="text"
-              label="Numero de TVA"
-              placeholder="Siret"
+              label={t("enterprise.tvaNumber")}
+              placeholder={t("enterprise.tvaNumber")}
               className="mt-4"
               value={data.TVANumber}
               disabled
@@ -90,35 +94,37 @@ export default function RecapEnterpriseForm() {
           </div>
           <hr className="border-secondary border-t-2 w-3/4 mx-auto my-5" />
           <div>
-            <h4 className="text-xl font-bold w-full">Localite</h4>
+            <h4 className="text-xl font-bold w-full">
+              {t("common.localisation")}
+            </h4>
             <Input
               type="text"
-              label="Adresse"
-              placeholder="Siret"
+              label={t("common.address")}
+              placeholder={t("common.address")}
               className="mt-4"
               value={data.address}
               disabled
             />
             <Input
               type="text"
-              label="Ville"
-              placeholder="Siret"
+              label={t("common.city")}
+              placeholder={t("common.city")}
               className="mt-4"
               value={data.city}
               disabled
             />
             <Input
               type="text"
-              label="Code postale"
-              placeholder="Siret"
+              label={t("common.zipCode")}
+              placeholder={t("common.zipCode")}
               className="mt-4"
               value={data.zipCode}
               disabled
             />
             <Input
               type="text"
-              label="Pays"
-              placeholder="Siret"
+              label={t("common.country")}
+              placeholder={t("common.country")}
               className="mt-4"
               value={country?.name ?? ""}
               disabled
@@ -126,19 +132,19 @@ export default function RecapEnterpriseForm() {
           </div>
           <hr className="border-secondary border-t-2 w-3/4 mx-auto my-5" />
           <div>
-            <h4 className="text-xl font-bold w-full">Contact</h4>
+            <h4 className="text-xl font-bold w-full">{t("common.contact")}</h4>
             <Input
               type="text"
-              label="Adresse mail"
-              placeholder="Siret"
+              label={t("common.email")}
+              placeholder={t("common.email")}
               className="mt-4"
               value={data.email}
               disabled
             />
             <Input
               type="text"
-              label="Telephone"
-              placeholder="Telephone"
+              label={t("common.phone")}
+              placeholder={t("common.phone")}
               className="mt-4"
               value={data.phone}
               disabled
@@ -148,7 +154,7 @@ export default function RecapEnterpriseForm() {
       </CardContent>
       <CardFooter>
         <Button className="mx-auto" onClick={onCreateEnterprise}>
-          Creer mon entreprise
+          {t("enterprise.createMyEnterprise")}
         </Button>
       </CardFooter>
     </Card>

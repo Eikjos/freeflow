@@ -195,8 +195,33 @@
     "zambia": "Zambia",
     "zimbabwe": "Zimbabwe"
   },
+  "common": {
+    "informations": "Information",
+    "fill": "Fill",
+    "localisation": "Location",
+    "city": "City",
+    "zipCode": "Postal Code",
+    "country": "Country",
+    "address": "Address",
+    "contact": "Contact",
+    "email": "Email Address",
+    "password": "Password",
+    "phone": "Phone",
+    "dropFile": "Drop your files here.",
+    "supportedFile": "Supported file(s):",
+    "previsualizeImage": "You can preview the image."
+  },
   "enterprise": {
-    "create": "Create your enterprise"
+    "create": "Create your business",
+    "createMyEnterprise": "Create my business",
+    "informaations": "Information",
+    "recap": "Your business recap",
+    "logo": "Your business logo",
+    "siret": "SIRET",
+    "fillForm": "Can pre-fill all fields if possible",
+    "name": "Business name",
+    "juridicShape": "Legal structure",
+    "tvaNumber": "VAT number"
   },
   "signIn": "Sign in",
   "credentials": {

@@ -3,12 +3,14 @@
 import { CloudUpload } from "lucide-react";
 import { ComponentProps } from "react";
 import { Label } from "./label";
+import { useTranslations } from "next-intl";
 
 type InputFileProps = {
   onFilesSelected: (files: File[]) => void;
 } & Omit<ComponentProps<"input">, "name" | "type">;
 
 const InputFile = ({ onFilesSelected, ...props }: InputFileProps) => {
+  const t = useTranslations();
   const handleFileChange = (event: any) => {
     const selectedFiles: File[] = event.target.files;
     // if (selectedFiles && selectedFiles.length > 0) {
@@ -34,8 +36,10 @@ const InputFile = ({ onFilesSelected, ...props }: InputFileProps) => {
       >
         <>
           <div className="border-dashed border-2 p-4 rounded-lg border-orange-500/50 bg-orange-50 text-sm text-center">
-            <p>Glisser vos fichiers ici</p>
-            <p>Fichier supporté: {props.accept}</p>
+            <p>{t("common.dropFile")}</p>
+            <p>
+              {t("common.supportedFile")} {props.accept}
+            </p>
             <Label
               htmlFor="browse"
               className="flex flew-row justify-center mt-2"
