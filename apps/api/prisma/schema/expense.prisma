@@ -5,4 +5,6 @@ model Expense {
   price               Decimal
   enterprise          Enterprise @relation(fields: [enterpriseId], references: [id])
   enterpriseId        Int
+  media               Media? @relation(fields: [mediaId], references: [id])
+  mediaId             Int? @unique
 }

@@ -32,6 +32,9 @@ export const LoginForm = ({ className }: LoginFormProps) => {
       if (!data.success) {
         setError(data.message);
       }
+      if (data.data?.role == "enterprise" && data.data.enterpriseId == null) {
+        redirect("/enterprise/create", RedirectType.replace);
+      }
       redirect("/", RedirectType.push);
     });
   };
@@ -50,13 +53,13 @@ export const LoginForm = ({ className }: LoginFormProps) => {
         <Input
           {...form.register("email")}
           className="w-full"
-          placeholder="Adresse mail"
-          label="Adresse mail"
+          placeholder={t("common.email")}
+          label={t("common.email")}
         />
         <SecretInput
           {...form.register("password")}
-          placeholder="Mot de passe"
-          label="Mot de passe"
+          placeholder={t("common.password")}
+          label={t("common.password")}
         />
         <p className="text-sm">
           {t("login.noAccount")}{" "}

@@ -4,7 +4,9 @@ import { AuthResponseData, LoginData } from "@repo/shared-types";
 import { cookies } from "next/headers";
 import { ServerActionsReturns } from "../../types/server-actions-type";
 
-export const login = async (data: LoginData): Promise<ServerActionsReturns> => {
+export const login = async (
+  data: LoginData
+): Promise<ServerActionsReturns<AuthResponseData>> => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   return await fetch(`${process.env.API_URL}/auth/login`, {
     method: "post",

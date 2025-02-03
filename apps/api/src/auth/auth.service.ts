@@ -45,7 +45,7 @@ export default class AuthService {
     const user = await this.userService.findUserById(userId);
     if (!user || !user.refreshToken)
       throw new ForbiddenException('Access Denied');
-    const refreshTokenMatches = await bcrypt.compareSync(
+    const refreshTokenMatches = await bcrypt.compare(
       refreshToken,
       user.refreshToken,
     );
@@ -65,8 +65,11 @@ export default class AuthService {
     this.userService.udpateRefreshToken(user.id, refreshToken);
 
     return {
+      userId: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
+      role: user.isEnterprise ? 'enterprise' : 'customer',
+      enterpriseId: user.enterpriseId,
       access_token,
       refreshToken,
     };

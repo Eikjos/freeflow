@@ -1,5 +1,9 @@
 model Media {
-  id            Int @id()@default(autoincrement())
-  path          String
-  invoices      Invoice[]
+  id           Int @id()@default(autoincrement())
+  filename     String
+  extension    String
+  invoice      Invoice?
+  entreprise   Enterprise?
+  project      Project?
+  expense      Expense?
 }

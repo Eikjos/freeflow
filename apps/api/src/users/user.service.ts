@@ -20,7 +20,7 @@ export default class UserService {
 
   // -
 
-  public async create(model: CreateUserData) {
+  public async create(model: CreateUserData, isEnterprise: boolean) {
     // verify if user already exist
     const user = this.prisma.user.findFirst({ where: { email: model.email } });
     if (!user) {
@@ -35,6 +35,8 @@ export default class UserService {
       data: {
         firstName: model.firstName,
         lastName: model.lastName,
+        isEnterprise: isEnterprise,
+        isCustomer: !isEnterprise,
         email: model.email,
         password: hashPassword,
         passwordSalt: passwordSalt,
@@ -53,7 +55,7 @@ export default class UserService {
   }
 
   public async udpateRefreshToken(userId: number, refreshToken: string) {
-    this.prisma.user.update({
+    await this.prisma.user.update({
       where: {
         id: userId,
       },
