@@ -2,16 +2,18 @@
   "name": "@repo/shared-types",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.ts",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsup ./index.ts --dts --format esm,cjs --clean",
+    "dev": "tsup ./index.ts --dts --format esm,cjs --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "tsup": "^7.3.0",
     "typescript": "^5.7.2",
     "zod": "^3.23.8"
   }

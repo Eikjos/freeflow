@@ -26,6 +26,8 @@ export default class EnterpriseService {
     logo: Express.Multer.File,
     userId: number,
   ) {
+    // validate the model
+
     // save media
     const mediaId = await this.mediaService.upload(logo);
     // save enterprise

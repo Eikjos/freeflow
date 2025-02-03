@@ -4,8 +4,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": ["packages/*/dist"]
     },
     "lint": {
       "dependsOn": ["^lint"]
@@ -14,6 +13,7 @@
       "dependsOn": ["^check-types"]
     },
     "dev": {
+      "dependsOn": ["@repo/shared-types#build"],
       "cache": false,
       "persistent": true
     }

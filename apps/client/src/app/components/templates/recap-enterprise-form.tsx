@@ -7,22 +7,27 @@ import { CountryData, JuridicShapeData } from "@repo/shared-types";
 import { getCountryById } from "actions/countries";
 import { createEnterprise } from "actions/enterprise";
 import { getJuridicShapeById } from "actions/juridic-shape";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useStepper } from "./stepper";
-import { useTranslations } from "next-intl";
 
 export default function RecapEnterpriseForm() {
   const t = useTranslations();
   const { data } = useStepper();
+  const router = useRouter();
   const [country, setCountry] = useState<CountryData>();
   const [juridicShape, setJuridicShape] = useState<JuridicShapeData>();
 
   const onCreateEnterprise = () => {
+    // eslint-disable-next-line no-unused-vars
     const { Logo, logoBlob, ...enterprise } = data;
     createEnterprise(enterprise, logoBlob)
       .then((res) => {
-        console.log(res);
+        if (res) {
+          router.replace("/");
+        }
       })
       .catch((e) => {
         console.log(e);

@@ -45,6 +45,7 @@ const EnterpriseForm = () => {
     email: string,
     phone: string
   ) => {
+    console.log(data);
     form.setValue("siret", data.siret, { shouldValidate: true });
     form.setValue("name", data.name, { shouldValidate: true });
     form.setValue("address", data.address, { shouldValidate: true });
