@@ -4,7 +4,10 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupContent,
   SidebarHeader,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from "@components/ui/sidebar";
 
 export default function SidebarMenu() {
@@ -14,7 +17,17 @@ export default function SidebarMenu() {
         <Logo />
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup />
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <a href={"/enterprise"}>
+                  <span>{"Mes chiffres"}</span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarGroupContent>
+        </SidebarGroup>
         <SidebarGroup />
       </SidebarContent>
       <SidebarFooter />
