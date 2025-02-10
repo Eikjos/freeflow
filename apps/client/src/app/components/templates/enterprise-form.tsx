@@ -73,10 +73,8 @@ const EnterpriseForm = () => {
   useEffect(() => {
     // Notifier au stepper que peut passer à la prochaine étape
     setIsValid(form.formState.isValid);
-    if (form.formState.isValid) {
-      setData({ ...data, ...form.getValues() });
-    }
-  }, [form.formState.isValid]);
+    setData({ ...data, ...form.getValues() });
+  }, [form.watch()]);
 
   const fillFormWithEnterpriseinfo = () => {
     fetchEnterpriseInfo(form.getValues().siret.replace(" ", "")).then(
