@@ -23,11 +23,11 @@ export const getJuridicShapes = async () => {
     });
 };
 
-export const getJuridicShapeById = async (id: number) => {
+export const getJuridicShapeByCode = async (code: string) => {
   const cookiesStore = await cookies();
   const token = cookiesStore.get("access_token");
   if (token == null) return undefined;
-  return fetch(`${process.env.API_URL}/juridic-shapes/${id}`, {
+  return fetch(`${process.env.API_URL}/juridic-shapes/${code}`, {
     headers: {
       Authorization: `Bearer ${token.value}`,
     },

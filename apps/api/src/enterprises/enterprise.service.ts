@@ -67,7 +67,10 @@ export default class EnterpriseService {
     const insee = await this.getInseeInformation(siret);
     return {
       siret: insee.etablissement.siret,
-      name: insee.etablissement.uniteLegale.denominationUniteLegale,
+      name: insee.etablissement.uniteLegale.denominationUniteLegale
+        .split(' ')
+        .map((e) => e.toLowerCase().toLocaleUpperCase())
+        .join(' '),
       address:
         insee.etablissement.adresseEtablissement.numeroVoieEtablissement +
         ' ' +

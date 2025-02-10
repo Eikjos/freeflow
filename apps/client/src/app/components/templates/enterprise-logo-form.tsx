@@ -3,17 +3,21 @@
 import { Card, CardContent } from "@components/ui/card";
 import InputFile from "@components/ui/input-file";
 import Image from "next/image";
-import { useStepper } from "./stepper";
+import { useTranslations } from "next-intl";
+import { useFormContext } from "react-hook-form";
+import { EnterpriseCreateModel } from "@repo/shared-types";
 
 const EnterpriseLogoForm = () => {
-  const { data, setData } = useStepper();
+  const t = useTranslations();
+  const form = useFormContext<EnterpriseCreateModel>();
+  const { logo } = form.watch();
 
   const onChangeInput = (files: File[]) => {
     var file = files[files.length - 1];
     if (file) {
-      setData({ ...data, logo: URL.createObjectURL(file), logoBlob: file });
+      form.setValue("logo", file, { shouldValidate: true });
     } else {
-      setData({ ...data, logo: null, logoBlob: null });
+      form.setValue("logo", undefined, { shouldValidate: false });
     }
   };
 
@@ -26,19 +30,19 @@ const EnterpriseLogoForm = () => {
           accept=".png, .jpeg, .jpg"
         />
         <div className="h-44 border-l-2 border-secondary ml-10 flex flex-row justify-center items-center w-full">
-          {data.logo && (
+          {logo && (
             <Image
-              src={data.logo}
+              src={URL.createObjectURL(logo)}
               width={500}
               height={150}
               className="object-contain w-96 h-32"
               alt="Logo de votre entreprise"
             />
           )}
-          {!data.logo && (
+          {!logo && (
             <div className="w-48 mx-auto">
               <p className="text-sm text-center">
-                Vous pouvez pre-visualiser l'image.
+                {t("common.previsualizeImage")}
               </p>
             </div>
           )}

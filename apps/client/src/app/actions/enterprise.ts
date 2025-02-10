@@ -33,7 +33,7 @@ export const fetchEnterpriseInfo = async (siret: string) => {
 
 export const createEnterprise = async (
   enterprise: EnterpriseCreateModel,
-  logo: File
+  logo: File | undefined
 ) => {
   const cookiesStore = await cookies();
   const token = cookiesStore.get("access_token");
@@ -43,7 +43,7 @@ export const createEnterprise = async (
   Object.keys(enterprise).forEach((key) =>
     formData.append(key, enterprise[key])
   );
-  formData.append("logo", logo);
+  if (logo) formData.append("logo", logo);
   return await fetch(`${process.env.API_URL}/enterprises`, {
     method: "POST",
     headers: {
