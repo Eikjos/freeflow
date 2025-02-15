@@ -1,5 +1,4 @@
 import { AuthResponseData } from "@repo/shared-types";
-import { read } from "fs";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -23,6 +22,7 @@ export async function AuthMiddleware(req: NextRequest) {
         const cookiesStore = await cookies();
         cookiesStore.set("access_token", data.access_token);
         cookiesStore.set("refreshToken", data.refreshToken);
+        req.headers.set("x-current-path", req.nextUrl.pathname);
         req.headers.set(
           "x-user",
           JSON.stringify({
