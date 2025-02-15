@@ -6,7 +6,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
+import { Enterprise, User } from '@prisma/client';
 import { AuthResponseData } from '@repo/shared-types';
 import * as bcrypt from 'bcrypt';
 import UserService from 'src/users/user.service';
@@ -34,7 +34,7 @@ export default class AuthService {
         description: 'credentials.invalid',
       });
     }
-    return this.generateToken(user);
+    return this.generateToken(user, user.enterprise);
   }
 
   public async logout(userId: number) {
@@ -50,10 +50,13 @@ export default class AuthService {
       user.refreshToken,
     );
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
-    return this.generateToken(user);
+    return this.generateToken(user, user.enterprise);
   }
 
-  public async generateToken(user: User): Promise<AuthResponseData> {
+  public async generateToken(
+    user: User,
+    enterprise?: Enterprise,
+  ): Promise<AuthResponseData> {
     const payload = { sub: user.id };
 
     const access_token = await this.jwtService.signAsync(payload);
@@ -70,6 +73,7 @@ export default class AuthService {
       lastName: user.lastName,
       role: user.isEnterprise ? 'enterprise' : 'customer',
       enterpriseId: user.enterpriseId,
+      enterpriseName: enterprise.name,
       access_token,
       refreshToken,
     };

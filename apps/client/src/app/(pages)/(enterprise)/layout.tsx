@@ -1,5 +1,7 @@
 import SidebarMenu from "@components/templates/sidebar-menu";
 import { SidebarProvider } from "@components/ui/sidebar";
+import { headers } from "next/headers";
+import { EnterpriseInfo } from "../../../types/enterprise-info-type";
 import "../../globals.css";
 
 export default async function EnterpriseLayout({
@@ -7,9 +9,13 @@ export default async function EnterpriseLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersEnterprise = (await headers()).get("x-enterprise");
+  const enterprise: EnterpriseInfo | null = headersEnterprise
+    ? JSON.parse(headersEnterprise)
+    : null;
   return (
     <SidebarProvider>
-      <SidebarMenu />
+      <SidebarMenu enterprise={enterprise} />
       {children}
     </SidebarProvider>
   );

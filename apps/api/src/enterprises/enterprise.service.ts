@@ -31,7 +31,7 @@ export default class EnterpriseService {
     // save media
     const mediaId = await this.mediaService.upload(logo);
     // save enterprise
-    await this.prisma.enterprise.create({
+    const enterprise = await this.prisma.enterprise.create({
       data: {
         name: model.name,
         siret: model.siret,
@@ -50,7 +50,7 @@ export default class EnterpriseService {
       },
     });
     const user = await this.prisma.user.findFirst({ where: { id: userId } });
-    return this.authService.generateToken(user);
+    return this.authService.generateToken(user, enterprise);
   }
 
   async findByid(id: number) {

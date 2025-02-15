@@ -7,12 +7,17 @@ import {
   DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
 import { cn } from "../../../lib/utils";
+import { EnterpriseInfo } from "../../../types/enterprise-info-type";
 
 type ProfileButtonProps = {
   className: string;
+  enterprise: EnterpriseInfo | null;
 };
 
-export default function ProfileButton({ className }: ProfileButtonProps) {
+export default async function ProfileButton({
+  className,
+  enterprise,
+}: ProfileButtonProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -22,12 +27,14 @@ export default function ProfileButton({ className }: ProfileButtonProps) {
             className
           )}
         >
-          <span className="font-semibold text-sm">Proxiad Axe Seine</span>
+          <span className="font-semibold text-sm w-1/2">
+            {enterprise?.name}
+          </span>
           <p className="text-sm mr-2 font-light">331 222 €</p>
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[250px]">
-        <DropdownMenuLabel>Proxiad Axe Seine</DropdownMenuLabel>
+        <DropdownMenuLabel>{enterprise?.name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Se déconnecter</DropdownMenuItem>
       </DropdownMenuContent>
