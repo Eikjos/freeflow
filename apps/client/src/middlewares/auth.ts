@@ -1,7 +1,8 @@
 import { AuthResponseData } from "@repo/shared-types";
-import { read } from "fs";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { EnterpriseInfo } from "../types/enterprise-info-type";
+import { UserInfoType as UserInfo } from "../types/user-info-types";
 
 export async function AuthMiddleware(req: NextRequest) {
   const cookiesStorage = req.cookies;
@@ -23,15 +24,27 @@ export async function AuthMiddleware(req: NextRequest) {
         const cookiesStore = await cookies();
         cookiesStore.set("access_token", data.access_token);
         cookiesStore.set("refreshToken", data.refreshToken);
-        req.headers.set(
+        const responseOK = NextResponse.next();
+        responseOK.headers.set("x-current-path", req.nextUrl.pathname);
+        responseOK.headers.set(
           "x-user",
           JSON.stringify({
             firstName: data.firstName,
             lastName: data.lastName,
             id: data.userId,
             enterpriseId: data.enterpriseId,
-          })
+          } as UserInfo)
         );
+        if (data.enterpriseId) {
+          responseOK.headers.set(
+            "x-enterprise",
+            JSON.stringify({
+              id: data.enterpriseId,
+              name: data.enterpriseName,
+              sales: data.sales ?? 0,
+            } as EnterpriseInfo)
+          );
+        }
 
         // redirect if user is an enterprise and he's not in enterprise
         if (
@@ -41,8 +54,7 @@ export async function AuthMiddleware(req: NextRequest) {
         ) {
           return NextResponse.redirect(new URL("/enterprise/create", req.url));
         }
-
-        return NextResponse.next();
+        return responseOK;
       }
       return NextResponse.redirect(new URL("/login", req.url));
     })

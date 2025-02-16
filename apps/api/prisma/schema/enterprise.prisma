@@ -2,7 +2,7 @@ model Enterprise {
   id              Int @id() @default(autoincrement())
   name            String @unique()
   siret           String @unique()
-  tvaNumber       String
+  tvaNumber       String?
   address         String
   zipCode         String
   city            String
@@ -19,5 +19,6 @@ model Enterprise {
   contacts        Contact[]
   opinions        Opinion[]
   mediaId         Int? @unique
+  sales           Sales[]
   media           Media? @relation(fields: [mediaId], references: [id])
 }

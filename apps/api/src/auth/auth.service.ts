@@ -6,9 +6,10 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
+import { Enterprise, User } from '@prisma/client';
 import { AuthResponseData } from '@repo/shared-types';
 import * as bcrypt from 'bcrypt';
+import SalesService from 'src/sales/sales.service';
 import UserService from 'src/users/user.service';
 
 @Injectable()
@@ -17,6 +18,7 @@ export default class AuthService {
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly salesService: SalesService,
   ) {}
 
   // --
@@ -34,7 +36,7 @@ export default class AuthService {
         description: 'credentials.invalid',
       });
     }
-    return this.generateToken(user);
+    return this.generateToken(user, user.enterprise);
   }
 
   public async logout(userId: number) {
@@ -50,10 +52,13 @@ export default class AuthService {
       user.refreshToken,
     );
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
-    return this.generateToken(user);
+    return this.generateToken(user, user.enterprise);
   }
 
-  public async generateToken(user: User): Promise<AuthResponseData> {
+  public async generateToken(
+    user: User,
+    enterprise?: Enterprise,
+  ): Promise<AuthResponseData> {
     const payload = { sub: user.id };
 
     const access_token = await this.jwtService.signAsync(payload);
@@ -64,12 +69,19 @@ export default class AuthService {
 
     this.userService.udpateRefreshToken(user.id, refreshToken);
 
+    let sales: number = null;
+    if (user.isEnterprise && enterprise) {
+      sales = (await this.salesService.getCurrentSales(enterprise.id)).number;
+    }
+
     return {
       userId: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.isEnterprise ? 'enterprise' : 'customer',
-      enterpriseId: user.enterpriseId,
+      enterpriseId: enterprise?.id,
+      enterpriseName: enterprise?.name,
+      sales: sales,
       access_token,
       refreshToken,
     };

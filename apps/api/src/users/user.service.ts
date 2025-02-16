@@ -4,7 +4,6 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { User } from '@prisma/client';
 import { CreateUserData } from '@repo/shared-types';
 import * as bcrypt from 'bcrypt';
 import AuthService from 'src/auth/auth.service';
@@ -46,12 +45,18 @@ export default class UserService {
     return this.authService.generateToken(newUser);
   }
 
-  public async findUserByEmail(email: string): Promise<User> {
-    return await this.prisma.user.findFirst({ where: { email } });
+  public async findUserByEmail(email: string) {
+    return await this.prisma.user.findFirst({
+      where: { email },
+      include: { enterprise: true },
+    });
   }
 
   public async findUserById(id: number) {
-    return await this.prisma.user.findFirst({ where: { id } });
+    return await this.prisma.user.findFirst({
+      where: { id },
+      include: { enterprise: true },
+    });
   }
 
   public async udpateRefreshToken(userId: number, refreshToken: string) {

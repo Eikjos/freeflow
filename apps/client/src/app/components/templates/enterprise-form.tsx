@@ -4,11 +4,9 @@ import { Button } from "@components/ui/button";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { Select } from "@components/ui/select";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CountryData,
   EnterpriseCreateModel,
-  EnterpriseCreateValidation,
   EnterpriseInformation,
   JuridicShapeData,
 } from "@repo/shared-types";
@@ -17,45 +15,31 @@ import { fetchEnterpriseInfo } from "actions/enterprise";
 import { getJuridicShapes } from "actions/juridic-shape";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { Card, CardContent } from "../ui/card";
-import { useStepper } from "./stepper";
 
 const EnterpriseForm = () => {
   const [countries, setCountries] = useState<CountryData[]>([]);
   const [juridicShapes, setJuridicShapes] = useState<JuridicShapeData[]>([]);
   const t = useTranslations();
-  const { setIsValid, data, setData } = useStepper();
-  const form = useForm<EnterpriseCreateModel>({
-    resolver: zodResolver(EnterpriseCreateValidation),
-    defaultValues: {
-      siret: "",
-      name: "",
-      address: "",
-      city: "",
-      phone: "",
-      TVANumber: "",
-      email: "",
-      zipCode: "",
-    },
-  });
+  const form = useFormContext<EnterpriseCreateModel>();
 
   const updateFormValues = async (
     data: EnterpriseInformation,
     email: string,
     phone: string
   ) => {
-    console.log(data);
-    form.setValue("siret", data.siret, { shouldValidate: true });
-    form.setValue("name", data.name, { shouldValidate: true });
-    form.setValue("address", data.address, { shouldValidate: true });
-    form.setValue("city", data.city, { shouldValidate: true });
-    form.setValue("TVANumber", data.TVANumber, { shouldValidate: true });
-    form.setValue("zipCode", data.zipCode, { shouldValidate: true });
-    form.setValue("juridicShape", data.juridicShape, { shouldValidate: true });
-    form.setValue("countryId", data.countryId, { shouldValidate: true });
-    if (email) form.setValue("email", email, { shouldValidate: true });
-    if (phone) form.setValue("phone", phone, { shouldValidate: true });
+    form.reset({ ...data, email, phone });
+    form.trigger([
+      "siret",
+      "name",
+      "address",
+      "city",
+      "TVANumber",
+      "zipCode",
+      "juridicShape",
+      "countryId",
+    ]);
   };
 
   useEffect(() => {
@@ -65,18 +49,7 @@ const EnterpriseForm = () => {
     getJuridicShapes().then((data) => {
       setJuridicShapes(data);
     });
-    if (data) {
-      updateFormValues(data, data.email, data.phone);
-    }
   }, []);
-
-  useEffect(() => {
-    // Notifier au stepper que peut passer à la prochaine étape
-    setIsValid(form.formState.isValid);
-    if (form.formState.isValid) {
-      setData({ ...data, ...form.getValues() });
-    }
-  }, [form.formState.isValid]);
 
   const fillFormWithEnterpriseinfo = () => {
     fetchEnterpriseInfo(form.getValues().siret.replace(" ", "")).then(

@@ -14,10 +14,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { EnterpriseCreateValidation } from '@repo/shared-types';
 import { Request } from 'express';
-import {
-  CreateEnterpriseDto,
-  CreateEnterpriseWithLogoDto,
-} from 'src/dtos/enterprises/enterprise-create.dto';
+import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import { ZodPipe } from 'src/pipe/zod.pipe';
@@ -43,7 +40,7 @@ export default class EnterprisesController {
   @HttpCode(200)
   @ApiBody({
     description: 'Créer une entreprise avec un fichier (logo)',
-    type: CreateEnterpriseWithLogoDto,
+    type: CreateEnterpriseDto,
   })
   @UseInterceptors(FileInterceptor('logo'))
   async createEnterprise(

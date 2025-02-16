@@ -31,7 +31,7 @@ export default class EnterpriseService {
     // save media
     const mediaId = await this.mediaService.upload(logo);
     // save enterprise
-    await this.prisma.enterprise.create({
+    const enterprise = await this.prisma.enterprise.create({
       data: {
         name: model.name,
         siret: model.siret,
@@ -47,10 +47,16 @@ export default class EnterpriseService {
         tvaNumber: model.TVANumber,
         countryId: parseInt(model.countryId),
         mediaId: mediaId > 0 ? mediaId : null,
+        sales: {
+          create: {
+            number: 0,
+            year: new Date().getFullYear(),
+          },
+        },
       },
     });
     const user = await this.prisma.user.findFirst({ where: { id: userId } });
-    return this.authService.generateToken(user);
+    return this.authService.generateToken(user, enterprise);
   }
 
   async findByid(id: number) {
@@ -67,7 +73,10 @@ export default class EnterpriseService {
     const insee = await this.getInseeInformation(siret);
     return {
       siret: insee.etablissement.siret,
-      name: insee.etablissement.uniteLegale.denominationUniteLegale,
+      name: insee.etablissement.uniteLegale.denominationUniteLegale
+        .split(' ')
+        .map((e) => e.toLowerCase().toLocaleUpperCase())
+        .join(' '),
       address:
         insee.etablissement.adresseEtablissement.numeroVoieEtablissement +
         ' ' +

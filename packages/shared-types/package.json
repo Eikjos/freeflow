@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "rollup": "^4.34.7",
     "tsup": "^7.3.0",
     "typescript": "^5.7.2",
     "zod": "^3.23.8"

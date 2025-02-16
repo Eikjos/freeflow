@@ -8,6 +8,7 @@ model Invoice {
   enterpriseId    Int
   createdAt       DateTime
   updatedAt       DateTime
+  isPaid          Boolean
   media           Media? @relation(fields: [mediaId], references: [id])
   mediaId         Int? @unique
 }

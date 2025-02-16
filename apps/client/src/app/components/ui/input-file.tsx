@@ -7,9 +7,14 @@ import { useTranslations } from "next-intl";
 
 type InputFileProps = {
   onFilesSelected: (files: File[]) => void;
+  errorMessage?: string;
 } & Omit<ComponentProps<"input">, "name" | "type">;
 
-const InputFile = ({ onFilesSelected, ...props }: InputFileProps) => {
+const InputFile = ({
+  onFilesSelected,
+  errorMessage,
+  ...props
+}: InputFileProps) => {
   const t = useTranslations();
   const handleFileChange = (event: any) => {
     const selectedFiles: File[] = event.target.files;
@@ -46,6 +51,11 @@ const InputFile = ({ onFilesSelected, ...props }: InputFileProps) => {
             >
               <CloudUpload className="hover:text-primary" />
             </Label>
+            {errorMessage && (
+              <p className="text-sm font-medium text-destructive text-center">
+                {errorMessage}
+              </p>
+            )}
           </div>
           <input
             type="file"

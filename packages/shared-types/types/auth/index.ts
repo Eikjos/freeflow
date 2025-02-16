@@ -5,7 +5,9 @@ export type AuthResponseData = {
   firstName: string;
   lastName: string;
   role: "enterprise" | "customer";
+  enterpriseName?: string;
   enterpriseId?: number;
+  sales?: number;
   access_token: string;
   refreshToken: string;
 };
