@@ -1,0 +1,7 @@
+model Sales {
+  id Int @unique() @default(autoincrement())
+  enterprise  Enterprise @relation(fields: [enterpriseId], references: [id])
+  enterpriseId Int
+  number  Float
+  year  Int
+}

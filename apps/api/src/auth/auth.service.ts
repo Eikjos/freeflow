@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Enterprise, User } from '@prisma/client';
 import { AuthResponseData } from '@repo/shared-types';
 import * as bcrypt from 'bcrypt';
+import SalesService from 'src/sales/sales.service';
 import UserService from 'src/users/user.service';
 
 @Injectable()
@@ -17,6 +18,7 @@ export default class AuthService {
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly salesService: SalesService,
   ) {}
 
   // --
@@ -67,13 +69,19 @@ export default class AuthService {
 
     this.userService.udpateRefreshToken(user.id, refreshToken);
 
+    let sales: number = null;
+    if (user.isEnterprise && enterprise) {
+      sales = (await this.salesService.getCurrentSales(enterprise.id)).number;
+    }
+
     return {
       userId: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.isEnterprise ? 'enterprise' : 'customer',
-      enterpriseId: user.enterpriseId,
-      enterpriseName: enterprise.name,
+      enterpriseId: enterprise?.id,
+      enterpriseName: enterprise?.name,
+      sales: sales,
       access_token,
       refreshToken,
     };

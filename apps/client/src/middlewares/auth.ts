@@ -41,6 +41,7 @@ export async function AuthMiddleware(req: NextRequest) {
             JSON.stringify({
               id: data.enterpriseId,
               name: data.enterpriseName,
+              sales: data.sales ?? 0,
             } as EnterpriseInfo)
           );
         }

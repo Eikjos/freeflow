@@ -30,7 +30,7 @@ export default async function ProfileButton({
           <span className="font-semibold text-sm w-1/2">
             {enterprise?.name}
           </span>
-          <p className="text-sm mr-2 font-light">331 222 €</p>
+          <p className="text-sm mr-2 font-light">{enterprise?.sales} €</p>
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[250px]">

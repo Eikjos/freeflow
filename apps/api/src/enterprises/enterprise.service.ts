@@ -47,6 +47,12 @@ export default class EnterpriseService {
         tvaNumber: model.TVANumber,
         countryId: parseInt(model.countryId),
         mediaId: mediaId > 0 ? mediaId : null,
+        sales: {
+          create: {
+            number: 0,
+            year: new Date().getFullYear(),
+          },
+        },
       },
     });
     const user = await this.prisma.user.findFirst({ where: { id: userId } });
