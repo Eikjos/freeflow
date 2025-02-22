@@ -10,17 +10,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@components/ui/sidebar";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { EnterpriseInfo } from "../../../types/enterprise-info-type";
+import SidebarNav from "@components/atoms/sidebar-nav";
 
 type SidebarMenuProps = {
   enterprise: EnterpriseInfo | null;
 };
 
 export default async function SidebarMenu({ enterprise }: SidebarMenuProps) {
-  const headerList = await headers();
-  const pathname = headerList.get("x-current-path");
   const navLinks = [
     {
       name: "Mes chiffres",
@@ -57,16 +55,7 @@ export default async function SidebarMenu({ enterprise }: SidebarMenuProps) {
         <SidebarGroup>
           <SidebarGroupContent className="flex flex-col gap-5">
             {navLinks.map((link, index) => (
-              <SidebarMenuItem key={index}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname?.startsWith(link.url)}
-                >
-                  <Link href={link.url} passHref>
-                    {link.name}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              <SidebarNav url={link.url} name={link.name} key={index} />
             ))}
           </SidebarGroupContent>
         </SidebarGroup>
