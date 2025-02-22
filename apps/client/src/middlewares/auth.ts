@@ -50,7 +50,7 @@ export async function AuthMiddleware(req: NextRequest) {
         if (
           data.role === "enterprise" &&
           !data.enterpriseId &&
-          req.nextUrl.pathname !== "/enterprise/create"
+          req.nextUrl.pathname !== "/enterprises/create"
         ) {
           return NextResponse.redirect(new URL("/enterprise/create", req.url));
         }

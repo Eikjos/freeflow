@@ -22,7 +22,7 @@ export default async function SidebarMenu({ enterprise }: SidebarMenuProps) {
   const navLinks = [
     {
       name: "Mes chiffres",
-      url: "/enterprise",
+      url: "/enterprises",
     },
     {
       name: "Mes factures",
@@ -30,7 +30,7 @@ export default async function SidebarMenu({ enterprise }: SidebarMenuProps) {
     },
     {
       name: "Mes clients",
-      url: "#",
+      url: "/customers",
     },
     {
       name: "Mes frais",
