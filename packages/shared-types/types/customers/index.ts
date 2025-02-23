@@ -1,5 +1,17 @@
 import { z } from "zod";
 
+export type CustomerModel = {
+  id: number;
+  name: string;
+  siret?: string;
+  address: string;
+  city: string;
+  zipCode: string;
+  country: string;
+  email: string;
+  phone: string;
+};
+
 export const CustomerCreateValidation = z.object({
   siret: z
     .string()

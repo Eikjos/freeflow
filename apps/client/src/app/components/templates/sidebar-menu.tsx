@@ -13,9 +13,13 @@ import { EnterpriseInfo } from "../../../types/enterprise-info-type";
 
 type SidebarMenuProps = {
   enterprise: EnterpriseInfo | null;
+  className?: string;
 };
 
-export default async function SidebarMenu({ enterprise }: SidebarMenuProps) {
+export default async function SidebarMenu({
+  enterprise,
+  className,
+}: SidebarMenuProps) {
   const navLinks = [
     {
       name: "Mes chiffres",
@@ -44,7 +48,7 @@ export default async function SidebarMenu({ enterprise }: SidebarMenuProps) {
   ];
 
   return (
-    <Sidebar>
+    <Sidebar className={className}>
       <SidebarHeader className="mb-20">
         <Logo />
       </SidebarHeader>
