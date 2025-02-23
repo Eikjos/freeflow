@@ -59,7 +59,7 @@ export default class AuthService {
     user: User,
     enterprise?: Enterprise,
   ): Promise<AuthResponseData> {
-    const payload = { sub: user.id };
+    const payload = { sub: user.id, enterpriseId: enterprise.id };
 
     const access_token = await this.jwtService.signAsync(payload);
     const refreshToken = await this.jwtService.signAsync(payload, {

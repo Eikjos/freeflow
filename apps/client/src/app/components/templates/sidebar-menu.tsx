@@ -1,3 +1,4 @@
+import SidebarNav from "@components/atoms/sidebar-nav";
 import Logo from "@components/molecules/logo";
 import ProfileButton from "@components/molecules/profileButton";
 import {
@@ -7,12 +8,8 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@components/ui/sidebar";
-import Link from "next/link";
 import { EnterpriseInfo } from "../../../types/enterprise-info-type";
-import SidebarNav from "@components/atoms/sidebar-nav";
 
 type SidebarMenuProps = {
   enterprise: EnterpriseInfo | null;

@@ -18,6 +18,7 @@ model Enterprise {
   expenses        Expense[]
   contacts        Contact[]
   opinions        Opinion[]
+  customers       Customer[]
   mediaId         Int? @unique
   sales           Sales[]
   media           Media? @relation(fields: [mediaId], references: [id])

@@ -11,4 +11,5 @@ model Customer {
   users             User[]
   invoices          Invoice[]
   opinions          Opinion[]
+  enterprises       Enterprise[]
 }
