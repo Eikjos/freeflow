@@ -71,7 +71,8 @@ export default class AuthService {
 
     let sales: number = null;
     if (user.isEnterprise && enterprise) {
-      sales = (await this.salesService.getCurrentSales(enterprise.id)).number;
+      sales =
+        (await this.salesService.getCurrentSales(enterprise.id))?.number ?? 0;
     }
 
     return {

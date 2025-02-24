@@ -4,6 +4,7 @@ import { Button } from "@components/ui/button";
 import { DataTable } from "@components/ui/data-table";
 import { CustomerModel } from "@repo/shared-types";
 import { ColumnDef } from "@tanstack/react-table";
+import { GetCustomers } from "actions/customer";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -25,7 +26,6 @@ const columnDefs: ColumnDef<CustomerModel>[] = [
     header: "Email",
   },
   {
-    accessorKey: "",
     header: "Actions",
     cell: ({ row }) => (
       <div>
@@ -46,8 +46,11 @@ export default function CustomersPage() {
           </Link>
         </Button>
       </div>
-
-      <DataTable columns={columnDefs} data={[]} className="w-full mx-auto" />
+      <DataTable
+        columns={columnDefs}
+        data={GetCustomers}
+        className="w-full mx-auto"
+      />
     </div>
   );
 }
