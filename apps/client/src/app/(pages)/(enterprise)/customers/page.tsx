@@ -48,7 +48,8 @@ export default function CustomersPage() {
       </div>
       <DataTable
         columns={columnDefs}
-        data={GetCustomers}
+        apiData={GetCustomers}
+        pageSize={20}
         className="w-full mx-auto"
       />
     </div>

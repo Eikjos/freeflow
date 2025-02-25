@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import { Pagination as PaginationType } from "@repo/shared-types";
 import {
   Table,
   TableBody,
@@ -15,6 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "components/ui/table";
+import { useEffect, useState } from "react";
 import { cn } from "../../../lib/utils";
 import {
   Pagination,
@@ -25,17 +27,15 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "./pagination";
-import { useEffect, useState } from "react";
-import { Pagination as PaginationType } from "@repo/shared-types";
 
-interface DataTableProps<TData extends object> {
+interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   apiData: (filter: PaginationType) => Promise<TData[]>;
   pageSize: number;
   className?: string;
 }
 
-export function DataTable<TData extends object>({
+export function DataTable<TData>({
   columns,
   apiData,
   className,
