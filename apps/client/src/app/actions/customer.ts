@@ -1,3 +1,5 @@
+"use server";
+
 import { CustomerModel, Pagination } from "@repo/shared-types";
 import { cookies } from "next/headers";
 import { generateQueryString } from "../../lib/utils";
