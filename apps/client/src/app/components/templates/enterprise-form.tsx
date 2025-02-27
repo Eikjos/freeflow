@@ -52,7 +52,7 @@ const EnterpriseForm = () => {
   }, []);
 
   const fillFormWithEnterpriseinfo = () => {
-    fetchEnterpriseInfo(form.getValues().siret.replace(" ", "")).then(
+    fetchEnterpriseInfo(form.getValues().siret.replace(/\s+/g, "")).then(
       (data) => {
         if (data !== null) {
           updateFormValues(

@@ -159,15 +159,16 @@ export type SelectProps = Omit<React.ComponentProps<"select">, "name"> & {
   description?: string;
   label?: string;
   placeholder?: string;
+  className?: string;
   values: SelectPrimitive.SelectItemProps[];
 };
 
-const Select = ({ ...props }: SelectProps) => {
+const Select = ({ className, ...props }: SelectProps) => {
   return (
     <FormField
       name={props.name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={cn(className)}>
           <FormLabel>{props.label}</FormLabel>
           <SelectRoot onValueChange={field.onChange} value={field.value}>
             <FormControl>

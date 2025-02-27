@@ -35,10 +35,8 @@ export const CustomerCreateValidation = z.object({
   address: z.string().min(1, "L'adresse est requis"),
   city: z.string().min(1, "La ville est requis"),
   zipCode: z.string().min(1, "Le nom est requis"),
-  countryId: z
-    .string({ required_error: "Le pays est requis." })
-    .transform((val) => Number(val)),
-  TVANumber: z.string().optional(),
+  countryId: z.string({ required_error: "Le pays est requis." }),
+  tvaNumber: z.string().optional(),
   email: z
     .string({ required_error: "L'email est requis." })
     .email("L'email est invalide.")

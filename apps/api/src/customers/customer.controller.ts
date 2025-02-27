@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Post,
   Query,
   Req,
@@ -31,6 +32,7 @@ export default class CustomerController {
 
   @Post()
   @UseGuards(AccessTokenGuard)
+  @HttpCode(200)
   async create(
     @Body(new ZodPipe(CustomerCreateValidation)) model: CustomerCreateDto,
     @Req() req: Request,

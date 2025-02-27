@@ -12,7 +12,7 @@ export default class CustomerService {
     return await this.prisma.customer.findMany({
       where: { enterprises: { some: { id: enterpriseId } } },
       skip: page * pageSize,
-      take: page,
+      take: pageSize,
     });
   }
 
@@ -24,7 +24,11 @@ export default class CustomerService {
       throw new ForbiddenException();
     }
     const customer = await this.prisma.customer.create({
-      data: { ...model, enterprises: { connect: { id: enterpriseId } } },
+      data: {
+        ...model,
+        countryId: parseInt(model.countryId),
+        enterprises: { connect: { id: enterpriseId } },
+      },
     });
     return customer;
   }

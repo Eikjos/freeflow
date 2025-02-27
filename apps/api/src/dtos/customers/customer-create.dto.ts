@@ -15,9 +15,9 @@ export default class CustomerCreateDto implements CustomerCreateModel {
   @ApiProperty({ description: 'Customer zipCode' })
   zipCode: string;
   @ApiProperty({ description: 'Customer country' })
-  countryId: number;
+  countryId: string;
   @ApiProperty({ description: 'Customer TVA number' })
-  TVANumber?: string;
+  tvaNumber?: string;
   @ApiProperty({ description: 'Customer phone' })
   phone: string;
 }

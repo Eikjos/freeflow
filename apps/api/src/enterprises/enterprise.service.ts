@@ -109,12 +109,20 @@ export default class EnterpriseService {
       { headers: header },
     );
     // Récupération des informations de l'entreprise
-    const url = 'https://api.insee.fr/entreprises/sirene/V3.11/siret/' + siret;
-    const response = await this.httpService.axiosRef.get<EtablissementResponse>(
-      url,
-      { headers: { Authorization: 'Bearer ' + token.data.access_token } },
-    );
-    return response.data;
+    const url =
+      'https://api.insee.fr/entreprises/sirene/V3.11/siret/' +
+      siret.replace(/\s+/g, '');
+    return await this.httpService.axiosRef
+      .get<EtablissementResponse>(url, {
+        headers: { Authorization: 'Bearer ' + token.data.access_token },
+      })
+      .then((res) => {
+        return res.data;
+      })
+      .catch((e) => {
+        console.log(e);
+        return null;
+      });
   }
 
   private getCleControleTVANumber(siren: string) {

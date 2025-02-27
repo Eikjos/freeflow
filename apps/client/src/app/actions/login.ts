@@ -9,7 +9,7 @@ export const login = async (
 ): Promise<ServerActionsReturns<AuthResponseData>> => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   return await fetch(`${process.env.API_URL}/auth/login`, {
-    method: "post",
+    method: "POST",
     body: JSON.stringify({
       email: data.email,
       password: data.password,
