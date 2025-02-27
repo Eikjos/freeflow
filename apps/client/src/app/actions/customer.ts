@@ -9,11 +9,15 @@ import {
 import { cookies } from "next/headers";
 import { generateQueryString } from "../../lib/utils";
 
-export const GetCustomers = async (filter: Pagination) => {
+export const GetCustomers: (
+  filter: Pagination
+) => Promise<PaginationResult<CustomerModel> | null> = async (
+  filter: Pagination
+) => {
   const cookiesStore = await cookies();
   const token = cookiesStore.get("access_token");
   const query = generateQueryString(filter);
-  if (token == null) return [];
+  if (token == null) return null;
   return fetch(`${process.env.API_URL}/customers?${query}`, {
     headers: {
       Authorization: `Bearer ${token.value}`,
@@ -23,10 +27,10 @@ export const GetCustomers = async (filter: Pagination) => {
       if (res.status === 200) {
         return (await res.json()) as PaginationResult<CustomerModel>;
       }
-      return [];
+      return null;
     })
     .catch(() => {
-      return [];
+      return null;
     });
 };
 

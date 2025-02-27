@@ -33,7 +33,7 @@ import {
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
-  apiData: (filter: PaginationType) => Promise<PaginationResult<TData>>;
+  apiData: (filter: PaginationType) => Promise<PaginationResult<TData> | null>;
   pageSize: number;
   className?: string;
 }
@@ -50,19 +50,21 @@ export function DataTable<TData>({
 
   const fetchData = async () => {
     await apiData({ page, pageSize }).then((res) => {
-      setData(res.data);
-      setPagination(
-        Array(
-          res.totalItems / res.pageSize + (res.totalItems % res.pageSize) > 0
-        )
-          .map((e, i) => i + 1)
-          .filter((e) => {
-            if (page === 0) {
-              return e <= 3;
-            }
-            return e - (page + 1) >= -1 && e - (page + 1) <= 1;
-          })
-      );
+      if (res !== null) {
+        setData(res.data);
+        setPagination(
+          Array(
+            res.totalItems / res.pageSize + (res.totalItems % res.pageSize) > 0
+          )
+            .map((e, i) => i + 1)
+            .filter((e) => {
+              if (page === 0) {
+                return e <= 3;
+              }
+              return e - (page + 1) >= -1 && e - (page + 1) <= 1;
+            })
+        );
+      }
     });
   };
 
@@ -130,9 +132,12 @@ export function DataTable<TData>({
       </div>
       <Pagination className="mt-5 pr-10">
         <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
+          {page > 0 && (
+            <PaginationItem>
+              <PaginationPrevious href="#" lang="fr" />
+            </PaginationItem>
+          )}
+
           {pagination[0] !== 1 && (
             <PaginationItem>
               <PaginationEllipsis />
@@ -150,9 +155,11 @@ export function DataTable<TData>({
               <PaginationEllipsis />
             </PaginationItem>
           )}
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
+          {pagination.length <= 2 && pagination[1] === page + 1 && (
+            <PaginationItem>
+              <PaginationNext lang="fr" />
+            </PaginationItem>
+          )}
         </PaginationContent>
       </Pagination>
     </>
