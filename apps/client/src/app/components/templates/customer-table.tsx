@@ -27,6 +27,10 @@ export default function CustomerTable() {
       header: "Email",
     },
     {
+      accessorKey: "phone",
+      header: "Téléphone",
+    },
+    {
       header: "Actions",
       cell: ({ row }) => (
         <div className="flex flew-row gap-4">
