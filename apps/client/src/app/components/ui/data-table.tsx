@@ -7,7 +7,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { Pagination as PaginationType } from "@repo/shared-types";
+import {
+  PaginationResult,
+  Pagination as PaginationType,
+} from "@repo/shared-types";
 import {
   Table,
   TableBody,
@@ -30,7 +33,7 @@ import {
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
-  apiData: (filter: PaginationType) => Promise<TData[]>;
+  apiData: (filter: PaginationType) => Promise<PaginationResult<TData>>;
   pageSize: number;
   className?: string;
 }
@@ -43,10 +46,23 @@ export function DataTable<TData>({
 }: DataTableProps<TData>) {
   const [page, setPage] = useState<number>(0);
   const [data, setData] = useState<TData[]>([]);
+  const [pagination, setPagination] = useState<number[]>([]);
 
   const fetchData = async () => {
     await apiData({ page, pageSize }).then((res) => {
-      setData(res);
+      setData(res.data);
+      setPagination(
+        Array(
+          res.totalItems / res.pageSize + (res.totalItems % res.pageSize) > 0
+        )
+          .map((e, i) => i + 1)
+          .filter((e) => {
+            if (page === 0) {
+              return e <= 3;
+            }
+            return e - (page + 1) >= -1 && e - (page + 1) <= 1;
+          })
+      );
     });
   };
 
@@ -117,20 +133,23 @@ export function DataTable<TData>({
           <PaginationItem>
             <PaginationPrevious href="#" />
           </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
+          {pagination[0] !== 1 && (
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+          )}
+          {pagination.map((item, index) => (
+            <PaginationItem key={index}>
+              <PaginationLink isActive={item === page + 1}>
+                {item}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          {pagination[pagination.length - 1] !== page + 1 && (
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+          )}
           <PaginationItem>
             <PaginationNext href="#" />
           </PaginationItem>

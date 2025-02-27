@@ -4,6 +4,7 @@ import {
   CustomerCreateModel,
   CustomerModel,
   Pagination,
+  PaginationResult,
 } from "@repo/shared-types";
 import { cookies } from "next/headers";
 import { generateQueryString } from "../../lib/utils";
@@ -20,7 +21,7 @@ export const GetCustomers = async (filter: Pagination) => {
   })
     .then(async (res) => {
       if (res.status === 200) {
-        return (await res.json()) as CustomerModel[];
+        return (await res.json()) as PaginationResult<CustomerModel>;
       }
       return [];
     })

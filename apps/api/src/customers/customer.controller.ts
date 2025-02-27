@@ -3,11 +3,13 @@ import {
   Controller,
   Get,
   HttpCode,
+  ParseIntPipe,
   Post,
   Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { CustomerCreateValidation } from '@repo/shared-types';
 import { Request } from 'express';
 import CustomerCreateDto from 'src/dtos/customers/customer-create.dto';
@@ -16,14 +18,15 @@ import { ZodPipe } from 'src/pipe/zod.pipe';
 import CustomerService from './customer.service';
 
 @Controller('customers')
+@ApiBearerAuth()
 export default class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
   @Get()
   @UseGuards(AccessTokenGuard)
   async findAll(
-    @Query() page: number,
-    @Query() pageSize: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('pageSize', ParseIntPipe) pageSize: number,
     @Req() req: Request,
   ) {
     const enterpriseId = req.user['enterpriseId'];
