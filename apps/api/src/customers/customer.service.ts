@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import CustomerCreateDto from 'src/dtos/customers/customer-create.dto';
 import CustomerDto, { mapCustomerToDto } from 'src/dtos/customers/customer.dto';
 import PaginationResultDto from 'src/dtos/utils/pagination-result.dto';
@@ -13,7 +17,11 @@ export default class CustomerService {
   async findAll(enterpriseId: number, page: number, pageSize: number) {
     const customers = await this.prisma.customer
       .findMany({
-        where: { enterprises: { some: { id: enterpriseId } } },
+        where: {
+          enterprises: {
+            some: { enterpriseId: enterpriseId, isDeleted: false },
+          },
+        },
         include: { country: true },
         skip: pageSize * page,
         take: pageSize,
@@ -43,12 +51,30 @@ export default class CustomerService {
       data: {
         ...model,
         countryId: parseInt(model.countryId),
-        enterprises: { connect: { id: enterpriseId } },
+        enterprises: {
+          create: { enterpriseId: enterpriseId, isDeleted: false },
+        },
       },
     });
     const country = await this.prisma.country.findFirst({
       where: { id: customer.countryId },
     });
     return mapCustomerToDto(customer, country);
+  }
+
+  async delete(customerId: number, enterpriseId: number) {
+    const customerRelation = await this.prisma.enterpriseCustomer.update({
+      where: {
+        enterpriseId_customerId: {
+          enterpriseId: enterpriseId,
+          customerId: customerId,
+        },
+        isDeleted: false,
+      },
+      data: {
+        isDeleted: true,
+      },
+    });
+    if (!customerRelation) throw new NotFoundException();
   }
 }

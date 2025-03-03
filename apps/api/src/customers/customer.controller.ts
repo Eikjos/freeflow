@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
+  Param,
   ParseIntPipe,
   Post,
   Query,
@@ -40,7 +42,14 @@ export default class CustomerController {
     @Body(new ZodPipe(CustomerCreateValidation)) model: CustomerCreateDto,
     @Req() req: Request,
   ) {
-    const entepriseId = req.user['enterpriseId'];
-    return await this.customerService.create(entepriseId, model);
+    const enterpriseId = req.user['enterpriseId'];
+    return await this.customerService.create(enterpriseId, model);
+  }
+
+  @Delete(':id')
+  @UseGuards(AccessTokenGuard)
+  async delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    const enterpriseId = req.user['enterpriseId'];
+    return await this.customerService.delete(id, enterpriseId);
   }
 }
