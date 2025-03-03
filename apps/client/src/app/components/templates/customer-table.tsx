@@ -11,13 +11,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@components/ui/dialog";
+import { Pagination } from "@components/ui/pagination";
 import { CustomerModel } from "@repo/shared-types";
 import { ColumnDef } from "@tanstack/react-table";
-import { GetCustomers } from "actions/customer";
 import { PenBoxIcon, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+
+// const mesburnes = queryOptions({
+//   queryFn: () => fetch(""),
+//   queryKey: ["pokemon"],
+// });
+
 export default function CustomerTable() {
   const t = useTranslations();
+  const [page, setPage] = useState<number>(0);
+  // const { data } = useSuspenseQuery(mesburnes);
   const columnDefs: ColumnDef<CustomerModel>[] = [
     {
       accessorKey: "name",
@@ -78,11 +87,20 @@ export default function CustomerTable() {
     },
   ];
   return (
-    <DataTable
-      columns={columnDefs}
-      apiData={GetCustomers}
-      pageSize={20}
-      className="w-full mx-auto"
-    />
+    <>
+      <DataTable
+        columns={columnDefs}
+        data={[]}
+        pageSize={20}
+        className="w-full mx-auto"
+      />
+      <Pagination
+        totalItems={62}
+        pageSize={10}
+        page={page}
+        className="mt-10"
+        onChangePage={(page) => setPage(page)}
+      />
+    </>
   );
 }

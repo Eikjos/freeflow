@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import localFont from "next/font/local";
 import "./globals.css";
+import Providers from "providers/query-client-provider";
 
 export const metadata: Metadata = {
   title: "Freeflow",
@@ -42,7 +43,7 @@ export default async function RootLayout({
     >
       <body className="font-display">
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <Providers>{children}</Providers>
         </NextIntlClientProvider>
       </body>
     </html>

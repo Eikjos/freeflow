@@ -5,8 +5,8 @@ import { Button } from "@components/ui/button";
 import { Plus } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { Suspense } from "react";
 import { EnterpriseInfo } from "../../../../types/enterprise-info-type";
+import { HydrationBoundary } from "@tanstack/react-query";
 
 export default async function CustomerPage() {
   const headersEnterprise = (await headers()).get("x-enterprise");
@@ -26,9 +26,9 @@ export default async function CustomerPage() {
           </Link>
         </Button>
       </div>
-      <Suspense fallback={"Chargement..."}>
+      <HydrationBoundary>
         <CustomerTable />
-      </Suspense>
+      </HydrationBoundary>
     </div>
   );
 }
