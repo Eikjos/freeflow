@@ -12,21 +12,21 @@ import {
   DialogTrigger,
 } from "@components/ui/dialog";
 import { Pagination } from "@components/ui/pagination";
-import { CustomerModel } from "@repo/shared-types";
+import {
+  CustomerModel,
+  Pagination as PaginationType,
+} from "@repo/shared-types";
 import { ColumnDef } from "@tanstack/react-table";
 import { PenBoxIcon, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-
-// const mesburnes = queryOptions({
-//   queryFn: () => fetch(""),
-//   queryKey: ["pokemon"],
-// });
+import { getAllCustomersQueryOptions } from "../../../lib/api/customers";
+import { useQuery } from "@tanstack/react-query";
 
 export default function CustomerTable() {
   const t = useTranslations();
-  const [page, setPage] = useState<number>(0);
-  // const { data } = useSuspenseQuery(mesburnes);
+  const [page, setPage] = useState<PaginationType>({ page: 0, pageSize: 20 });
+  const query = useQuery(getAllCustomersQueryOptions(page));
   const columnDefs: ColumnDef<CustomerModel>[] = [
     {
       accessorKey: "name",
@@ -86,20 +86,25 @@ export default function CustomerTable() {
       ),
     },
   ];
+
+  const handleChangePage = (page: number) => {
+    setPage((prev) => ({ ...prev, page }));
+  };
+
   return (
     <>
       <DataTable
         columns={columnDefs}
-        data={[]}
+        data={query.data?.data ?? []}
         pageSize={20}
         className="w-full mx-auto"
       />
       <Pagination
-        totalItems={62}
-        pageSize={10}
-        page={page}
+        totalItems={query.data?.totalItems ?? 0}
+        pageSize={query.data?.pageSize ?? 0}
+        page={query.data?.page ?? 0}
         className="mt-10"
-        onChangePage={(page) => setPage(page)}
+        onChangePage={handleChangePage}
       />
     </>
   );

@@ -1,15 +1,10 @@
 "use server";
 
 import { CountryData } from "@repo/shared-types";
-import { cookies } from "next/headers";
 
 export const getCountries = async () => {
-  const token = (await cookies()).get("access_token");
-  if (token == null) return [];
   return fetch(`${process.env.API_URL}/countries`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    credentials: "include",
   })
     .then(async (res) => {
       if (res.status === 200) {
@@ -23,12 +18,8 @@ export const getCountries = async () => {
 };
 
 export const getCountryById = async (id: number) => {
-  const token = (await cookies()).get("access_token");
-  if (token == null) return undefined;
   return fetch(`${process.env.API_URL}/countries/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    credentials: "include",
   })
     .then(async (res) => {
       if (res.status === 200) {

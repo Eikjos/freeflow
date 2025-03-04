@@ -6,13 +6,19 @@ import { Plus } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { EnterpriseInfo } from "../../../../types/enterprise-info-type";
-import { HydrationBoundary } from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import getQueryClient from "../../../../lib/query-client";
+import { getAllCustomersQueryOptions } from "../../../../lib/api/customers";
 
 export default async function CustomerPage() {
   const headersEnterprise = (await headers()).get("x-enterprise");
   const enterprise: EnterpriseInfo | null = headersEnterprise
     ? JSON.parse(headersEnterprise)
     : null;
+  const queryClient = getQueryClient();
+  void queryClient.prefetchQuery(
+    getAllCustomersQueryOptions({ page: 0, pageSize: 20 })
+  );
 
   return (
     <div className="w-full">
@@ -26,7 +32,7 @@ export default async function CustomerPage() {
           </Link>
         </Button>
       </div>
-      <HydrationBoundary>
+      <HydrationBoundary state={dehydrate(queryClient)}>
         <CustomerTable />
       </HydrationBoundary>
     </div>

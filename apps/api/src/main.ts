@@ -7,6 +7,12 @@ import { ZodFilter } from './filters/zod-filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    allowedHeaders: 'Content-Type, Authorization',
+  });
   app.useGlobalFilters(new ZodFilter());
 
   const config = new DocumentBuilder()

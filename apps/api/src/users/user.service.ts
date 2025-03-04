@@ -21,7 +21,9 @@ export default class UserService {
 
   public async create(model: CreateUserData, isEnterprise: boolean) {
     // verify if user already exist
-    const user = this.prisma.user.findFirst({ where: { email: model.email } });
+    const user = await this.prisma.user.findFirst({
+      where: { email: model.email },
+    });
     if (user) {
       throw new BadRequestException('User already exist', {
         description: 'User already exist',

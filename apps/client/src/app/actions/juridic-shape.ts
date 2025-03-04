@@ -8,9 +8,7 @@ export const getJuridicShapes = async () => {
   const token = cookiesStore.get("access_token");
   if (token == null) return [];
   return fetch(`${process.env.API_URL}/juridic-shapes`, {
-    headers: {
-      Authorization: `Bearer ${token.value}`,
-    },
+    credentials: "include",
   })
     .then(async (res) => {
       if (res.status === 200) {
@@ -28,9 +26,7 @@ export const getJuridicShapeByCode = async (code: string) => {
   const token = cookiesStore.get("access_token");
   if (token == null) return undefined;
   return fetch(`${process.env.API_URL}/juridic-shapes/${code}`, {
-    headers: {
-      Authorization: `Bearer ${token.value}`,
-    },
+    credentials: "include",
   })
     .then(async (res) => {
       if (res.status === 200) {

@@ -1,7 +1,6 @@
 "use server";
 
 import { AuthResponseData, LoginData } from "@repo/shared-types";
-import { cookies } from "next/headers";
 import { ServerActionsReturns } from "../../types/server-actions-type";
 
 export const login = async (
@@ -17,6 +16,7 @@ export const login = async (
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
   })
     .then(async (res) => {
       if (!res.ok) {
@@ -27,9 +27,6 @@ export const login = async (
         };
       }
       const data = (await res.json()) as AuthResponseData;
-      const cookiesStore = await cookies();
-      cookiesStore.set("access_token", data.access_token);
-      cookiesStore.set("refreshToken", data.refreshToken);
       return {
         success: true,
         data,

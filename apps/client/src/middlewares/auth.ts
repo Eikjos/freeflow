@@ -1,5 +1,4 @@
 import { AuthResponseData } from "@repo/shared-types";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { EnterpriseInfo } from "../types/enterprise-info-type";
 import { UserInfoType as UserInfo } from "../types/user-info-types";
@@ -7,7 +6,6 @@ import { UserInfoType as UserInfo } from "../types/user-info-types";
 export async function AuthMiddleware(req: NextRequest) {
   const cookiesStorage = req.cookies;
   const authToken = cookiesStorage.get("refreshToken");
-
   if (!authToken || authToken.value === "") {
     return NextResponse.redirect(new URL("/login", req.url));
   }
@@ -15,15 +13,12 @@ export async function AuthMiddleware(req: NextRequest) {
   return fetch(`${process.env.API_URL}/auth/refresh`, {
     method: "post",
     headers: {
-      Authorization: `Bearer ${authToken.value}`,
+      Cookie: `refreshToken=${authToken.value}`,
     },
   })
     .then(async (res) => {
       if (res.status === 200) {
         const data = (await res.json()) as AuthResponseData;
-        const cookiesStore = await cookies();
-        cookiesStore.set("access_token", data.access_token);
-        cookiesStore.set("refreshToken", data.refreshToken);
         const responseOK = NextResponse.next();
         responseOK.headers.set("x-current-path", req.nextUrl.pathname);
         responseOK.headers.set(
@@ -32,7 +27,7 @@ export async function AuthMiddleware(req: NextRequest) {
             firstName: data.firstName,
             lastName: data.lastName,
             id: data.userId,
-            enterpriseId: data.enterpriseId,
+            enterpriseId: data.enterpriseId ?? undefined,
           } as UserInfo)
         );
         if (data.enterpriseId) {
@@ -52,13 +47,15 @@ export async function AuthMiddleware(req: NextRequest) {
           !data.enterpriseId &&
           req.nextUrl.pathname !== "/enterprises/create"
         ) {
-          return NextResponse.redirect(new URL("/enterprise/create", req.url));
+          return NextResponse.redirect(new URL("/enterprises/create", req.url));
         }
         return responseOK;
       }
+      console.log(res.status);
       return NextResponse.redirect(new URL("/login", req.url));
     })
-    .catch(() => {
+    .catch((e) => {
+      console.log(e);
       return NextResponse.redirect(new URL("/login", req.url));
     });
 }
