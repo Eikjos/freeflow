@@ -1,12 +1,13 @@
 "use server";
 
 import { AuthResponseData, LoginData } from "@repo/shared-types";
+import { cookies } from "next/headers";
 import { ServerActionsReturns } from "../../types/server-actions-type";
 
 export const login = async (
   data: LoginData
 ): Promise<ServerActionsReturns<AuthResponseData>> => {
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
+  const cookieStore = await cookies();
   return await fetch(`${process.env.API_URL}/auth/login`, {
     method: "POST",
     body: JSON.stringify({
@@ -16,7 +17,6 @@ export const login = async (
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include",
   })
     .then(async (res) => {
       if (!res.ok) {
@@ -27,6 +27,8 @@ export const login = async (
         };
       }
       const data = (await res.json()) as AuthResponseData;
+      cookieStore.set("access_token", data.access_token);
+      cookieStore.set("refreshToken", data.refreshToken);
       return {
         success: true,
         data,

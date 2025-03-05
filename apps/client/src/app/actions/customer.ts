@@ -6,6 +6,8 @@ import {
   Pagination,
   PaginationResult,
 } from "@repo/shared-types";
+import { cookies } from "next/headers";
+import { client } from "../../lib/client";
 import { generateQueryString } from "../../lib/utils";
 
 export const GetCustomers: (
@@ -14,7 +16,12 @@ export const GetCustomers: (
   filter: Pagination
 ) => {
   const query = generateQueryString(filter);
-  return fetch(`${process.env.API_URL}/customers?${query}`, {
+  var cookieStore = await cookies();
+  const token = cookieStore.get("access_token");
+  return fetch(`${process.env.NEXT_PUBLIC_API_URL}/customers?${query}`, {
+    headers: {
+      Authorization: `Bearer ${token?.value}`,
+    },
     credentials: "include",
   })
     .then(async (res) => {
@@ -29,20 +36,13 @@ export const GetCustomers: (
 };
 
 export const CreateCustomer = async (model: CustomerCreateModel) => {
-  return fetch(`${process.env.API_URL}/customers`, {
+  return client<CustomerModel>(`customers`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     credentials: "include",
     body: JSON.stringify(model),
   })
-    .then(async (res) => {
-      console.log(res);
-      if (res.status === 200) {
-        return (await res.json()) as CustomerModel;
-      }
-      return null;
+    .then(async (data) => {
+      return data;
     })
     .catch(() => {
       return null;

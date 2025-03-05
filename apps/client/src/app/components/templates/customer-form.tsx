@@ -67,11 +67,12 @@ export default function CustomerForm({ className }: CustomerFormProps) {
   };
 
   const fillFormWithEnterpriseinfo = () => {
-    console.log(form.getValues());
+    console.log("cooucou");
     if (form.getValues().siret !== undefined) {
       fetchEnterpriseInfo(
         form.getValues().siret?.replace(/\s+/g, "") ?? ""
       ).then((data) => {
+        console.log(data);
         if (data !== null) {
           updateFormValues(
             data,
@@ -84,7 +85,6 @@ export default function CustomerForm({ className }: CustomerFormProps) {
   };
 
   const onSubmit = (values: CustomerCreateModel) => {
-    console.log("coucou");
     CreateCustomer(values).then((res) => {
       if (res === null) {
         console.log("error");

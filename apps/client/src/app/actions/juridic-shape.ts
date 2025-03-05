@@ -7,9 +7,7 @@ export const getJuridicShapes = async () => {
   const cookiesStore = await cookies();
   const token = cookiesStore.get("access_token");
   if (token == null) return [];
-  return fetch(`${process.env.API_URL}/juridic-shapes`, {
-    credentials: "include",
-  })
+  return fetch(`${process.env.NEXT_PUBLIC_API_URL}/juridic-shapes`, {})
     .then(async (res) => {
       if (res.status === 200) {
         return (await res.json()) as JuridicShapeData[];

@@ -6,7 +6,6 @@ import {
   Post,
   Query,
   Req,
-  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -14,7 +13,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { EnterpriseCreateValidation } from '@repo/shared-types';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
@@ -49,22 +48,11 @@ export default class EnterprisesController {
     @UploadedFile()
     logo: Express.Multer.File,
     @Req() req: Request,
-    @Res() res: Response,
   ) {
-    const credentials = await this.enterpriseService.createEnterprise(
+    return this.enterpriseService.createEnterprise(
       body,
       logo,
       parseInt(req.user['sub']),
     );
-    res.cookie('access_token', credentials.access_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-    });
-
-    res.cookie('refreshToken', credentials.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-    });
-    return res.status(200).send(credentials);
   }
 }
