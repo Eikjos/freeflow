@@ -7,18 +7,17 @@ import { Input } from "@components/ui/input";
 import { Select } from "@components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  CountryData,
   CustomerCreateModel,
   CustomerCreateValidation,
   EnterpriseInformation,
 } from "@repo/shared-types";
-import { getCountries } from "actions/countries";
+import { useQuery } from "@tanstack/react-query";
 import { CreateCustomer } from "actions/customer";
-import { fetchEnterpriseInfo } from "actions/enterprise";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { getAllCountriesQueryOptions } from "../../../lib/api/countries";
+import { fetchEnterpriseInfoQueryOptions } from "../../../lib/api/enterprise";
 
 type CustomerFormProps = {
   className?: string;
@@ -27,7 +26,6 @@ type CustomerFormProps = {
 export default function CustomerForm({ className }: CustomerFormProps) {
   const t = useTranslations();
   const router = useRouter();
-  const [countries, setCountries] = useState<CountryData[]>([]);
   const form = useForm<CustomerCreateModel>({
     resolver: zodResolver(CustomerCreateValidation),
     defaultValues: {
@@ -67,20 +65,14 @@ export default function CustomerForm({ className }: CustomerFormProps) {
   };
 
   const fillFormWithEnterpriseinfo = () => {
-    console.log("cooucou");
-    if (form.getValues().siret !== undefined) {
-      fetchEnterpriseInfo(
-        form.getValues().siret?.replace(/\s+/g, "") ?? ""
-      ).then((data) => {
-        console.log(data);
-        if (data !== null) {
-          updateFormValues(
-            data,
-            form.getValues().email,
-            form.getValues().phone
-          );
-        }
-      });
+    const siret = form.getValues().siret;
+    if (siret !== undefined) {
+      const { data } = useQuery(
+        fetchEnterpriseInfoQueryOptions(siret.replace(/\s+/g, ""))
+      );
+      if (data) {
+        updateFormValues(data, form.getValues().email, form.getValues().phone);
+      }
     }
   };
 
@@ -94,11 +86,7 @@ export default function CustomerForm({ className }: CustomerFormProps) {
     });
   };
 
-  useEffect(() => {
-    getCountries().then((res) => {
-      setCountries(res);
-    });
-  }, []);
+  const { data: countries } = useQuery(getAllCountriesQueryOptions());
 
   return (
     <Form {...form}>
@@ -168,7 +156,7 @@ export default function CustomerForm({ className }: CustomerFormProps) {
                 <Select
                   label={t("common.country")}
                   placeholder={t("common.country")}
-                  values={countries.map((c) => ({
+                  values={(countries ?? []).map((c) => ({
                     value: c.id.toString(),
                     textValue: t(c.name),
                   }))}

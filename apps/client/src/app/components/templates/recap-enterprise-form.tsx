@@ -3,26 +3,20 @@
 import { Button } from "@components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@components/ui/card";
 import { Input } from "@components/ui/input";
-import {
-  CountryData,
-  EnterpriseCreateModel,
-  JuridicShapeData,
-} from "@repo/shared-types";
-import { getCountryById } from "actions/countries";
+import { EnterpriseCreateModel } from "@repo/shared-types";
+import { useQuery } from "@tanstack/react-query";
 import { createEnterprise } from "actions/enterprise";
-import { getJuridicShapeByCode } from "actions/juridic-shape";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { getCountryByIdQueryOptions } from "../../../lib/api/countries";
+import { getAllJuridicShapesByCodeQueryOptions } from "../../../lib/api/juridic-shapes";
 
 export default function RecapEnterpriseForm() {
   const t = useTranslations();
   const form = useFormContext<EnterpriseCreateModel>();
   const router = useRouter();
-  const [countryData, setCountryData] = useState<CountryData>();
-  const [juridicShapeData, setJuridicShapeData] = useState<JuridicShapeData>();
   const data = form.getValues();
   const onCreateEnterprise = () => {
     const { logo, ...enterprise } = form.getValues();
@@ -37,15 +31,13 @@ export default function RecapEnterpriseForm() {
       });
   };
 
-  useEffect(() => {
-    getCountryById(parseInt(data.countryId)).then((res) => {
-      setCountryData(res);
-    });
+  const { data: countryData } = useQuery(
+    getCountryByIdQueryOptions(parseInt(data.countryId))
+  );
 
-    getJuridicShapeByCode(data.juridicShape).then((res) => {
-      setJuridicShapeData(res);
-    });
-  }, []);
+  const { data: juridicShapeData } = useQuery(
+    getAllJuridicShapesByCodeQueryOptions(data.juridicShape)
+  );
 
   return (
     <Card className="w-1/2 mx-auto">
