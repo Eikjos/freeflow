@@ -25,9 +25,7 @@ export default class UserService {
       where: { email: model.email },
     });
     if (user) {
-      throw new BadRequestException('User already exist', {
-        description: 'User already exist',
-      });
+      throw new BadRequestException('user.alreadyExist');
     }
     // create user
     const passwordSalt = bcrypt.genSaltSync(10);

@@ -47,7 +47,7 @@ export class MediaService {
       );
 
       if (!fs.existsSync(filePath)) {
-        throw new NotFoundException();
+        throw new NotFoundException('media.notFound');
       }
 
       const fileBuffer = fs.readFileSync(filePath);
@@ -55,7 +55,7 @@ export class MediaService {
 
       return { file: fileBuffer, mimeType };
     } catch (e) {
-      throw new NotFoundException();
+      throw new NotFoundException('media.notFound');
     }
   }
 

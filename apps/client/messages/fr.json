@@ -1,4 +1,7 @@
 {
+  "access": {
+    "denied": "Vous n'avez pas le droit."
+  },
   "country": {
     "afghanistan": "Afghanistan",
     "albania": "Albanie",
@@ -130,6 +133,7 @@
     "nigeria": "Nigéria",
     "north_macedonia": "Macédoine du Nord",
     "norway": "Norvège",
+    "notFound": "Le pays n'a pas été trouvé",
     "oman": "Oman",
     "pakistan": "Pakistan",
     "palau": "Palaos",
@@ -211,6 +215,9 @@
     "supportedFile": "Fichier(s) supporté(s) :",
     "previsualizeImage": "Vous pouvez pre-visualiser l'image."
   },
+  "customer": {
+    "notFound": "Le client n'a pas été trouvé"
+  },
   "enterprise": {
     "create": "Création de votre entreprise",
     "createMyEnterprise": "Créer mon entreprise",
@@ -221,11 +228,15 @@
     "fillForm": "Peut pré-remplir tous les champs si possible",
     "name": "Nom de l'entreprise",
     "juridicShape": "Forme juridique",
-    "tvaNumber": "Numéro de TVA"
+    "tvaNumber": "Numéro de TVA",
+    "info.notFound": "Les informations sur l'entreprise n'a pas été trouvé"
   },
   "signIn": "Connexion",
   "credentials": {
     "invalid": "Les identifiants sont invalides"
+  },
+  "juridicShape": {
+    "notFound": "La forme juridique n'a pas été trouvé"
   },
   "login": {
     "noAccount": "Pas encore de compte ?",

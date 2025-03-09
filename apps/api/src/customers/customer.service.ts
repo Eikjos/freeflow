@@ -45,7 +45,7 @@ export default class CustomerService {
       where: { id: enterpriseId },
     });
     if (!enterprise) {
-      throw new ForbiddenException();
+      throw new ForbiddenException('access.denied');
     }
     const customer = await this.prisma.customer.create({
       data: {
@@ -75,6 +75,6 @@ export default class CustomerService {
         isDeleted: true,
       },
     });
-    if (!customerRelation) throw new NotFoundException();
+    if (!customerRelation) throw new NotFoundException('customer.notFound');
   }
 }

@@ -46,12 +46,12 @@ export default class AuthService {
   public async refresh(userId: number, refreshToken: string) {
     const user = await this.userService.findUserById(userId);
     if (!user || !user.refreshToken)
-      throw new ForbiddenException('Access Denied');
+      throw new ForbiddenException('access.denied');
     const refreshTokenMatches = await bcrypt.compare(
       refreshToken,
       user.refreshToken,
     );
-    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
+    if (!refreshTokenMatches) throw new ForbiddenException('access.denied');
     return this.generateToken(user, user.enterprise);
   }
 

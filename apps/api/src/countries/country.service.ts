@@ -18,7 +18,7 @@ export default class CountryService {
         },
       });
     } catch (e) {
-      throw new NotFoundException();
+      throw new NotFoundException('country.notFound');
     }
   }
 }

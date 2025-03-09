@@ -1,4 +1,7 @@
 {
+  "access": {
+    "denied": "You don't have the right."
+  },
   "country": {
     "afghanistan": "Afghanistan",
     "albania": "Albania",
@@ -130,6 +133,7 @@
     "nigeria": "Nigeria",
     "north_macedonia": "North Macedonia",
     "norway": "Norway",
+    "notFound": "The country is not found.",
     "oman": "Oman",
     "pakistan": "Pakistan",
     "palau": "Palau",
@@ -211,6 +215,9 @@
     "supportedFile": "Supported file(s):",
     "previsualizeImage": "You can preview the image."
   },
+  "customer": {
+    "notFound": "The customer is not found."
+  },
   "enterprise": {
     "create": "Create your business",
     "createMyEnterprise": "Create my business",
@@ -221,11 +228,15 @@
     "fillForm": "Can pre-fill all fields if possible",
     "name": "Business name",
     "juridicShape": "Legal structure",
-    "tvaNumber": "VAT number"
+    "tvaNumber": "VAT number",
+    "info.notFound": "The information about enterprise is not found."
   },
   "signIn": "Sign in",
   "credentials": {
     "invalid": "The credentials are invalid"
+  },
+  "juridicShape": {
+    "notFound": "The juridic shape is not found."
   },
   "login": {
     "noAccount": "No account yet ?",

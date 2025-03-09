@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import AuthService from 'src/auth/auth.service';
 import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
@@ -120,8 +120,7 @@ export default class EnterpriseService {
         return res.data;
       })
       .catch((e) => {
-        console.log(e);
-        return null;
+        throw new NotFoundException('enterprise.info.notFound');
       });
   }
 
