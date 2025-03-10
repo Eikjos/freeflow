@@ -17,11 +17,18 @@ export const login = async (
     } as LoginData),
   })
     .then(async (data) => {
-      cookieStore.set("access_token", data.access_token);
-      cookieStore.set("refreshToken", data.refreshToken);
+      console.log("server login", data);
+      if (data.ok) {
+        cookieStore.set("access_token", data.data?.access_token ?? "");
+        cookieStore.set("refreshToken", data.data?.refreshToken ?? "");
+        return {
+          success: true,
+          data: data.data,
+        };
+      }
       return {
-        success: true,
-        data,
+        success: false,
+        message: data.error,
       };
     })
     .catch((e: Error) => {

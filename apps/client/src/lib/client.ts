@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { HttpResponse } from "../types/http-response";
 
 type ClientOptionsProps = {
   body?: any;
@@ -10,10 +11,9 @@ type ClientOptionsProps = {
 export const client = async <T>(
   endpoint: string,
   options: ClientOptionsProps = {}
-): Promise<T> => {
+): Promise<HttpResponse<T>> => {
   const cookieStore = await cookies();
   const authToken = cookieStore.get("access_token");
-  console.log(authToken);
   // const authToken = getAuthToken();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -34,8 +34,17 @@ export const client = async <T>(
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "An error occurred");
+    return {
+      ok: false,
+      data: undefined,
+      error: error.message,
+    };
   }
-
-  return (await response.json()) as T;
+  const responseBody = await response.text();
+  return {
+    ok: true,
+    data:
+      responseBody.trim() !== "" ? (JSON.parse(responseBody) as T) : undefined,
+    error: undefined,
+  };
 };

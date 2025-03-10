@@ -2,13 +2,13 @@
 
 import CustomerTable from "@components/templates/customer-table";
 import { Button } from "@components/ui/button";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { EnterpriseInfo } from "../../../../types/enterprise-info-type";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import getQueryClient from "../../../../lib/query-client";
 import { getAllCustomersQueryOptions } from "../../../../lib/api/customers";
+import getQueryClient from "../../../../lib/query-client";
+import { EnterpriseInfo } from "../../../../types/enterprise-info-type";
 
 export default async function CustomerPage() {
   const headersEnterprise = (await headers()).get("x-enterprise");
@@ -17,7 +17,7 @@ export default async function CustomerPage() {
     : null;
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(
-    getAllCustomersQueryOptions({ page: 0, pageSize: 20 })
+    getAllCustomersQueryOptions({ page: 0, pageSize: 2 })
   );
 
   return (

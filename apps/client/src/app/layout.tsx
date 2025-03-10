@@ -1,9 +1,10 @@
+import { Toaster } from "@components/ui/sonner";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import localFont from "next/font/local";
-import "./globals.css";
 import Providers from "providers/query-client-provider";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Freeflow",
@@ -44,6 +45,7 @@ export default async function RootLayout({
       <body className="font-display">
         <NextIntlClientProvider messages={messages}>
           <Providers>{children}</Providers>
+          <Toaster richColors position="top-right" duration={3000} />
         </NextIntlClientProvider>
       </body>
     </html>

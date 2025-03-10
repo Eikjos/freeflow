@@ -31,7 +31,13 @@ export default class CustomerService {
           mapCustomerToDto(customer, customer.country),
         );
       });
-    const totalItems = await this.prisma.customer.count();
+    const totalItems = await this.prisma.customer.count({
+      where: {
+        enterprises: {
+          some: { enterpriseId: enterpriseId, isDeleted: false },
+        },
+      },
+    });
     return {
       data: customers,
       totalItems: totalItems,

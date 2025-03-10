@@ -229,7 +229,7 @@
     "name": "Nom de l'entreprise",
     "juridicShape": "Forme juridique",
     "tvaNumber": "Numéro de TVA",
-    "info.notFound": "Les informations sur l'entreprise n'a pas été trouvé"
+    "infoNotFound": "Les informations sur l'entreprise n'a pas été trouvé"
   },
   "signIn": "Connexion",
   "credentials": {

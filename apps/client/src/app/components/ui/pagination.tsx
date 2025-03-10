@@ -1,11 +1,11 @@
 "use client";
 
-import * as React from "react";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import * as React from "react";
 
-import { cn } from "../../../lib/utils";
 import { ButtonProps, buttonVariants } from "components/ui/button";
 import { useEffect, useState } from "react";
+import { cn } from "../../../lib/utils";
 
 const PaginationContainer = ({
   className,
@@ -128,11 +128,11 @@ const Pagination = ({
   onChangePage,
 }: PaginationProps) => {
   const [pagination, setPagination] = useState<number[]>([]);
-  const length = Math.floor(
-    totalItems / pageSize + (totalItems % pageSize > 0 ? 1 : 0)
-  );
 
   useEffect(() => {
+    const length = Math.floor(
+      totalItems / pageSize + (totalItems % pageSize > 0 ? 1 : 0)
+    );
     setPagination(
       Array.from(
         {

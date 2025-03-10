@@ -47,6 +47,7 @@ export default class CustomerController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   @UseGuards(AccessTokenGuard)
   async delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];

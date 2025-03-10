@@ -120,7 +120,7 @@ export default class EnterpriseService {
         return res.data;
       })
       .catch((e) => {
-        throw new NotFoundException('enterprise.info.notFound');
+        throw new NotFoundException('enterprise.infoNotFound');
       });
   }
 

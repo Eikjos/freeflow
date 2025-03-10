@@ -229,7 +229,7 @@
     "name": "Business name",
     "juridicShape": "Legal structure",
     "tvaNumber": "VAT number",
-    "info.notFound": "The information about enterprise is not found."
+    "infoNotFound": "The information about enterprise is not found."
   },
   "signIn": "Sign in",
   "credentials": {

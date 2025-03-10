@@ -16,17 +16,46 @@ import {
   CustomerModel,
   Pagination as PaginationType,
 } from "@repo/shared-types";
+import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
+import { DeleteCutomer } from "actions/customer";
 import { PenBoxIcon, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { toast } from "sonner";
 import { getAllCustomersQueryOptions } from "../../../lib/api/customers";
-import { useQuery } from "@tanstack/react-query";
+import getQueryClient from "../../../lib/query-client";
 
 export default function CustomerTable() {
   const t = useTranslations();
-  const [page, setPage] = useState<PaginationType>({ page: 0, pageSize: 20 });
-  const query = useQuery(getAllCustomersQueryOptions(page));
+  const queryClient = getQueryClient();
+  const [page, setPage] = useState<PaginationType>({ page: 0, pageSize: 2 });
+  const { data: customers, refetch } = useQuery(
+    getAllCustomersQueryOptions(page)
+  );
+
+  const handleChangePage = (page: number) => {
+    setPage((prev) => ({ ...prev, page }));
+  };
+
+  const OnDeleteCustomer = (customer: CustomerModel) => {
+    DeleteCutomer(customer.id).then((res) => {
+      if (res.ok) {
+        toast.success("Suppression du client " + customer.id);
+        if ((customers?.data?.data.length ?? 0) > 1 && page.page > 0) {
+          queryClient.invalidateQueries({
+            queryKey: ["customers", page],
+          });
+          refetch();
+        } else {
+          setPage((prev) => ({ ...prev, page: prev.page - 1 }));
+        }
+      } else {
+        toast.error(`Erreur suppression du client : ${customer.name}`);
+      }
+    });
+  };
+
   const columnDefs: ColumnDef<CustomerModel>[] = [
     {
       accessorKey: "name",
@@ -59,7 +88,7 @@ export default function CustomerTable() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle className="font-semibold text-xl">
+                <DialogTitle className="text-3xl">
                   Suppression du client : {row.getValue("name")}
                 </DialogTitle>
               </DialogHeader>
@@ -74,7 +103,7 @@ export default function CustomerTable() {
                 <DialogClose asChild>
                   <Button
                     variant={"destructive"}
-                    onClick={() => console.log("hello world !!")}
+                    onClick={() => OnDeleteCustomer(row.original)}
                   >
                     Supprimer
                   </Button>
@@ -87,25 +116,23 @@ export default function CustomerTable() {
     },
   ];
 
-  const handleChangePage = (page: number) => {
-    setPage((prev) => ({ ...prev, page }));
-  };
-
   return (
     <>
       <DataTable
         columns={columnDefs}
-        data={query.data?.data ?? []}
+        data={customers?.data?.data ?? []}
         pageSize={20}
         className="w-full mx-auto"
       />
-      <Pagination
-        totalItems={query.data?.totalItems ?? 0}
-        pageSize={query.data?.pageSize ?? 0}
-        page={query.data?.page ?? 0}
-        className="mt-10"
-        onChangePage={handleChangePage}
-      />
+      {customers?.data?.totalItems && customers?.data?.totalItems > 0 && (
+        <Pagination
+          totalItems={customers?.data?.totalItems ?? 0}
+          pageSize={customers?.data?.pageSize ?? 0}
+          page={customers?.data?.page ?? 0}
+          className="mt-10"
+          onChangePage={handleChangePage}
+        />
+      )}
     </>
   );
 }

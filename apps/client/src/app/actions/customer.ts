@@ -16,3 +16,7 @@ export const CreateCustomer = async (model: CustomerCreateModel) => {
       return null;
     });
 };
+
+export const DeleteCutomer = async (id: number) => {
+  return client<any>(`customers/${id}`, { method: "DELETE" });
+};

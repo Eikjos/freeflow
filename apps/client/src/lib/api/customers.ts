@@ -3,8 +3,8 @@ import {
   Pagination,
   PaginationResult,
 } from "@repo/shared-types";
-import { client } from "../client";
 import { queryOptions } from "@tanstack/react-query";
+import { client } from "../client";
 import { generateQueryString } from "../utils";
 
 export const getAllCustomers = (pagination: Pagination) => {
@@ -15,6 +15,6 @@ export const getAllCustomers = (pagination: Pagination) => {
 export const getAllCustomersQueryOptions = (pagination: Pagination) =>
   queryOptions({
     queryFn: () => getAllCustomers(pagination),
-    queryKey: ["customers"],
+    queryKey: ["customers", pagination],
     retry: false,
   });
