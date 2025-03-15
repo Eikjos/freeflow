@@ -10,4 +10,5 @@ export const fetchEnterpriseInfoQueryOptions = (siret: string) =>
     queryKey: ["enterprise", "info", siret],
     queryFn: () => fetchEnterpriseInfo(siret),
     retry: false,
+    enabled: siret.length === 14,
   });

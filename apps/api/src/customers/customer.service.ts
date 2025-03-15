@@ -4,7 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import CustomerCreateDto from 'src/dtos/customers/customer-create.dto';
-import CustomerDto, { mapCustomerToDto } from 'src/dtos/customers/customer.dto';
+import {
+  mapCustomerToDto,
+  CustomerDto,
+  mapCustomerToDetailDto,
+} from 'src/dtos/customers/customer.dto';
 import PaginationResultDto from 'src/dtos/utils/pagination-result.dto';
 import { PrismaService } from 'src/prisma.service';
 
@@ -44,6 +48,17 @@ export default class CustomerService {
       page,
       pageSize,
     } as PaginationResultDto<CustomerDto>;
+  }
+
+  async findByIdAndEnterpriseId(id: number, enterpriseId: number) {
+    const relation = await this.prisma.enterpriseCustomer.findFirst({
+      where: { customerId: id, enterpriseId, isDeleted: false },
+      include: {
+        customer: true,
+      },
+    });
+    if (!relation) throw new NotFoundException('customer.notFound');
+    return mapCustomerToDetailDto(relation.customer, null);
   }
 
   async create(enterpriseId: number, model: CustomerCreateDto) {

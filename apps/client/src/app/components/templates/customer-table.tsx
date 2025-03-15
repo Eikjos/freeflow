@@ -21,6 +21,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DeleteCutomer } from "actions/customer";
 import { PenBoxIcon, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { getAllCustomersQueryOptions } from "../../../lib/api/customers";
@@ -29,7 +30,7 @@ import getQueryClient from "../../../lib/query-client";
 export default function CustomerTable() {
   const t = useTranslations();
   const queryClient = getQueryClient();
-  const [page, setPage] = useState<PaginationType>({ page: 0, pageSize: 2 });
+  const [page, setPage] = useState<PaginationType>({ page: 0, pageSize: 20 });
   const { data: customers, refetch } = useQuery(
     getAllCustomersQueryOptions(page)
   );
@@ -41,17 +42,19 @@ export default function CustomerTable() {
   const OnDeleteCustomer = (customer: CustomerModel) => {
     DeleteCutomer(customer.id).then((res) => {
       if (res.ok) {
-        toast.success("Suppression du client " + customer.id);
-        if ((customers?.data?.data.length ?? 0) > 1 && page.page > 0) {
+        toast.success(t("customer.removeSuccess", { customer: customer.name }));
+        // si il y a encore un client après suppression
+        if ((customers?.data?.data.length ?? 0) > 1 || page.page === 0) {
           queryClient.invalidateQueries({
             queryKey: ["customers", page],
           });
           refetch();
+          // sinon aller sur la page précédente si elle permet
         } else {
           setPage((prev) => ({ ...prev, page: prev.page - 1 }));
         }
       } else {
-        toast.error(`Erreur suppression du client : ${customer.name}`);
+        toast.error(t("customer.removeFailed", { customer: customer.name }));
       }
     });
   };
@@ -59,29 +62,31 @@ export default function CustomerTable() {
   const columnDefs: ColumnDef<CustomerModel>[] = [
     {
       accessorKey: "name",
-      header: "Nom",
+      header: t("common.name"),
     },
     {
       accessorFn: (row) => row.siret ?? "Pas renseigné",
-      header: "Siret",
+      header: t("common.siret"),
     },
     {
       accessorFn: (row) => `${row.city}, ${t(row.country)}`,
-      header: "Localisation",
+      header: t("common.localisation"),
     },
     {
       accessorKey: "email",
-      header: "Email",
+      header: t("common.email"),
     },
     {
       accessorKey: "phone",
-      header: "Téléphone",
+      header: t("common.phone"),
     },
     {
-      header: "Actions",
+      header: t("common.actions"),
       cell: ({ row }) => (
         <div className="flex flew-row gap-4">
-          <PenBoxIcon size={18} />
+          <Link href={`/customers/${row.original.id}/edit`}>
+            <PenBoxIcon size={18} />
+          </Link>
           <Dialog>
             <DialogTrigger asChild>
               <Trash color="red" size={18} />
@@ -89,23 +94,26 @@ export default function CustomerTable() {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle className="text-3xl">
-                  Suppression du client : {row.getValue("name")}
+                  {t("customer.dialog.removeTitle", {
+                    customer: row.getValue("name"),
+                  })}
                 </DialogTitle>
               </DialogHeader>
               <p>
-                Êtes-vous sur de vouloir supprimer le client{" "}
-                {row.getValue("name")} ?
+                {t("customer.dialog.removeDescription", {
+                  customer: row.getValue("name"),
+                })}
               </p>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant={"outline"}>Annuler</Button>
+                  <Button variant={"outline"}>{t("common.cancel")}</Button>
                 </DialogClose>
                 <DialogClose asChild>
                   <Button
                     variant={"destructive"}
                     onClick={() => OnDeleteCustomer(row.original)}
                   >
-                    Supprimer
+                    {t("common.remove")}
                   </Button>
                 </DialogClose>
               </DialogFooter>
@@ -124,7 +132,7 @@ export default function CustomerTable() {
         pageSize={20}
         className="w-full mx-auto"
       />
-      {customers?.data?.totalItems && customers?.data?.totalItems > 0 && (
+      {(customers?.data?.totalItems ?? 0) > 0 && (
         <Pagination
           totalItems={customers?.data?.totalItems ?? 0}
           pageSize={customers?.data?.pageSize ?? 0}

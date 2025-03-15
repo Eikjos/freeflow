@@ -9,52 +9,68 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CustomerCreateModel,
   CustomerCreateValidation,
+  CustomerDetailModel,
   EnterpriseInformation,
 } from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
 import { CreateCustomer } from "actions/customer";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { getAllCountriesQueryOptions } from "../../../lib/api/countries";
 import { fetchEnterpriseInfoQueryOptions } from "../../../lib/api/enterprise";
 
 type CustomerFormProps = {
   className?: string;
+  edit?: boolean;
+  customerId?: number;
+  data?: CustomerDetailModel;
 };
 
-export default function CustomerForm({ className }: CustomerFormProps) {
+export default function CustomerForm({
+  className,
+  edit,
+  customerId,
+  data,
+}: CustomerFormProps) {
+  const [queryTrigger, setQueryTrigger] = useState(false);
   const t = useTranslations();
   const router = useRouter();
   const form = useForm<CustomerCreateModel>({
     resolver: zodResolver(CustomerCreateValidation),
     defaultValues: {
-      siret: "",
-      name: "",
-      address: "",
-      city: "",
-      phone: "",
-      tvaNumber: "",
-      email: "",
-      zipCode: "",
+      siret: edit ? (data?.siret ?? "") : "",
+      name: edit ? (data?.name ?? "") : "",
+      address: edit ? (data?.address ?? "") : "",
+      city: edit ? (data?.city ?? "") : "",
+      phone: edit ? (data?.phone ?? "") : "",
+      tvaNumber: edit ? (data?.tvaNumber ?? "") : "",
+      email: edit ? (data?.email ?? "") : "",
+      zipCode: edit ? (data?.zipCode ?? "") : "",
+      countryId: edit ? (data?.countryId.toString() ?? "") : "",
     },
   });
-
+  const siret = form.watch("siret");
   const updateFormValues = async (
-    data: EnterpriseInformation,
     email: string,
-    phone: string
+    phone: string,
+    data?: EnterpriseInformation
   ) => {
-    // eslint-disable-next-line no-unused-vars
-    const { juridicShape, TVANumber, ...customerInfo } = data;
-    form.reset({
-      ...customerInfo,
-      tvaNumber: TVANumber,
-      email,
-      phone,
-    });
+    if (data) {
+      // eslint-disable-next-line no-unused-vars
+      const { juridicShape, TVANumber, ...customerInfo } = data;
+      form.reset({
+        ...customerInfo,
+        tvaNumber: TVANumber,
+        email,
+        phone,
+      });
+    } else {
+      form.reset({ email, phone, siret });
+    }
     form.trigger([
-      "siret",
       "name",
       "address",
       "city",
@@ -64,29 +80,42 @@ export default function CustomerForm({ className }: CustomerFormProps) {
     ]);
   };
 
-  const fillFormWithEnterpriseinfo = () => {
-    const siret = form.getValues().siret;
-    if (siret !== undefined) {
-      const { data } = useQuery(
-        fetchEnterpriseInfoQueryOptions(siret.replace(/\s+/g, ""))
-      );
-      if (data) {
-        updateFormValues(data, form.getValues().email, form.getValues().phone);
-      }
+  const { data: enterpriseInfo } = useQuery({
+    ...fetchEnterpriseInfoQueryOptions(siret?.replace(/\s+/g, "") ?? ""),
+    enabled: (siret?.replace(/\s+/g, "") ?? "").length === 14 && queryTrigger,
+  });
+
+  const onSubmit = (values: CustomerCreateModel) => {
+    if (edit) {
+      console.log(edit, values, customerId);
+    } else {
+      CreateCustomer(values).then((res) => {
+        if (res === null) {
+          console.log("error");
+        } else {
+          router.push("/customers");
+        }
+      });
     }
   };
 
-  const onSubmit = (values: CustomerCreateModel) => {
-    CreateCustomer(values).then((res) => {
-      if (res === null) {
-        console.log("error");
-      } else {
-        router.push("/customers");
-      }
-    });
-  };
-
   const { data: countries } = useQuery(getAllCountriesQueryOptions());
+
+  useEffect(() => {
+    setQueryTrigger(false);
+    if (enterpriseInfo) {
+      // Gestion du cas où on n'arrive pas à trouver l'entreprise
+      if (!enterpriseInfo.ok) {
+        toast.warning(t("enterprise.infoNotFound"));
+      } else {
+        updateFormValues(
+          form.getValues().email,
+          form.getValues().phone,
+          enterpriseInfo?.data
+        );
+      }
+    }
+  }, [enterpriseInfo]);
 
   return (
     <Form {...form}>
@@ -109,7 +138,7 @@ export default function CustomerForm({ className }: CustomerFormProps) {
                 <Button
                   className="mt-2"
                   type="button"
-                  onClick={fillFormWithEnterpriseinfo}
+                  onClick={() => setQueryTrigger(true)}
                 >
                   {t("common.fill")}
                 </Button>
@@ -156,7 +185,7 @@ export default function CustomerForm({ className }: CustomerFormProps) {
                 <Select
                   label={t("common.country")}
                   placeholder={t("common.country")}
-                  values={(countries ?? []).map((c) => ({
+                  values={(countries?.data ?? []).map((c) => ({
                     value: c.id.toString(),
                     textValue: t(c.name),
                   }))}
@@ -187,7 +216,7 @@ export default function CustomerForm({ className }: CustomerFormProps) {
           </CardContent>
           <CardFooter className="flex flex-row justify-end">
             <Button type="submit" disabled={!form.formState.isValid}>
-              Créer
+              {t("common.create")}
             </Button>
           </CardFooter>
         </Card>

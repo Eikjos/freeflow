@@ -46,6 +46,13 @@ export default class CustomerController {
     return await this.customerService.create(enterpriseId, model);
   }
 
+  @Get(':id')
+  @UseGuards(AccessTokenGuard)
+  async findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    const enterpriseId = req.user['enterpriseId'];
+    return await this.customerService.findByIdAndEnterpriseId(id, enterpriseId);
+  }
+
   @Delete(':id')
   @HttpCode(204)
   @UseGuards(AccessTokenGuard)

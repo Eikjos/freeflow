@@ -200,23 +200,37 @@
     "zimbabwe": "Zimbabwe"
   },
   "common": {
+    "actions": "Actions",
+    "add": "Ajouter",
+    "create": "Créer",
+    "cancel": "Annuler",
+    "name": "Nom",
     "informations": "Informations",
     "fill": "Remplir",
     "localisation": "Localisation",
     "city": "Ville",
     "zipCode": "Code postale",
     "country": "Pays",
+    "siret": "Siret",
     "address": "Adresse",
     "contact": "Contact",
     "email": "Adresse mail",
     "password": "Mot de passe",
+    "remove": "Supprimer",
     "phone": "Télephone",
     "dropFile": "Glisser vos fichiers ici.",
     "supportedFile": "Fichier(s) supporté(s) :",
     "previsualizeImage": "Vous pouvez pre-visualiser l'image."
   },
   "customer": {
-    "notFound": "Le client n'a pas été trouvé"
+    "title": "Les clients de {enterprise}",
+    "notFound": "Le client n'a pas été trouvé",
+    "removeSuccess": "Le client {customer} a été correctement supprimé.",
+    "removeFailed": "Le client {customer} n'a pas été supprimé.",
+    "dialog": {
+      "removeTitle": "Suppression du client {customer}",
+      "removeDescription": "Êtes-vous sur de vouloir supprimer le client {customer} ?"
+    }
   },
   "enterprise": {
     "create": "Création de votre entreprise",

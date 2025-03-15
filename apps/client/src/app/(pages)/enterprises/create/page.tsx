@@ -1,6 +1,5 @@
 "use client";
 
-import CompleteLayoutWithoutSideBar from "@components/layouts/complete-layout";
 import EnterpriseForm from "@components/templates/enterprise-form";
 import EnterpriseLogoForm from "@components/templates/enterprise-logo-form";
 import Footer from "@components/templates/footer";
@@ -13,7 +12,6 @@ import {
   EnterpriseCreateValidation,
 } from "@repo/shared-types";
 import { useTranslations } from "next-intl";
-import { ReactNode } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 const CreateEnterprisePage = () => {
@@ -59,10 +57,6 @@ const CreateEnterprisePage = () => {
       <Footer />
     </>
   );
-};
-
-CreateEnterprisePage.getLayout = function getLayout(page: ReactNode) {
-  return <CompleteLayoutWithoutSideBar>{page}</CompleteLayoutWithoutSideBar>;
 };
 
 export default CreateEnterprisePage;

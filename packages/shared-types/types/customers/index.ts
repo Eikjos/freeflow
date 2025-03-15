@@ -12,6 +12,11 @@ export type CustomerModel = {
   phone: string;
 };
 
+export type CustomerDetailModel = {
+  countryId: number;
+  tvaNumber: string;
+} & CustomerModel;
+
 export const CustomerCreateValidation = z.object({
   siret: z
     .string()

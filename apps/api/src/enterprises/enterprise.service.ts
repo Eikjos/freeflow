@@ -77,12 +77,9 @@ export default class EnterpriseService {
         .split(' ')
         .map((e) => e.toLowerCase().toLocaleUpperCase())
         .join(' '),
-      address:
-        insee.etablissement.adresseEtablissement.numeroVoieEtablissement +
-        ' ' +
-        insee.etablissement.adresseEtablissement.typeVoieEtablissement +
-        ' ' +
-        insee.etablissement.adresseEtablissement.libelleVoieEtablissement,
+      address: `${insee.etablissement.adresseEtablissement.numeroVoieEtablissement ?? ''} ${insee.etablissement.adresseEtablissement.typeVoieEtablissement ?? ''} ${
+        insee.etablissement.adresseEtablissement.complementAdresseEtablissement
+      } ${insee.etablissement.adresseEtablissement.libelleVoieEtablissement}`,
       city: insee.etablissement.adresseEtablissement
         .libelleCommuneEtablissement,
       zipCode: insee.etablissement.adresseEtablissement.codePostalEtablissement,
@@ -119,7 +116,7 @@ export default class EnterpriseService {
       .then((res) => {
         return res.data;
       })
-      .catch((e) => {
+      .catch(() => {
         throw new NotFoundException('enterprise.infoNotFound');
       });
   }
