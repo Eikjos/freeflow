@@ -16,7 +16,7 @@ export default async function EnterpriseLayout({
   return (
     <SidebarProvider>
       <SidebarMenu enterprise={enterprise} />
-      {children}
+      <div className="px-5 pb-2 pt-7 w-full">{children}</div>
     </SidebarProvider>
   );
 }

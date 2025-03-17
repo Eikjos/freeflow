@@ -2,44 +2,39 @@
 
 import { AuthResponseData, LoginData } from "@repo/shared-types";
 import { cookies } from "next/headers";
+import { client } from "../../lib/client";
 import { ServerActionsReturns } from "../../types/server-actions-type";
 
 export const login = async (
   data: LoginData
 ): Promise<ServerActionsReturns<AuthResponseData>> => {
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
-  return await fetch(`${process.env.API_URL}/auth/login`, {
-    method: "post",
+  const cookieStore = await cookies();
+  return await client<AuthResponseData>(`auth/login`, {
+    method: "POST",
     body: JSON.stringify({
       email: data.email,
       password: data.password,
     } as LoginData),
-    headers: {
-      "Content-Type": "application/json",
-    },
   })
-    .then(async (res) => {
-      if (!res.ok) {
-        const error = (await res.json()) as Error;
+    .then(async (data) => {
+      console.log("server login", data);
+      if (data.ok) {
+        cookieStore.set("access_token", data.data?.access_token ?? "");
+        cookieStore.set("refreshToken", data.data?.refreshToken ?? "");
         return {
-          success: false,
-          message: error.message,
+          success: true,
+          data: data.data,
         };
       }
-      const data = (await res.json()) as AuthResponseData;
-      const cookiesStore = await cookies();
-      cookiesStore.set("access_token", data.access_token);
-      cookiesStore.set("refreshToken", data.refreshToken);
-      return {
-        success: true,
-        data,
-      };
-    })
-    .catch((e) => {
-      console.error(e);
       return {
         success: false,
-        message: "Une erreur est survenue",
+        message: data.error,
+      };
+    })
+    .catch((e: Error) => {
+      return {
+        success: false,
+        message: e.message,
       };
     });
 };

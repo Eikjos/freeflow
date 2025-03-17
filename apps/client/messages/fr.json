@@ -1,4 +1,7 @@
 {
+  "access": {
+    "denied": "Vous n'avez pas le droit."
+  },
   "country": {
     "afghanistan": "Afghanistan",
     "albania": "Albanie",
@@ -130,6 +133,7 @@
     "nigeria": "Nigéria",
     "north_macedonia": "Macédoine du Nord",
     "norway": "Norvège",
+    "notFound": "Le pays n'a pas été trouvé",
     "oman": "Oman",
     "pakistan": "Pakistan",
     "palau": "Palaos",
@@ -196,20 +200,48 @@
     "zimbabwe": "Zimbabwe"
   },
   "common": {
+    "actions": "Actions",
+    "add": "Ajouter",
+    "create": "Créer",
+    "cancel": "Annuler",
+    "name": "Nom",
     "informations": "Informations",
     "fill": "Remplir",
     "localisation": "Localisation",
     "city": "Ville",
     "zipCode": "Code postale",
     "country": "Pays",
+    "siret": "Siret",
     "address": "Adresse",
     "contact": "Contact",
     "email": "Adresse mail",
+    "modify": "Modifier",
     "password": "Mot de passe",
+    "remove": "Supprimer",
     "phone": "Télephone",
     "dropFile": "Glisser vos fichiers ici.",
     "supportedFile": "Fichier(s) supporté(s) :",
     "previsualizeImage": "Vous pouvez pre-visualiser l'image."
+  },
+  "customer": {
+    "title": "Les clients de {enterprise}",
+    "create": "Création d'un client",
+    "edit": "Édition du client {customer}",
+    "notFound": "Le client n'a pas été trouvé",
+    "removeSuccess": "Le client {customer} a été correctement supprimé.",
+    "removeFailed": "Le client {customer} n'a pas été supprimé.",
+    "dialog": {
+      "removeTitle": "Suppression du client {customer}",
+      "removeDescription": "Êtes-vous sur de vouloir supprimer le client {customer} ?"
+    },
+    "error": {
+      "edit": "Le client n'a pas pu être mis à jour. Veuillez réessayer plus tard.",
+      "create": "Le client n'a pas pu être créer. Veuillez réessayer plus tard."
+    },
+    "success": {
+      "create": "Le client a bien été créer.",
+      "edit": "Le client a bien été mis à jour."
+    }
   },
   "enterprise": {
     "create": "Création de votre entreprise",
@@ -221,11 +253,15 @@
     "fillForm": "Peut pré-remplir tous les champs si possible",
     "name": "Nom de l'entreprise",
     "juridicShape": "Forme juridique",
-    "tvaNumber": "Numéro de TVA"
+    "tvaNumber": "Numéro de TVA",
+    "infoNotFound": "Les informations sur l'entreprise n'a pas été trouvé"
   },
   "signIn": "Connexion",
   "credentials": {
     "invalid": "Les identifiants sont invalides"
+  },
+  "juridicShape": {
+    "notFound": "La forme juridique n'a pas été trouvé"
   },
   "login": {
     "noAccount": "Pas encore de compte ?",

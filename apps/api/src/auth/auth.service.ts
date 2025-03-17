@@ -46,12 +46,12 @@ export default class AuthService {
   public async refresh(userId: number, refreshToken: string) {
     const user = await this.userService.findUserById(userId);
     if (!user || !user.refreshToken)
-      throw new ForbiddenException('Access Denied');
+      throw new ForbiddenException('access.denied');
     const refreshTokenMatches = await bcrypt.compare(
       refreshToken,
       user.refreshToken,
     );
-    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
+    if (!refreshTokenMatches) throw new ForbiddenException('access.denied');
     return this.generateToken(user, user.enterprise);
   }
 
@@ -59,7 +59,7 @@ export default class AuthService {
     user: User,
     enterprise?: Enterprise,
   ): Promise<AuthResponseData> {
-    const payload = { sub: user.id };
+    const payload = { sub: user.id, enterpriseId: enterprise?.id ?? undefined };
 
     const access_token = await this.jwtService.signAsync(payload);
     const refreshToken = await this.jwtService.signAsync(payload, {
@@ -71,7 +71,8 @@ export default class AuthService {
 
     let sales: number = null;
     if (user.isEnterprise && enterprise) {
-      sales = (await this.salesService.getCurrentSales(enterprise.id)).number;
+      sales =
+        (await this.salesService.getCurrentSales(enterprise.id))?.number ?? 0;
     }
 
     return {

@@ -35,7 +35,7 @@ export const LoginForm = ({ className }: LoginFormProps) => {
       if (data.data?.role == "enterprise" && data.data.enterpriseId == null) {
         redirect("/enterprise/create", RedirectType.replace);
       }
-      redirect("/", RedirectType.push);
+      redirect("/", RedirectType.replace);
     });
   };
 

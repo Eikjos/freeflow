@@ -1,3 +1,4 @@
+import SidebarNav from "@components/atoms/sidebar-nav";
 import Logo from "@components/molecules/logo";
 import ProfileButton from "@components/molecules/profileButton";
 import {
@@ -7,24 +8,22 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@components/ui/sidebar";
-import { headers } from "next/headers";
-import Link from "next/link";
 import { EnterpriseInfo } from "../../../types/enterprise-info-type";
 
 type SidebarMenuProps = {
   enterprise: EnterpriseInfo | null;
+  className?: string;
 };
 
-export default async function SidebarMenu({ enterprise }: SidebarMenuProps) {
-  const headerList = await headers();
-  const pathname = headerList.get("x-current-path");
+export default async function SidebarMenu({
+  enterprise,
+  className,
+}: SidebarMenuProps) {
   const navLinks = [
     {
       name: "Mes chiffres",
-      url: "/enterprise",
+      url: "/enterprises",
     },
     {
       name: "Mes factures",
@@ -32,7 +31,7 @@ export default async function SidebarMenu({ enterprise }: SidebarMenuProps) {
     },
     {
       name: "Mes clients",
-      url: "#",
+      url: "/customers",
     },
     {
       name: "Mes frais",
@@ -49,7 +48,7 @@ export default async function SidebarMenu({ enterprise }: SidebarMenuProps) {
   ];
 
   return (
-    <Sidebar>
+    <Sidebar className={className}>
       <SidebarHeader className="mb-20">
         <Logo />
       </SidebarHeader>
@@ -57,16 +56,7 @@ export default async function SidebarMenu({ enterprise }: SidebarMenuProps) {
         <SidebarGroup>
           <SidebarGroupContent className="flex flex-col gap-5">
             {navLinks.map((link, index) => (
-              <SidebarMenuItem key={index}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname?.startsWith(link.url)}
-                >
-                  <Link href={link.url} passHref>
-                    {link.name}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              <SidebarNav url={link.url} name={link.name} key={index} />
             ))}
           </SidebarGroupContent>
         </SidebarGroup>

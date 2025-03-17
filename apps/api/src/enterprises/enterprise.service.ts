@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import AuthService from 'src/auth/auth.service';
 import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
@@ -77,12 +77,10 @@ export default class EnterpriseService {
         .split(' ')
         .map((e) => e.toLowerCase().toLocaleUpperCase())
         .join(' '),
-      address:
-        insee.etablissement.adresseEtablissement.numeroVoieEtablissement +
-        ' ' +
-        insee.etablissement.adresseEtablissement.typeVoieEtablissement +
-        ' ' +
-        insee.etablissement.adresseEtablissement.libelleVoieEtablissement,
+      address: `${insee.etablissement.adresseEtablissement.numeroVoieEtablissement ?? ''} ${insee.etablissement.adresseEtablissement.typeVoieEtablissement ?? ''} ${
+        insee.etablissement.adresseEtablissement
+          .complementAdresseEtablissement ?? ''
+      } ${insee.etablissement.adresseEtablissement.libelleVoieEtablissement ?? ''}`,
       city: insee.etablissement.adresseEtablissement
         .libelleCommuneEtablissement,
       zipCode: insee.etablissement.adresseEtablissement.codePostalEtablissement,
@@ -109,12 +107,19 @@ export default class EnterpriseService {
       { headers: header },
     );
     // Récupération des informations de l'entreprise
-    const url = 'https://api.insee.fr/entreprises/sirene/V3.11/siret/' + siret;
-    const response = await this.httpService.axiosRef.get<EtablissementResponse>(
-      url,
-      { headers: { Authorization: 'Bearer ' + token.data.access_token } },
-    );
-    return response.data;
+    const url =
+      'https://api.insee.fr/entreprises/sirene/V3.11/siret/' +
+      siret.replace(/\s+/g, '');
+    return await this.httpService.axiosRef
+      .get<EtablissementResponse>(url, {
+        headers: { Authorization: 'Bearer ' + token.data.access_token },
+      })
+      .then((res) => {
+        return res.data;
+      })
+      .catch(() => {
+        throw new NotFoundException('enterprise.infoNotFound');
+      });
   }
 
   private getCleControleTVANumber(siren: string) {

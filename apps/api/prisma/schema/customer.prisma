@@ -4,11 +4,15 @@ model Customer {
   siret             String?
   tvaNumber         String?
   address           String
+  zipCode           String
   city              String
+  email             String
+  phone             String
   country           Country @relation(fields: [countryId], references: [id])
   countryId         Int
   projects          Project[]
   users             User[]
   invoices          Invoice[]
   opinions          Opinion[]
+  enterprises       EnterpriseCustomer[]
 }

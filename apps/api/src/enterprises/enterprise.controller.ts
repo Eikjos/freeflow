@@ -49,7 +49,7 @@ export default class EnterprisesController {
     logo: Express.Multer.File,
     @Req() req: Request,
   ) {
-    return await this.enterpriseService.createEnterprise(
+    return this.enterpriseService.createEnterprise(
       body,
       logo,
       parseInt(req.user['sub']),

@@ -5,22 +5,18 @@ import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { Select } from "@components/ui/select";
 import {
-  CountryData,
   EnterpriseCreateModel,
   EnterpriseInformation,
-  JuridicShapeData,
 } from "@repo/shared-types";
-import { getCountries } from "actions/countries";
-import { fetchEnterpriseInfo } from "actions/enterprise";
-import { getJuridicShapes } from "actions/juridic-shape";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { getAllCountriesQueryOptions } from "../../../lib/api/countries";
+import { fetchEnterpriseInfoQueryOptions } from "../../../lib/api/enterprise";
+import { getAllJuridicShapesQueryOptions } from "../../../lib/api/juridic-shapes";
 import { Card, CardContent } from "../ui/card";
 
 const EnterpriseForm = () => {
-  const [countries, setCountries] = useState<CountryData[]>([]);
-  const [juridicShapes, setJuridicShapes] = useState<JuridicShapeData[]>([]);
   const t = useTranslations();
   const form = useFormContext<EnterpriseCreateModel>();
 
@@ -42,27 +38,18 @@ const EnterpriseForm = () => {
     ]);
   };
 
-  useEffect(() => {
-    getCountries().then((data) => {
-      setCountries(data);
-    });
-    getJuridicShapes().then((data) => {
-      setJuridicShapes(data);
-    });
-  }, []);
+  const { data: countries } = useQuery(getAllCountriesQueryOptions());
+  const { data: juridicShapes } = useQuery(getAllJuridicShapesQueryOptions());
 
   const fillFormWithEnterpriseinfo = () => {
-    fetchEnterpriseInfo(form.getValues().siret.replace(" ", "")).then(
-      (data) => {
-        if (data !== null) {
-          updateFormValues(
-            data,
-            form.getValues().email,
-            form.getValues().phone
-          );
-        }
-      }
+    const { data } = useQuery(
+      fetchEnterpriseInfoQueryOptions(
+        form.getValues().siret.replace(/\s+/g, "")
+      )
     );
+    if (data) {
+      updateFormValues(data, form.getValues().email, form.getValues().phone);
+    }
   };
 
   return (
@@ -101,7 +88,7 @@ const EnterpriseForm = () => {
                   label={t("enterprise.juridicShape")}
                   className="mt-3"
                   placeholder={t("enterprise.juridicShape")}
-                  values={juridicShapes.map((item) => ({
+                  values={(juridicShapes ?? []).map((item) => ({
                     value: item.code,
                     textValue: item.designation,
                   }))}
@@ -143,7 +130,7 @@ const EnterpriseForm = () => {
                 <Select
                   label={t("common.country")}
                   placeholder={t("common.country")}
-                  values={countries.map((c) => ({
+                  values={(countries ?? []).map((c) => ({
                     value: c.id.toString(),
                     textValue: t(c.name),
                   }))}

@@ -18,7 +18,18 @@ model Enterprise {
   expenses        Expense[]
   contacts        Contact[]
   opinions        Opinion[]
+  customers       EnterpriseCustomer[]
   mediaId         Int? @unique
   sales           Sales[]
   media           Media? @relation(fields: [mediaId], references: [id])
+}
+
+model EnterpriseCustomer {
+  enterprise      Enterprise @relation(fields: [enterpriseId], references: [id])
+  enterpriseId    Int 
+  customer        Customer @relation(fields: [customerId], references: [id])
+  customerId      Int 
+  isDeleted       Boolean @default(false)
+
+  @@id([enterpriseId, customerId])
 }
