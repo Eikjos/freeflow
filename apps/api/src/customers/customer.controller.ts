@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -44,6 +45,17 @@ export default class CustomerController {
   ) {
     const enterpriseId = req.user['enterpriseId'];
     return await this.customerService.create(enterpriseId, model);
+  }
+
+  @Put(':id')
+  @UseGuards(AccessTokenGuard)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body(new ZodPipe(CustomerCreateValidation)) model: CustomerCreateDto,
+    @Req() req: Request,
+  ) {
+    const enterpriseId = req.user['enterpriseId'];
+    return await this.customerService.update(id, enterpriseId, model);
   }
 
   @Get(':id')

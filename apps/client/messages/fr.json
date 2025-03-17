@@ -215,6 +215,7 @@
     "address": "Adresse",
     "contact": "Contact",
     "email": "Adresse mail",
+    "modify": "Modifier",
     "password": "Mot de passe",
     "remove": "Supprimer",
     "phone": "Télephone",
@@ -224,12 +225,22 @@
   },
   "customer": {
     "title": "Les clients de {enterprise}",
+    "create": "Création d'un client",
+    "edit": "Édition du client {customer}",
     "notFound": "Le client n'a pas été trouvé",
     "removeSuccess": "Le client {customer} a été correctement supprimé.",
     "removeFailed": "Le client {customer} n'a pas été supprimé.",
     "dialog": {
       "removeTitle": "Suppression du client {customer}",
       "removeDescription": "Êtes-vous sur de vouloir supprimer le client {customer} ?"
+    },
+    "error": {
+      "edit": "Le client n'a pas pu être mis à jour. Veuillez réessayer plus tard.",
+      "create": "Le client n'a pas pu être créer. Veuillez réessayer plus tard."
+    },
+    "success": {
+      "create": "Le client a bien été créer.",
+      "edit": "Le client a bien été mis à jour."
     }
   },
   "enterprise": {

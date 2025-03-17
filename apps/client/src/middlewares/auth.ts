@@ -19,7 +19,6 @@ export async function AuthMiddleware(req: NextRequest) {
     token: authToken.value,
   })
     .then((data) => {
-      console.log(data);
       const responseOK = NextResponse.next();
       if (data.ok) {
         cookieStore.set("access_token", data?.data?.access_token ?? "");

@@ -78,8 +78,9 @@ export default class EnterpriseService {
         .map((e) => e.toLowerCase().toLocaleUpperCase())
         .join(' '),
       address: `${insee.etablissement.adresseEtablissement.numeroVoieEtablissement ?? ''} ${insee.etablissement.adresseEtablissement.typeVoieEtablissement ?? ''} ${
-        insee.etablissement.adresseEtablissement.complementAdresseEtablissement
-      } ${insee.etablissement.adresseEtablissement.libelleVoieEtablissement}`,
+        insee.etablissement.adresseEtablissement
+          .complementAdresseEtablissement ?? ''
+      } ${insee.etablissement.adresseEtablissement.libelleVoieEtablissement ?? ''}`,
       city: insee.etablissement.adresseEtablissement
         .libelleCommuneEtablissement,
       zipCode: insee.etablissement.adresseEtablissement.codePostalEtablissement,

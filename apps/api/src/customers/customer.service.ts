@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common';
 import CustomerCreateDto from 'src/dtos/customers/customer-create.dto';
 import {
-  mapCustomerToDto,
   CustomerDto,
   mapCustomerToDetailDto,
+  mapCustomerToDto,
 } from 'src/dtos/customers/customer.dto';
 import PaginationResultDto from 'src/dtos/utils/pagination-result.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -61,6 +61,30 @@ export default class CustomerService {
     return mapCustomerToDetailDto(relation.customer, null);
   }
 
+  async update(
+    customerId: number,
+    enterpriseId: number,
+    model: CustomerCreateDto,
+  ) {
+    const relation = await this.prisma.enterpriseCustomer.findFirst({
+      where: { customerId, enterpriseId, isDeleted: false },
+      include: {
+        customer: true,
+      },
+    });
+    if (!relation) throw new NotFoundException('customer.notFound');
+
+    const customer = await this.prisma.customer.update({
+      where: { id: customerId },
+      data: {
+        ...model,
+        countryId: parseInt(model.countryId),
+      },
+    });
+
+    return mapCustomerToDto(customer, null);
+  }
+
   async create(enterpriseId: number, model: CustomerCreateDto) {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
@@ -77,10 +101,7 @@ export default class CustomerService {
         },
       },
     });
-    const country = await this.prisma.country.findFirst({
-      where: { id: customer.countryId },
-    });
-    return mapCustomerToDto(customer, country);
+    return mapCustomerToDto(customer, null);
   }
 
   async delete(customerId: number, enterpriseId: number) {

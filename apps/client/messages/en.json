@@ -1,6 +1,6 @@
 {
   "access": {
-    "denied": "You don't have the right."
+    "denied": "You do not have permission."
   },
   "country": {
     "afghanistan": "Afghanistan",
@@ -31,7 +31,7 @@
     "bulgaria": "Bulgaria",
     "burkina_faso": "Burkina Faso",
     "burundi": "Burundi",
-    "cabo_verde": "Cabo Verde",
+    "cabo_verde": "Cape Verde",
     "cambodia": "Cambodia",
     "cameroon": "Cameroon",
     "canada": "Canada",
@@ -47,7 +47,7 @@
     "croatia": "Croatia",
     "cuba": "Cuba",
     "cyprus": "Cyprus",
-    "czechia": "Czechia",
+    "czechia": "Czech Republic",
     "denmark": "Denmark",
     "djibouti": "Djibouti",
     "dominica": "Dominica",
@@ -133,7 +133,7 @@
     "nigeria": "Nigeria",
     "north_macedonia": "North Macedonia",
     "norway": "Norway",
-    "notFound": "The country is not found.",
+    "notFound": "Country not found",
     "oman": "Oman",
     "pakistan": "Pakistan",
     "palau": "Palau",
@@ -154,7 +154,7 @@
     "saint_vincent_and_grenadines": "Saint Vincent and the Grenadines",
     "samoa": "Samoa",
     "san_marino": "San Marino",
-    "sao_tome_and_principe": "Sao Tome and Principe",
+    "sao_tome_and_principe": "São Tomé and Príncipe",
     "saudi_arabia": "Saudi Arabia",
     "senegal": "Senegal",
     "serbia": "Serbia",
@@ -200,43 +200,68 @@
     "zimbabwe": "Zimbabwe"
   },
   "common": {
+    "actions": "Actions",
+    "add": "Add",
+    "create": "Create",
+    "cancel": "Cancel",
+    "name": "Name",
     "informations": "Information",
     "fill": "Fill",
     "localisation": "Location",
     "city": "City",
     "zipCode": "Postal Code",
     "country": "Country",
+    "siret": "Siret",
     "address": "Address",
     "contact": "Contact",
     "email": "Email Address",
+    "modify": "Modify",
     "password": "Password",
+    "remove": "Remove",
     "phone": "Phone",
-    "dropFile": "Drop your files here.",
+    "dropFile": "Drag your files here.",
     "supportedFile": "Supported file(s):",
     "previsualizeImage": "You can preview the image."
   },
   "customer": {
-    "notFound": "The customer is not found."
+    "title": "The customers of {enterprise}",
+    "create": "Create a customer",
+    "edit": "Edit customer {customer}",
+    "notFound": "Customer not found",
+    "removeSuccess": "Customer {customer} has been successfully removed.",
+    "removeFailed": "Customer {customer} has not been removed.",
+    "dialog": {
+      "removeTitle": "Remove customer {customer}",
+      "removeDescription": "Are you sure you want to remove customer {customer}?"
+    },
+    "error": {
+      "edit": "The customer could not be updated. Please try again later.",
+      "create": "The customer could not be created. Please try again later."
+    },
+    "success": {
+      "create": "The customer has been created successfully.",
+      "edit": "The customer has been updated successfully."
+    }
   },
   "enterprise": {
-    "create": "Create your business",
-    "createMyEnterprise": "Create my business",
-    "informations": "Informations",
-    "recap": "Your business recap",
-    "logo": "Your business logo",
-    "siret": "SIRET",
+    "create": "Create your enterprise",
+    "createMyEnterprise": "Create my enterprise",
+    "informations": "Information",
+    "recap": "Enterprise summary",
+    "logo": "Enterprise logo",
+    "siret": "Siret",
     "fillForm": "Can pre-fill all fields if possible",
-    "name": "Business name",
-    "juridicShape": "Legal structure",
+    "name": "Enterprise name",
+    "juridicShape": "Legal form",
     "tvaNumber": "VAT number",
-    "infoNotFound": "The information about enterprise is not found."
+    "infoNotFound": "Enterprise information not found"
   },
-  "signIn": "Sign in",
+  "signIn": "Sign In",
   "credentials": {
-    "invalid": "The credentials are invalid"
+    "invalid": "Invalid credentials"
   },
   "juridicShape": {
-    "notFound": "The juridic shape is not found."
+    "notFound": "Legal form not found"
   },
   "login": {
     "noAccount": "No account yet ?",

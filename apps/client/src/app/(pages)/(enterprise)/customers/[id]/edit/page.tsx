@@ -1,28 +1,40 @@
-"use client";
+"use server";
 
 import CustomerForm from "@components/templates/customer-form";
-import { useQuery } from "@tanstack/react-query";
-import { notFound, useParams } from "next/navigation";
-import { getCustomerByIdOptions } from "../../../../../../lib/api/customers";
+import { CustomerDetailModel } from "@repo/shared-types";
+import { getTranslations } from "next-intl/server";
+import { notFound } from "next/navigation";
+import { client } from "../../../../../../lib/client";
 
-type EditCustomerPageProps = {
+type EditCustomerParams = {
   id: string;
 };
 
-export default function EditCustomerPage() {
-  const { id }: EditCustomerPageProps = useParams();
-  const { data } = useQuery(getCustomerByIdOptions(id));
+type EditCustomerPageProps = {
+  params: Promise<EditCustomerParams>;
+};
 
-  if (data && !data?.ok) {
+export default async function EditCustomerPage({
+  params,
+}: EditCustomerPageProps) {
+  const { id } = await params;
+  const customer = await client<CustomerDetailModel>(`customers/${id}`);
+  const t = await getTranslations();
+
+  if (customer && !customer.ok) {
     notFound();
   }
 
   return (
     <div>
-      <h1 className="font-amica text-4xl mb-4">
-        Edition du client {data?.data?.name}
-      </h1>
-      <CustomerForm edit customerId={parseInt(id)} data={data?.data} />
+      {customer && customer?.ok && (
+        <>
+          <h1 className="font-amica text-4xl mb-20">
+            {t("customer.edit", { customer: customer.data?.name })}
+          </h1>
+          <CustomerForm edit customerId={parseInt(id)} data={customer.data} />
+        </>
+      )}
     </div>
   );
 }

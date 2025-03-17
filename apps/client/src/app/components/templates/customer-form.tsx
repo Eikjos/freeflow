@@ -13,7 +13,7 @@ import {
   EnterpriseInformation,
 } from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
-import { CreateCustomer } from "actions/customer";
+import { CreateCustomer, UpdateCustomer } from "actions/customer";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getAllCountriesQueryOptions } from "../../../lib/api/countries";
 import { fetchEnterpriseInfoQueryOptions } from "../../../lib/api/enterprise";
+import getQueryClient from "../../../lib/query-client";
 
 type CustomerFormProps = {
   className?: string;
@@ -35,6 +36,7 @@ export default function CustomerForm({
   customerId,
   data,
 }: CustomerFormProps) {
+  const queryClient = getQueryClient();
   const [queryTrigger, setQueryTrigger] = useState(false);
   const t = useTranslations();
   const router = useRouter();
@@ -86,13 +88,24 @@ export default function CustomerForm({
   });
 
   const onSubmit = (values: CustomerCreateModel) => {
-    if (edit) {
-      console.log(edit, values, customerId);
+    if (edit && customerId) {
+      UpdateCustomer(customerId, values).then((res) => {
+        if (res === null) {
+          toast.error(t("customer.error.edit"));
+        } else {
+          toast.success(t("customer.success.edit"));
+          queryClient.invalidateQueries({
+            queryKey: ["customers", customerId],
+          });
+          router.push("/customers");
+        }
+      });
     } else {
       CreateCustomer(values).then((res) => {
         if (res === null) {
-          console.log("error");
+          toast.error(t("customer.error.create"));
         } else {
+          toast.success(t("customer.success.create"));
           router.push("/customers");
         }
       });
@@ -216,7 +229,7 @@ export default function CustomerForm({
           </CardContent>
           <CardFooter className="flex flex-row justify-end">
             <Button type="submit" disabled={!form.formState.isValid}>
-              {t("common.create")}
+              {edit ? t("common.modify") : t("common.create")}
             </Button>
           </CardFooter>
         </Card>

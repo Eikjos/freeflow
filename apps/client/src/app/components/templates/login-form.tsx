@@ -29,7 +29,6 @@ export const LoginForm = ({ className }: LoginFormProps) => {
   });
   const onSubmit = (values: LoginData) => {
     login(values).then((data) => {
-      console.log("login", data);
       if (!data.success) {
         setError(data.message);
       }

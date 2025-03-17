@@ -17,6 +17,23 @@ export const CreateCustomer = async (model: CustomerCreateModel) => {
     });
 };
 
+export const UpdateCustomer = async (
+  id: number,
+  model: CustomerCreateModel
+) => {
+  return client<CustomerModel>(`customers/${id}`, {
+    method: "PUT",
+    credentials: "include",
+    body: JSON.stringify(model),
+  })
+    .then(async (data) => {
+      return data;
+    })
+    .catch(() => {
+      return null;
+    });
+};
+
 export const DeleteCutomer = async (id: number) => {
   return client<any>(`customers/${id}`, { method: "DELETE" });
 };
