@@ -19,7 +19,7 @@ export default async function CustomerPage() {
     : null;
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(
-    getAllCustomersQueryOptions({ page: 0, pageSize: 20 })
+    getAllCustomersQueryOptions({ page: 0, pageSize: 10 })
   );
 
   return (
