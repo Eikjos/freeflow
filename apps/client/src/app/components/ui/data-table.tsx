@@ -22,11 +22,13 @@ interface DataTableProps<TData> {
   data: TData[];
   pageSize: number;
   className?: string;
+  isLoading?: boolean;
 }
 
 export function DataTable<TData>({
   columns,
   data,
+  isLoading,
   className,
 }: DataTableProps<TData>) {
   const table = useReactTable({
@@ -58,31 +60,48 @@ export function DataTable<TData>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+            {!isLoading && (
+              <>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
+                      Vous n'avez pas encore de données.
                     </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  Vous n'avez pas encore de données.
-                </TableCell>
-              </TableRow>
+                  </TableRow>
+                )}
+              </>
+            )}
+            {isLoading && (
+              <>
+                {Array.from({ length: 10 }).map((_, rowIndex) => (
+                  <TableRow key={`loading-row-${rowIndex}`}>
+                    {columns.map((_, colIndex) => (
+                      <TableCell key={`loading-cell-${rowIndex}-${colIndex}`}>
+                        <div className="animate-pulse w-full h-4 rounded-md bg-gray-200"></div>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </>
             )}
           </TableBody>
         </Table>

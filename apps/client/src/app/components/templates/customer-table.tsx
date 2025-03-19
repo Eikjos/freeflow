@@ -30,10 +30,12 @@ import getQueryClient from "../../../lib/query-client";
 export default function CustomerTable() {
   const t = useTranslations();
   const queryClient = getQueryClient();
-  const [page, setPage] = useState<PaginationType>({ page: 0, pageSize: 20 });
-  const { data: customers, refetch } = useQuery(
-    getAllCustomersQueryOptions(page)
-  );
+  const [page, setPage] = useState<PaginationType>({ page: 0, pageSize: 10 });
+  const {
+    data: customers,
+    refetch,
+    isLoading,
+  } = useQuery(getAllCustomersQueryOptions(page));
 
   const handleChangePage = (page: number) => {
     setPage((prev) => ({ ...prev, page }));
@@ -130,6 +132,7 @@ export default function CustomerTable() {
         columns={columnDefs}
         data={customers?.data?.data ?? []}
         pageSize={20}
+        isLoading={isLoading}
         className="w-full mx-auto"
       />
       {(customers?.data?.totalItems ?? 0) > 0 && (

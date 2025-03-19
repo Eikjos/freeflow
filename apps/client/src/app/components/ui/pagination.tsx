@@ -128,15 +128,17 @@ const Pagination = ({
   onChangePage,
 }: PaginationProps) => {
   const [pagination, setPagination] = useState<number[]>([]);
+  const [length, setLength] = useState<number>(0);
 
   useEffect(() => {
-    const length = Math.floor(
+    const l = Math.floor(
       totalItems / pageSize + (totalItems % pageSize > 0 ? 1 : 0)
     );
+    setLength(l);
     setPagination(
       Array.from(
         {
-          length: length,
+          length: l,
         },
         (e, i) => i + 1
       ).filter((e) => {
@@ -175,7 +177,7 @@ const Pagination = ({
             <PaginationEllipsis />
           </PaginationItem>
         )}
-        {page < length - 1 && (
+        {page >= 0 && page < length - 1 && (
           <PaginationItem onClick={() => onChangePage(page + 1)}>
             <PaginationNext lang="fr" />
           </PaginationItem>

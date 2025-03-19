@@ -82,7 +82,7 @@ export default function CustomerForm({
     ]);
   };
 
-  const { data: enterpriseInfo } = useQuery({
+  const { data: enterpriseInfo, isLoading } = useQuery({
     ...fetchEnterpriseInfoQueryOptions(siret?.replace(/\s+/g, "") ?? ""),
     enabled: (siret?.replace(/\s+/g, "") ?? "").length === 14 && queryTrigger,
   });
@@ -151,6 +151,7 @@ export default function CustomerForm({
                 <Button
                   className="mt-2"
                   type="button"
+                  isLoading={isLoading}
                   onClick={() => setQueryTrigger(true)}
                 >
                   {t("common.fill")}
@@ -228,7 +229,11 @@ export default function CustomerForm({
             </div>
           </CardContent>
           <CardFooter className="flex flex-row justify-end">
-            <Button type="submit" disabled={!form.formState.isValid}>
+            <Button
+              type="submit"
+              isLoading={form.formState.isSubmitting}
+              disabled={!form.formState.isValid}
+            >
               {edit ? t("common.modify") : t("common.create")}
             </Button>
           </CardFooter>
