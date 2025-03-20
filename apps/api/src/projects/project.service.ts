@@ -1,10 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
+import ProjectCreateDto from 'src/dtos/projects/project-create.dto';
 import { mapProjectToDto } from 'src/dtos/projects/project.dto';
+import { MediaService } from 'src/media/media.service';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export default class ProjectService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mediaService: MediaService,
+  ) {}
 
   // -
 
@@ -14,5 +23,29 @@ export default class ProjectService {
       include: { customer: true },
     });
     return projects.map((p) => mapProjectToDto(p, p.customer));
+  }
+
+  async create(
+    model: ProjectCreateDto,
+    media: Express.Multer.File,
+    enterpriseId: number,
+  ) {
+    if (enterpriseId == null) throw new ForbiddenException();
+    const customer = await this.prisma.enterpriseCustomer.findFirst({
+      where: { enterpriseId, customerId: model.customerId, isDeleted: false },
+    });
+    if (!customer) throw new BadRequestException('project.customer.notValid');
+    const mediaId = await this.mediaService.upload(media);
+
+    const project = await this.prisma.project.create({
+      data: {
+        name: model.name,
+        customerId: model.customerId,
+        mediaId,
+        enterpriseId,
+      },
+    });
+
+    return project.id;
   }
 }
