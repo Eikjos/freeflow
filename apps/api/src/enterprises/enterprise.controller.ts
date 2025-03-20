@@ -1,8 +1,11 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   HttpCode,
+  Param,
+  ParseIntPipe,
   Post,
   Query,
   Req,
@@ -18,13 +21,17 @@ import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto'
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import { ZodPipe } from 'src/pipe/zod.pipe';
+import ProjectService from 'src/projects/project.service';
 import EnterpriseService from './enterprise.service';
 
 @Controller('enterprises')
 @ApiTags('Enterprise')
 @ApiBearerAuth()
 export default class EnterprisesController {
-  constructor(private readonly enterpriseService: EnterpriseService) {}
+  constructor(
+    private readonly enterpriseService: EnterpriseService,
+    private readonly projectService: ProjectService,
+  ) {}
 
   @UseGuards(AccessTokenGuard)
   @Get('information')
@@ -54,5 +61,16 @@ export default class EnterprisesController {
       logo,
       parseInt(req.user['sub']),
     );
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get(':id/projects')
+  async getProjectsByEnterpriseId(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request,
+  ) {
+    const enterpriseId = req.user['enterpriseId'] as number;
+    if (id === enterpriseId) throw new ForbiddenException();
+    return;
   }
 }

@@ -6,10 +6,10 @@ import {
   ParseIntPipe,
   Res,
 } from '@nestjs/common';
-import { MediaService } from './media.service';
 import { Response } from 'express';
+import { MediaService } from './media.service';
 
-@Controller()
+@Controller('media')
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
 

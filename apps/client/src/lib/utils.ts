@@ -22,3 +22,7 @@ export function generateQueryString<T extends object>(filter: T): string {
     .filter(Boolean) // On filtre les valeurs vides (par exemple, si la clé est `null` ou `undefined`)
     .join("&");
 }
+
+export function getMediaUrl(mediaId: number) {
+  return `${process.env.API_URL}/media/${mediaId}`;
+}
