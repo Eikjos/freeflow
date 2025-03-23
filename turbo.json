@@ -15,7 +15,7 @@
     "dev": {
       "dependsOn": ["@repo/shared-types#build"],
       "cache": false,
-      "persistent": true
+      "persistent": false
     }
   }
 }

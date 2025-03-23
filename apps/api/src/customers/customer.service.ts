@@ -3,13 +3,17 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { CustomerModel } from '@repo/shared-types';
 import CustomerCreateDto from 'src/dtos/customers/customer-create.dto';
 import {
   CustomerDto,
   mapCustomerToDetailDto,
   mapCustomerToDto,
 } from 'src/dtos/customers/customer.dto';
-import PaginationResultDto from 'src/dtos/utils/pagination-result.dto';
+import {
+  PaginationResultDto,
+  PaginationFilterDto,
+} from 'src/dtos/utils/pagination-result.dto';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -18,10 +22,34 @@ export default class CustomerService {
 
   // --
 
-  async findAll(enterpriseId: number, page: number, pageSize: number) {
+  async findAll(
+    enterpriseId: number,
+    filter: PaginationFilterDto<CustomerModel>,
+  ) {
+    const transformedFilter = {};
+    let { page, pageSize } = filter;
+
+    page = page ? Number(page) : 0;
+    pageSize = pageSize ? Number(pageSize) : 20;
+
+    if (filter.filter) {
+      Object.entries(filter.filter).forEach(([key, value]) => {
+        if (typeof value === 'string' && !isNaN(parseInt(value, 10))) {
+          transformedFilter[key] = parseInt(value, 10);
+        } else if (typeof value === 'string' && value.trim() !== '') {
+          transformedFilter[key] = {
+            contains: value.trim(),
+            mode: 'insensitive',
+          };
+        } else if (value) {
+          transformedFilter[key] = value;
+        }
+      });
+    }
     const customers = await this.prisma.customer
       .findMany({
         where: {
+          ...transformedFilter,
           enterprises: {
             some: { enterpriseId: enterpriseId, isDeleted: false },
           },
@@ -29,6 +57,11 @@ export default class CustomerService {
         include: { country: true },
         skip: pageSize * page,
         take: pageSize,
+        orderBy: filter.asc
+          ? { [filter.asc]: 'asc' }
+          : filter.desc
+            ? { [filter.desc]: 'desc' }
+            : { id: 'asc' },
       })
       .then((res) => {
         return res.map((customer) =>
@@ -37,6 +70,7 @@ export default class CustomerService {
       });
     const totalItems = await this.prisma.customer.count({
       where: {
+        ...transformedFilter,
         enterprises: {
           some: { enterpriseId: enterpriseId, isDeleted: false },
         },

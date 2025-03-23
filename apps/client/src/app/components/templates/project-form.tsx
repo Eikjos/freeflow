@@ -1,6 +1,6 @@
 "use client";
 
-import { AutoComplete } from "@components/molecules/autocomplete";
+import Autocomplete from "@components/molecules/autocomplete";
 import { Card, CardContent } from "@components/ui/card";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ProjectCreateData, ProjectCreateValidation } from "@repo/shared-types";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
+import { getAllCustomersQueryOptions } from "../../../lib/api/customers";
 
 type ProjectFormProps = {
   className?: string;
@@ -19,6 +20,7 @@ export default function ProjectForm({ className }: ProjectFormProps) {
     resolver: zodResolver(ProjectCreateValidation),
     defaultValues: {
       name: "",
+      customerId: 1,
     },
   });
   return (
@@ -32,7 +34,14 @@ export default function ProjectForm({ className }: ProjectFormProps) {
                 {...form.register("name")}
                 label={t("common.name")}
               />
-              <AutoComplete />
+              <Autocomplete
+                queryOptions={getAllCustomersQueryOptions}
+                filterField="name"
+                render={(customer) => customer.name}
+                fieldIdentifier="id"
+                {...form.register("customerId")}
+                label="Client"
+              />
             </div>
           </CardContent>
         </Card>

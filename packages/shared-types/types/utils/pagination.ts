@@ -10,7 +10,7 @@ export type Pagination = {
   pageSize: number;
 };
 
-export type PaginationFilter<TData> = {
+export type PaginationFilter<TData extends Record<string, string | number>> = {
   filter?: Partial<TData>;
   asc?: keyof TData;
   desc?: keyof TData;

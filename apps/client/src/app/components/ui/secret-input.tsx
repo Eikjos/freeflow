@@ -25,7 +25,7 @@ const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>(
 
     return (
       <FormField
-        name={props.name}
+        name={props.name ?? ""}
         render={({ field, fieldState }) => (
           <FormItem>
             <FormLabel>{props.label}</FormLabel>
