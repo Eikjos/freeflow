@@ -27,15 +27,15 @@ export default class ProjectService {
 
   async create(
     model: ProjectCreateDto,
-    media: Express.Multer.File,
     enterpriseId: number,
+    media?: Express.Multer.File,
   ) {
     if (enterpriseId == null) throw new ForbiddenException();
     const customer = await this.prisma.enterpriseCustomer.findFirst({
       where: { enterpriseId, customerId: model.customerId, isDeleted: false },
     });
     if (!customer) throw new BadRequestException('project.customer.notValid');
-    const mediaId = await this.mediaService.upload(media);
+    const mediaId = media ? await this.mediaService.upload(media) : undefined;
 
     const project = await this.prisma.project.create({
       data: {

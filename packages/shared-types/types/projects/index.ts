@@ -19,6 +19,7 @@ export type ProjectCreateData = {
   name: string;
   customerId: number;
   media?: File;
+  [key: string]: any;
 };
 
 export const ProjectCreateValidation = z.object({

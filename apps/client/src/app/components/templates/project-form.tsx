@@ -8,10 +8,13 @@ import { Input } from "@components/ui/input";
 import InputFile from "@components/ui/input-file";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProjectCreateData, ProjectCreateValidation } from "@repo/shared-types";
+import { CreateProject } from "actions/project";
 import { Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { getAllCustomersQueryOptions } from "../../../lib/api/customers";
 import { cn } from "../../../lib/utils";
 
@@ -21,6 +24,7 @@ type ProjectFormProps = {
 
 export default function ProjectForm({ className }: ProjectFormProps) {
   const t = useTranslations();
+  const router = useRouter();
   const form = useForm<ProjectCreateData>({
     resolver: zodResolver(ProjectCreateValidation),
     defaultValues: {
@@ -41,7 +45,16 @@ export default function ProjectForm({ className }: ProjectFormProps) {
   };
 
   const onSubmit = (values: ProjectCreateData) => {
-    console.log(values);
+    CreateProject(values).then((res) => {
+      if (res === null) {
+        toast.error(t("customer.error.create"));
+      } else if (!res.ok && res.error) {
+        toast.error(res.error);
+      } else {
+        toast.success("Projet créé avec succès");
+        router.push("/activities");
+      }
+    });
   };
 
   return (
