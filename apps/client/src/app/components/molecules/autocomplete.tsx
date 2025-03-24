@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@components/ui/button";
 import {
   FormControl,
   FormField,
@@ -12,13 +13,13 @@ import Loading from "@components/ui/loading";
 import { PaginationFilter, PaginationResult } from "@repo/shared-types";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
-import { createRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "../../../lib/utils";
 import { HttpResponse } from "../../../types/http-response";
 
 type AutoCompleteProps<TData extends Record<string, string | number>> =
-  {} & AutoCompleteWithoutControlProps<TData> &
-    Omit<InputProps, "type" | "value" | "defaultValue">;
+  {} & Omit<AutoCompleteWithoutControlProps<TData>, "onChange"> &
+    Omit<InputProps, "type" | "value" | "defaultValue" | "onChange">;
 
 type AutoCompleteWithoutControlProps<
   TData extends Record<string, string | number>,
@@ -33,7 +34,8 @@ type AutoCompleteWithoutControlProps<
   className?: string;
   placeholder?: string;
   error?: string;
-} & Omit<InputProps, "type" | "value" | "defaultValue">;
+  onChange?: (value?: number) => void;
+} & Omit<InputProps, "type" | "value" | "defaultValue" | "onChange">;
 
 type AutocompleteItemProps = {
   name: string;
@@ -43,12 +45,15 @@ type AutocompleteItemProps = {
 
 function AutoCompleteItem({ name, value, onClick }: AutocompleteItemProps) {
   return (
-    <div
+    <Button
+      type="button"
+      variant={"select"}
       className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
-      onClick={() => onClick(value, name)}
+      onClick={(e) => onClick(value, name)}
+      tabIndex={0}
     >
-      <span>{name}</span>
-    </div>
+      <span className="text-left">{name}</span>
+    </Button>
   );
 }
 
@@ -62,11 +67,13 @@ function AutoCompleteWithoutControl<
   placeholder,
   value,
   error,
+  ...props
 }: AutoCompleteWithoutControlProps<TData>) {
   const [open, setOpen] = useState<boolean>(false);
   const [currentValue, setCurrentValue] = useState<number | undefined>(value);
   const [displayValue, setDisplayValue] = useState<string>("");
-  const inputRef = createRef<HTMLInputElement>();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [filterApplied, setFilterApplied] = useState<PaginationFilter<TData>>({
     page: 0,
@@ -80,6 +87,9 @@ function AutoCompleteWithoutControl<
   const handleChange = (newValue: number, newDisplayValue: string) => {
     setCurrentValue(newValue);
     setDisplayValue(newDisplayValue);
+    if (props.onChange) {
+      props.onChange(newValue);
+    }
     handleFilter(newDisplayValue);
     setOpen(false);
   };
@@ -88,6 +98,9 @@ function AutoCompleteWithoutControl<
     setCurrentValue(undefined);
     setDisplayValue("");
     handleFilter("");
+    if (props.onChange) {
+      props.onChange();
+    }
     inputRef.current?.focus();
   };
 
@@ -117,6 +130,25 @@ function AutoCompleteWithoutControl<
     }
   }, [data]);
 
+  useEffect(() => {
+    // Fermer le dropdown lorsque vous cliquez en dehors de l'input ou du dropdown
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node) &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div>
       <div className="relative flex flex-row">
@@ -129,7 +161,6 @@ function AutoCompleteWithoutControl<
             }
           )}
           onChange={(e) => handleFilter(e.currentTarget.value)}
-          onBlur={() => setTimeout(() => setOpen(false), 200)}
           onFocus={() => setOpen(true)}
           placeholder={placeholder}
           value={displayValue}
@@ -153,7 +184,11 @@ function AutoCompleteWithoutControl<
         </span>
       </div>
       {open && (
-        <div className="absolute max-h-40 z-50 rounded-md shadow-md w-full bg-white overflow-y-auto">
+        <div
+          className="absolute max-h-40 z-50 rounded-md shadow-md w-full bg-white overflow-y-auto"
+          ref={dropdownRef}
+          tabIndex={-1}
+        >
           <div className="flex flex-col w-full">
             {isLoading ? (
               <div className="flex flex-row justify-center py-2">
@@ -195,6 +230,7 @@ export default function Autocomplete<
                 {...field}
                 {...props}
                 error={fieldState.error?.message}
+                onChange={(value) => field.onChange(value)}
               />
               <FormMessage />
             </div>

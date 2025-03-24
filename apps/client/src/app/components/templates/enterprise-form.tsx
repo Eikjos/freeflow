@@ -47,8 +47,12 @@ const EnterpriseForm = () => {
         form.getValues().siret.replace(/\s+/g, "")
       )
     );
-    if (data) {
-      updateFormValues(data, form.getValues().email, form.getValues().phone);
+    if (data && data.ok && data.data) {
+      updateFormValues(
+        data.data,
+        form.getValues().email,
+        form.getValues().phone
+      );
     }
   };
 
@@ -88,7 +92,7 @@ const EnterpriseForm = () => {
                   label={t("enterprise.juridicShape")}
                   className="mt-3"
                   placeholder={t("enterprise.juridicShape")}
-                  values={(juridicShapes ?? []).map((item) => ({
+                  values={(juridicShapes?.data ?? []).map((item) => ({
                     value: item.code,
                     textValue: item.designation,
                   }))}
@@ -130,7 +134,7 @@ const EnterpriseForm = () => {
                 <Select
                   label={t("common.country")}
                   placeholder={t("common.country")}
-                  values={(countries ?? []).map((c) => ({
+                  values={(countries.data ?? []).map((c) => ({
                     value: c.id.toString(),
                     textValue: t(c.name),
                   }))}
