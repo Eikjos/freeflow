@@ -15,12 +15,10 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { EnterpriseCreateValidation } from '@repo/shared-types';
 import { Request } from 'express';
 import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
-import { ZodPipe } from 'src/pipe/zod.pipe';
 import ProjectService from 'src/projects/project.service';
 import EnterpriseService from './enterprise.service';
 
@@ -51,7 +49,7 @@ export default class EnterprisesController {
   })
   @UseInterceptors(FileInterceptor('logo'))
   async createEnterprise(
-    @Body(new ZodPipe(EnterpriseCreateValidation)) body: CreateEnterpriseDto,
+    @Body() body: CreateEnterpriseDto,
     @UploadedFile()
     logo: Express.Multer.File,
     @Req() req: Request,

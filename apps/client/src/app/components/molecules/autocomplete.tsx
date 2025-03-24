@@ -1,20 +1,20 @@
 "use client";
 
-import { cn } from "../../../lib/utils";
-import { useEffect, useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { HttpResponse } from "../../../types/http-response";
-import { PaginationFilter, PaginationResult } from "@repo/shared-types";
-import Loading from "@components/ui/loading";
 import {
-  FormField,
-  FormLabel,
-  FormItem,
   FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
   FormMessage,
 } from "@components/ui/form";
 import { InputProps } from "@components/ui/input";
+import Loading from "@components/ui/loading";
+import { PaginationFilter, PaginationResult } from "@repo/shared-types";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { ChevronDown, ChevronUp, X } from "lucide-react";
+import { createRef, useEffect, useState } from "react";
+import { cn } from "../../../lib/utils";
+import { HttpResponse } from "../../../types/http-response";
 
 type AutoCompleteProps<TData extends Record<string, string | number>> =
   {} & AutoCompleteWithoutControlProps<TData> &
@@ -31,6 +31,7 @@ type AutoCompleteWithoutControlProps<
   render: (data: TData) => string;
   value?: number;
   className?: string;
+  placeholder?: string;
   error?: string;
 } & Omit<InputProps, "type" | "value" | "defaultValue">;
 
@@ -58,13 +59,14 @@ function AutoCompleteWithoutControl<
   filterField,
   fieldIdentifier,
   render,
-  className,
+  placeholder,
   value,
   error,
 }: AutoCompleteWithoutControlProps<TData>) {
   const [open, setOpen] = useState<boolean>(false);
   const [currentValue, setCurrentValue] = useState<number | undefined>(value);
   const [displayValue, setDisplayValue] = useState<string>("");
+  const inputRef = createRef<HTMLInputElement>();
 
   const [filterApplied, setFilterApplied] = useState<PaginationFilter<TData>>({
     page: 0,
@@ -78,7 +80,15 @@ function AutoCompleteWithoutControl<
   const handleChange = (newValue: number, newDisplayValue: string) => {
     setCurrentValue(newValue);
     setDisplayValue(newDisplayValue);
+    handleFilter(newDisplayValue);
     setOpen(false);
+  };
+
+  const handleClear = () => {
+    setCurrentValue(undefined);
+    setDisplayValue("");
+    handleFilter("");
+    inputRef.current?.focus();
   };
 
   const handleFilter = (value: string) => {
@@ -121,16 +131,24 @@ function AutoCompleteWithoutControl<
           onChange={(e) => handleFilter(e.currentTarget.value)}
           onBlur={() => setTimeout(() => setOpen(false), 200)}
           onFocus={() => setOpen(true)}
+          placeholder={placeholder}
           value={displayValue}
+          ref={inputRef}
         />
         <span
           className="absolute top-3 right-2 cursor-pointer"
           onClick={() => setOpen(!open)}
         >
-          {open ? (
+          {currentValue === undefined && open ? (
             <ChevronUp size={20} className="text-gray-500" />
           ) : (
-            <ChevronDown size={20} className="text-gray-500" />
+            <>
+              {currentValue === undefined ? (
+                <ChevronDown size={20} className="text-gray-500" />
+              ) : (
+                <X size={15} className="text-gray-500" onClick={handleClear} />
+              )}
+            </>
           )}
         </span>
       </div>

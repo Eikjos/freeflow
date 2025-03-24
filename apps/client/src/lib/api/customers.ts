@@ -12,6 +12,7 @@ export const getAllCustomers = (
   pagination: PaginationFilter<CustomerModel>
 ) => {
   const query = generateQueryString(pagination);
+  console.log(`customers?${query}`);
   return client<PaginationResult<CustomerModel>>(`customers?${query}`);
 };
 

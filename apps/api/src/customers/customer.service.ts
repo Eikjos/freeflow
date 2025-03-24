@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CustomerModel } from '@repo/shared-types';
+import { Customer } from '@prisma/client';
 import CustomerCreateDto from 'src/dtos/customers/customer-create.dto';
 import {
   CustomerDto,
@@ -11,8 +11,8 @@ import {
   mapCustomerToDto,
 } from 'src/dtos/customers/customer.dto';
 import {
-  PaginationResultDto,
   PaginationFilterDto,
+  PaginationResultDto,
 } from 'src/dtos/utils/pagination-result.dto';
 import { PrismaService } from 'src/prisma.service';
 
@@ -22,21 +22,13 @@ export default class CustomerService {
 
   // --
 
-  async findAll(
-    enterpriseId: number,
-    filter: PaginationFilterDto<CustomerModel>,
-  ) {
+  async findAll(enterpriseId: number, filter: PaginationFilterDto<Customer>) {
     const transformedFilter = {};
-    let { page, pageSize } = filter;
-
-    page = page ? Number(page) : 0;
-    pageSize = pageSize ? Number(pageSize) : 20;
+    const { page, pageSize } = filter;
 
     if (filter.filter) {
       Object.entries(filter.filter).forEach(([key, value]) => {
-        if (typeof value === 'string' && !isNaN(parseInt(value, 10))) {
-          transformedFilter[key] = parseInt(value, 10);
-        } else if (typeof value === 'string' && value.trim() !== '') {
+        if (typeof value === 'string' && value.trim() !== '') {
           transformedFilter[key] = {
             contains: value.trim(),
             mode: 'insensitive',

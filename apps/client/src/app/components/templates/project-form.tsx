@@ -20,7 +20,7 @@ export default function ProjectForm({ className }: ProjectFormProps) {
     resolver: zodResolver(ProjectCreateValidation),
     defaultValues: {
       name: "",
-      customerId: 1,
+      customerId: undefined,
     },
   });
   return (
@@ -41,6 +41,7 @@ export default function ProjectForm({ className }: ProjectFormProps) {
                 fieldIdentifier="id"
                 {...form.register("customerId")}
                 label="Client"
+                placeholder="Sélectionner un client"
               />
             </div>
           </CardContent>
