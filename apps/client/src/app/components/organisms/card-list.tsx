@@ -7,5 +7,6 @@ export default function CardList<TData>({
   data,
   render,
 }: CardListProps<TData>) {
+  console.log(data);
   return <>{data.map((d, index) => render(d, index))}</>;
 }

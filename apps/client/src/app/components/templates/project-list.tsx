@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { getAllProjectsQueryOptions } from "../../../lib/api/projects";
-import { useState } from "react";
-import { Pagination as PaginationType } from "@repo/shared-types";
 import CardList from "@components/organisms/card-list";
-import ProjectCard from "./project-card";
 import { Pagination } from "@components/ui/pagination";
+import { Pagination as PaginationType } from "@repo/shared-types";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { getAllProjectsQueryOptions } from "../../../lib/api/projects";
+import ProjectCard from "./project-card";
 
 type ProjectListProps = {
   enterpriseId: number;

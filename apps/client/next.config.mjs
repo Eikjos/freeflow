@@ -7,6 +7,9 @@ const withNextIntl = createNextIntlPlugin(
 );
 
 const nextConfig = {
+  images: {
+    domains: ["localhost"],
+  },
   async rewrites() {
     return [
       {

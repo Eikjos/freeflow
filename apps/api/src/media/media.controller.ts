@@ -13,7 +13,7 @@ import { MediaService } from './media.service';
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
 
-  @Get('mediaId')
+  @Get(':mediaId')
   async getFile(
     @Param('mediaId', new ParseIntPipe()) mediaId: number,
     @Res() res: Response,

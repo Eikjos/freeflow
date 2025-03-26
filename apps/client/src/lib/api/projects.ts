@@ -1,7 +1,7 @@
 import { Pagination, PaginationResult, ProjectData } from "@repo/shared-types";
-import { generateQueryString } from "../utils";
-import { client } from "../client";
 import { queryOptions } from "@tanstack/react-query";
+import { client } from "../client";
+import { generateQueryString } from "../utils";
 
 export const getAllProjects = (
   enterpriseId: number,
@@ -9,7 +9,7 @@ export const getAllProjects = (
 ) => {
   const query = generateQueryString(pagination);
   return client<PaginationResult<ProjectData>>(
-    `enterprise/${enterpriseId}?${query}`
+    `enterprises/${enterpriseId}/projects?${query}`
   );
 };
 

@@ -49,5 +49,5 @@ function generateQueryStringOfSubObject<T extends object>(
 }
 
 export function getMediaUrl(mediaId: number) {
-  return `${process.env.API_URL}/media/${mediaId}`;
+  return `${process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL}/media/${mediaId}`;
 }

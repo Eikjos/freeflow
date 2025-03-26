@@ -4,8 +4,13 @@ import { Button } from "@components/ui/button";
 import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import ProjectList from "./project-list";
 
-export default function ProjectTab() {
+type ProjectTabProps = {
+  enterpriseId: number;
+};
+
+export default function ProjectTab({ enterpriseId }: ProjectTabProps) {
   const t = useTranslations();
   return (
     <div className="w-full">
@@ -14,6 +19,7 @@ export default function ProjectTab() {
           {t("common.add")} <Plus />
         </Link>
       </Button>
+      <ProjectList enterpriseId={enterpriseId} />
     </div>
   );
 }
