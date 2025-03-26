@@ -13,7 +13,7 @@ type ProjectListProps = {
 export default function ProjectList({ enterpriseId }: ProjectListProps) {
   const [pagination, setPagination] = useState<PaginationType>({
     page: 0,
-    pageSize: 9,
+    pageSize: 6,
   });
   const {
     data: projects,
@@ -29,7 +29,10 @@ export default function ProjectList({ enterpriseId }: ProjectListProps) {
     <>
       <CardList
         data={projects?.data?.data ?? []}
-        render={(p, key) => <ProjectCard project={p} key={key} />}
+        render={(p, loading, key) => (
+          <ProjectCard project={p} key={key} isLoading={loading} />
+        )}
+        isLoading={isLoading}
       />
       {(projects?.data?.totalItems ?? 0) > 0 && (
         <Pagination

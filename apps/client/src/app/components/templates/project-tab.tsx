@@ -13,8 +13,8 @@ type ProjectTabProps = {
 export default function ProjectTab({ enterpriseId }: ProjectTabProps) {
   const t = useTranslations();
   return (
-    <div className="w-full">
-      <Button asChild className="float-right mr-5">
+    <div className="w-full flex flex-col items-end">
+      <Button asChild className="ml-auto mb-10">
         <Link href={"/activities/projects/create"}>
           {t("common.add")} <Plus />
         </Link>
