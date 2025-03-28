@@ -2,11 +2,16 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { Project } from '@prisma/client';
 import { PaginationFilter } from '@repo/shared-types';
 import ProjectCreateDto from 'src/dtos/projects/project-create.dto';
-import { mapProjectToDto, ProjectDto } from 'src/dtos/projects/project.dto';
+import {
+  mapProjectToDetailDto,
+  mapProjectToDto,
+  ProjectDto,
+} from 'src/dtos/projects/project.dto';
 import { PaginationResultDto } from 'src/dtos/utils/pagination-result.dto';
 import { MediaService } from 'src/media/media.service';
 import { PrismaService } from 'src/prisma.service';
@@ -23,7 +28,7 @@ export default class ProjectService {
   async findAllByEnterpriseId(
     enterpriseId: number,
     filter: PaginationFilter<Project>,
-  ) {
+  ): Promise<PaginationResultDto<ProjectDto>> {
     const projects = await this.prisma.project.findMany({
       where: { ...filter.filter, enterpriseId },
       include: { customer: true },
@@ -41,7 +46,15 @@ export default class ProjectService {
       totalItems: totalItems,
       page: filter.page,
       pageSize: filter.pageSize,
-    } as PaginationResultDto<ProjectDto>;
+    };
+  }
+
+  async findById(id: number, enterpriseId: number) {
+    const project = await this.prisma.project.findFirst({
+      where: { id, enterpriseId },
+    });
+    if (!project) throw new NotFoundException();
+    return mapProjectToDetailDto(project);
   }
 
   async create(

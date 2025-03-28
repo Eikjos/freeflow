@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { PaginationFilter, PaginationResult } from '@repo/shared-types';
+import { Type } from 'class-transformer';
 import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class PaginationResultDto<T> implements PaginationResult<T> {

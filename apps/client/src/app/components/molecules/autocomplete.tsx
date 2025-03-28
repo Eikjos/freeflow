@@ -131,7 +131,6 @@ function AutoCompleteWithoutControl<
   }, [data]);
 
   useEffect(() => {
-    // Fermer le dropdown lorsque vous cliquez en dehors de l'input ou du dropdown
     const handleClickOutside = (event: MouseEvent) => {
       if (
         inputRef.current &&

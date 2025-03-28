@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
+  Param,
+  ParseIntPipe,
   Post,
   Req,
   UploadedFile,
@@ -40,5 +43,12 @@ export default class ProjectController {
       parseInt(req.user['enterpriseId']),
       media,
     );
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get(':id')
+  async findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    console.log(id);
+    return this.projectService.findById(id, req.user['enterpriseId']);
   }
 }

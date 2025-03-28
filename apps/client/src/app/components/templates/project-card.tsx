@@ -11,6 +11,17 @@ import { ProjectData } from "@repo/shared-types";
 import { Pen, Trash } from "lucide-react";
 import Image from "next/image";
 import { getMediaUrl } from "../../../lib/utils";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@components/ui/dialog";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 type ProjectCardProps = {
   project: ProjectData;
@@ -18,6 +29,7 @@ type ProjectCardProps = {
 };
 
 export default function ProjectCard({ project, isLoading }: ProjectCardProps) {
+  const t = useTranslations();
   if (isLoading) {
     return (
       <Card className="w-92 min-w-92 h-36">
@@ -65,14 +77,48 @@ export default function ProjectCard({ project, isLoading }: ProjectCardProps) {
         </CardHeader>
         <CardFooter className="p-0 flex flex-row justify-end">
           <div className="flex flex-row items-center gap-5">
-            <Button>
-              <Pen size={18} className="text-white hover:cursor-pointer" />
-              Modifier
+            <Button variant={"outline"} asChild>
+              <Link href={`/activities/projects/${project.id}/edit`}>
+                <Pen size={18} className="text-primary hover:cursor-pointer" />
+                Modifier
+              </Link>
             </Button>
-            <Button variant={"destructive"}>
-              <Trash size={18} className="text-white hover:cursor-pointer" />
-              Supprimer
-            </Button>
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant={"outline"}>
+                  <Trash
+                    size={18}
+                    className="text-primary hover:cursor-pointer"
+                  />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="text-3xl">
+                    Suppression du projet {project.name}
+                  </DialogTitle>
+                  <p>
+                    {t("customer.dialog.removeDescription", {
+                      customer: project.name,
+                    })}
+                  </p>
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button variant={"outline"}>{t("common.cancel")}</Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button
+                        variant={"destructive"}
+                        onClick={() => console.log(project.id)}
+                      >
+                        {t("common.remove")}
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
           </div>
         </CardFooter>
       </CardContent>

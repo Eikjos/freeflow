@@ -22,6 +22,13 @@ export type ProjectCreateData = {
   [key: string]: any;
 };
 
+export type ProjectDetailData = {
+  id: number;
+  customerId: number;
+  mediaId: number;
+  name: string;
+};
+
 export const ProjectCreateValidation = z.object({
   name: z.string().min(1, "Le nom est requis"),
   customerId: z.number({ required_error: "Le client est requis." }),

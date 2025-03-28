@@ -7,7 +7,11 @@ import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import InputFile from "@components/ui/input-file";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ProjectCreateData, ProjectCreateValidation } from "@repo/shared-types";
+import {
+  ProjectCreateData,
+  ProjectCreateValidation,
+  ProjectDetailData,
+} from "@repo/shared-types";
 import { CreateProject } from "actions/project";
 import { Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -16,20 +20,28 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getAllCustomersQueryOptions } from "../../../lib/api/customers";
-import { cn } from "../../../lib/utils";
+import { cn, getMediaUrl } from "../../../lib/utils";
 
 type ProjectFormProps = {
   className?: string;
+  data?: ProjectDetailData;
+  edit?: boolean;
+  projectId?: number;
 };
 
-export default function ProjectForm({ className }: ProjectFormProps) {
+export default function ProjectForm({
+  className,
+  data,
+  projectId,
+  edit = false,
+}: ProjectFormProps) {
   const t = useTranslations();
   const router = useRouter();
   const form = useForm<ProjectCreateData>({
     resolver: zodResolver(ProjectCreateValidation),
     defaultValues: {
-      name: "",
-      customerId: undefined,
+      name: data?.name ?? "",
+      customerId: data?.customerId ?? undefined,
       media: undefined,
     },
   });
@@ -45,16 +57,20 @@ export default function ProjectForm({ className }: ProjectFormProps) {
   };
 
   const onSubmit = (values: ProjectCreateData) => {
-    CreateProject(values).then((res) => {
-      if (res === null) {
-        toast.error(t("customer.error.create"));
-      } else if (!res.ok && res.error) {
-        toast.error(res.error);
-      } else {
-        toast.success("Projet créé avec succès");
-        router.push("/activities");
-      }
-    });
+    if (!edit) {
+      CreateProject(values).then((res) => {
+        if (res === null) {
+          toast.error(t("customer.error.create"));
+        } else if (!res.ok && res.error) {
+          toast.error(res.error);
+        } else {
+          toast.success("Projet créé avec succès");
+          router.push("/activities");
+        }
+      });
+    } else {
+      console.log("edit");
+    }
   };
 
   return (
@@ -88,31 +104,41 @@ export default function ProjectForm({ className }: ProjectFormProps) {
                     multiple={false}
                     accept=".png, .jpeg, .jpg"
                   />
-                  {media && (
-                    <div className="flex flex-row justify-center items-center">
-                      <span>Aperçu :</span>
-                      <Image
-                        src={URL.createObjectURL(media)}
-                        width={100}
-                        height={100}
-                        className="h-20 w-20 object-contain ml-10 mr-3"
-                        alt="Logo de votre entreprise"
-                      />
-                      <Trash2Icon
-                        size={20}
-                        onClick={() =>
-                          form.setValue("media", undefined, {
-                            shouldValidate: true,
-                          })
-                        }
-                      />
+                  {(media || data?.mediaId) && (
+                    <div>
+                      <div className="flex flex-row justify-center items-center">
+                        <span>Aperçu :</span>
+                        <Image
+                          src={
+                            media
+                              ? URL.createObjectURL(media)
+                              : data?.mediaId
+                                ? getMediaUrl(data?.mediaId)
+                                : ""
+                          }
+                          width={100}
+                          height={100}
+                          className="h-20 w-20 object-contain ml-10 mr-3"
+                          alt="Logo de votre entreprise"
+                        />
+                        <Trash2Icon
+                          size={20}
+                          onClick={() =>
+                            form.setValue("media", undefined, {
+                              shouldValidate: true,
+                            })
+                          }
+                        />
+                      </div>
                     </div>
                   )}
                 </div>
               </div>
 
               <div className="w-full flex flex-row justify-end mt-5">
-                <Button type="submit">Créer</Button>
+                <Button type="submit">
+                  {edit ? t("common.modify") : t("common.create")}
+                </Button>
               </div>
             </CardContent>
           </Card>

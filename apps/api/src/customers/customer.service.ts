@@ -4,8 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Customer } from '@prisma/client';
+import { CustomerDetailModel } from '@repo/shared-types';
+import { plainToClass, plainToInstance } from 'class-transformer';
 import CustomerCreateDto from 'src/dtos/customers/customer-create.dto';
 import {
+  CustomerDetailDto,
   CustomerDto,
   mapCustomerToDetailDto,
   mapCustomerToDto,
@@ -22,21 +25,26 @@ export default class CustomerService {
 
   // --
 
-  async findAll(enterpriseId: number, filter: PaginationFilterDto<Customer>) {
+  async findAll(
+    enterpriseId: number,
+    filter: PaginationFilterDto<CustomerDetailDto>,
+  ) {
     const transformedFilter = {};
     const { page, pageSize } = filter;
 
     if (filter.filter) {
-      Object.entries(filter.filter).forEach(([key, value]) => {
-        if (typeof value === 'string' && value.trim() !== '') {
-          transformedFilter[key] = {
-            contains: value.trim(),
-            mode: 'insensitive',
-          };
-        } else if (value) {
-          transformedFilter[key] = value;
-        }
-      });
+      Object.entries(plainToInstance(CustomerDetailDto, filter.filter)).forEach(
+        ([key, value]) => {
+          if (typeof value === 'string' && value.trim() !== '') {
+            transformedFilter[key] = {
+              contains: value.trim(),
+              mode: 'insensitive',
+            };
+          } else if (value) {
+            transformedFilter[key] = value;
+          }
+        },
+      );
     }
     const customers = await this.prisma.customer
       .findMany({

@@ -13,6 +13,17 @@ export class ProjectDto implements ProjectData {
   media?: number;
 }
 
+export class ProjectDetailDto implements ProjectDetailDto {
+  @ApiProperty({ description: 'Project Id' })
+  id: number;
+  @ApiProperty({ description: 'Project name' })
+  name: string;
+  @ApiProperty({ description: 'Project customer id' })
+  customerId: number;
+  @ApiProperty({ description: 'Project media id' })
+  mediaId?: number;
+}
+
 export const mapProjectToDto = (project: Project, customer: Customer) => {
   return {
     id: project.id,
@@ -20,4 +31,13 @@ export const mapProjectToDto = (project: Project, customer: Customer) => {
     customer: customer.name,
     media: project.mediaId,
   } as ProjectDto;
+};
+
+export const mapProjectToDetailDto = (project: Project) => {
+  return {
+    id: project.id,
+    name: project.name,
+    customerId: project.customerId,
+    mediaId: project.mediaId,
+  };
 };

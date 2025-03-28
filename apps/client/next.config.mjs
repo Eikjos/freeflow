@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 import createNextIntlPlugin from "next-intl/plugin";
+import { hostname } from "os";
 
 const withNextIntl = createNextIntlPlugin(
   // Specify a custom path here
@@ -8,7 +9,11 @@ const withNextIntl = createNextIntlPlugin(
 
 const nextConfig = {
   images: {
-    domains: ["localhost"],
+    remotePatterns: [
+      {
+        hostname: new URL(process.env.API_URL).hostname,
+      },
+    ],
   },
   async rewrites() {
     return [
