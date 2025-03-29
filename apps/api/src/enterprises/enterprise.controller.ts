@@ -1,8 +1,11 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   HttpCode,
+  Param,
+  ParseIntPipe,
   Post,
   Query,
   Req,
@@ -12,19 +15,23 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { EnterpriseCreateValidation } from '@repo/shared-types';
+import { Project } from '@prisma/client';
 import { Request } from 'express';
 import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
+import { PaginationFilterDto } from 'src/dtos/utils/pagination-result.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
-import { ZodPipe } from 'src/pipe/zod.pipe';
+import ProjectService from 'src/projects/project.service';
 import EnterpriseService from './enterprise.service';
 
 @Controller('enterprises')
 @ApiTags('Enterprise')
 @ApiBearerAuth()
 export default class EnterprisesController {
-  constructor(private readonly enterpriseService: EnterpriseService) {}
+  constructor(
+    private readonly enterpriseService: EnterpriseService,
+    private readonly projectService: ProjectService,
+  ) {}
 
   @UseGuards(AccessTokenGuard)
   @Get('information')
@@ -44,7 +51,7 @@ export default class EnterprisesController {
   })
   @UseInterceptors(FileInterceptor('logo'))
   async createEnterprise(
-    @Body(new ZodPipe(EnterpriseCreateValidation)) body: CreateEnterpriseDto,
+    @Body() body: CreateEnterpriseDto,
     @UploadedFile()
     logo: Express.Multer.File,
     @Req() req: Request,
@@ -54,5 +61,17 @@ export default class EnterprisesController {
       logo,
       parseInt(req.user['sub']),
     );
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get(':id/projects')
+  async getProjectsByEnterpriseId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() filter: PaginationFilterDto<Project>,
+    @Req() req: Request,
+  ) {
+    const enterpriseId = req.user['enterpriseId'] as number;
+    if (id !== enterpriseId) throw new ForbiddenException();
+    return this.projectService.findAllByEnterpriseId(enterpriseId, filter);
   }
 }

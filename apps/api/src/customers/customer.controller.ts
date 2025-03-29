@@ -13,12 +13,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { CustomerCreateValidation } from '@repo/shared-types';
 import { Request } from 'express';
 import CustomerCreateDto from 'src/dtos/customers/customer-create.dto';
+import { PaginationFilterDto } from 'src/dtos/utils/pagination-result.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
-import { ZodPipe } from 'src/pipe/zod.pipe';
 import CustomerService from './customer.service';
+import { CustomerFilterDto } from 'src/dtos/customers/customer-filter.dto';
 
 @Controller('customers')
 @ApiBearerAuth()
@@ -28,21 +28,18 @@ export default class CustomerController {
   @Get()
   @UseGuards(AccessTokenGuard)
   async findAll(
-    @Query('page', ParseIntPipe) page: number,
-    @Query('pageSize', ParseIntPipe) pageSize: number,
+    @Query()
+    filter: PaginationFilterDto<CustomerFilterDto>,
     @Req() req: Request,
   ) {
     const enterpriseId = req.user['enterpriseId'];
-    return await this.customerService.findAll(enterpriseId, page, pageSize);
+    return await this.customerService.findAll(enterpriseId, filter);
   }
 
   @Post()
   @UseGuards(AccessTokenGuard)
   @HttpCode(200)
-  async create(
-    @Body(new ZodPipe(CustomerCreateValidation)) model: CustomerCreateDto,
-    @Req() req: Request,
-  ) {
+  async create(@Body() model: CustomerCreateDto, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
     return await this.customerService.create(enterpriseId, model);
   }
@@ -51,7 +48,7 @@ export default class CustomerController {
   @UseGuards(AccessTokenGuard)
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodPipe(CustomerCreateValidation)) model: CustomerCreateDto,
+    @Body() model: CustomerCreateDto,
     @Req() req: Request,
   ) {
     const enterpriseId = req.user['enterpriseId'];

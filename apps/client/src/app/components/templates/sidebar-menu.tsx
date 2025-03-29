@@ -38,12 +38,12 @@ export default async function SidebarMenu({
       url: "#",
     },
     {
-      name: "Mes entreprise",
+      name: "Mon entreprise",
       url: "#",
     },
     {
-      name: "Mes tâches",
-      url: "#",
+      name: "Mes activités",
+      url: "/activities",
     },
   ];
 

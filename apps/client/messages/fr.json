@@ -2,6 +2,11 @@
   "access": {
     "denied": "Vous n'avez pas le droit."
   },
+  "activities": {
+    "enterprise": "Les activités de {enterprise}",
+    "projects": "Mes projets",
+    "tasks": "Mes tâches en cours"
+  },
   "country": {
     "afghanistan": "Afghanistan",
     "albania": "Albanie",
@@ -204,6 +209,8 @@
     "add": "Ajouter",
     "create": "Créer",
     "cancel": "Annuler",
+    "customer": "Client",
+    "emptyData": "Vous n'avez pas encore de données.",
     "name": "Nom",
     "informations": "Informations",
     "fill": "Remplir",
@@ -219,6 +226,7 @@
     "password": "Mot de passe",
     "remove": "Supprimer",
     "phone": "Télephone",
+    "preview": "Aperçu",
     "dropFile": "Glisser vos fichiers ici.",
     "supportedFile": "Fichier(s) supporté(s) :",
     "previsualizeImage": "Vous pouvez pre-visualiser l'image."
@@ -268,5 +276,23 @@
     "createAccount": "Inscrivez-vous",
     "login": "Se connecter",
     "manageYourLife": "Gérer votre vie d'entrepreneur facilement"
+  },
+  "project": {
+    "edit": "Édition du projet {project}",
+    "removeSuccess": "Le projet {project} a été correctement supprimé.",
+    "removeFailed": "Le projet {project} n'a pas été supprimé.",
+    "error": {
+      "edit": "Le projet n'a pas pu être mis à jour. Veuillez réessayer plus tard.",
+      "create": "Le projet n'a pas pu être créer. Veuillez réessayer plus tard."
+    },
+    "success": {
+      "create": "Le projet a bien été créer.",
+      "edit": "Le projet a bien été mis à jour."
+    },
+    "dialog": {
+      "removeTitle": "Suppression du project {project}",
+      "removeDescription": "Êtes-vous sur de vouloir supprimer le project {project} ?"
+    },
+    "notFound": "Le projet n'a pas été trouvé."
   }
 }

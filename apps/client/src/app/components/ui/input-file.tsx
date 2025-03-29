@@ -1,9 +1,9 @@
 "use client";
 
 import { CloudUpload } from "lucide-react";
-import { ComponentProps } from "react";
-import { Label } from "./label";
 import { useTranslations } from "next-intl";
+import { ComponentProps, useRef } from "react";
+import { Label } from "./label";
 
 type InputFileProps = {
   onFilesSelected: (files: File[]) => void;
@@ -16,12 +16,12 @@ const InputFile = ({
   ...props
 }: InputFileProps) => {
   const t = useTranslations();
+  const ref = useRef<HTMLInputElement>(null);
   const handleFileChange = (event: any) => {
-    const selectedFiles: File[] = event.target.files;
-    // if (selectedFiles && selectedFiles.length > 0) {
-    //   const newFiles = Array.from(selectedFiles);
-    //   setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    // }
+    const selectedFiles: File[] = Array.from(event.target.files);
+    if (ref.current) {
+      ref.current.value = "";
+    }
     onFilesSelected(selectedFiles);
   };
   const handleDrop = (event: any) => {
@@ -64,6 +64,8 @@ const InputFile = ({
             onChange={handleFileChange}
             accept={props.accept}
             multiple={props.multiple}
+            value={undefined}
+            ref={ref}
           />
         </>
       </div>

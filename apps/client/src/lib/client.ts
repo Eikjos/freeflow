@@ -10,23 +10,25 @@ type ClientOptionsProps = {
 
 export const client = async <T>(
   endpoint: string,
-  options: ClientOptionsProps = {}
+  options: ClientOptionsProps = {},
+  contentType: "application/json" | "other" = "application/json"
 ): Promise<HttpResponse<T>> => {
   const cookieStore = await cookies();
   const authToken = cookieStore.get("access_token");
   // const authToken = getAuthToken();
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+  const { token, ...otherOptions } = options;
+  const headers: HeadersInit = {
+    Authorization: `Bearer ${token ?? authToken?.value}`,
   };
 
-  const { token, ...otherOptions } = options;
+  if (contentType !== "other") {
+    headers["Content-Type"] = contentType;
+  }
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL ?? process.env.API_URL}/${endpoint}`,
     {
-      headers: {
-        ...headers,
-        Authorization: `Bearer ${token ?? authToken?.value}`,
-      },
+      headers,
       credentials: "include",
       ...otherOptions,
     }

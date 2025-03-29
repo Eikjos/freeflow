@@ -6,14 +6,14 @@ import {
   ParseIntPipe,
   Res,
 } from '@nestjs/common';
-import { MediaService } from './media.service';
 import { Response } from 'express';
+import { MediaService } from './media.service';
 
-@Controller()
+@Controller('media')
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
 
-  @Get('mediaId')
+  @Get(':mediaId')
   async getFile(
     @Param('mediaId', new ParseIntPipe()) mediaId: number,
     @Res() res: Response,
