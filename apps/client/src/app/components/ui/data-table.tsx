@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "components/ui/table";
 import { cn } from "../../../lib/utils";
+import { useTranslations } from "next-intl";
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
@@ -36,6 +37,7 @@ export function DataTable<TData>({
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+  const t = useTranslations();
 
   return (
     <>
@@ -84,7 +86,7 @@ export function DataTable<TData>({
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      Vous n'avez pas encore de données.
+                      {t("common.emptyData")}
                     </TableCell>
                   </TableRow>
                 )}

@@ -12,7 +12,7 @@ import {
   ProjectCreateValidation,
   ProjectDetailData,
 } from "@repo/shared-types";
-import { CreateProject } from "actions/project";
+import { CreateProject, UpdateProject } from "actions/project";
 import { Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getAllCustomersQueryOptions } from "../../../lib/api/customers";
 import { cn, getMediaUrl } from "../../../lib/utils";
+import getQueryClient from "../../../lib/query-client";
 
 type ProjectFormProps = {
   className?: string;
@@ -37,6 +38,7 @@ export default function ProjectForm({
 }: ProjectFormProps) {
   const t = useTranslations();
   const router = useRouter();
+  const queryClient = getQueryClient();
   const form = useForm<ProjectCreateData>({
     resolver: zodResolver(ProjectCreateValidation),
     defaultValues: {
@@ -57,7 +59,18 @@ export default function ProjectForm({
   };
 
   const onSubmit = (values: ProjectCreateData) => {
-    if (!edit) {
+    if (edit && projectId) {
+      UpdateProject(projectId, values).then((res) => {
+        if (res === null) {
+          toast.error(t("customer.error.create"));
+        } else if (!res.ok && res.error) {
+          toast.error(res.error);
+        } else {
+          toast.success("Projet a été mis à jour avec succès");
+          router.push("/activities");
+        }
+      });
+    } else {
       CreateProject(values).then((res) => {
         if (res === null) {
           toast.error(t("customer.error.create"));
@@ -65,11 +78,10 @@ export default function ProjectForm({
           toast.error(res.error);
         } else {
           toast.success("Projet créé avec succès");
+          queryClient.invalidateQueries({ queryKey: ["project", projectId] });
           router.push("/activities");
         }
       });
-    } else {
-      console.log("edit");
     }
   };
 
@@ -107,7 +119,7 @@ export default function ProjectForm({
                   {(media || data?.mediaId) && (
                     <div>
                       <div className="flex flex-row justify-center items-center">
-                        <span>Aperçu :</span>
+                        <span>{t("common.preview")} :</span>
                         <Image
                           src={
                             media

@@ -30,7 +30,7 @@ export default async function EditProjectPage({
       {project && project?.ok && (
         <>
           <h1 className="font-amica text-4xl mb-20">
-            Edition du projet {project.data?.name}
+            {t("project.edit", { project: project.data?.name })}
           </h1>
           <ProjectForm edit projectId={parseInt(id)} data={project.data} />
         </>

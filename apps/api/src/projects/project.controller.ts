@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
   ParseIntPipe,
   Post,
+  Put,
   Req,
   UploadedFile,
   UseGuards,
@@ -48,7 +50,34 @@ export default class ProjectController {
   @UseGuards(AccessTokenGuard)
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
-    console.log(id);
     return this.projectService.findById(id, req.user['enterpriseId']);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @UseInterceptors(FileInterceptor('media'))
+  @ApiBody({
+    description: 'Mettre à un projet avec un fichier (logo)',
+    type: ProjectCreateDto,
+  })
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() model: ProjectCreateDto,
+    @Req() req: Request,
+    @UploadedFile()
+    media?: Express.Multer.File,
+  ) {
+    return this.projectService.update(
+      id,
+      model,
+      parseInt(req.user['enterpriseId']),
+      media,
+    );
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    return this.projectService.delete(id, parseInt(req.user['enterpriseId']));
   }
 }

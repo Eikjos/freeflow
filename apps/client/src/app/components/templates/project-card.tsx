@@ -26,9 +26,14 @@ import Link from "next/link";
 type ProjectCardProps = {
   project: ProjectData;
   isLoading: boolean;
+  onDelete: (project: ProjectData) => void;
 };
 
-export default function ProjectCard({ project, isLoading }: ProjectCardProps) {
+export default function ProjectCard({
+  project,
+  isLoading,
+  onDelete,
+}: ProjectCardProps) {
   const t = useTranslations();
   if (isLoading) {
     return (
@@ -70,7 +75,7 @@ export default function ProjectCard({ project, isLoading }: ProjectCardProps) {
                 {project.name}
               </CardTitle>
               <CardDescription className="text-sm w-60 text-ellipsis text-nowrap overflow-hidden">
-                Client : {project.customer}
+                {t("common.customer")} : {project.customer}
               </CardDescription>
             </div>
           </div>
@@ -80,7 +85,7 @@ export default function ProjectCard({ project, isLoading }: ProjectCardProps) {
             <Button variant={"outline"} asChild>
               <Link href={`/activities/projects/${project.id}/edit`}>
                 <Pen size={18} className="text-primary hover:cursor-pointer" />
-                Modifier
+                {t("common.modify")}
               </Link>
             </Button>
 
@@ -96,11 +101,11 @@ export default function ProjectCard({ project, isLoading }: ProjectCardProps) {
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle className="text-3xl">
-                    Suppression du projet {project.name}
+                    {t("project.dialog.removeTitle", { project: project.name })}
                   </DialogTitle>
                   <p>
-                    {t("customer.dialog.removeDescription", {
-                      customer: project.name,
+                    {t("project.dialog.removeDescription", {
+                      project: project.name,
                     })}
                   </p>
                   <DialogFooter>
@@ -110,7 +115,7 @@ export default function ProjectCard({ project, isLoading }: ProjectCardProps) {
                     <DialogClose asChild>
                       <Button
                         variant={"destructive"}
-                        onClick={() => console.log(project.id)}
+                        onClick={() => onDelete(project)}
                       >
                         {t("common.remove")}
                       </Button>

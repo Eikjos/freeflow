@@ -80,4 +80,45 @@ export default class ProjectService {
 
     return project.id;
   }
+
+  async update(
+    projectId: number,
+    model: ProjectCreateDto,
+    enterpriseId: number,
+    media?: Express.Multer.File,
+  ) {
+    if (enterpriseId == null) throw new ForbiddenException();
+    let project = await this.prisma.project.findFirst({
+      where: { id: projectId, enterpriseId },
+    });
+    if (!project) throw new NotFoundException('project.notFound');
+    const customer = await this.prisma.enterpriseCustomer.findFirst({
+      where: { enterpriseId, customerId: model.customerId, isDeleted: false },
+    });
+    if (!customer) throw new BadRequestException('project.customer.notValid');
+    const mediaId = media ? await this.mediaService.upload(media) : undefined;
+
+    project = await this.prisma.project.update({
+      where: { id: projectId, enterpriseId: enterpriseId },
+      data: {
+        name: model.name,
+        customerId: model.customerId,
+        mediaId: media ? mediaId : project.mediaId,
+        enterpriseId,
+      },
+    });
+
+    return project.id;
+  }
+
+  async delete(id: number, enterpriseId: number) {
+    if (enterpriseId == null) throw new ForbiddenException();
+    const project = await this.prisma.project.findFirst({
+      where: { id: id, enterpriseId },
+    });
+    if (!project) throw new NotFoundException('project.notFound');
+    await this.prisma.project.delete({
+      where: { id, enterpriseId },
+    });
+  }
 }

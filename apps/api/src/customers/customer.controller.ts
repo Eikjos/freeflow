@@ -13,12 +13,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { Customer } from '@prisma/client';
 import { Request } from 'express';
 import CustomerCreateDto from 'src/dtos/customers/customer-create.dto';
 import { PaginationFilterDto } from 'src/dtos/utils/pagination-result.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import CustomerService from './customer.service';
+import { CustomerFilterDto } from 'src/dtos/customers/customer-filter.dto';
 
 @Controller('customers')
 @ApiBearerAuth()
@@ -29,7 +29,7 @@ export default class CustomerController {
   @UseGuards(AccessTokenGuard)
   async findAll(
     @Query()
-    filter: PaginationFilterDto<Customer>,
+    filter: PaginationFilterDto<CustomerFilterDto>,
     @Req() req: Request,
   ) {
     const enterpriseId = req.user['enterpriseId'];

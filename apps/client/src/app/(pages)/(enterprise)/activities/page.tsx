@@ -13,12 +13,12 @@ export default async function ActivitiesPage() {
   return (
     <div>
       <h1 className="font-amica text-4xl">
-        Les activités de {enterprise?.name}
+        {t("activities.enterprise", { enterprise: enterprise?.name })}
       </h1>
       <Tabs defaultValue="projects" className="mt-5">
         <TabsList>
-          <TabsTrigger value="projects">Mes projets</TabsTrigger>
-          <TabsTrigger value="tasks">Mes tâches en cours</TabsTrigger>
+          <TabsTrigger value="projects">{t("activities.projects")}</TabsTrigger>
+          <TabsTrigger value="tasks">{t("activities.tasks")}</TabsTrigger>
         </TabsList>
         <TabsContent value="projects">
           <ProjectTab enterpriseId={enterprise?.id ?? 0} />
