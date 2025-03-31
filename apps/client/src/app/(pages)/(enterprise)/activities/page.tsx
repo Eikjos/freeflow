@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
 import { getTranslations } from "next-intl/server";
 import { headers } from "next/headers";
 import { EnterpriseInfo } from "../../../../types/enterprise-info-type";
+import TasksTab from "@components/templates/task-tab";
 
 export default async function ActivitiesPage() {
   const t = await getTranslations();
@@ -24,7 +25,7 @@ export default async function ActivitiesPage() {
           <ProjectTab enterpriseId={enterprise?.id ?? 0} />
         </TabsContent>
         <TabsContent value="tasks">
-          <p>Mes tâches en cours</p>
+          <TasksTab />
         </TabsContent>
       </Tabs>
     </div>
