@@ -5,32 +5,6 @@ import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 export default function Kanban() {
-  const tasks: Task[] = [
-    {
-      id: 10,
-      name: "Tache de test",
-    },
-    {
-      id: 11,
-      name: "Tache de test",
-    },
-    {
-      id: 12,
-      name: "Tache de test",
-    },
-    {
-      id: 13,
-      name: "Tache de test",
-    },
-    {
-      id: 14,
-      name: "Tache de test",
-    },
-    {
-      id: 15,
-      name: "Tache de test",
-    },
-  ];
   const column: { id: number; name: string; tasks: Task[] }[] = [
     {
       id: 1,
@@ -39,14 +13,17 @@ export default function Kanban() {
         {
           id: 10,
           name: "Tache de test",
+          index: 1,
         },
         {
           id: 11,
           name: "Tache de test",
+          index: 2,
         },
         {
-          id: 12,
+          id: 1,
           name: "Tache de test",
+          index: 3,
         },
       ],
     },
@@ -57,10 +34,12 @@ export default function Kanban() {
         {
           id: 12,
           name: "Tache de test",
+          index: 1,
         },
         {
           id: 13,
           name: "Tache de test",
+          index: 2,
         },
       ],
     },
@@ -71,10 +50,12 @@ export default function Kanban() {
         {
           id: 14,
           name: "Tache de test",
+          index: 1,
         },
         {
           id: 15,
           name: "Tache de test",
+          index: 2,
         },
       ],
     },
@@ -85,10 +66,12 @@ export default function Kanban() {
         {
           id: 16,
           name: "Tache de test",
+          index: 1,
         },
         {
           id: 17,
           name: "Tache de test",
+          index: 2,
         },
       ],
     },
@@ -98,18 +81,29 @@ export default function Kanban() {
   const handleDrop = (
     task: Task,
     columnId_src: number,
-    columnId_dest: number
+    index_src: number,
+    columnId_dest: number,
+    index_dest: number
   ) => {
     setColumns((prev) =>
       prev.map((col) => {
-        if (col.id === columnId_src) {
-          console.log(col.tasks, task);
-          const updatedTasks = col.tasks.filter((t) => t.id !== task.id);
-          return { ...col, tasks: updatedTasks };
-        }
         if (col.id === columnId_dest) {
-          const updatedTasks = [...col.tasks, { ...task }];
-          return { ...col, tasks: updatedTasks };
+          const updatedTasks = [...col.tasks.filter((t) => t.id !== task.id)];
+          updatedTasks.splice(index_dest, 0, task);
+
+          return {
+            ...col,
+            tasks: updatedTasks.map((t, index) => ({ ...t, index })),
+          };
+        }
+        if (col.id === columnId_src) {
+          const updatedTasks = col.tasks
+            .filter((t) => t.id !== task.id)
+            .map((item, index) => ({
+              ...item,
+              index,
+            }));
+          return { ...col, tasks: updatedTasks.sort((e) => e.index) };
         }
         return col;
       })

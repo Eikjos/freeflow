@@ -9,13 +9,20 @@ import TaskCard from "./task-card";
 export type Task = {
   id: number;
   name: string;
+  index: number;
 };
 
 type ColumnTaksProps = {
   id: number;
   name: string;
   tasks: Task[];
-  onDrop: (task: Task, columnId_src: number, columnId_dest: number) => void;
+  onDrop: (
+    task: Task,
+    columnId_src: number,
+    index_src: number,
+    columnId_dest: number,
+    index_dest: number
+  ) => void;
 };
 
 export default function ColumnTask({
@@ -31,7 +38,7 @@ export default function ColumnTask({
       drop: (item: Task & { columnId: number }) => {
         const { columnId, ...task } = item;
         if (columnId !== id) {
-          onDrop(task, columnId, id);
+          onDrop(task, columnId, task.index, id, tasks.length);
         }
       },
     }),
@@ -54,7 +61,14 @@ export default function ColumnTask({
           className="rounded-md w-[95%] mx-auto max-h-[calc(100%-3.5rem)] h-full flex flex-col gap-1 overflow-y-auto scroll-bar"
         >
           {tasks.map((item, index) => (
-            <TaskCard id={item.id} key={index} name={item.name} columnId={id} />
+            <TaskCard
+              id={item.id}
+              key={index}
+              name={item.name}
+              columnId={id}
+              index={index}
+              onDrop={onDrop}
+            />
           ))}
         </div>
       </CardContent>
