@@ -2,11 +2,11 @@
 
 import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { PenIcon, Trash2Icon } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useDrop } from "react-dnd";
 import TaskCard from "./task-card";
 
-type Task = {
+export type Task = {
   id: number;
   name: string;
 };
@@ -15,19 +15,25 @@ type ColumnTaksProps = {
   id: number;
   name: string;
   tasks: Task[];
+  onDrop: (task: Task, columnId_src: number, columnId_dest: number) => void;
 };
 
-export default function ColumnTask({ id, name, tasks }: ColumnTaksProps) {
-  const [tasksArray, setTasksArray] = useState<Task[]>(tasks);
+export default function ColumnTask({
+  id,
+  name,
+  tasks,
+  onDrop,
+}: ColumnTaksProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [, drop] = useDrop(
     () => ({
       accept: "TaskCard",
-      drop: (item: Task) =>
-        setTasksArray((prev) => [
-          ...prev.filter((e) => e.id !== item.id),
-          item,
-        ]),
+      drop: (item: Task & { columnId: number }) => {
+        const { columnId, ...task } = item;
+        if (columnId !== id) {
+          onDrop(task, columnId, id);
+        }
+      },
     }),
     [id]
   );
@@ -47,8 +53,8 @@ export default function ColumnTask({ id, name, tasks }: ColumnTaksProps) {
           ref={ref}
           className="rounded-md w-[95%] mx-auto max-h-[calc(100%-3.5rem)] h-full flex flex-col gap-1 overflow-y-auto scroll-bar"
         >
-          {tasksArray.map((item, index) => (
-            <TaskCard id={item.id} key={index} name={item.name} />
+          {tasks.map((item, index) => (
+            <TaskCard id={item.id} key={index} name={item.name} columnId={id} />
           ))}
         </div>
       </CardContent>
