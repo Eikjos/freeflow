@@ -16,7 +16,6 @@ type TaskCardProps = {
   onDrop: (
     task: Task,
     columnId_src: number,
-    index_src: number,
     columnId_dest: number,
     index_dest: number
   ) => void;
@@ -40,22 +39,23 @@ export default function TaskCard({
     }),
     [id, name, columnId, index]
   );
-  const [{ handlerId }, dropRef] = useDrop<
+  const [{ handlerId, isOver }, dropRef] = useDrop<
     TaskCardProps,
     void,
-    { handlerId: Identifier | null }
+    { handlerId: Identifier | null; isOver: boolean }
   >(
     () => ({
       accept: "TaskCard",
       collect(monitor) {
+        const item = monitor.getItem<TaskCardProps>();
         return {
           handlerId: monitor.getHandlerId(),
+          isOver: monitor.isOver() && item.id !== id,
         };
       },
-      drop(item: TaskCardProps, monitor) {
+      drop(item: TaskCardProps) {
         if (item.index !== index || item.columnId !== columnId) {
-          console.log("drop", item.index, index);
-          onDrop(item, item.columnId, item.index, columnId, index);
+          onDrop(item, item.columnId, columnId, index);
         }
       },
     }),
@@ -65,23 +65,26 @@ export default function TaskCard({
   dragRef(dropRef(ref));
 
   return (
-    <Card ref={ref} data-handler-id={handlerId}>
-      <CardContent
-        className={cn(
-          "h-20 py-1 px-2 flex flex-col justify-between",
-          `opacity-${opacity}`
-        )}
-      >
-        <CardHeader className="p-0">
-          <span className={`font-light text-sm`}>
-            {name} {id}
-          </span>
-        </CardHeader>
-        <div className="w-full flex flex-row justify-end mb-1 items-center gap-2">
-          <div className="bg-gray-200 p-1 rounded-full text-xs">10h</div>
-          <ChevronsUp size={15} />
-        </div>
-      </CardContent>
-    </Card>
+    <>
+      {isOver && <div className="h-2 bg-gray-100 my-1 rounded-lg"></div>}
+      <Card ref={ref} data-handler-id={handlerId}>
+        <CardContent
+          className={cn(
+            "h-20 py-1 px-2 flex flex-col justify-between",
+            `opacity-${opacity}`
+          )}
+        >
+          <CardHeader className="p-0">
+            <span className={`font-light text-sm`}>
+              {name} {id}
+            </span>
+          </CardHeader>
+          <div className="w-full flex flex-row justify-end mb-1 items-center gap-2">
+            <div className="bg-gray-200 p-1 rounded-full text-xs">10h</div>
+            <ChevronsUp size={15} />
+          </div>
+        </CardContent>
+      </Card>
+    </>
   );
 }
