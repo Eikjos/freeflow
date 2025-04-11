@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import ColumnModule from './columns/columns.module';
 import CountryModule from './countries/country.module';
 import CustomerModule from './customers/customer.module';
 import { EnterpriseModule } from './enterprises/enterprise.module';
@@ -18,6 +19,7 @@ import { UserModule } from './users/user.module';
     JuridicShapeModule,
     CustomerModule,
     ProjectModule,
+    ColumnModule,
   ],
   providers: [],
 })

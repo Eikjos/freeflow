@@ -1,12 +1,12 @@
 "use client";
 
 import { Card, CardContent, CardHeader } from "@components/ui/card";
-import { PenIcon, Trash2Icon } from "lucide-react";
-import { useRef } from "react";
+import { PenIcon, Plus, Trash2Icon } from "lucide-react";
+import { useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
-import TaskCard from "./task-card";
 import { cn } from "../../../lib/utils";
-import { HtmlContext } from "next/dist/server/route-modules/pages/vendored/contexts/entrypoints";
+import TaskCard from "./task-card";
+import TaksCreateSheet from "./task-create-sheet";
 
 export type Task = {
   id: number;
@@ -43,6 +43,7 @@ export default function ColumnTask({
   onDropTask,
   onDropColumn,
 }: ColumnTaksProps) {
+  const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const columRef = useRef<HTMLDivElement>(null);
   const [{ opacity }, dragRef] = useDrag(
@@ -85,9 +86,13 @@ export default function ColumnTask({
   drop(ref);
   dragRef(dropRef(columRef));
 
+  const openTaskSheet = () => {
+    setOpen(true);
+  };
+
   return (
     <>
-      {isOver && <div className="mx-1 bg-gray-200 w-2 rounded-lg"></div>}
+      {isOver && <div className="mx-1 bg-gray-100 w-2 rounded-lg"></div>}
       <Card ref={columRef}>
         <CardContent
           className={cn(
@@ -100,6 +105,11 @@ export default function ColumnTask({
             <div className="flex flex-row justify-end items-center gap-2">
               <PenIcon size={18} className="text-primary" />
               <Trash2Icon size={18} className="text-primary" />
+              <Plus
+                size={18}
+                className="text-primary"
+                onClick={openTaskSheet}
+              />
             </div>
           </CardHeader>
           <div
@@ -121,6 +131,11 @@ export default function ColumnTask({
           </div>
         </CardContent>
       </Card>
+      <TaksCreateSheet
+        open={open}
+        onClose={() => setOpen(false)}
+        columnId={id}
+      />
     </>
   );
 }

@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Project } from '@prisma/client';
 import { PaginationFilter } from '@repo/shared-types';
+import ColumnService from 'src/columns/columns.service';
 import ProjectCreateDto from 'src/dtos/projects/project-create.dto';
 import {
   mapProjectToDetailDto,
@@ -21,6 +22,7 @@ export default class ProjectService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mediaService: MediaService,
+    private readonly columnService: ColumnService,
   ) {}
 
   // -
@@ -77,6 +79,10 @@ export default class ProjectService {
         enterpriseId,
       },
     });
+
+    if (project.id > 0) {
+      this.columnService.initializeForProject(project.id);
+    }
 
     return project.id;
   }

@@ -134,7 +134,7 @@ const EnterpriseForm = () => {
                 <Select
                   label={t("common.country")}
                   placeholder={t("common.country")}
-                  values={(countries.data ?? []).map((c) => ({
+                  values={(countries?.data ?? []).map((c) => ({
                     value: c.id.toString(),
                     textValue: t(c.name),
                   }))}
