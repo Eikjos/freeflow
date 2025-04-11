@@ -79,7 +79,7 @@ export default function RecapEnterpriseForm() {
             label={t("enterprise.juridicShape")}
             placeholder={t("enterprise.juridicShape")}
             className="mt-4"
-            value={juridicShapeData?.designation ?? ""}
+            value={juridicShapeData?.data?.designation ?? ""}
             disabled
           />
           <Input
@@ -125,7 +125,7 @@ export default function RecapEnterpriseForm() {
             label={t("common.country")}
             placeholder={t("common.country")}
             className="mt-4"
-            value={countryData?.name ? t(countryData.name) : ""}
+            value={countryData?.data?.name ? t(countryData.data.name) : ""}
             disabled
           />
         </div>

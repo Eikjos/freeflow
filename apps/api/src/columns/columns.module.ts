@@ -5,7 +5,7 @@ import ColumnService from './columns.service';
 
 @Module({
   controllers: [ColumnsController],
-  providers: [PrismaService, ColumnService],
+  providers: [ColumnService, PrismaService],
   exports: [ColumnService],
 })
 export default class ColumnModule {}

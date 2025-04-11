@@ -12,9 +12,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import { getAllCountriesQueryOptions } from "../../../lib/api/countries";
-import { fetchEnterpriseInfoQueryOptions } from "../../../lib/api/enterprise";
 import { getAllJuridicShapesQueryOptions } from "../../../lib/api/juridic-shapes";
 import { Card, CardContent } from "../ui/card";
+import { fetchEnterpriseInfo } from "../../../lib/api/enterprise";
 
 const EnterpriseForm = () => {
   const t = useTranslations();
@@ -41,11 +41,9 @@ const EnterpriseForm = () => {
   const { data: countries } = useQuery(getAllCountriesQueryOptions());
   const { data: juridicShapes } = useQuery(getAllJuridicShapesQueryOptions());
 
-  const fillFormWithEnterpriseinfo = () => {
-    const { data } = useQuery(
-      fetchEnterpriseInfoQueryOptions(
-        form.getValues().siret.replace(/\s+/g, "")
-      )
+  const fillFormWithEnterpriseinfo = async () => {
+    const data = await fetchEnterpriseInfo(
+      form.getValues().siret.replace(/\s+/g, "")
     );
     if (data && data.ok && data.data) {
       updateFormValues(

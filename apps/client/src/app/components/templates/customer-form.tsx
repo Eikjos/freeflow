@@ -16,11 +16,10 @@ import { useQuery } from "@tanstack/react-query";
 import { CreateCustomer, UpdateCustomer } from "actions/customer";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getAllCountriesQueryOptions } from "../../../lib/api/countries";
-import { fetchEnterpriseInfoQueryOptions } from "../../../lib/api/enterprise";
+import { fetchEnterpriseInfo } from "../../../lib/api/enterprise";
 import getQueryClient from "../../../lib/query-client";
 
 type CustomerFormProps = {
@@ -37,7 +36,6 @@ export default function CustomerForm({
   data,
 }: CustomerFormProps) {
   const queryClient = getQueryClient();
-  const [queryTrigger, setQueryTrigger] = useState(false);
   const t = useTranslations();
   const router = useRouter();
   const form = useForm<CustomerCreateModel>({
@@ -82,11 +80,6 @@ export default function CustomerForm({
     ]);
   };
 
-  const { data: enterpriseInfo, isLoading } = useQuery({
-    ...fetchEnterpriseInfoQueryOptions(siret?.replace(/\s+/g, "") ?? ""),
-    enabled: (siret?.replace(/\s+/g, "") ?? "").length === 14 && queryTrigger,
-  });
-
   const onSubmit = (values: CustomerCreateModel) => {
     if (edit && customerId) {
       UpdateCustomer(customerId, values).then((res) => {
@@ -114,21 +107,16 @@ export default function CustomerForm({
 
   const { data: countries } = useQuery(getAllCountriesQueryOptions());
 
-  useEffect(() => {
-    setQueryTrigger(false);
-    if (enterpriseInfo) {
-      // Gestion du cas où on n'arrive pas à trouver l'entreprise
-      if (!enterpriseInfo.ok) {
-        toast.warning(t("enterprise.infoNotFound"));
-      } else {
-        updateFormValues(
-          form.getValues().email,
-          form.getValues().phone,
-          enterpriseInfo?.data
-        );
-      }
+  const fillFormWithEnterpriseinfo = async () => {
+    const data = await fetchEnterpriseInfo(siret?.replace(/\s+/g, "") ?? "");
+    if (data && data.ok && data.data) {
+      updateFormValues(
+        form.getValues().email,
+        form.getValues().phone,
+        data.data
+      );
     }
-  }, [enterpriseInfo]);
+  };
 
   return (
     <Form {...form}>
@@ -151,8 +139,7 @@ export default function CustomerForm({
                 <Button
                   className="mt-2"
                   type="button"
-                  isLoading={isLoading}
-                  onClick={() => setQueryTrigger(true)}
+                  onClick={fillFormWithEnterpriseinfo}
                 >
                   {t("common.fill")}
                 </Button>

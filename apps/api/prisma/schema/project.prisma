@@ -5,6 +5,7 @@ model Project {
   customerId      Int?
   enterprise      Enterprise  @relation(fields: [enterpriseId], references: [id])
   enterpriseId    Int
+  colums          Column[]
   media           Media? @relation(fields: [mediaId], references: [id])
   mediaId         Int?  @unique
 }
