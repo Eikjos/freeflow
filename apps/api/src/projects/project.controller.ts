@@ -54,6 +54,18 @@ export default class ProjectController {
   }
 
   @UseGuards(AccessTokenGuard)
+  @Get(':id/details')
+  async findAllTasksByProjectId(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request,
+  ) {
+    return this.projectService.findByIdWithTasksAndColumns(
+      id,
+      req.user['enterpriseId'],
+    );
+  }
+
+  @UseGuards(AccessTokenGuard)
   @UseInterceptors(FileInterceptor('media'))
   @ApiBody({
     description: 'Mettre à un projet avec un fichier (logo)',

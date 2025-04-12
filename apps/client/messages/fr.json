@@ -278,6 +278,7 @@
     "manageYourLife": "Gérer votre vie d'entrepreneur facilement"
   },
   "project": {
+    "create": "Créer un projet",
     "edit": "Édition du projet {project}",
     "removeSuccess": "Le projet {project} a été correctement supprimé.",
     "removeFailed": "Le projet {project} n'a pas été supprimé.",

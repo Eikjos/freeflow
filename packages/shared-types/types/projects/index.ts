@@ -29,6 +29,29 @@ export type ProjectDetailData = {
   name: string;
 };
 
+export type ProjectDetailWithTasks = {
+  id: number;
+  customerId: number;
+  mediaId: number;
+  name: string;
+  columns: ColumnsData[];
+};
+
+export type ColumnsData = {
+  id: number;
+  name: string;
+  index: number;
+  tasks: TaskData[];
+};
+
+export type TaskData = {
+  id: number;
+  name: string;
+  description: string;
+  priority: "high";
+  index: number;
+};
+
 export const ProjectCreateValidation = z.object({
   name: z.string().min(1, "Le nom est requis"),
   customerId: z.number({ required_error: "Le client est requis." }),

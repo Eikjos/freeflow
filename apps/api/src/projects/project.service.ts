@@ -8,6 +8,7 @@ import { Project } from '@prisma/client';
 import { PaginationFilter } from '@repo/shared-types';
 import ColumnService from 'src/columns/columns.service';
 import ProjectCreateDto from 'src/dtos/projects/project-create.dto';
+import { mapProjectWithTasksAndColumns } from 'src/dtos/projects/project-detail.dto';
 import {
   mapProjectToDetailDto,
   mapProjectToDto,
@@ -57,6 +58,15 @@ export default class ProjectService {
     });
     if (!project) throw new NotFoundException();
     return mapProjectToDetailDto(project);
+  }
+
+  async findByIdWithTasksAndColumns(id: number, enterpriseId: number) {
+    const project = await this.prisma.project.findFirst({
+      where: { id, enterpriseId },
+      include: { columns: { include: { tasks: true } } },
+    });
+    if (!project) throw new NotFoundException();
+    return mapProjectWithTasksAndColumns(project, project.columns);
   }
 
   async create(
