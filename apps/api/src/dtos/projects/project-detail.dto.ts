@@ -35,7 +35,7 @@ export function mapProjectWithTasksAndColumns(
   return {
     ...project,
     columns: columns
-      .sort((c) => c.index)
+      .sort((a, b) => a.index - b.index)
       .map(
         (c) =>
           ({
@@ -43,7 +43,7 @@ export function mapProjectWithTasksAndColumns(
             name: c.name,
             index: c.index,
             tasks: c.tasks
-              .sort((t) => t.index)
+              .sort((a, b) => a.index - b.index)
               .map(
                 (t) =>
                   ({

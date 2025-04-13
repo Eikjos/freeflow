@@ -35,15 +35,13 @@ export const createEnterprise = async (
       Authorization: `Bearer ${token?.value}`,
     },
     body: formData,
-  })
-    .then(async (res) => {
-      if (res.status === 200) {
-        const data = (await res.json()) as AuthResponseData;
-        return data;
-      }
-      return null;
-    })
-    .catch((e) => {
-      return null;
-    });
+  }).then(async (res) => {
+    if (res.status === 200) {
+      const data = (await res.json()) as AuthResponseData;
+      cookieStore.set("access_token", data.access_token);
+      cookieStore.set("refreshToken", data.refreshToken);
+      return data;
+    }
+    throw new Error((await res.json()).message);
+  });
 };

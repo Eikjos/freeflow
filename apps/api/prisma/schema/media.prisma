@@ -1,9 +1,9 @@
 model Media {
-  id           Int @id()@default(autoincrement())
-  filename     String
-  extension    String
-  invoice      Invoice?
-  entreprise   Enterprise?
-  project      Project?
-  expense      Expense?
+  id         Int         @id @default(autoincrement())
+  extension  String
+  filename   String
+  entreprise Enterprise?
+  expense    Expense?
+  invoice    Invoice?
+  project    Project?
 }

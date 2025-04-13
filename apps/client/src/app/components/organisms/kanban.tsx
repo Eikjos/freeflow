@@ -1,14 +1,33 @@
 "use client";
 
-import ColumnTask, { Column, Task } from "@components/templates/colum-task";
+import ColumnTask from "@components/templates/colum-task";
+import { Button } from "@components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+} from "@components/ui/dialog";
+import { Input } from "@components/ui/input";
+import { ColumnsData, TaskData } from "@repo/shared-types";
 import { useRef, useState } from "react";
 import { DndProvider, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-export function Board() {
+import { cn } from "../../../lib/utils";
+
+type KanbanProps = {
+  className?: string;
+  columns: ColumnsData[];
+};
+
+export function Board({ className, columns }: KanbanProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [columnsState, setColumnsState] = useState(columns);
   const [, drop] = useDrop({
     accept: "Column",
-    drop(item: Column, monitor) {
+    drop(item: ColumnsData, monitor) {
       const didDrop = monitor.didDrop();
       if (!didDrop) {
         handleDropColums(item, columns.length);
@@ -17,85 +36,8 @@ export function Board() {
   });
   drop(ref);
 
-  const column: Column[] = [
-    {
-      id: 1,
-      name: "TEST 1",
-      index: 0,
-      tasks: [
-        {
-          id: 10,
-          name: "Tache de test",
-          index: 1,
-        },
-        {
-          id: 11,
-          name: "Tache de test",
-          index: 2,
-        },
-        {
-          id: 1,
-          name: "Tache de test",
-          index: 3,
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: "TEST 2",
-      index: 1,
-      tasks: [
-        {
-          id: 12,
-          name: "Tache de test",
-          index: 1,
-        },
-        {
-          id: 13,
-          name: "Tache de test",
-          index: 2,
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: "TEST 3",
-      index: 2,
-      tasks: [
-        {
-          id: 14,
-          name: "Tache de test",
-          index: 1,
-        },
-        {
-          id: 15,
-          name: "Tache de test",
-          index: 2,
-        },
-      ],
-    },
-    {
-      id: 4,
-      name: "TEST 4",
-      index: 3,
-      tasks: [
-        {
-          id: 16,
-          name: "Tache de test",
-          index: 1,
-        },
-        {
-          id: 17,
-          name: "Tache de test",
-          index: 2,
-        },
-      ],
-    },
-  ];
-  const [columns, setColumns] = useState<Column[]>(column);
-
-  const handleDropColums = (col: Column, index_dest: number) => {
-    setColumns((prev) => {
+  const handleDropColums = (col: ColumnsData, index_dest: number) => {
+    setColumnsState((prev) => {
       const cols = [...prev.filter((p) => p.id !== col.id)];
       cols.splice(index_dest, 0, col);
 
@@ -105,14 +47,13 @@ export function Board() {
   };
 
   const handleDropTask = (
-    task: Task,
+    task: TaskData,
     columnId_src: number,
     columnId_dest: number,
     index_dest: number
   ) => {
-    setColumns((prev) =>
+    setColumnsState((prev) =>
       prev.map((col) => {
-        console.log(col);
         if (col.id === columnId_dest) {
           const updatedTasks = [...col.tasks.filter((t) => t.id !== task.id)];
           updatedTasks.splice(index_dest, 0, task);
@@ -137,31 +78,56 @@ export function Board() {
   };
 
   return (
-    <div
-      className="min-h-[calc(100vh-200px)]  max-h-[calc(100vh-200px)] py-4 flex flex-row w-full gap-5"
-      ref={ref}
-    >
-      {columns
-        .sort((c) => c.index)
-        .map((item) => (
-          <ColumnTask
-            id={item.id}
-            key={item.id}
-            name={item.name}
-            tasks={item.tasks}
-            index={item.index}
-            onDropTask={handleDropTask}
-            onDropColumn={handleDropColums}
-          />
-        ))}
+    <div className="w-full flex flex-col items-end">
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button>Ajouter une colonne</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogTitle className="text-3xl">
+            Créer une nouvelle colonne
+          </DialogTitle>
+          <Input type="text" placeholder="Nom" label="Nom de la colonne" />
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant={"outline"}>Annuler</Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button>Créer</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <div
+        className={cn(
+          "py-4 flex flex-row w-full gap-5 overflow-x-auto",
+          className
+        )}
+        ref={ref}
+      >
+        {columnsState
+          .sort((a, b) => a.index - b.index)
+          .map((item) => (
+            <ColumnTask
+              id={item.id}
+              key={item.id}
+              name={item.name}
+              tasks={item.tasks}
+              index={item.index}
+              onDropTask={handleDropTask}
+              onDropColumn={handleDropColums}
+            />
+          ))}
+      </div>
     </div>
   );
 }
 
-export default function Kanban() {
+export default function Kanban({ ...props }: KanbanProps) {
   return (
     <DndProvider backend={HTML5Backend}>
-      <Board />
+      <Board {...props} />
     </DndProvider>
   );
 }

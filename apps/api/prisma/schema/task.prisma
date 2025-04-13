@@ -1,8 +1,8 @@
 model Task {
-  id            Int @id() @default(autoincrement())
-  name          String
-  description   String?
-  index         Int
-  column        Column @relation(fields: [columnId], references: [id])
-  columnId      Int
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  index       Int
+  columnId    Int
+  column      Column  @relation(fields: [columnId], references: [id])
 }

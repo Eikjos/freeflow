@@ -1,35 +1,35 @@
 model Enterprise {
-  id              Int @id() @default(autoincrement())
-  name            String @unique()
-  siret           String @unique()
-  tvaNumber       String?
-  address         String
-  zipCode         String
-  city            String
-  country         Country @relation(fields: [countryId], references: [id])
-  countryId       Int
-  juridicShape    JuridicShape @relation(fields: [juridicShapeId], references: [code])
-  juridicShapeId  String
-  phone           String
-  email           String
-  users           User[]
-  projects        Project[]
-  invoices        Invoice[]
-  expenses        Expense[]
-  contacts        Contact[]
-  opinions        Opinion[]
-  customers       EnterpriseCustomer[]
-  mediaId         Int? @unique
-  sales           Sales[]
-  media           Media? @relation(fields: [mediaId], references: [id])
+  id             Int                  @id @default(autoincrement())
+  name           String               @unique
+  siret          String               @unique
+  tvaNumber      String?
+  address        String
+  city           String
+  countryId      Int
+  juridicShapeId String
+  mediaId        Int?                 @unique
+  zipCode        String
+  email          String
+  phone          String
+  contacts       Contact[]
+  country        Country              @relation(fields: [countryId], references: [id])
+  juridicShape   JuridicShape         @relation(fields: [juridicShapeId], references: [code])
+  media          Media?               @relation(fields: [mediaId], references: [id])
+  customers      EnterpriseCustomer[]
+  expenses       Expense[]
+  invoices       Invoice[]
+  opinions       Opinion[]
+  projects       Project[]
+  sales          Sales[]
+  users          User[]
 }
 
 model EnterpriseCustomer {
-  enterprise      Enterprise @relation(fields: [enterpriseId], references: [id])
-  enterpriseId    Int 
-  customer        Customer @relation(fields: [customerId], references: [id])
-  customerId      Int 
-  isDeleted       Boolean @default(false)
+  enterpriseId Int
+  customerId   Int
+  isDeleted    Boolean    @default(false)
+  customer     Customer   @relation(fields: [customerId], references: [id])
+  enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
 
   @@id([enterpriseId, customerId])
 }

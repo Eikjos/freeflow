@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
+import { toast } from "sonner";
 import { getCountryByIdQueryOptions } from "../../../lib/api/countries";
 import { getAllJuridicShapesByCodeQueryOptions } from "../../../lib/api/juridic-shapes";
 
@@ -26,8 +27,8 @@ export default function RecapEnterpriseForm() {
           router.replace("/");
         }
       })
-      .catch((e) => {
-        console.log(e);
+      .catch((e: Error) => {
+        toast.error(e.message);
       });
   };
 

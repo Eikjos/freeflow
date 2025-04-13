@@ -6,12 +6,7 @@ export default class ColumnService {
   constructor(private readonly prisma: PrismaService) {}
 
   async initializeForProject(projectId: number) {
-    const columnNames = [
-      'columns.todo',
-      'columns.ongoing',
-      'columms.testing',
-      'columms.validate',
-    ];
+    const columnNames = ['À faire', 'En cours', 'À tester', 'À valider'];
     columnNames.map(async (c, index) => {
       const column = await this.prisma.column.create({
         data: { name: c, index, projectId },

@@ -1,38 +1,28 @@
+/* eslint-disable no-unused-vars */
 "use client";
 
 import { Card, CardContent, CardHeader } from "@components/ui/card";
-import { PenIcon, Plus, Trash2Icon } from "lucide-react";
+import { ColumnsData, TaskData } from "@repo/shared-types";
+import { Plus, Trash2Icon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { cn } from "../../../lib/utils";
 import TaskCard from "./task-card";
 import TaksCreateSheet from "./task-create-sheet";
 
-export type Task = {
-  id: number;
-  name: string;
-  index: number;
-};
-
-export type Column = {
-  id: number;
-  name: string;
-  index: number;
-  tasks: Task[];
-};
-
 type ColumnTaksProps = {
   id: number;
   name: string;
   index: number;
-  tasks: Task[];
+  tasks: TaskData[];
   onDropTask: (
-    task: Task,
+    task: TaskData,
     columnId_src: number,
     columnId_dest: number,
     index_dest: number
   ) => void;
-  onDropColumn: (col: Column, index_dest: number) => void;
+  onDropColumn: (col: ColumnsData, index_dest: number) => void;
 };
 
 export default function ColumnTask({
@@ -44,6 +34,7 @@ export default function ColumnTask({
   onDropColumn,
 }: ColumnTaksProps) {
   const [open, setOpen] = useState(false);
+  const t = useTranslations();
   const ref = useRef<HTMLDivElement>(null);
   const columRef = useRef<HTMLDivElement>(null);
   const [{ opacity }, dragRef] = useDrag(
@@ -56,24 +47,26 @@ export default function ColumnTask({
     }),
     [id, name, index, tasks]
   );
-  const [{ isOver }, dropRef] = useDrop<Column, void, { isOver: boolean }>({
-    accept: "Column",
-    drop(item: Column) {
-      if (item.index !== index) {
-        onDropColumn(item, index);
-      }
-    },
-    collect(monitor) {
-      const item = monitor.getItem<Column>();
-      return {
-        isOver: monitor.isOver() && item.id !== id,
-      };
-    },
-  });
+  const [{ isOver }, dropRef] = useDrop<ColumnsData, void, { isOver: boolean }>(
+    {
+      accept: "Column",
+      drop(item: ColumnsData) {
+        if (item.index !== index) {
+          onDropColumn(item, index);
+        }
+      },
+      collect(monitor) {
+        const item = monitor.getItem<ColumnsData>();
+        return {
+          isOver: monitor.isOver() && item.id !== id,
+        };
+      },
+    }
+  );
   const [, drop] = useDrop(
     () => ({
       accept: "TaskCard",
-      drop: (item: Task & { columnId: number }, monitor) => {
+      drop: (item: TaskData & { columnId: number }, monitor) => {
         const { columnId, ...task } = item;
         const didDrop = monitor.didDrop();
         if (columnId !== id && !didDrop) {
@@ -103,7 +96,6 @@ export default function ColumnTask({
           <CardHeader className="h-10 mb-2 px-5 py-3 shadow-sm rounded-sm flex flex-row justify-between items-center">
             <span className="text-md">{name}</span>
             <div className="flex flex-row justify-end items-center gap-2">
-              <PenIcon size={18} className="text-primary" />
               <Trash2Icon size={18} className="text-primary" />
               <Plus
                 size={18}
@@ -117,7 +109,7 @@ export default function ColumnTask({
             className="rounded-md w-[95%] mx-auto max-h-[calc(100%-3.5rem)] h-full flex flex-col gap-2 overflow-y-auto scroll-bar"
           >
             {tasks
-              .sort((e) => e.index)
+              .sort((a, b) => a.index - b.index)
               .map((item, index) => (
                 <TaskCard
                   id={item.id}

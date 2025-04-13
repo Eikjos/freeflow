@@ -7,10 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@components/ui/card";
-import { ProjectData } from "@repo/shared-types";
-import { Pen, Trash } from "lucide-react";
-import Image from "next/image";
-import { getMediaUrl } from "../../../lib/utils";
 import {
   Dialog,
   DialogClose,
@@ -20,8 +16,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@components/ui/dialog";
+import { ProjectData } from "@repo/shared-types";
+import { Pen, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { getMediaUrl } from "../../../lib/utils";
 
 type ProjectCardProps = {
   project: ProjectData;
@@ -35,6 +35,11 @@ export default function ProjectCard({
   onDelete,
 }: ProjectCardProps) {
   const t = useTranslations();
+  const router = useRouter();
+  const goToDetails = () => {
+    router.push(`/activities/projects/${project.id}/tasks`);
+  };
+
   if (isLoading) {
     return (
       <Card className="w-92 min-w-92 h-36">
@@ -58,10 +63,13 @@ export default function ProjectCard({
   return (
     <Card className="w-92 min-w-92 h-36">
       <CardContent>
-        <CardHeader className="flex flex-row items-start px-0 justify-between">
+        <CardHeader
+          className="flex flex-row items-start px-0 justify-between hover:cursor-pointer"
+          onClick={goToDetails}
+        >
           <div className="flex flex-row items-center gap-5 h-[40px]">
             {project.media && (
-              <Image
+              <img
                 src={getMediaUrl(project.media)}
                 width={50}
                 height={50}
@@ -101,7 +109,9 @@ export default function ProjectCard({
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle className="text-3xl">
-                    {t("project.dialog.removeTitle", { project: project.name })}
+                    {t("project.dialog.removeTitle", {
+                      project: project.name,
+                    })}
                   </DialogTitle>
                   <p>
                     {t("project.dialog.removeDescription", {

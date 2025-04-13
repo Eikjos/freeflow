@@ -1,14 +1,14 @@
 model Invoice {
-  id              Int @id()@default(autoincrement())
-  name            String 
-  date            DateTime
-  customer        Customer @relation(fields: [customerId], references: [id])
-  customerId      Int
-  enterprise      Enterprise @relation(fields: [enterpriseId], references: [id])
-  enterpriseId    Int
-  createdAt       DateTime
-  updatedAt       DateTime
-  isPaid          Boolean
-  media           Media? @relation(fields: [mediaId], references: [id])
-  mediaId         Int? @unique
+  id           Int        @id @default(autoincrement())
+  name         String
+  date         DateTime
+  customerId   Int
+  enterpriseId Int
+  createdAt    DateTime
+  updatedAt    DateTime
+  mediaId      Int?       @unique
+  isPaid       Boolean
+  customer     Customer   @relation(fields: [customerId], references: [id])
+  enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
+  media        Media?     @relation(fields: [mediaId], references: [id])
 }
