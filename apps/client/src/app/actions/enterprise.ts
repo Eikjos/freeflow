@@ -28,20 +28,18 @@ export const createEnterprise = async (
   );
   if (logo) formData.append("logo", logo);
   var cookieStore = await cookies();
-  const token = cookieStore.get("access_token");
-  return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/enterprises`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token?.value}`,
-    },
-    body: formData,
-  }).then(async (res) => {
-    if (res.status === 200) {
-      const data = (await res.json()) as AuthResponseData;
-      cookieStore.set("access_token", data.access_token);
-      cookieStore.set("refreshToken", data.refreshToken);
-      return data;
+  return client<AuthResponseData>(
+    `${process.env.NEXT_PUBLIC_API_URL}/enterprises`,
+    {
+      method: "POST",
+      body: formData,
     }
-    throw new Error((await res.json()).message);
+  ).then(async (res) => {
+    if (res.ok && res.data) {
+      cookieStore.set("access_token", res.data.access_token);
+      cookieStore.set("refreshToken", res.data.refreshToken);
+      return res.data;
+    }
+    throw new Error(res.error);
   });
 };

@@ -10,21 +10,39 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@components/ui/dialog";
+import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { ColumnsData, TaskData } from "@repo/shared-types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  ColumnsData,
+  CreateColumnData,
+  CreateColumnValidation,
+  TaskData,
+} from "@repo/shared-types";
+import { createColumn } from "actions/column";
 import { useRef, useState } from "react";
 import { DndProvider, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { cn } from "../../../lib/utils";
 
 type KanbanProps = {
   className?: string;
+  projectId: number;
   columns: ColumnsData[];
 };
 
-export function Board({ className, columns }: KanbanProps) {
+export function Board({ className, projectId, columns }: KanbanProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [columnsState, setColumnsState] = useState(columns);
+  const [open, setOpen] = useState(false);
+  const form = useForm<CreateColumnData>({
+    resolver: zodResolver(CreateColumnValidation),
+    defaultValues: {
+      name: "",
+    },
+  });
   const [, drop] = useDrop({
     accept: "Column",
     drop(item: ColumnsData, monitor) {
@@ -77,25 +95,45 @@ export function Board({ className, columns }: KanbanProps) {
     );
   };
 
+  const onSubmitCreateColumn = (values: CreateColumnData) => {
+    createColumn(projectId, values)
+      .then((res) => {
+        if (res) {
+          setColumnsState([...columnsState, res]);
+        }
+      })
+      .catch((e) => {
+        toast.error(e.message);
+      });
+    setOpen(false);
+  };
+
   return (
     <div className="w-full flex flex-col items-end">
-      <Dialog>
+      <Dialog open={open} onOpenChange={(value) => setOpen(value)}>
         <DialogTrigger asChild>
           <Button>Ajouter une colonne</Button>
         </DialogTrigger>
         <DialogContent>
-          <DialogTitle className="text-3xl">
-            Créer une nouvelle colonne
-          </DialogTitle>
-          <Input type="text" placeholder="Nom" label="Nom de la colonne" />
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant={"outline"}>Annuler</Button>
-            </DialogClose>
-            <DialogClose asChild>
-              <Button>Créer</Button>
-            </DialogClose>
-          </DialogFooter>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmitCreateColumn)}>
+              <DialogTitle className="text-3xl">
+                Créer une nouvelle colonne
+              </DialogTitle>
+              <Input
+                type="text"
+                placeholder="Nom"
+                label="Nom de la colonne"
+                {...form.register("name")}
+              />
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant={"outline"}>Annuler</Button>
+                </DialogClose>
+                <Button type="submit">Créer</Button>
+              </DialogFooter>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
 

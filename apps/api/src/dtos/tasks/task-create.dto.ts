@@ -1,0 +1,24 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { CreateTaskData } from '@repo/shared-types';
+import { IsEnum, IsNumber, IsString } from 'class-validator';
+
+export enum PriorityEnum {
+  HIGH = 'HIGH',
+  MEDIUM = 'MEDIUM',
+  LOW = 'LOW',
+}
+
+export default class CreateTaskDto implements CreateTaskData {
+  @ApiProperty({ description: 'The name of task' })
+  @IsString()
+  name: string;
+  @ApiProperty({ description: 'The description of task' })
+  @IsString()
+  description?: string;
+  @ApiProperty({ description: 'The priority of task' })
+  @IsEnum(PriorityEnum)
+  priority: 'HIGH' | 'MEDIUM' | 'LOW';
+  @ApiProperty({ description: 'The estimation of task' })
+  @IsNumber()
+  estimation: number;
+}

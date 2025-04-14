@@ -26,9 +26,10 @@ export default function ProjectDetailWithTasksPage() {
 
   return (
     <>
-      <h1 className="font-amica text-4xl mb-5">{data?.data?.name}</h1>
+      <h1 className="font-amica text-4xl mb-1">{data?.data?.name}</h1>
       {data && data.ok && data.data && (
         <Kanban
+          projectId={data.data.id}
           className="min-h-[calc(100vh-150px)]  max-h-[calc(100vh-150px)]"
           columns={data.data.columns}
         />

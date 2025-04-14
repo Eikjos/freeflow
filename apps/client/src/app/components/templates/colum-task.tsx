@@ -83,6 +83,10 @@ export default function ColumnTask({
     setOpen(true);
   };
 
+  const addTask = (task: TaskData) => {
+    onDropTask(task, 0, id, tasks.length);
+  };
+
   return (
     <>
       {isOver && <div className="mx-1 bg-gray-100 w-2 rounded-lg"></div>}
@@ -127,6 +131,7 @@ export default function ColumnTask({
         open={open}
         onClose={() => setOpen(false)}
         columnId={id}
+        onAddTask={addTask}
       />
     </>
   );

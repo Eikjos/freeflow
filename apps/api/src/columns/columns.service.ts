@@ -1,4 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
+import { mapToTask } from 'src/dtos/tasks/task.dto';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -13,5 +15,23 @@ export default class ColumnService {
       });
       return column.id;
     });
+  }
+
+  async createTask(columnId: number, model: CreateTaskDto) {
+    const column = await this.prisma.column.findFirst({
+      where: { id: columnId },
+      include: { tasks: true },
+    });
+    if (!column) throw new NotFoundException();
+
+    const task = await this.prisma.task.create({
+      data: {
+        ...model,
+        index: column.tasks.length,
+        columnId: columnId,
+      },
+    });
+
+    return mapToTask(task);
   }
 }

@@ -7,6 +7,8 @@ import {
 import { Project } from '@prisma/client';
 import { PaginationFilter } from '@repo/shared-types';
 import ColumnService from 'src/columns/columns.service';
+import CreateColumnDto from 'src/dtos/columns/column-create.dto';
+import { mapToColumn } from 'src/dtos/columns/column.dto';
 import ProjectCreateDto from 'src/dtos/projects/project-create.dto';
 import { mapProjectWithTasksAndColumns } from 'src/dtos/projects/project-detail.dto';
 import {
@@ -95,6 +97,35 @@ export default class ProjectService {
     }
 
     return project.id;
+  }
+
+  async createColumn(
+    projectId: number,
+    enterpriseId: number,
+    column: CreateColumnDto,
+  ) {
+    const project = await this.prisma.project.findFirst({
+      where: { id: projectId, enterpriseId },
+      include: { columns: true },
+    });
+    if (!project) throw new NotFoundException();
+    if (
+      project.columns.filter(
+        (c) =>
+          c.name.toLocaleLowerCase().trim() ===
+          column.name.toLocaleLowerCase().trim(),
+      ).length
+    ) {
+      throw new BadRequestException('columns.already.exist');
+    }
+    const columnEntity = await this.prisma.column.create({
+      data: {
+        projectId: projectId,
+        name: column.name,
+        index: project.columns.length,
+      },
+    });
+    return mapToColumn(columnEntity);
   }
 
   async update(

@@ -2,7 +2,15 @@ model Task {
   id          Int     @id @default(autoincrement())
   name        String
   description String?
+  priority    Priority
+  estimation  Float
   index       Int
   columnId    Int
   column      Column  @relation(fields: [columnId], references: [id])
+}
+
+enum Priority {
+  HIGH
+  MEDIUM
+  LOW
 }

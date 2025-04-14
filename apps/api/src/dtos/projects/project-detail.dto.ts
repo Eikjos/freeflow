@@ -1,9 +1,7 @@
 import { Column, Project, Task } from '@prisma/client';
-import {
-  ColumnsData,
-  ProjectDetailWithTasks,
-  TaskData,
-} from '@repo/shared-types';
+import { ProjectDetailWithTasks } from '@repo/shared-types';
+import { ColumnDto } from '../columns/column.dto';
+import { TaskDto } from '../tasks/task.dto';
 
 export class ProjectDetailWithTasksDto implements ProjectDetailWithTasks {
   customerId: number;
@@ -11,21 +9,6 @@ export class ProjectDetailWithTasksDto implements ProjectDetailWithTasks {
   name: string;
   columns: ColumnDto[];
   id: number;
-}
-
-export class ColumnDto implements ColumnsData {
-  id: number;
-  name: string;
-  index: number;
-  tasks: TaskDto[];
-}
-
-export class TaskDto implements TaskData {
-  id: number;
-  name: string;
-  description: string;
-  priority: 'high';
-  index: number;
 }
 
 export function mapProjectWithTasksAndColumns(
@@ -48,7 +31,6 @@ export function mapProjectWithTasksAndColumns(
                 (t) =>
                   ({
                     ...t,
-                    priority: 'high',
                   }) as TaskDto,
               ),
           }) as ColumnDto,

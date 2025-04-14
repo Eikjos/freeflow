@@ -7,6 +7,7 @@ import { EnterpriseModule } from './enterprises/enterprise.module';
 import JuridicShapeModule from './juridic-shapes/juridic-shapes.module';
 import { MediaModule } from './media/media.module';
 import ProjectModule from './projects/project.module';
+import TaskModule from './tasks/task.module';
 import { UserModule } from './users/user.module';
 
 @Module({
@@ -20,6 +21,7 @@ import { UserModule } from './users/user.module';
     CustomerModule,
     ProjectModule,
     ColumnModule,
+    TaskModule,
   ],
   providers: [],
 })
