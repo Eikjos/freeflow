@@ -1,4 +1,5 @@
 import { Button } from "@components/ui/button";
+import Editor from "@components/ui/editor";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { Select } from "@components/ui/select";
@@ -76,6 +77,7 @@ export default function TaksCreateSheet({
               placeholder="Description"
               {...form.register("description")}
             />
+            <Editor className="mt-3 mb-4" label={"Description"} />
             <Select
               label="Priorité"
               values={[

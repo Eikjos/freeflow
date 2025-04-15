@@ -37,6 +37,7 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.53.2",
+    "react-quill-new": "^3.4.6",
     "shadcn": "^2.1.6",
     "sonner": "^2.0.1",
     "tailwind-merge": "^2.5.5",
