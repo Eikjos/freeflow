@@ -71,12 +71,6 @@ export default function TaksCreateSheet({
               placeholder="Nom de la tâche"
               {...form.register("name")}
             />
-            <Input
-              type="text"
-              label="Description"
-              placeholder="Description"
-              {...form.register("description")}
-            />
             <Editor className="mt-3 mb-4" label={"Description"} />
             <Select
               label="Priorité"

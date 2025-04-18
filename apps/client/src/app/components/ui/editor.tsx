@@ -4,6 +4,7 @@ import { useState } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { cn } from "../../../lib/utils";
+import "../../editor.css";
 import { FormLabel } from "./form";
 
 type EditorProps = {
@@ -23,7 +24,7 @@ export default function Editor({ className, label }: EditorProps) {
         { indent: "-1" },
         { indent: "+1" },
       ],
-      ["link", "image"],
+      ["link", "image", "code-block"],
       ["clean"],
     ],
   };
@@ -31,7 +32,6 @@ export default function Editor({ className, label }: EditorProps) {
   const formats = ["bold", "italic", "underline", "list", "image"];
 
   const handleChange = (v: string) => {
-    console.log(v);
     setValue(v);
   };
 
@@ -44,6 +44,7 @@ export default function Editor({ className, label }: EditorProps) {
           value={value}
           onChange={handleChange}
           formats={formats}
+          placeholder="Ecris ton contenu ici...."
           modules={modules}
         />
       </div>
