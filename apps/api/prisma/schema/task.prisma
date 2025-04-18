@@ -6,7 +6,7 @@ model Task {
   estimation  Float
   index       Int
   columnId    Int
-  column      Column  @relation(fields: [columnId], references: [id])
+  column      Column  @relation(fields: [columnId], references: [id], onDelete: Cascade)
 }
 
 enum Priority {

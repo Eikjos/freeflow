@@ -29,11 +29,12 @@ export const createEnterprise = async (
   if (logo) formData.append("logo", logo);
   var cookieStore = await cookies();
   return client<AuthResponseData>(
-    `${process.env.NEXT_PUBLIC_API_URL}/enterprises`,
+    `enterprises`,
     {
       method: "POST",
       body: formData,
-    }
+    },
+    "other"
   ).then(async (res) => {
     if (res.ok && res.data) {
       cookieStore.set("access_token", res.data.access_token);
