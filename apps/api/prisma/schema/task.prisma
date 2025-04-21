@@ -7,6 +7,16 @@ model Task {
   index       Int
   columnId    Int
   column      Column  @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  medias      TaskMedia[]
+}
+
+model TaskMedia {
+  taskId      Int
+  mediaId     Int
+  task        Task   @relation(fields: [taskId], references: [id])
+  media       Media  @relation(fields: [mediaId], references: [id])
+
+  @@id([taskId, mediaId])
 }
 
 enum Priority {

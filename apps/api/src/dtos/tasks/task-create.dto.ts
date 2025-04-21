@@ -21,4 +21,8 @@ export default class CreateTaskDto implements CreateTaskData {
   @ApiProperty({ description: 'The estimation of task' })
   @IsNumber()
   estimation: number;
+  @ApiProperty({ description: 'file attachment' })
+  files: File[];
+  @ApiProperty({ description: 'file already saved' })
+  mediaIds?: number[];
 }

@@ -1,5 +1,5 @@
 import { Button } from "@components/ui/button";
-import Editor from "@components/ui/editor";
+import { Editor, uploadAndReplace } from "@components/ui/editor";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { Select } from "@components/ui/select";
@@ -41,13 +41,28 @@ export default function TaksCreateSheet({
     },
   });
 
-  const onSubmit = (values: CreateTaskData) => {
+  const onSubmit = async (values: CreateTaskData) => {
+    try {
+      if (values.description) {
+        const newValue = await uploadAndReplace(values.description);
+        if (newValue) {
+          values.description = newValue.value;
+          values.mediaIds = newValue.images;
+        }
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        toast.error(e.message);
+      }
+    }
+
     createTask(columnId, values)
       .then((res) => {
         if (res) {
           onAddTask(res);
         }
       })
+      .then(() => form.reset())
       .catch((e) => toast.error(e.message))
       .finally(() => onClose());
   };
@@ -71,7 +86,12 @@ export default function TaksCreateSheet({
               placeholder="Nom de la tâche"
               {...form.register("name")}
             />
-            <Editor className="mt-3 mb-4" label={"Description"} />
+            <Editor
+              className="mt-3 mb-4"
+              label={"Description"}
+              placeholder="Ecrivez une description..."
+              {...form.register("description")}
+            />
             <Select
               label="Priorité"
               values={[

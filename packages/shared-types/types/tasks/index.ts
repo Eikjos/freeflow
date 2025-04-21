@@ -4,6 +4,8 @@ export type CreateTaskData = {
   name: string;
   description?: string;
   priority: "HIGH" | "MEDIUM" | "LOW";
+  files?: File[];
+  mediaIds?: number[];
   estimation: number;
 };
 
@@ -13,6 +15,7 @@ export type TaskData = {
   description: string;
   priority: "HIGH" | "MEDIUM" | "LOW";
   index: number;
+  mediaIds: number[];
 };
 
 export const CreateTaskValidation = z.object({

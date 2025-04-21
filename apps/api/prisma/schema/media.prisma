@@ -6,4 +6,5 @@ model Media {
   expense    Expense?
   invoice    Invoice?
   project    Project?
+  tasks      TaskMedia[]
 }

@@ -7,8 +7,9 @@ export class TaskDto implements TaskData {
   description: string;
   priority: 'HIGH' | 'MEDIUM' | 'LOW';
   index: number;
+  mediaIds: number[];
 }
 
-export function mapToTask(task: Task): TaskDto {
-  return { ...task };
+export function mapToTask(task: Task, mediaIds: number[]): TaskDto {
+  return { ...task, mediaIds };
 }
