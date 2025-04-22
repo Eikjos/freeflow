@@ -2,6 +2,7 @@ import { Button } from "@components/ui/button";
 import { Editor, uploadAndReplace } from "@components/ui/editor";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
+import InputFile from "@components/ui/input-file";
 import { Select } from "@components/ui/select";
 import {
   Sheet,
@@ -37,7 +38,8 @@ export default function TaksCreateSheet({
     resolver: zodResolver(CreateTaskValidation),
     defaultValues: {
       name: "",
-      estimation: 0,
+      estimation: undefined,
+      description: "",
     },
   });
 
@@ -67,9 +69,13 @@ export default function TaksCreateSheet({
       .finally(() => onClose());
   };
 
+  const handleUploadFile = (files: File[]) => {
+    form.setValue("files", files);
+  };
+
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent>
+      <SheetContent className="overflow-y-auto pb-5">
         <SheetHeader>
           <SheetTitle className="text-3xl font-medium font-amica">
             Création d'une tâche
@@ -107,6 +113,13 @@ export default function TaksCreateSheet({
               label="Estimation"
               placeholder="Estimation"
               {...form.register("estimation")}
+            />
+            <InputFile
+              className="w-full mt-3"
+              multiple
+              onFilesSelected={handleUploadFile}
+              accept="image/*,.pdf,.docx,.xlsx,video/*,audio/*"
+              showFiles
             />
             <Button type="submit" className="w-full mt-10">
               Créer

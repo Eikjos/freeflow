@@ -2,27 +2,31 @@
 
 import { CloudUpload } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { ComponentProps, useRef } from "react";
+import { ComponentProps, useRef, useState } from "react";
 import { Label } from "./label";
 
 type InputFileProps = {
   onFilesSelected: (files: File[]) => void;
+  showFiles?: boolean;
   errorMessage?: string;
 } & Omit<ComponentProps<"input">, "name" | "type">;
 
 const InputFile = ({
   onFilesSelected,
   errorMessage,
+  showFiles = false,
   ...props
 }: InputFileProps) => {
   const t = useTranslations();
+  const [files, setFiles] = useState<File[]>([]);
   const ref = useRef<HTMLInputElement>(null);
   const handleFileChange = (event: any) => {
     const selectedFiles: File[] = Array.from(event.target.files);
     if (ref.current) {
       ref.current.value = "";
     }
-    onFilesSelected(selectedFiles);
+    setFiles((prev) => [...prev, ...selectedFiles]);
+    onFilesSelected(files);
   };
   const handleDrop = (event: any) => {
     event.preventDefault();
@@ -33,18 +37,15 @@ const InputFile = ({
   };
 
   return (
-    <section>
+    <section className={props.className}>
       <div
         className={`document-uploader`}
         onDrop={handleDrop}
         onDragOver={(event) => event.preventDefault()}
       >
         <>
-          <div className="border-dashed border-2 p-4 rounded-lg border-orange-500/50 bg-orange-50 text-sm text-center">
+          <div className="border-dashed border-2 p-4 rounded-lg border-orange-500/50 bg-orange-50 text-sm text-center w-full">
             <p>{t("common.dropFile")}</p>
-            <p>
-              {t("common.supportedFile")} {props.accept}
-            </p>
             <Label
               htmlFor="browse"
               className="flex flew-row justify-center mt-2"
@@ -69,6 +70,13 @@ const InputFile = ({
           />
         </>
       </div>
+      {showFiles && (
+        <div>
+          {files.map((f, index) => (
+            <div key={index}>{f.name}</div>
+          ))}
+        </div>
+      )}
     </section>
   );
 };
