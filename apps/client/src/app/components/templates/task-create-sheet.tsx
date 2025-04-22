@@ -83,7 +83,7 @@ export default function TaksCreateSheet({
         </SheetHeader>
         <Form {...form}>
           <form
-            className="flex flex-col items-center mt-10 h-full"
+            className="flex flex-col items-center mt-10"
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <Input
@@ -118,7 +118,6 @@ export default function TaksCreateSheet({
               className="w-full mt-3"
               multiple
               onFilesSelected={handleUploadFile}
-              accept="image/*,.pdf,.docx,.xlsx,video/*,audio/*"
               showFiles
             />
             <Button type="submit" className="w-full mt-10">
