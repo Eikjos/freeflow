@@ -26,5 +26,5 @@ export const CreateTaskValidation = z.object({
   priority: z.enum(["HIGH", "MEDIUM", "LOW"], {
     message: "La valeur est invalide",
   }),
-  estimation: z.number().gte(0, "Must be 0 and above").optional(),
+  estimation: z.coerce.number().gte(0, "Must be 0 and above").optional(),
 });

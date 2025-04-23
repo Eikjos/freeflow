@@ -42,7 +42,7 @@ const InputFile = ({
     return forbiddenExtensions.includes(ext!);
   };
 
-  const handleFileChange = (event: any) => {
+  const handleFileChange = async (event: any) => {
     const selectedFiles: File[] = Array.from(event.target.files);
     if (ref.current) {
       ref.current.value = "";
@@ -55,8 +55,8 @@ const InputFile = ({
         safeFiles.push(file);
       }
     });
+    onFilesSelected([...files, ...safeFiles]);
     setFiles((prev) => [...prev, ...safeFiles]);
-    onFilesSelected(files);
   };
   const handleDrop = (event: any) => {
     event.preventDefault();

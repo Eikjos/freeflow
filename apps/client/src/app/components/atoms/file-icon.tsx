@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@components/ui/card";
-import { CircleXIcon, FileVideo } from "lucide-react";
+import { ArrowDownToLine, CircleXIcon, FileVideo } from "lucide-react";
 import {
   FaFile,
   FaFileAlt,
@@ -17,9 +17,15 @@ type FileIconProps = {
   file: File;
   onDelete: (file: File) => void;
   className?: string;
+  canDownload?: boolean;
 };
 
-export default function FileIcon({ file, onDelete, className }: FileIconProps) {
+export default function FileIcon({
+  file,
+  onDelete,
+  className,
+  canDownload,
+}: FileIconProps) {
   const getFileIcon = (fileName: string) => {
     const extension = (fileName.split(".").pop() ?? "").toLowerCase();
 
@@ -72,6 +78,11 @@ export default function FileIcon({ file, onDelete, className }: FileIconProps) {
           >
             <CircleXIcon />
           </div>
+          {canDownload && (
+            <div className="absolute w-5 h-5 rounded-full bg-primary -top-2 -left-2 flex items-center justify-center text-white hover:cursor-pointer">
+              <ArrowDownToLine />
+            </div>
+          )}
           {getFileIcon(file.name)}
           <p className="text-[0.55rem] break-all w-[50px] line-clamp-2 mt-1 text-center">
             {file.name}

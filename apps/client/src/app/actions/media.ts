@@ -37,7 +37,6 @@ export const uploadImg = async (base64: string) => {
     },
     "other"
   ).then((res) => {
-    console.log("reponse", res);
     if (res.ok && res.data) {
       return res.data;
     }

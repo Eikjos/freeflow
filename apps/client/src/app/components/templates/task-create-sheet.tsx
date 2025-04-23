@@ -42,7 +42,6 @@ export default function TaksCreateSheet({
       description: "",
     },
   });
-
   const onSubmit = async (values: CreateTaskData) => {
     try {
       if (values.description) {
@@ -54,10 +53,9 @@ export default function TaksCreateSheet({
       }
     } catch (e) {
       if (e instanceof Error) {
-        toast.error(e.message);
+        toast.error("uploaded " + e.message);
       }
     }
-
     createTask(columnId, values)
       .then((res) => {
         if (res) {
@@ -65,7 +63,7 @@ export default function TaksCreateSheet({
         }
       })
       .then(() => form.reset())
-      .catch((e) => toast.error(e.message))
+      .catch((e) => toast.error("api " + e.message))
       .finally(() => onClose());
   };
 
@@ -83,7 +81,7 @@ export default function TaksCreateSheet({
         </SheetHeader>
         <Form {...form}>
           <form
-            className="flex flex-col items-center mt-10"
+            className="flex flex-col items-center mt-5"
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <Input
