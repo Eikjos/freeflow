@@ -38,7 +38,7 @@ export default function TaksCreateSheet({
     resolver: zodResolver(CreateTaskValidation),
     defaultValues: {
       name: "",
-      estimation: undefined,
+      estimation: 0,
       description: "",
     },
   });

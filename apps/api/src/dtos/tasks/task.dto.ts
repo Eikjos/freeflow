@@ -7,6 +7,8 @@ export class TaskDto implements TaskData {
   description: string;
   priority: 'HIGH' | 'MEDIUM' | 'LOW';
   index: number;
+  columnId: number;
+  estimation?: number;
   mediaIds: number[];
 }
 

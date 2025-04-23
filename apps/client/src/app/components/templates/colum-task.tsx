@@ -66,11 +66,10 @@ export default function ColumnTask({
   const [, drop] = useDrop(
     () => ({
       accept: "TaskCard",
-      drop: (item: TaskData & { columnId: number }, monitor) => {
-        const { columnId, ...task } = item;
+      drop: (item: TaskData, monitor) => {
         const didDrop = monitor.didDrop();
-        if (columnId !== id && !didDrop) {
-          onDropTask(task, columnId, id, tasks.length);
+        if (item.columnId !== id && !didDrop) {
+          onDropTask(item, item.columnId, id, tasks.length);
         }
       },
     }),
@@ -115,14 +114,7 @@ export default function ColumnTask({
             {tasks
               .sort((a, b) => a.index - b.index)
               .map((item, index) => (
-                <TaskCard
-                  id={item.id}
-                  key={index}
-                  name={item.name}
-                  columnId={id}
-                  index={index}
-                  onDrop={onDropTask}
-                />
+                <TaskCard task={item} key={index} onDrop={onDropTask} />
               ))}
           </div>
         </CardContent>

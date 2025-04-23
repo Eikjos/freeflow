@@ -1,5 +1,6 @@
 "use client";
 
+import { uploadImg } from "actions/media";
 import { ComponentProps, forwardRef } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
@@ -12,7 +13,6 @@ import {
   FormLabel,
   FormMessage,
 } from "./form";
-import { uploadImg } from "actions/media";
 import { Label } from "./label";
 
 type EditorProps = {
@@ -39,7 +39,7 @@ const uploadAndReplace = async (value?: string) => {
 };
 
 const Editor = forwardRef<ReactQuill, EditorProps>(
-  ({ className, label, name, placeholder, ...props }, ref) => {
+  ({ className, label, name, placeholder }, ref) => {
     const modules = {
       toolbar: [
         [{ header: [1, 2, false] }],

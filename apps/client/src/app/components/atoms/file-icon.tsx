@@ -1,15 +1,15 @@
-import { Card, CardContent, CardFooter, CardHeader } from "@components/ui/card";
-import { CircleXIcon, Cross, FileVideo } from "lucide-react";
+import { Card, CardContent } from "@components/ui/card";
+import { CircleXIcon, FileVideo } from "lucide-react";
 import {
+  FaFile,
+  FaFileAlt,
+  FaFileArchive,
+  FaFileCode,
+  FaFileExcel,
   FaFileImage,
   FaFilePdf,
-  FaFileWord,
-  FaFileExcel,
   FaFilePowerpoint,
-  FaFileAlt,
-  FaFile,
-  FaFileCode,
-  FaFileArchive,
+  FaFileWord,
 } from "react-icons/fa";
 import { cn } from "../../../lib/utils";
 

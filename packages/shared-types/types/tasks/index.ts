@@ -6,13 +6,15 @@ export type CreateTaskData = {
   priority: "HIGH" | "MEDIUM" | "LOW";
   files?: File[];
   mediaIds?: number[];
-  estimation: number;
+  estimation?: number;
 };
 
 export type TaskData = {
   id: number;
   name: string;
+  columnId: number;
   description: string;
+  estimation?: number;
   priority: "HIGH" | "MEDIUM" | "LOW";
   index: number;
   mediaIds: number[];
@@ -24,5 +26,5 @@ export const CreateTaskValidation = z.object({
   priority: z.enum(["HIGH", "MEDIUM", "LOW"], {
     message: "La valeur est invalide",
   }),
-  estimation: z.coerce.number().gte(0, "Must be 0 and above"),
+  estimation: z.number().gte(0, "Must be 0 and above").optional(),
 });
