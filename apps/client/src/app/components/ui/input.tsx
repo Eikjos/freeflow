@@ -9,16 +9,36 @@ import {
   FormMessage,
 } from "./form";
 import { Label } from "./label";
+import { cva, VariantProps } from "class-variance-authority";
 
 export type InputProps = Omit<ComponentProps<"input">, "name"> & {
   name?: string;
   description?: string;
   label?: string;
   error?: string; // Ajout pour les erreurs sans react-hook-form
-};
+} & VariantProps<typeof inputVariant>;
+
+const inputVariant = cva(
+  "flex h-10 w-full rounded-md text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+  {
+    variants: {
+      variant: {
+        default:
+          "border border-input bg-background focus-visible:outline-none focus-visible:ring-[1px] focus-visible:ring-primary px-3 py-2",
+        ghost: "bg-transparent py-0 px-2 m-0 w-full text-inherit",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, name, description, label, error, ...props }, ref) => {
+  (
+    { className, type, name, description, label, error, variant, ...props },
+    ref
+  ) => {
     const hasError = !!error;
 
     return name ? (
@@ -31,10 +51,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               <input
                 type={type}
                 className={cn(
-                  "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[1px] focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-                  {
-                    "border-destructive text-destructive": fieldState.error,
-                  }
+                  inputVariant({
+                    variant,
+                  }),
+                  fieldState.error && "border-destructive text-destructive"
                 )}
                 {...props}
                 {...field}
@@ -52,10 +72,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           type={type}
           className={cn(
-            "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[1px] focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-            {
-              "border-destructive text-destructive": hasError,
-            }
+            inputVariant({
+              variant,
+            }),
+            hasError && "border-destructive text-destructive"
           )}
           {...props}
           ref={ref}

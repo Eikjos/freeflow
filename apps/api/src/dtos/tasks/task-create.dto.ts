@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateTaskData } from '@repo/shared-types';
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsNumber, IsString } from 'class-validator';
 
 export enum PriorityEnum {
   HIGH = 'HIGH',
@@ -24,5 +24,6 @@ export default class CreateTaskDto implements CreateTaskData {
   @ApiProperty({ description: 'file attachment' })
   files: File[];
   @ApiProperty({ description: 'file already saved' })
+  @IsArray()
   mediaIds?: number[];
 }

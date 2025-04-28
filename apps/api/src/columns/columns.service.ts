@@ -33,13 +33,23 @@ export default class ColumnService {
     });
     if (!column) throw new NotFoundException();
 
+    const { mediaIds, files: filesModel, ...modelTask } = model;
     const task = await this.prisma.task.create({
       data: {
-        ...model,
+        ...modelTask,
         index: column.tasks.length,
         columnId: columnId,
       },
     });
+
+    if (task.id > 0) {
+      await this.prisma.taskMedia.createMany({
+        data: mediaIds.map((m) => ({
+          mediaId: m,
+          taskId: task.id,
+        })),
+      });
+    }
 
     const uploads = files?.length
       ? [

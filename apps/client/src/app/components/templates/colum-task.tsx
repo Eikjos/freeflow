@@ -10,6 +10,7 @@ import { useDrag, useDrop } from "react-dnd";
 import { cn } from "../../../lib/utils";
 import TaskCard from "./task-card";
 import TaksCreateSheet from "./task-create-sheet";
+import { Input } from "@components/ui/input";
 
 type ColumnTaksProps = {
   id: number;
@@ -34,6 +35,7 @@ export default function ColumnTask({
   onDropColumn,
 }: ColumnTaksProps) {
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string>("");
   const t = useTranslations();
   const ref = useRef<HTMLDivElement>(null);
   const columRef = useRef<HTMLDivElement>(null);
@@ -96,8 +98,15 @@ export default function ColumnTask({
             `opacity-${opacity}`
           )}
         >
-          <CardHeader className="h-10 mb-2 px-5 py-3 shadow-sm rounded-sm flex flex-row justify-between items-center">
-            <span className="text-md">{name}</span>
+          <CardHeader className="h-10 mb-2 px-5 pl-0 py-3 shadow-sm rounded-sm flex flex-row justify-between items-center">
+            <Input
+              type="text"
+              className="text-md"
+              defaultValue={name}
+              variant="ghost"
+              error={error}
+              onBlur={(e) => console.log(e.currentTarget.value)}
+            />
             <div className="flex flex-row justify-end items-center gap-2">
               <Trash2Icon size={18} className="text-primary" />
               <Plus
