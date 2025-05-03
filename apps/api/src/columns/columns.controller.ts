@@ -8,18 +8,24 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import ColumnService from './columns.service';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('columns')
 export default class ColumnsController {
   constructor(private readonly columnService: ColumnService) {}
 
-  @UseInterceptors(FileInterceptor('files'))
+  @UseInterceptors(FilesInterceptor('files'))
+  @ApiConsumes('multipart/form-data')
   @UseGuards(AccessTokenGuard)
   @Post(':id/tasks')
+  @ApiBody({
+    description: 'Créer une tâche',
+    type: CreateTaskDto,
+  })
   async createTasks(
     @Param('id', ParseIntPipe) id,
     @Body() model: CreateTaskDto,

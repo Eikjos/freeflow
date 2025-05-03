@@ -1,5 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { getRandomValues } from 'crypto';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
 import { mapToTask } from 'src/dtos/tasks/task.dto';
 import { MediaService } from 'src/media/media.service';
@@ -33,7 +36,7 @@ export default class ColumnService {
     });
     if (!column) throw new NotFoundException();
 
-    const { mediaIds, files: filesModel, ...modelTask } = model;
+    const { mediaIds, files: _, ...modelTask } = model;
     const task = await this.prisma.task.create({
       data: {
         ...modelTask,
@@ -42,22 +45,27 @@ export default class ColumnService {
       },
     });
 
+    console.log('création de la tâches', task.id);
     if (task.id > 0) {
+      const uploads =
+        files?.length > 0
+          ? [
+              ...model.mediaIds,
+              ...(await Promise.all(
+                files.map((f) => this.mediaService.upload(f)),
+              )),
+            ]
+          : [...model.mediaIds];
+      console.log(files, mediaIds);
       await this.prisma.taskMedia.createMany({
-        data: mediaIds.map((m) => ({
+        data: uploads.map((m) => ({
           mediaId: m,
           taskId: task.id,
         })),
       });
+
+      return mapToTask(task, uploads);
     }
-
-    const uploads = files?.length
-      ? [
-          ...model.mediaIds,
-          ...(await Promise.all(files.map((f) => this.mediaService.upload(f)))),
-        ]
-      : [...model.mediaIds];
-
-    return mapToTask(task, uploads);
+    throw new ConflictException();
   }
 }

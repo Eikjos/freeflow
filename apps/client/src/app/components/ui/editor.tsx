@@ -1,6 +1,7 @@
 "use client";
 
 import { uploadImg } from "actions/media";
+import dynamic from "next/dynamic";
 import { ComponentProps } from "react";
 import "react-quill-new/dist/quill.snow.css";
 import { cn, getMediaUrl } from "../../../lib/utils";
@@ -13,7 +14,6 @@ import {
   FormMessage,
 } from "./form";
 import { Label } from "./label";
-import dynamic from "next/dynamic";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), {
   ssr: false,
@@ -36,6 +36,7 @@ const uploadAndReplace = async (value?: string) => {
     if (img.src.startsWith("data:")) {
       const uploadedUrl = await uploadImg(img.src);
       img.setAttribute("src", getMediaUrl(uploadedUrl));
+      uploadedsImages.push(uploadedUrl);
     }
   }
 

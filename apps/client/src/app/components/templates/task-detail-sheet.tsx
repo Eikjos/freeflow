@@ -19,9 +19,9 @@ import {
   CreateTaskValidation,
   TaskData,
 } from "@repo/shared-types";
-import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
+import { getImage } from "../../../lib/utils";
 
 type TaskDetailSheetProps = {
   task: TaskData;
@@ -71,7 +71,7 @@ export default function TaskDetailSheet({
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent>
+      <SheetContent className="overflow-x-auto">
         <SheetHeader>
           <SheetTitle className="text-3xl font-medium font-amica">
             Détail d'une tache
@@ -110,11 +110,19 @@ export default function TaskDetailSheet({
               placeholder="Estimation"
               {...form.register("estimation")}
             />
-            {files && files.length > 0 && (
+            {task.mediaIds && task.mediaIds.length > 0 && (
               <div className="flex flex-row items-center gap-3 mt-3 w-full py-2 overflow-x-auto">
-                {files.map((f, index) => (
-                  <FileIcon file={f} key={index} onDelete={handleDeleteFile} />
-                ))}
+                {task.mediaIds.map(async (mediaId, index) => {
+                  var file = await getImage(mediaId);
+                  return (
+                    <FileIcon
+                      file={file}
+                      key={index}
+                      onDelete={handleDeleteFile}
+                      canDownload
+                    />
+                  );
+                })}
               </div>
             )}
             <InputFile
