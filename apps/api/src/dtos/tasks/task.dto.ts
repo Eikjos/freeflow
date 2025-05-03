@@ -1,4 +1,4 @@
-import { Task } from '@prisma/client';
+import { Task, TaskMedia } from '@prisma/client';
 import { TaskData } from '@repo/shared-types';
 
 export class TaskDto implements TaskData {
@@ -13,5 +13,20 @@ export class TaskDto implements TaskData {
 }
 
 export function mapToTask(task: Task, mediaIds: number[]): TaskDto {
-  return { ...task, mediaIds };
+  return {
+    ...task,
+    mediaIds,
+  };
+}
+
+export function mapToTaskWithTaskMedia(
+  task: Task,
+  mediaIds: TaskMedia[],
+): TaskDto {
+  return {
+    ...task,
+    mediaIds: mediaIds
+      .filter((m) => m.type === 'ATTACHED')
+      .map((m) => m.mediaId),
+  };
 }

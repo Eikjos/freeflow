@@ -65,9 +65,14 @@ export default class ProjectService {
   async findByIdWithTasksAndColumns(id: number, enterpriseId: number) {
     const project = await this.prisma.project.findFirst({
       where: { id, enterpriseId },
-      include: { columns: { include: { tasks: true } } },
+      include: {
+        columns: {
+          include: { tasks: { include: { medias: true } } },
+        },
+      },
     });
     if (!project) throw new NotFoundException();
+
     return mapProjectWithTasksAndColumns(project, project.columns);
   }
 

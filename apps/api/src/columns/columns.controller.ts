@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -13,12 +14,14 @@ import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import ColumnService from './columns.service';
+import CreateColumnDto from 'src/dtos/columns/column-create.dto';
 
 @Controller('columns')
 export default class ColumnsController {
   constructor(private readonly columnService: ColumnService) {}
 
   @UseInterceptors(FilesInterceptor('files'))
+  @HttpCode(200)
   @ApiConsumes('multipart/form-data')
   @UseGuards(AccessTokenGuard)
   @Post(':id/tasks')
@@ -33,5 +36,15 @@ export default class ColumnsController {
     files: Express.Multer.File[],
   ) {
     return await this.columnService.createTask(id, model, files);
+  }
+
+  @HttpCode(200)
+  @Post(':id')
+  @UseGuards(AccessTokenGuard)
+  async updateColumns(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() model: CreateColumnDto,
+  ) {
+    return await this.columnService.update(id, model);
   }
 }

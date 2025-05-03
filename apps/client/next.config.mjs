@@ -15,6 +15,11 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
+  },
   async rewrites() {
     return [
       {

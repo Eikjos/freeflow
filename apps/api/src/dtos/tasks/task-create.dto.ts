@@ -1,7 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateTaskData } from '@repo/shared-types';
 import { Type } from 'class-transformer';
-import { IsArray, IsEnum, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export enum PriorityEnum {
   HIGH = 'HIGH',
@@ -28,5 +34,6 @@ export default class CreateTaskDto implements CreateTaskData {
   @ApiProperty({ description: 'file already saved' })
   @Type(() => Number)
   @IsArray()
+  @IsOptional()
   mediaIds?: number[];
 }

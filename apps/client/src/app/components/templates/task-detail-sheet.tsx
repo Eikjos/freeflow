@@ -22,6 +22,7 @@ import {
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { getImage } from "../../../lib/utils";
+import { useEffect, useState } from "react";
 
 type TaskDetailSheetProps = {
   task: TaskData;
@@ -44,6 +45,23 @@ export default function TaskDetailSheet({
     control: form.control,
     name: "files",
   });
+
+  const [fetchedFiles, setFetchedFiles] = useState<File[]>([]);
+
+  useEffect(() => {
+    const fetchAllFiles = async () => {
+      if (!task.mediaIds?.length) return;
+
+      try {
+        const files = await Promise.all(task.mediaIds.map(getImage));
+        setFetchedFiles(files);
+      } catch (e) {
+        toast.error("Erreur lors du chargement des fichiers");
+      }
+    };
+
+    fetchAllFiles();
+  }, [task.mediaIds]);
 
   const onSubmit = async (values: CreateTaskData) => {
     try {
@@ -110,19 +128,16 @@ export default function TaskDetailSheet({
               placeholder="Estimation"
               {...form.register("estimation")}
             />
-            {task.mediaIds && task.mediaIds.length > 0 && (
-              <div className="flex flex-row items-center gap-3 mt-3 w-full py-2 overflow-x-auto">
-                {task.mediaIds.map(async (mediaId, index) => {
-                  var file = await getImage(mediaId);
-                  return (
-                    <FileIcon
-                      file={file}
-                      key={index}
-                      onDelete={handleDeleteFile}
-                      canDownload
-                    />
-                  );
-                })}
+            {fetchedFiles.length > 0 && (
+              <div className="flex flex-row items-center gap-3 mt-3 w-full py-2 overflow-x-auto pl-2">
+                {fetchedFiles.map((file, index) => (
+                  <FileIcon
+                    file={file}
+                    key={index}
+                    onDelete={handleDeleteFile}
+                    canDownload
+                  />
+                ))}
               </div>
             )}
             <InputFile

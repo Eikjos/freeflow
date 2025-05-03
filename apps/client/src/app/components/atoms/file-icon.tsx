@@ -63,6 +63,18 @@ export default function FileIcon({
     return <FaFile color="#adb5bd" size={30} />;
   };
 
+  const downloadFile = () => {
+    const downloadLink = document.createElement("a");
+    const objectURL = URL.createObjectURL(file);
+
+    downloadLink.href = objectURL;
+    downloadLink.download = file.name;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(objectURL);
+  };
+
   return (
     <div>
       <Card>
@@ -79,8 +91,11 @@ export default function FileIcon({
             <CircleXIcon />
           </div>
           {canDownload && (
-            <div className="absolute w-5 h-5 rounded-full bg-primary -top-2 -left-2 flex items-center justify-center text-white hover:cursor-pointer">
-              <ArrowDownToLine />
+            <div
+              className="absolute w-5 h-5 rounded-full bg-primary -top-2 -left-2 flex items-center justify-center text-white hover:cursor-pointer"
+              onClick={downloadFile}
+            >
+              <ArrowDownToLine size={15} />
             </div>
           )}
           {getFileIcon(file.name)}

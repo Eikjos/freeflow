@@ -5,12 +5,14 @@ import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { ColumnsData, TaskData } from "@repo/shared-types";
 import { Plus, Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { cn } from "../../../lib/utils";
 import TaskCard from "./task-card";
 import TaksCreateSheet from "./task-create-sheet";
 import { Input } from "@components/ui/input";
+import { updateColumn } from "actions/column";
+import { toast } from "sonner";
 
 type ColumnTaksProps = {
   id: number;
@@ -35,6 +37,7 @@ export default function ColumnTask({
   onDropColumn,
 }: ColumnTaksProps) {
   const [open, setOpen] = useState(false);
+  const [currentName, setCurrentName] = useState(name);
   const [error, setError] = useState<string>("");
   const t = useTranslations();
   const ref = useRef<HTMLDivElement>(null);
@@ -88,6 +91,23 @@ export default function ColumnTask({
     onDropTask(task, 0, id, tasks.length);
   };
 
+  const handleUpdateColumn = (event: React.FocusEvent<HTMLInputElement>) => {
+    updateColumn(id, { name: event.currentTarget.value })
+      .then((res) => {
+        if (res) {
+          setCurrentName(res.name);
+        }
+      })
+      .catch((e) => {
+        toast.error(e.message);
+        setCurrentName(name);
+      });
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentName(event.currentTarget.value);
+  };
+
   return (
     <>
       {isOver && <div className="mx-1 bg-gray-100 w-2 rounded-lg"></div>}
@@ -102,10 +122,11 @@ export default function ColumnTask({
             <Input
               type="text"
               className="text-md"
-              defaultValue={name}
+              value={currentName}
+              onChange={handleChange}
               variant="ghost"
               error={error}
-              onBlur={(e) => console.log(e.currentTarget.value)}
+              onBlur={handleUpdateColumn}
             />
             <div className="flex flex-row justify-end items-center gap-2">
               <Trash2Icon size={18} className="text-primary" />

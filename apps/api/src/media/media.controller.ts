@@ -27,10 +27,15 @@ export class MediaController {
     @Res() res: Response,
   ) {
     try {
-      const { file, mimeType } = await this.mediaService.download(mediaId);
+      const { file, mimeType, filename } =
+        await this.mediaService.download(mediaId);
 
+      res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
       res.setHeader('Content-Type', mimeType);
-      res.setHeader('Content-Disposition', 'inline');
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${filename}"`,
+      );
 
       res.send(file);
     } catch (error) {

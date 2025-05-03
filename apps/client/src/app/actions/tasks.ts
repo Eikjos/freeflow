@@ -19,7 +19,7 @@ export async function createTask(
   // Append mediaIds as JSON string if needed
   if (body.mediaIds && body.mediaIds.length > 0) {
     body.mediaIds.forEach((e) => {
-      formData.append("mediaIds", String(e));
+      formData.append("mediaIds[]", String(e));
     });
   }
 
@@ -29,8 +29,6 @@ export async function createTask(
       formData.append("files", file);
     });
   }
-
-  console.log(formData);
 
   return await client<TaskData>(
     `columns/${columnId}/tasks`,

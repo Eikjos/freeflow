@@ -15,6 +15,7 @@ model TaskMedia {
   mediaId     Int
   task        Task   @relation(fields: [taskId], references: [id])
   media       Media  @relation(fields: [mediaId], references: [id])
+  type        TaskMediaEnum @default(DESCRIPTION)
 
   @@id([taskId, mediaId])
 }
@@ -24,3 +25,10 @@ enum Priority {
   MEDIUM
   LOW
 }
+
+
+enum TaskMediaEnum {
+  ATTACHED
+  DESCRIPTION
+}
+

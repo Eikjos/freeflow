@@ -1,7 +1,7 @@
-import { Column, Project, Task } from '@prisma/client';
+import { Column, Project, Task, TaskMedia } from '@prisma/client';
 import { ProjectDetailWithTasks } from '@repo/shared-types';
 import { ColumnDto } from '../columns/column.dto';
-import { mapToTask, TaskDto } from '../tasks/task.dto';
+import { mapToTaskWithTaskMedia } from '../tasks/task.dto';
 
 export class ProjectDetailWithTasksDto implements ProjectDetailWithTasks {
   customerId: number;
@@ -13,7 +13,7 @@ export class ProjectDetailWithTasksDto implements ProjectDetailWithTasks {
 
 export function mapProjectWithTasksAndColumns(
   project: Project,
-  columns: Array<{ tasks: Task[] } & Column>,
+  columns: Array<{ tasks: Array<{ medias: TaskMedia[] } & Task> } & Column>,
 ): ProjectDetailWithTasksDto {
   return {
     ...project,
@@ -27,7 +27,7 @@ export function mapProjectWithTasksAndColumns(
             index: c.index,
             tasks: c.tasks
               .sort((a, b) => a.index - b.index)
-              .map((t) => mapToTask(t, [])),
+              .map((t) => mapToTaskWithTaskMedia(t, t.medias)),
           }) as ColumnDto,
       ),
   };

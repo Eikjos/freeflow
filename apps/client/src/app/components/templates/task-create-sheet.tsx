@@ -17,6 +17,7 @@ import {
   TaskData,
 } from "@repo/shared-types";
 import { createTask } from "actions/tasks";
+import { formatRevalidate } from "next/dist/server/lib/revalidate";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -40,6 +41,7 @@ export default function TaksCreateSheet({
       name: "",
       estimation: 0,
       description: "",
+      files: [],
     },
   });
   const onSubmit = async (values: CreateTaskData) => {
@@ -56,19 +58,19 @@ export default function TaksCreateSheet({
         toast.error("uploaded " + e.message);
       }
     }
-    createTask(columnId, values)
+    createTask(columnId, values, form.getValues("files"))
       .then((res) => {
         if (res) {
           onAddTask(res);
         }
       })
       .then(() => form.reset())
-      .catch((e) => toast.error("api " + e.message))
+      .catch((e) => toast.error(e.message))
       .finally(() => onClose());
   };
 
   const handleUploadFile = (files: File[]) => {
-    form.setValue("files", files);
+    form.setValue("files", files, { shouldDirty: true, shouldValidate: true });
   };
 
   return (

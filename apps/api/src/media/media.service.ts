@@ -53,7 +53,11 @@ export class MediaService {
       const fileBuffer = fs.readFileSync(filePath);
       const mimeType = this.getMimeType(media.extension);
 
-      return { file: fileBuffer, mimeType };
+      return {
+        file: fileBuffer,
+        mimeType,
+        filename: this.getOriginalName(media.filename),
+      };
     } catch (e) {
       throw new NotFoundException('media.notFound');
     }
@@ -81,5 +85,18 @@ export class MediaService {
       default:
         return 'application/octet-stream'; // Type générique pour les autres fichiers
     }
+  }
+
+  private getOriginalName(storedFilename: string) {
+    const dotIndex = storedFilename.lastIndexOf('.');
+    const dashIndex = storedFilename.lastIndexOf('-');
+
+    if (dotIndex === -1 || dashIndex === -1 || dashIndex > dotIndex) {
+      return storedFilename; // fallback si format inattendu
+    }
+
+    const base = storedFilename.slice(0, dashIndex);
+    const ext = storedFilename.slice(dotIndex);
+    return `${base}${ext}`;
   }
 }
