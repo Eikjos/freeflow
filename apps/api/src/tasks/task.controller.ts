@@ -1,7 +1,57 @@
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import TaskService from './task.service';
+import { AccessTokenGuard } from 'src/guards/access-token.guard';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
 
 @Controller('/tasks')
 export default class TasksController {
   constructor(private readonly taskService: TaskService) {}
+
+  @UseGuards(AccessTokenGuard)
+  @Delete(':id/medias/:mediaId')
+  async deleteMedia(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('mediaId', ParseIntPipe) mediaId: number,
+  ) {
+    return this.taskService.deleteMedia(id, mediaId);
+  }
+
+  @UseInterceptors(FilesInterceptor('files'))
+  @HttpCode(200)
+  @ApiConsumes('multipart/form-data')
+  @UseGuards(AccessTokenGuard)
+  @Put(':id')
+  @ApiBody({
+    description: 'Mise à jour de la tâche',
+    type: CreateTaskDto,
+  })
+  async createTasks(
+    @Param('id', ParseIntPipe) id,
+    @Body() model: CreateTaskDto,
+    @UploadedFiles()
+    files: Express.Multer.File[],
+  ) {
+    return await this.taskService.update(id, model, files);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Delete(':id')
+  @HttpCode(200)
+  async deleteTask(@Param('id', ParseIntPipe) id: number) {
+    return await this.taskService.delete(id);
+  }
 }

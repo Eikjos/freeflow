@@ -91,6 +91,14 @@ export default function ColumnTask({
     onDropTask(task, 0, id, tasks.length);
   };
 
+  const updateTask = (task: TaskData) => {
+    onDropTask(task, id, id, task.index);
+  };
+
+  const onDeleteTask = (task: TaskData) => {
+    onDropTask(task, id, 0, 0);
+  };
+
   const handleUpdateColumn = (event: React.FocusEvent<HTMLInputElement>) => {
     updateColumn(id, { name: event.currentTarget.value })
       .then((res) => {
@@ -144,7 +152,13 @@ export default function ColumnTask({
             {tasks
               .sort((a, b) => a.index - b.index)
               .map((item, index) => (
-                <TaskCard task={item} key={index} onDrop={onDropTask} />
+                <TaskCard
+                  task={item}
+                  key={index}
+                  onDrop={onDropTask}
+                  onEdit={updateTask}
+                  onDelete={onDeleteTask}
+                />
               ))}
           </div>
         </CardContent>

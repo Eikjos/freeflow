@@ -17,9 +17,16 @@ type TaskCardProps = {
     columnId_dest: number,
     index_dest: number
   ) => void;
+  onEdit: (task: TaskData) => void;
+  onDelete: (task: TaskData) => void;
 };
 
-export default function TaskCard({ task, onDrop }: TaskCardProps) {
+export default function TaskCard({
+  task,
+  onDrop,
+  onEdit,
+  onDelete,
+}: TaskCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [{ opacity }, dragRef] = useDrag(
@@ -91,7 +98,13 @@ export default function TaskCard({ task, onDrop }: TaskCardProps) {
           </div>
         </CardContent>
       </Card>
-      <TaskDetailSheet open={open} onClose={handleClose} task={task} />
+      <TaskDetailSheet
+        open={open}
+        onClose={handleClose}
+        task={task}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
     </div>
   );
 }

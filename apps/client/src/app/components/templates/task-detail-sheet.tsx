@@ -19,21 +19,46 @@ import {
   CreateTaskValidation,
   TaskData,
 } from "@repo/shared-types";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm, useWatch, ValidationModeFlags } from "react-hook-form";
 import { toast } from "sonner";
 import { getImage } from "../../../lib/utils";
 import { useEffect, useState } from "react";
+import { deleteMedia, deleteTask, updateTask } from "actions/tasks";
+import { TrashIcon } from "lucide-react";
 
 type TaskDetailSheetProps = {
   task: TaskData;
   open: boolean;
   onClose: () => void;
+  onEdit: (task: TaskData) => void;
+  onDelete: (task: TaskData) => void;
+};
+
+type FetchedFilesType = {
+  mediaId: number;
+  file: File;
+};
+
+const getDeletedFiles = (oldValue: string, newValue: string) => {
+  const regExpImg = /\/media\/(\d+)/gi;
+  const oldImages = [...oldValue.matchAll(regExpImg)]
+    .map((m) => m[1])
+    .filter((i) => i !== undefined);
+  const newImages = [...newValue.matchAll(regExpImg)]
+    .map((m) => m[1])
+    .filter((i) => i !== undefined);
+
+  return oldImages
+    .filter((i) => !newImages.includes(i))
+    .map((i) => parseInt(i));
 };
 
 export default function TaskDetailSheet({
   task,
   open,
   onClose,
+  onEdit,
+  onDelete,
 }: TaskDetailSheetProps) {
   const form = useForm<CreateTaskData>({
     resolver: zodResolver(CreateTaskValidation),
@@ -46,14 +71,19 @@ export default function TaskDetailSheet({
     name: "files",
   });
 
-  const [fetchedFiles, setFetchedFiles] = useState<File[]>([]);
+  const [fetchedFiles, setFetchedFiles] = useState<FetchedFilesType[]>([]);
 
   useEffect(() => {
     const fetchAllFiles = async () => {
       if (!task.mediaIds?.length) return;
 
       try {
-        const files = await Promise.all(task.mediaIds.map(getImage));
+        const files = await Promise.all(
+          task.mediaIds.map(async (m) => ({
+            mediaId: m,
+            file: await getImage(m),
+          }))
+        );
         setFetchedFiles(files);
       } catch (e) {
         toast.error("Erreur lors du chargement des fichiers");
@@ -70,13 +100,36 @@ export default function TaskDetailSheet({
         if (newValue) {
           values.description = newValue.value;
           values.mediaIds = newValue.images;
+          const deletedImage = getDeletedFiles(
+            task.description ?? "",
+            newValue.value ?? ""
+          );
+          deletedImage.forEach((i) => {
+            deleteMedia(task.id, i);
+          });
         }
       }
+
+      updateTask(task.id, values, form.getValues("files") ?? [])
+        .then((res) => {
+          if (res) {
+            onEdit(res);
+          }
+        })
+        .then(() => onClose())
+        .catch((e) => toast.error(e.message));
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message);
       }
     }
+  };
+
+  const handleDelete = () => {
+    deleteTask(task.id)
+      .then(() => onDelete(task))
+      .catch((e) => toast.error(e.message))
+      .finally(() => onClose());
   };
 
   const handleDeleteFile = (file: File) => {
@@ -85,6 +138,14 @@ export default function TaskDetailSheet({
 
   const handleUploadFile = (files: File[]) => {
     form.setValue("files", files);
+  };
+
+  const handleDeleteFilesAlreadyUploaded = (file: File, mediaId: number) => {
+    deleteMedia(task.id, mediaId)
+      .catch((err) => toast.error(err.message))
+      .then(() => {
+        setFetchedFiles((prev) => prev.filter((e) => e.mediaId !== mediaId));
+      });
   };
 
   return (
@@ -128,26 +189,52 @@ export default function TaskDetailSheet({
               placeholder="Estimation"
               {...form.register("estimation")}
             />
-            {fetchedFiles.length > 0 && (
-              <div className="flex flex-row items-center gap-3 mt-3 w-full py-2 overflow-x-auto pl-2">
-                {fetchedFiles.map((file, index) => (
-                  <FileIcon
-                    file={file}
-                    key={index}
-                    onDelete={handleDeleteFile}
-                    canDownload
-                  />
-                ))}
-              </div>
-            )}
+            <div className="flex flex-row items-center gap-3 mt-3 w-full py-2 overflow-x-auto pl-2">
+              {fetchedFiles.length > 0 && (
+                <>
+                  {" "}
+                  {fetchedFiles.map((file) => (
+                    <FileIcon
+                      file={file.file}
+                      key={file.mediaId}
+                      onDelete={(f) =>
+                        handleDeleteFilesAlreadyUploaded(f, file.mediaId)
+                      }
+                      canDownload
+                    />
+                  ))}
+                </>
+              )}
+              {files && files.length > 0 && (
+                <>
+                  {files.map((f, index) => (
+                    <FileIcon
+                      file={f}
+                      key={index}
+                      onDelete={handleDeleteFile}
+                    />
+                  ))}
+                </>
+              )}
+            </div>
             <InputFile
               className="w-full mt-3"
               multiple
               onFilesSelected={handleUploadFile}
             />
-            <Button type="submit" className="w-full mt-10">
-              Editer
-            </Button>
+            <div className="flex flex-row mt-10 w-full gap-2">
+              <Button type="submit" className="w-3/4">
+                Editer
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                className="w-1/4"
+                onClick={handleDelete}
+              >
+                <TrashIcon />
+              </Button>
+            </div>
           </form>
         </Form>
       </SheetContent>

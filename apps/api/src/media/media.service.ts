@@ -1,6 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { log } from 'console';
 import * as fs from 'fs';
 import * as path from 'path';
+import { throwError } from 'rxjs';
 import { MediaDto } from 'src/dtos/media/media-dto';
 import { PrismaService } from 'src/prisma.service';
 
@@ -61,6 +68,21 @@ export class MediaService {
     } catch (e) {
       throw new NotFoundException('media.notFound');
     }
+  }
+
+  async delete(id: number) {
+    const deleted = await this.prisma.media.delete({ where: { id } });
+    if (!deleted) throw new HttpException('', HttpStatus.NO_CONTENT);
+    const filePath = path.join(
+      this.getUploadPath(deleted.extension),
+      deleted.filename,
+    );
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error(err);
+        throw new HttpException(err.message, HttpStatus.NOT_MODIFIED);
+      }
+    });
   }
 
   private getUploadPath(extension: string) {
