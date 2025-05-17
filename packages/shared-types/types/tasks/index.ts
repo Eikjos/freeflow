@@ -9,6 +9,10 @@ export type CreateTaskData = {
   estimation?: number;
 };
 
+export type MoveTaskData = {
+  toPosition: number;
+};
+
 export type TaskData = {
   id: number;
   name: string;

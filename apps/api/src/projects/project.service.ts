@@ -133,6 +133,30 @@ export default class ProjectService {
     return mapToColumn(columnEntity);
   }
 
+  async reorderColumns(id: number, columnIds: number[]) {
+    const project = await this.prisma.project.findFirst({
+      where: { id },
+      include: { columns: true },
+    });
+    if (!project) throw new NotFoundException();
+
+    const notColumnsInProject = columnIds.filter(
+      (c) => !project.columns.map((e) => e.id).includes(c),
+    );
+
+    if (notColumnsInProject.length > 0) throw new BadRequestException();
+
+    await this.prisma.$transaction(
+      columnIds.map((id, index) =>
+        this.prisma.column.update({
+          where: { id },
+          data: { index },
+        }),
+      ),
+    );
+    return { success: true };
+  }
+
   async update(
     projectId: number,
     model: ProjectCreateDto,

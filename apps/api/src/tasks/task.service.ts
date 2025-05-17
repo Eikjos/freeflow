@@ -55,6 +55,7 @@ export default class TaskService {
     });
     if (!task) throw new NotFoundException();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { mediaIds, files: _, ...modelTask } = model;
     const updatedTask = await this.prisma.task.update({
       where: { id: taskId },

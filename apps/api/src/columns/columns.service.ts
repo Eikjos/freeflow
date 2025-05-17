@@ -51,6 +51,7 @@ export default class ColumnService {
     });
     if (!column) throw new NotFoundException();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { mediaIds, files: _, ...modelTask } = model;
     const task = await this.prisma.task.create({
       data: {
@@ -91,5 +92,63 @@ export default class ColumnService {
       return mapToTask(task, uploads);
     }
     throw new ConflictException();
+  }
+
+  async moveTask(columnId: number, taskId: number, toPosition: number) {
+    const column = await this.prisma.column.findFirst({
+      where: { id: columnId },
+    });
+    if (!column) throw new NotFoundException();
+
+    const task = await this.prisma.task.findFirst({ where: { id: taskId } });
+    if (!task) throw new NotFoundException();
+
+    const isSameColumn = task.columnId === columnId;
+
+    // 1. Décale les tâches de la colonne cible
+    await this.prisma.$transaction(async (tx) => {
+      // Si on change de colonne, on réordonne la source
+      if (!isSameColumn) {
+        await tx.task.updateMany({
+          where: {
+            columnId: task.columnId,
+            index: {
+              gt: task.index,
+            },
+          },
+          data: {
+            index: {
+              decrement: 1,
+            },
+          },
+        });
+      }
+
+      // Décale les tâches de la cible pour faire de la place
+      await tx.task.updateMany({
+        where: {
+          columnId: columnId,
+          index: {
+            gte: toPosition,
+          },
+        },
+        data: {
+          index: {
+            increment: 1,
+          },
+        },
+      });
+
+      // Déplace la tâche
+      await tx.task.update({
+        where: { id: taskId },
+        data: {
+          columnId: columnId,
+          index: toPosition,
+        },
+      });
+    });
+
+    return { success: true };
   }
 }

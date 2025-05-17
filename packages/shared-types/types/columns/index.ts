@@ -15,3 +15,7 @@ export type ColumnsData = {
 export const CreateColumnValidation = z.object({
   name: z.string().min(1, "The name is required"),
 });
+
+export type ReOrderColumsData = {
+  orderedColumnIds: number[];
+};
