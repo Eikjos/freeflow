@@ -1,6 +1,10 @@
 "use server";
 
-import { ProjectCreateData, ProjectData } from "@repo/shared-types";
+import {
+  ProjectCreateData,
+  ProjectData,
+  ReOrderColumsData,
+} from "@repo/shared-types";
 import { client } from "../../lib/client";
 
 export const CreateProject = async (project: ProjectCreateData) => {
@@ -45,6 +49,13 @@ export const UpdateProject = async (id: number, project: ProjectCreateData) => {
     });
 };
 
-export const DeleteProject = async (id: number) => {
-  return client<any>(`projects/${id}`, { method: "DELETE" });
+export const deleteProject = async (id: number) => {
+  return client<void>(`projects/${id}`, { method: "DELETE" });
+};
+
+export const reorderColumns = async (id: number, model: ReOrderColumsData) => {
+  return client<void>(`projects/${id}/columns/reorder`, {
+    method: "PATCH",
+    body: JSON.stringify(model),
+  });
 };

@@ -67,7 +67,7 @@ export default class ProjectController {
 
   @HttpCode(200)
   @UseGuards(AccessTokenGuard)
-  @Patch(':id/colums/redorder')
+  @Patch(':id/columns/reorder')
   async reorderColums(
     @Param('id', ParseIntPipe) id: number,
     @Body() model: ReorderColumnsDto,

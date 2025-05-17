@@ -55,7 +55,6 @@ export function getMediaUrl(mediaId: number) {
 export async function getImage(mediaId: number) {
   const file = await fetch(getMediaUrl(mediaId));
   const contentDisposition = file.headers.get("Content-Disposition");
-  console.log(contentDisposition);
   let filename = `fichier-${mediaId}`;
   if (contentDisposition) {
     const match = contentDisposition.match(/filename="(.+)"/);

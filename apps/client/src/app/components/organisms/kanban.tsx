@@ -19,13 +19,14 @@ import {
   CreateColumnValidation,
   TaskData,
 } from "@repo/shared-types";
-import { createColumn } from "actions/column";
+import { createColumn, moveTask } from "actions/column";
 import { useRef, useState } from "react";
 import { DndProvider, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { cn } from "../../../lib/utils";
+import { reorderColumns } from "actions/project";
 
 type KanbanProps = {
   className?: string;
@@ -55,12 +56,17 @@ export function Board({ className, projectId, columns }: KanbanProps) {
   drop(ref);
 
   const handleDropColums = (col: ColumnsData, index_dest: number) => {
-    setColumnsState((prev) => {
-      const cols = [...prev.filter((p) => p.id !== col.id)];
-      cols.splice(index_dest, 0, col);
-
-      console.log(cols);
-      return cols.map((c, index) => ({ ...c, index }));
+    const cols = [...columnsState.filter((p) => p.id !== col.id)];
+    cols.splice(index_dest, 0, col);
+    const columns = cols.map((c, index) => ({ ...c, index }));
+    reorderColumns(projectId, {
+      orderedColumnIds: columns.map((c) => c.id),
+    }).then((res) => {
+      setColumnsState((prev) => {
+        const cols = [...prev.filter((p) => p.id !== col.id)];
+        cols.splice(index_dest, 0, col);
+        return cols.map((c, index) => ({ ...c, index }));
+      });
     });
   };
 
@@ -68,7 +74,8 @@ export function Board({ className, projectId, columns }: KanbanProps) {
     task: TaskData,
     columnId_src: number,
     columnId_dest: number,
-    index_dest: number
+    index_dest: number,
+    isCreation: boolean = false
   ) => {
     setColumnsState((prev) =>
       prev.map((col) => {
@@ -93,6 +100,11 @@ export function Board({ className, projectId, columns }: KanbanProps) {
         return col;
       })
     );
+    // Si ce n'est pas une creation ou update de tache
+    if (!isCreation) {
+      // Appel de l'api
+      moveTask(columnId_dest, task.id, { toPosition: index_dest });
+    }
   };
 
   const onSubmitCreateColumn = (values: CreateColumnData) => {

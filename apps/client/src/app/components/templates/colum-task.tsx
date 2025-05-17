@@ -23,7 +23,8 @@ type ColumnTaksProps = {
     task: TaskData,
     columnId_src: number,
     columnId_dest: number,
-    index_dest: number
+    index_dest: number,
+    isCreation?: boolean
   ) => void;
   onDropColumn: (col: ColumnsData, index_dest: number) => void;
 };
@@ -88,15 +89,15 @@ export default function ColumnTask({
   };
 
   const addTask = (task: TaskData) => {
-    onDropTask(task, 0, id, tasks.length);
+    onDropTask(task, 0, id, tasks.length, true);
   };
 
   const updateTask = (task: TaskData) => {
-    onDropTask(task, id, id, task.index);
+    onDropTask(task, id, id, task.index, true);
   };
 
   const onDeleteTask = (task: TaskData) => {
-    onDropTask(task, id, 0, 0);
+    onDropTask(task, id, 0, 0, true);
   };
 
   const handleUpdateColumn = (event: React.FocusEvent<HTMLInputElement>) => {

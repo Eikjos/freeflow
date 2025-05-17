@@ -32,7 +32,7 @@ export default function TaskCard({
   const [{ opacity }, dragRef] = useDrag(
     () => ({
       type: "TaskCard",
-      item: { task },
+      item: task,
       collect: (monitor) => ({
         opacity: monitor.isDragging() ? 50 : 100,
       }),

@@ -148,7 +148,5 @@ export default class ColumnService {
         },
       });
     });
-
-    return { success: true };
   }
 }

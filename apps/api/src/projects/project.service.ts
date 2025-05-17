@@ -154,7 +154,6 @@ export default class ProjectService {
         }),
       ),
     );
-    return { success: true };
   }
 
   async update(
