@@ -204,6 +204,9 @@
     "add": "Add",
     "create": "Create",
     "cancel": "Cancel",
+    "description": "Description",
+    "edit": "Edit",
+    "enterDescription": "Enter a description...",
     "name": "Name",
     "informations": "Information",
     "fill": "Fill",
@@ -222,6 +225,10 @@
     "dropFile": "Drag your files here.",
     "supportedFile": "Supported file(s):",
     "previsualizeImage": "You can preview the image."
+  },
+  "column": {
+    "addButton": "Add a column",
+    "createTitle": "Create a new column"
   },
   "customer": {
     "title": "The customers of {enterprise}",
@@ -268,5 +275,12 @@
     "createAccount": "Register",
     "login": "Sign in",
     "manageYourLife": "Manage your entrepreneurial life with ease"
+  },
+  "task": {
+    "createTitle": "Create a task",
+    "detailTitle": "Detail of task",
+    "estimation": "Estimation",
+    "namePlaceholder": "Name of the task",
+    "priority": "Priority"
   }
 }

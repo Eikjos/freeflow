@@ -19,12 +19,13 @@ import {
   CreateTaskValidation,
   TaskData,
 } from "@repo/shared-types";
-import { useForm, useWatch, ValidationModeFlags } from "react-hook-form";
-import { toast } from "sonner";
-import { getImage } from "../../../lib/utils";
-import { useEffect, useState } from "react";
 import { deleteMedia, deleteTask, updateTask } from "actions/tasks";
 import { TrashIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
+import { getImage } from "../../../lib/utils";
 
 type TaskDetailSheetProps = {
   task: TaskData;
@@ -60,6 +61,7 @@ export default function TaskDetailSheet({
   onEdit,
   onDelete,
 }: TaskDetailSheetProps) {
+  const t = useTranslations();
   const form = useForm<CreateTaskData>({
     resolver: zodResolver(CreateTaskValidation),
     defaultValues: {
@@ -153,7 +155,7 @@ export default function TaskDetailSheet({
       <SheetContent className="overflow-x-auto">
         <SheetHeader>
           <SheetTitle className="text-3xl font-medium font-amica">
-            Détail d'une tache
+            {t("task.detailTitle")}
           </SheetTitle>
         </SheetHeader>
         <Form {...form}>
@@ -163,30 +165,30 @@ export default function TaskDetailSheet({
           >
             <Input
               type="text"
-              label="Nom"
-              placeholder="Nom de la tâche"
+              label={t("common.name")}
+              placeholder={t("task.namePlaceholder")}
               {...form.register("name")}
             />
             <Editor
               className="mt-3 mb-4"
-              label={"Description"}
-              placeholder="Ecrivez une description..."
+              label={t("common.description")}
+              placeholder={t("common.enterDescription")}
               {...form.register("description")}
             />
             <Select
-              label="Priorité"
+              label={t("task.priority")}
               values={[
                 { value: "HIGH", textValue: "Élevé" },
                 { value: "MEDIUM", textValue: "Moyen" },
                 { value: "LOW", textValue: "Faible" },
               ]}
-              placeholder="Priorité"
+              placeholder={t("task.priority")}
               {...form.register("priority")}
             />
             <Input
               type="number"
-              label="Estimation"
-              placeholder="Estimation"
+              label={t("task.estimation")}
+              placeholder={t("task.estimation")}
               {...form.register("estimation")}
             />
             <div className="flex flex-row items-center gap-3 mt-3 w-full py-2 overflow-x-auto pl-2">
@@ -224,7 +226,7 @@ export default function TaskDetailSheet({
             />
             <div className="flex flex-row mt-10 w-full gap-2">
               <Button type="submit" className="w-3/4">
-                Editer
+                {t("common.edit")}
               </Button>
               <Button
                 type="button"

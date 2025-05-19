@@ -17,7 +17,7 @@ import {
   TaskData,
 } from "@repo/shared-types";
 import { createTask } from "actions/tasks";
-import { formatRevalidate } from "next/dist/server/lib/revalidate";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -35,6 +35,7 @@ export default function TaksCreateSheet({
   columnId,
   onAddTask,
 }: TaskCreateSheetProps) {
+  const t = useTranslations();
   const form = useForm<CreateTaskData>({
     resolver: zodResolver(CreateTaskValidation),
     defaultValues: {
@@ -78,7 +79,7 @@ export default function TaksCreateSheet({
       <SheetContent className="overflow-y-auto pb-5">
         <SheetHeader>
           <SheetTitle className="text-3xl font-medium font-amica">
-            Création d'une tâche
+            {t("task.createTitle")}
           </SheetTitle>
         </SheetHeader>
         <Form {...form}>
@@ -88,30 +89,30 @@ export default function TaksCreateSheet({
           >
             <Input
               type="text"
-              label="Nom"
-              placeholder="Nom de la tâche"
+              label={t("common.name")}
+              placeholder={t("task.namePlaceholder")}
               {...form.register("name")}
             />
             <Editor
               className="mt-3 mb-4"
-              label={"Description"}
-              placeholder="Ecrivez une description..."
+              label={t("common.description")}
+              placeholder={t("common.enterDescription")}
               {...form.register("description")}
             />
             <Select
-              label="Priorité"
+              label={t("task.priority")}
               values={[
                 { value: "HIGH", textValue: "Élevé" },
                 { value: "MEDIUM", textValue: "Moyen" },
                 { value: "LOW", textValue: "Faible" },
               ]}
-              placeholder="Priorité"
+              placeholder={t("task.priority")}
               {...form.register("priority")}
             />
             <Input
               type="number"
-              label="Estimation"
-              placeholder="Estimation"
+              label={t("task.estimation")}
+              placeholder={t("task.estimation")}
               {...form.register("estimation")}
             />
             <InputFile
@@ -121,7 +122,7 @@ export default function TaksCreateSheet({
               showFiles
             />
             <Button type="submit" className="w-full mt-10">
-              Créer
+              {t("common.create")}
             </Button>
           </form>
         </Form>

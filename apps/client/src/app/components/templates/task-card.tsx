@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { TaskData } from "@repo/shared-types";
 import type { Identifier } from "dnd-core";
-import { ChevronsUp } from "lucide-react";
+import { ChevronsDown, ChevronsUp, Equal } from "lucide-react";
 import { useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { cn } from "../../../lib/utils";
@@ -94,7 +94,9 @@ export default function TaskCard({
             <div className="bg-gray-200 p-1 rounded-full text-xs">
               {task.estimation}h
             </div>
-            <ChevronsUp size={15} />
+            {task.priority === "HIGH" && <ChevronsUp size={15} color="red" />}
+            {task.priority === "MEDIUM" && <Equal size={15} color="green" />}
+            {task.priority === "LOW" && <ChevronsDown size={15} color="blue" />}
           </div>
         </CardContent>
       </Card>

@@ -20,13 +20,14 @@ import {
   TaskData,
 } from "@repo/shared-types";
 import { createColumn, moveTask } from "actions/column";
+import { reorderColumns } from "actions/project";
+import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { DndProvider, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { cn } from "../../../lib/utils";
-import { reorderColumns } from "actions/project";
 
 type KanbanProps = {
   className?: string;
@@ -35,6 +36,7 @@ type KanbanProps = {
 };
 
 export function Board({ className, projectId, columns }: KanbanProps) {
+  const t = useTranslations();
   const ref = useRef<HTMLDivElement>(null);
   const [columnsState, setColumnsState] = useState(columns);
   const [open, setOpen] = useState(false);
@@ -124,13 +126,13 @@ export function Board({ className, projectId, columns }: KanbanProps) {
     <div className="w-full flex flex-col items-end">
       <Dialog open={open} onOpenChange={(value) => setOpen(value)}>
         <DialogTrigger asChild>
-          <Button>Ajouter une colonne</Button>
+          <Button>{t("column.addButton")}</Button>
         </DialogTrigger>
         <DialogContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmitCreateColumn)}>
               <DialogTitle className="text-3xl">
-                Créer une nouvelle colonne
+                {t("column.createTitle")}
               </DialogTitle>
               <Input
                 type="text"
@@ -140,9 +142,9 @@ export function Board({ className, projectId, columns }: KanbanProps) {
               />
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant={"outline"}>Annuler</Button>
+                  <Button variant={"outline"}>{t("common.cancel")}</Button>
                 </DialogClose>
-                <Button type="submit">Créer</Button>
+                <Button type="submit">{t("common.create")}</Button>
               </DialogFooter>
             </form>
           </Form>

@@ -210,7 +210,10 @@
     "create": "Créer",
     "cancel": "Annuler",
     "customer": "Client",
+    "description": "Description",
+    "edit": "Éditer",
     "emptyData": "Vous n'avez pas encore de données.",
+    "enterDescription": "Entrez une description...",
     "name": "Nom",
     "informations": "Informations",
     "fill": "Remplir",
@@ -230,6 +233,10 @@
     "dropFile": "Glisser vos fichiers ici.",
     "supportedFile": "Fichier(s) supporté(s) :",
     "previsualizeImage": "Vous pouvez pre-visualiser l'image."
+  },
+  "column": {
+    "addButton": "Ajouter une colonne",
+    "createTitle": "Créer une nouvelle colonne"
   },
   "customer": {
     "title": "Les clients de {enterprise}",
@@ -295,5 +302,12 @@
       "removeDescription": "Êtes-vous sur de vouloir supprimer le project {project} ?"
     },
     "notFound": "Le projet n'a pas été trouvé."
+  },
+  "task": {
+    "createTitle": "Création d'un tâche",
+    "detailTitle": "Détail d'une tâche",
+    "estimation": "Estimation",
+    "namePlaceholder": "Nom de la tâche",
+    "priority": "Priorité"
   }
 }
