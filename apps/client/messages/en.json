@@ -2,6 +2,11 @@
   "access": {
     "denied": "You do not have permission."
   },
+  "activities": {
+    "enterprise": "{enterprise}'s activities",
+    "projects": "My projects",
+    "tasks": "My current tasks"
+  },
   "country": {
     "afghanistan": "Afghanistan",
     "albania": "Albania",
