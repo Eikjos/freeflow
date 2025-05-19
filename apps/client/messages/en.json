@@ -263,6 +263,25 @@
     "tvaNumber": "VAT number",
     "infoNotFound": "Enterprise information not found"
   },
+  "project": {
+    "create": "Create a project",
+    "edit": "Edition of project {project}",
+    "removeSuccess": "The project {project} has been correctly deteled.",
+    "removeFailed": "The project {project} has not been deleted.",
+    "error": {
+      "edit": "The project could not be updated. Please try again later.",
+      "create": "The project could not be created. Please try again later."
+    },
+    "success": {
+      "create": "The project has been created.",
+      "edit": "The project has been updated."
+    },
+    "dialog": {
+      "removeTitle": "Deleting the project {project}",
+      "removeDescription": "Are you sure you want to delete the {project} project?"
+    },
+    "notFound": "The project was not found."
+  },
   "signIn": "Sign In",
   "credentials": {
     "invalid": "Invalid credentials"
