@@ -63,12 +63,51 @@ export function Board({ className, projectId, columns }: KanbanProps) {
     const columns = cols.map((c, index) => ({ ...c, index }));
     reorderColumns(projectId, {
       orderedColumnIds: columns.map((c) => c.id),
-    }).then((res) => {
+    }).then(() => {
       setColumnsState((prev) => {
         const cols = [...prev.filter((p) => p.id !== col.id)];
         cols.splice(index_dest, 0, col);
         return cols.map((c, index) => ({ ...c, index }));
       });
+    });
+  };
+
+  const orderTask = (
+    task: TaskData,
+    columnId_src: number,
+    columnId_dest: number,
+    index_dest: number
+  ) => {
+    return columnsState.map((col) => {
+      if (col.id === columnId_dest) {
+        const isSameColumn = columnId_src === columnId_dest;
+
+        let updatedTasks = col.tasks.filter((t) => t.id !== task.id);
+        if (!isSameColumn) {
+          updatedTasks = updatedTasks.filter((t) => t.id !== task.id);
+        }
+
+        updatedTasks.splice(index_dest, 0, task);
+
+        const reindexedTasks = updatedTasks.map((t, index) => ({
+          ...t,
+          index,
+        }));
+
+        return { ...col, tasks: reindexedTasks };
+      }
+
+      if (col.id === columnId_src && columnId_src !== columnId_dest) {
+        const updatedTasks = col.tasks
+          .filter((t) => t.id !== task.id)
+          .map((item, index) => ({
+            ...item,
+            index,
+          }));
+        console.log(updatedTasks);
+        return { ...col, tasks: updatedTasks };
+      }
+      return col;
     });
   };
 
@@ -80,33 +119,15 @@ export function Board({ className, projectId, columns }: KanbanProps) {
     isCreation: boolean = false
   ) => {
     setColumnsState((prev) =>
-      prev.map((col) => {
-        if (col.id === columnId_dest) {
-          const updatedTasks = [...col.tasks.filter((t) => t.id !== task.id)];
-          updatedTasks.splice(index_dest, 0, task);
-
-          return {
-            ...col,
-            tasks: updatedTasks.map((t, index) => ({ ...t, index })),
-          };
-        }
-        if (col.id === columnId_src) {
-          const updatedTasks = col.tasks
-            .filter((t) => t.id !== task.id)
-            .map((item, index) => ({
-              ...item,
-              index,
-            }));
-          return { ...col, tasks: updatedTasks.sort((e) => e.index) };
-        }
-        return col;
-      })
+      orderTask(task, columnId_src, columnId_dest, index_dest)
     );
     // Si ce n'est pas une creation ou update de tache
     if (!isCreation) {
       // Appel de l'api
       moveTask(columnId_dest, task.id, { toPosition: index_dest });
     }
+
+    console.log(columnsState);
   };
 
   const onSubmitCreateColumn = (values: CreateColumnData) => {
