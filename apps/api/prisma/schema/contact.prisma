@@ -1,9 +1,8 @@
 model Contact {
-  id              Int @id()@default(autoincrement())
-  content         String
-  email           String
-  name            String
-  enterprise      Enterprise @relation(fields: [enterpriseId], references: [id])
-  enterpriseId    Int
-
+  id           Int        @id @default(autoincrement())
+  content      String
+  email        String
+  name         String
+  enterpriseId Int
+  enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
 }

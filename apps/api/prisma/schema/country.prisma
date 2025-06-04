@@ -1,6 +1,6 @@
 model Country {
-  id            Int @id()@default(autoincrement())
-  name          String
-  enterprises  Enterprise[]
-  customers    Customer[]
+  id          Int          @id @default(autoincrement())
+  name        String
+  customers   Customer[]
+  enterprises Enterprise[]
 }

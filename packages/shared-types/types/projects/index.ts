@@ -1,3 +1,4 @@
+import { ColumnsData } from "types/columns";
 import { z } from "zod";
 
 const MAX_FILE_SIZE = 5000000;
@@ -27,6 +28,14 @@ export type ProjectDetailData = {
   customerId: number;
   mediaId: number;
   name: string;
+};
+
+export type ProjectDetailWithTasks = {
+  id: number;
+  customerId: number;
+  mediaId: number;
+  name: string;
+  columns: ColumnsData[];
 };
 
 export const ProjectCreateValidation = z.object({

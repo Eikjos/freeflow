@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getAllProjectsQueryOptions } from "../../../lib/api/projects";
 import ProjectCard from "./project-card";
-import { DeleteProject } from "actions/project";
+import { deleteProject } from "actions/project";
 import { toast } from "sonner";
 import getQueryClient from "../../../lib/query-client";
 import { useTranslations } from "next-intl";
@@ -31,7 +31,7 @@ export default function ProjectList({ enterpriseId }: ProjectListProps) {
   };
 
   const OnDeleteProject = (project: ProjectData) => {
-    DeleteProject(project.id).then((res) => {
+    deleteProject(project.id).then((res) => {
       if (res.ok) {
         queryClient.invalidateQueries({
           queryKey: ["projects", pagination],

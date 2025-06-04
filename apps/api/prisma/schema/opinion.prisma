@@ -1,9 +1,9 @@
 model Opinion {
-  id              Int @id() @default(autoincrement())
-  content         String
-  rate            Decimal
-  customer        Customer @relation(fields: [customerId], references: [id])
-  customerId      Int
-  enterprise      Enterprise @relation(fields: [enterpriseId], references: [id])
-  enterpriseId    Int
+  id           Int        @id @default(autoincrement())
+  content      String
+  rate         Decimal
+  customerId   Int
+  enterpriseId Int
+  customer     Customer   @relation(fields: [customerId], references: [id])
+  enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
 }

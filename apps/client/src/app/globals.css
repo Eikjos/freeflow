@@ -13,6 +13,22 @@
   background-repeat: repeat-x;
 }
 
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 45px;
+  width: 10px;
+  height: 5px;
+}
+
 @layer base {
   @font-face {
     font-family: "Amica SC";

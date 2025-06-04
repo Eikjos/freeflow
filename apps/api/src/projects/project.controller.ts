@@ -6,6 +6,7 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
   Req,
@@ -16,9 +17,11 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { Request } from 'express';
+import CreateColumnDto from 'src/dtos/columns/column-create.dto';
 import ProjectCreateDto from 'src/dtos/projects/project-create.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import ProjectService from './project.service';
+import ReorderColumnsDto from 'src/dtos/customers/reorder-colums.dto';
 
 @Controller('projects')
 @ApiBearerAuth()
@@ -48,9 +51,46 @@ export default class ProjectController {
   }
 
   @UseGuards(AccessTokenGuard)
+  @Post(':id/columns')
+  @HttpCode(200)
+  async createColumn(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() model: CreateColumnDto,
+    @Req() req: Request,
+  ) {
+    return this.projectService.createColumn(
+      id,
+      parseInt(req.user['enterpriseId']),
+      model,
+    );
+  }
+
+  @HttpCode(200)
+  @UseGuards(AccessTokenGuard)
+  @Patch(':id/columns/reorder')
+  async reorderColums(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() model: ReorderColumnsDto,
+  ) {
+    return this.projectService.reorderColumns(id, model.orderedColumnIds);
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     return this.projectService.findById(id, req.user['enterpriseId']);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get(':id/details')
+  async findAllTasksByProjectId(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request,
+  ) {
+    return this.projectService.findByIdWithTasksAndColumns(
+      id,
+      req.user['enterpriseId'],
+    );
   }
 
   @UseGuards(AccessTokenGuard)

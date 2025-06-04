@@ -1,6 +1,6 @@
 model JuridicShape {
-  code          String @id()
-  level         Int
-  designation   String
-  enterprises   Enterprise[]
+  code        String       @id
+  level       Int
+  designation String
+  enterprises Enterprise[]
 }

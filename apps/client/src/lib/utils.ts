@@ -51,3 +51,17 @@ function generateQueryStringOfSubObject<T extends object>(
 export function getMediaUrl(mediaId: number) {
   return `${process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL}/media/${mediaId}`;
 }
+
+export async function getImage(mediaId: number) {
+  const file = await fetch(getMediaUrl(mediaId));
+  const contentDisposition = file.headers.get("Content-Disposition");
+  let filename = `fichier-${mediaId}`;
+  if (contentDisposition) {
+    const match = contentDisposition.match(/filename="(.+)"/);
+    if (match && match[1]) {
+      filename = match[1].replace(/['"]/g, "");
+    }
+  }
+  const blob = await file.blob();
+  return new File([blob], filename, { type: blob.type });
+}

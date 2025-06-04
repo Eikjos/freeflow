@@ -4,6 +4,7 @@ import {
   IsEmail,
   IsInt,
   IsNumberString,
+  IsOptional,
   IsPhoneNumber,
   IsString,
   Matches,
@@ -34,6 +35,7 @@ export class CreateEnterpriseDto implements EnterpriseCreateModel {
   TVANumber: string;
   @ApiProperty({ description: 'Enterprise social capital' })
   @IsInt()
+  @IsOptional()
   socialCapital?: number;
   @ApiProperty({ description: 'Enterprise phone' })
   @IsPhoneNumber('FR')

@@ -1,17 +1,17 @@
 model User {
-  id              Int @id()@default(autoincrement())
-  firstName       String
-  lastName        String
-  email           String @unique()
-  password        String
-  passwordSalt    String
-  refreshToken    String?
-  isEnterprise    Boolean
-  isCustomer      Boolean
-  enterprise      Enterprise?  @relation(fields: [enterpriseId], references: [id])
-  enterpriseId    Int?
-  customer        Customer?   @relation(fields: [customerId], references: [id])
-  customerId      Int?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt()
+  id           Int         @id @default(autoincrement())
+  firstName    String
+  lastName     String
+  email        String      @unique
+  password     String
+  passwordSalt String
+  refreshToken String?
+  enterpriseId Int?
+  customerId   Int?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  isCustomer   Boolean
+  isEnterprise Boolean
+  customer     Customer?   @relation(fields: [customerId], references: [id])
+  enterprise   Enterprise? @relation(fields: [enterpriseId], references: [id])
 }

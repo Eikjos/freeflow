@@ -6,7 +6,11 @@ import {
 } from '@nestjs/common';
 import { Project } from '@prisma/client';
 import { PaginationFilter } from '@repo/shared-types';
+import ColumnService from 'src/columns/columns.service';
+import CreateColumnDto from 'src/dtos/columns/column-create.dto';
+import { mapToColumn } from 'src/dtos/columns/column.dto';
 import ProjectCreateDto from 'src/dtos/projects/project-create.dto';
+import { mapProjectWithTasksAndColumns } from 'src/dtos/projects/project-detail.dto';
 import {
   mapProjectToDetailDto,
   mapProjectToDto,
@@ -21,6 +25,7 @@ export default class ProjectService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mediaService: MediaService,
+    private readonly columnService: ColumnService,
   ) {}
 
   // -
@@ -57,6 +62,20 @@ export default class ProjectService {
     return mapProjectToDetailDto(project);
   }
 
+  async findByIdWithTasksAndColumns(id: number, enterpriseId: number) {
+    const project = await this.prisma.project.findFirst({
+      where: { id, enterpriseId },
+      include: {
+        columns: {
+          include: { tasks: { include: { medias: true } } },
+        },
+      },
+    });
+    if (!project) throw new NotFoundException();
+
+    return mapProjectWithTasksAndColumns(project, project.columns);
+  }
+
   async create(
     model: ProjectCreateDto,
     enterpriseId: number,
@@ -78,7 +97,63 @@ export default class ProjectService {
       },
     });
 
+    if (project.id > 0) {
+      this.columnService.initializeForProject(project.id);
+    }
+
     return project.id;
+  }
+
+  async createColumn(
+    projectId: number,
+    enterpriseId: number,
+    column: CreateColumnDto,
+  ) {
+    const project = await this.prisma.project.findFirst({
+      where: { id: projectId, enterpriseId },
+      include: { columns: true },
+    });
+    if (!project) throw new NotFoundException();
+    if (
+      project.columns.filter(
+        (c) =>
+          c.name.toLocaleLowerCase().trim() ===
+          column.name.toLocaleLowerCase().trim(),
+      ).length
+    ) {
+      throw new BadRequestException('columns.already.exist');
+    }
+    const columnEntity = await this.prisma.column.create({
+      data: {
+        projectId: projectId,
+        name: column.name,
+        index: project.columns.length,
+      },
+    });
+    return mapToColumn(columnEntity);
+  }
+
+  async reorderColumns(id: number, columnIds: number[]) {
+    const project = await this.prisma.project.findFirst({
+      where: { id },
+      include: { columns: true },
+    });
+    if (!project) throw new NotFoundException();
+
+    const notColumnsInProject = columnIds.filter(
+      (c) => !project.columns.map((e) => e.id).includes(c),
+    );
+
+    if (notColumnsInProject.length > 0) throw new BadRequestException();
+
+    await this.prisma.$transaction(
+      columnIds.map((id, index) =>
+        this.prisma.column.update({
+          where: { id },
+          data: { index },
+        }),
+      ),
+    );
   }
 
   async update(

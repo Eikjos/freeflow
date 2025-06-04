@@ -45,7 +45,7 @@ export default async function RootLayout({
       <body className="font-display">
         <NextIntlClientProvider messages={messages}>
           <Providers>{children}</Providers>
-          <Toaster richColors position="top-right" duration={3000} />
+          <Toaster richColors duration={3000} />
         </NextIntlClientProvider>
       </body>
     </html>

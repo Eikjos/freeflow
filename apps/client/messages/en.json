@@ -2,6 +2,11 @@
   "access": {
     "denied": "You do not have permission."
   },
+  "activities": {
+    "enterprise": "{enterprise}'s activities",
+    "projects": "My projects",
+    "tasks": "My current tasks"
+  },
   "country": {
     "afghanistan": "Afghanistan",
     "albania": "Albania",
@@ -204,6 +209,9 @@
     "add": "Add",
     "create": "Create",
     "cancel": "Cancel",
+    "description": "Description",
+    "edit": "Edit",
+    "enterDescription": "Enter a description...",
     "name": "Name",
     "informations": "Information",
     "fill": "Fill",
@@ -222,6 +230,10 @@
     "dropFile": "Drag your files here.",
     "supportedFile": "Supported file(s):",
     "previsualizeImage": "You can preview the image."
+  },
+  "column": {
+    "addButton": "Add a column",
+    "createTitle": "Create a new column"
   },
   "customer": {
     "title": "The customers of {enterprise}",
@@ -256,6 +268,25 @@
     "tvaNumber": "VAT number",
     "infoNotFound": "Enterprise information not found"
   },
+  "project": {
+    "create": "Create a project",
+    "edit": "Edition of project {project}",
+    "removeSuccess": "The project {project} has been correctly deteled.",
+    "removeFailed": "The project {project} has not been deleted.",
+    "error": {
+      "edit": "The project could not be updated. Please try again later.",
+      "create": "The project could not be created. Please try again later."
+    },
+    "success": {
+      "create": "The project has been created.",
+      "edit": "The project has been updated."
+    },
+    "dialog": {
+      "removeTitle": "Deleting the project {project}",
+      "removeDescription": "Are you sure you want to delete the {project} project?"
+    },
+    "notFound": "The project was not found."
+  },
   "signIn": "Sign In",
   "credentials": {
     "invalid": "Invalid credentials"
@@ -268,5 +299,12 @@
     "createAccount": "Register",
     "login": "Sign in",
     "manageYourLife": "Manage your entrepreneurial life with ease"
+  },
+  "task": {
+    "createTitle": "Create a task",
+    "detailTitle": "Detail of task",
+    "estimation": "Estimation",
+    "namePlaceholder": "Name of the task",
+    "priority": "Priority"
   }
 }

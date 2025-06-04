@@ -1,5 +1,4 @@
 import ProjectTab from "@components/templates/project-tab";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
 import { getTranslations } from "next-intl/server";
 import { headers } from "next/headers";
 import { EnterpriseInfo } from "../../../../types/enterprise-info-type";
@@ -15,18 +14,7 @@ export default async function ActivitiesPage() {
       <h1 className="font-amica text-4xl">
         {t("activities.enterprise", { enterprise: enterprise?.name })}
       </h1>
-      <Tabs defaultValue="projects" className="mt-5">
-        <TabsList>
-          <TabsTrigger value="projects">{t("activities.projects")}</TabsTrigger>
-          <TabsTrigger value="tasks">{t("activities.tasks")}</TabsTrigger>
-        </TabsList>
-        <TabsContent value="projects">
-          <ProjectTab enterpriseId={enterprise?.id ?? 0} />
-        </TabsContent>
-        <TabsContent value="tasks">
-          <p>Mes tâches en cours</p>
-        </TabsContent>
-      </Tabs>
+      <ProjectTab enterpriseId={enterprise?.id ?? 0} />
     </div>
   );
 }

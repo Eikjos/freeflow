@@ -2,10 +2,11 @@ import * as React from "react";
 
 import { cn } from "../../../lib/utils";
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+type CardProps = {
+  ref?: React.Ref<HTMLDivElement>;
+} & React.HTMLAttributes<HTMLDivElement>;
+
+const Card = ({ className, ref, ...props }: CardProps) => (
   <div
     ref={ref}
     className={cn(
@@ -14,7 +15,7 @@ const Card = React.forwardRef<
     )}
     {...props}
   />
-));
+);
 Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<

@@ -1,8 +1,34 @@
 model Task {
-  id            Int @id() @default(autoincrement())
-  name          String
-  description   String?
-  index         Int
-  column        Column @relation(fields: [columnId], references: [id])
-  columnId      Int
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  priority    Priority
+  estimation  Float
+  index       Int
+  columnId    Int
+  column      Column  @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  medias      TaskMedia[]
 }
+
+model TaskMedia {
+  taskId      Int
+  mediaId     Int
+  task        Task   @relation(fields: [taskId], references: [id])
+  media       Media  @relation(fields: [mediaId], references: [id])
+  type        TaskMediaEnum @default(DESCRIPTION)
+
+  @@id([taskId, mediaId])
+}
+
+enum Priority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+
+enum TaskMediaEnum {
+  ATTACHED
+  DESCRIPTION
+}
+

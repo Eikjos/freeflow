@@ -1,17 +1,17 @@
 "use server";
 
+import ProjectForm from "@components/templates/project-form";
 import { ProjectDetailData } from "@repo/shared-types";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { client } from "../../../../../../../lib/client";
-import ProjectForm from "@components/templates/project-form";
 
-type EditCustomerParams = {
+type EditProjectParams = {
   id: string;
 };
 
 type EditCustomerPageProps = {
-  params: Promise<EditCustomerParams>;
+  params: Promise<EditProjectParams>;
 };
 
 export default async function EditProjectPage({

@@ -1,6 +1,8 @@
 model Column {
-  id          Int @id() @default(autoincrement())
-  name        String
-  index       Int
-  tasks       Task[]
+  id        Int     @id @default(autoincrement())
+  name      String
+  index     Int
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tasks     Task[]
 }
