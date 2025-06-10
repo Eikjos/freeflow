@@ -1,0 +1,113 @@
+@media print {
+  body {
+    margin: 10mm 15mm 10mm 15mm;
+  }
+}
+
+body,
+html {
+  padding: 10px;
+  margin: 0;
+  font-family: "Roboto";
+  clear: both;
+}
+
+#logo {
+  width: 100px;
+  height: 50px;
+  object-fit: contain;
+}
+
+#header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.invoice-info {
+  padding: 20px 50px;
+  border: 1px #3e6450 dashed;
+  border-radius: 30px;
+}
+
+.header-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h1 {
+  font-size: 20px;
+}
+
+.date {
+  font-size: 15px;
+  text-align: right;
+}
+
+#client-info {
+  float: right;
+}
+
+#seller-info,
+#client-info {
+  color: white;
+  padding: 5px 25px;
+  background-color: #3e6450;
+  border-radius: 10px;
+  width: fit-content;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.detail-invoice {
+  width: 90%;
+  margin: auto;
+}
+
+table,
+th,
+td,
+tr {
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+th {
+  padding: 10px 10px;
+  background-color: #3e6450;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color: white;
+}
+
+td {
+  padding: 5px 10px;
+}
+
+tfoot > tr > td:first-child {
+  background-color: #3e6450;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  text-align: center;
+  color: white;
+}
+
+.sum-invoice {
+  margin-top: 10px;
+  width: 30%;
+  margin-right: 5%;
+  margin-left: auto;
+}
+
+.footer {
+  margin-top: 20px;
+  font-size: 15px;
+  font-style: italic;
+}
