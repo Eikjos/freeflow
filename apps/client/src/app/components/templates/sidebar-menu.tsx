@@ -27,7 +27,7 @@ export default async function SidebarMenu({
     },
     {
       name: "Mes factures",
-      url: "#",
+      url: "/invoices",
     },
     {
       name: "Mes clients",
