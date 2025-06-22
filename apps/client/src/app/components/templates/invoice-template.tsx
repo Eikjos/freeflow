@@ -60,12 +60,36 @@ const styles = StyleSheet.create({
     borderRight: "1px solid #000",
     padding: 5,
   },
-  tableCell: {
+  text: {
     fontSize: 10,
+  },
+  textImportant: {
+    fontSize: 12,
   },
   tableCellHeader: {
     backgroundColor: "#3e6450",
     color: "white",
+  },
+  textTVA: {
+    fontSize: 8,
+    marginTop: 25,
+  },
+  tableResume: {
+    width: "30%",
+    marginTop: 25,
+    marginLeft: "auto",
+    marginRight: "5%",
+  },
+  informationContainer: {
+    flexDirection: "row",
+    width: "95%",
+    justifyContent: "space-between",
+  },
+  informationCustomerContainer: {
+    marginTop: "50px",
+  },
+  title: {
+    marginTop: "20px",
   },
 });
 
@@ -79,121 +103,104 @@ const InvoiceTemplate = ({ title }: { title?: string }) => (
           <Text>Freeflow</Text>
         </View>
         <View style={styles.containerInfo}>
-          <Text style={{ fontSize: 12 }}>Facture n° 2025-000XXX</Text>
-          <Text style={{ fontSize: 10, textAlign: "right" }}>
-            Date : 10/05/2025
-          </Text>
+          <Text style={styles.textImportant}>Facture n° 2025-000XXX</Text>
+          <Text style={[styles.text]}>Date : 10/05/2025</Text>
         </View>
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          width: "95%",
-          justifyContent: "space-between",
-        }}
-      >
+      <View style={styles.informationContainer}>
         <View>
-          <Text style={{ fontSize: 12 }}>Nom de l'enterprise</Text>
-          <Text style={{ fontSize: 10 }}>CP, Ville</Text>
-          <Text style={{ fontSize: 10 }}>Téléphone / Email</Text>
-          <Text style={{ fontSize: 10 }}>Siret: 443141431531513</Text>
-          <Text style={{ fontSize: 10 }}>N°TVA: FR76EKF?ZLFA$</Text>
+          <Text style={styles.textImportant}>Nom de l'enterprise</Text>
+          <Text style={styles.text}>CP, Ville</Text>
+          <Text style={styles.text}>Téléphone / Email</Text>
+          <Text style={styles.text}>Siret: 443141431531513</Text>
+          <Text style={styles.text}>N°TVA: FR76EKF?ZLFA$</Text>
         </View>
-        <View style={{ marginTop: "50px" }}>
-          <Text style={{ fontSize: 12 }}>Nom de l'enterprise</Text>
-          <Text style={{ fontSize: 10 }}>CP, Ville</Text>
-          <Text style={{ fontSize: 10 }}>Téléphone / Email</Text>
-          <Text style={{ fontSize: 10 }}>Siret: 443141431531513</Text>
-          <Text style={{ fontSize: 10 }}>N°TVA: FR76EKF?ZLFA$</Text>
+        <View style={styles.informationCustomerContainer}>
+          <Text style={styles.textImportant}>Nom de l'enterprise</Text>
+          <Text style={styles.text}>CP, Ville</Text>
+          <Text style={styles.text}>Téléphone / Email</Text>
+          <Text style={styles.text}>Siret: 443141431531513</Text>
+          <Text style={styles.text}>N°TVA: FR76EKF?ZLFA$</Text>
         </View>
       </View>
-      <Text style={{ marginTop: "20px" }}>
-        Facture sur l'évolution de juin 2025
-      </Text>
+      <Text style={styles.title}>Facture sur l'évolution de juin 2025</Text>
       <View style={styles.table}>
         {/* Header */}
         <View style={styles.tableRow}>
           <View style={{ ...styles.tableColHeader, width: "100%" }}>
-            <Text style={styles.tableCell}>Désignation</Text>
+            <Text style={styles.text}>Désignation</Text>
           </View>
           <View style={styles.tableColHeader}>
-            <Text style={styles.tableCell}>Quantité</Text>
+            <Text style={styles.text}>Quantité</Text>
           </View>
           <View style={styles.tableColHeader}>
-            <Text style={styles.tableCell}>Prix Unit.</Text>
+            <Text style={styles.text}>Prix Unit.</Text>
           </View>
           <View style={styles.tableColHeader}>
-            <Text style={styles.tableCell}>Prix HT</Text>
+            <Text style={styles.text}>Prix HT</Text>
           </View>
         </View>
 
         {/* Row 1 */}
         <View style={styles.tableRow}>
           <View style={{ ...styles.tableCol, width: "100%" }}>
-            <Text style={styles.tableCell}>Alice</Text>
+            <Text style={styles.text}>Alice</Text>
           </View>
           <View style={styles.tableCol}>
-            <Text style={styles.tableCell}>30</Text>
+            <Text style={styles.text}>30</Text>
           </View>
           <View style={styles.tableCol}>
-            <Text style={styles.tableCell}>25</Text>
+            <Text style={styles.text}>25</Text>
           </View>
           <View style={styles.tableCol}>
-            <Text style={styles.tableCell}>France</Text>
+            <Text style={styles.text}>France</Text>
           </View>
         </View>
 
         {/* Row 2 */}
         <View style={styles.tableRow}>
           <View style={{ ...styles.tableCol, width: "100%" }}>
-            <Text style={styles.tableCell}>Bob</Text>
+            <Text style={styles.text}>Bob</Text>
           </View>
           <View style={styles.tableCol}>
-            <Text style={styles.tableCell}>30</Text>
+            <Text style={styles.text}>30</Text>
           </View>
           <View style={styles.tableCol}>
-            <Text style={styles.tableCell}>30</Text>
+            <Text style={styles.text}>30</Text>
           </View>
           <View style={styles.tableCol}>
-            <Text style={styles.tableCell}>Canada</Text>
+            <Text style={styles.text}>Canada</Text>
           </View>
         </View>
       </View>
 
-      <View
-        style={{
-          width: "30%",
-          marginTop: 25,
-          marginLeft: "auto",
-          marginRight: "5%",
-        }}
-      >
+      <View style={styles.tableResume}>
         <View style={styles.tableRow}>
           <View style={{ ...styles.tableColHeader, width: "50%" }}>
-            <Text style={styles.tableCell}>Total HT</Text>
+            <Text style={styles.text}>Total HT</Text>
           </View>
           <View style={{ ...styles.tableCol, width: "50%" }}>
-            <Text style={styles.tableCell}>225.00 $</Text>
+            <Text style={styles.text}>225.00 $</Text>
           </View>
         </View>
         <View style={styles.tableRow}>
           <View style={{ ...styles.tableColHeader, width: "50%" }}>
-            <Text style={styles.tableCell}>Total HT</Text>
+            <Text style={styles.text}>Total HT</Text>
           </View>
           <View style={{ ...styles.tableCol, width: "50%" }}>
-            <Text style={styles.tableCell}>225.00 $</Text>
+            <Text style={styles.text}>225.00 $</Text>
           </View>
         </View>
         <View style={styles.tableRow}>
           <View style={{ ...styles.tableColHeader, width: "50%" }}>
-            <Text style={styles.tableCell}>Total HT</Text>
+            <Text style={styles.text}>Total HT</Text>
           </View>
           <View style={{ ...styles.tableCol, width: "50%" }}>
-            <Text style={styles.tableCell}>225.00 $</Text>
+            <Text style={styles.text}>225.00 $</Text>
           </View>
         </View>
       </View>
-      <Text style={{ fontSize: 8, marginTop: 25 }}>
+      <Text style={styles.textTVA}>
         TVA non applicable, article 293 B du CGI. Paiement sous 30 jours à
         compter de la date de facture. Tout retard de paiement entraînera des
         pénalités au taux de 10% annuel, ainsi qu'une indemnité forfaitaire de
