@@ -1,33 +1,129 @@
 "use client";
 
-import InvoiceTemplate from "@components/templates/invoice-template";
 import { Button } from "@components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import { DataTable } from "@components/ui/data-table";
+import { ColumnDef } from "@tanstack/react-table";
+import clsx from "clsx";
+import { Printer, Send } from "lucide-react";
+import Link from "next/link";
 
-export default function InvoicesPage() {
+type Invoice = {
+  id: number;
+  amount: number;
+  status: "PAYED";
+  customer: string;
+  type: "INVOICE" | "DEVIS";
+};
+
+const data: Invoice[] = [
+  {
+    id: 1,
+    amount: 125.0,
+    status: "PAYED",
+    customer: "Client",
+    type: "INVOICE",
+  },
+  {
+    id: 2,
+    amount: 125.0,
+    status: "PAYED",
+    customer: "Client",
+    type: "INVOICE",
+  },
+  {
+    id: 3,
+    amount: 125.0,
+    status: "PAYED",
+    customer: "Client",
+    type: "INVOICE",
+  },
+  {
+    id: 4,
+    amount: 125.0,
+    status: "PAYED",
+    customer: "Client",
+    type: "INVOICE",
+  },
+  {
+    id: 5,
+    amount: 125.0,
+    status: "PAYED",
+    customer: "Client",
+    type: "INVOICE",
+  },
+];
+
+const columnsDef: ColumnDef<Invoice>[] = [
+  {
+    accessorKey: "id",
+    header: "",
+  },
+  {
+    accessorKey: "customer",
+    header: "Client",
+  },
+  {
+    accessorKey: "type",
+    header: "Type",
+    cell: ({ row }) => (
+      <>
+        <span>{row.getValue("type")}</span>
+      </>
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: "Statut",
+    cell: ({ row }) => (
+      <>
+        <span
+          className={clsx(
+            row.getValue("status") === "PAYED"
+              ? "text-green-700"
+              : "text-red-700"
+          )}
+        >
+          {row.getValue("status")}
+        </span>
+      </>
+    ),
+  },
+  {
+    accessorKey: "amount",
+    header: "Montant",
+    cell: ({ row }) => (
+      <>
+        <span>{row.getValue("amount")} €</span>
+      </>
+    ),
+  },
+  {
+    id: "actions",
+    accessorKey: "",
+    cell: () => (
+      <div className="flex flex-row justify-end gap-5 mr-10 ml-auto">
+        <Printer size={15}></Printer>
+        <Send size={15}></Send>
+      </div>
+    ),
+  },
+];
+
+export default function InvoicePage() {
   return (
-    <div className="h-full">
-      <Card className="mb-10">
-        <CardHeader>
-          <CardTitle>Creation d'une facture</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <PDFDownloadLink
-            document={<InvoiceTemplate title={"hello"} />}
-            fileName="invoice-1.pdf"
-          >
-            {({ blob, url, loading, error }) => (
-              <Button>
-                {loading ? "Loading document..." : "Download now!"}
-              </Button>
-            )}
-          </PDFDownloadLink>
-        </CardContent>
-      </Card>
-      <PDFViewer className="w-full h-5/6 rounded-md" showToolbar={false}>
-        <InvoiceTemplate title={"hello"} />
-      </PDFViewer>
-    </div>
+    <>
+      <div className="w-full flex flex-row justify-between items-center">
+        <h1 className="font-amica text-4xl">Mes factures</h1>
+        <Button asChild>
+          <Link href={"/invoices/create"}>Créer une facture</Link>
+        </Button>
+      </div>
+      <DataTable
+        columns={columnsDef}
+        data={data}
+        pageSize={2}
+        className="mt-10"
+      />
+    </>
   );
 }
