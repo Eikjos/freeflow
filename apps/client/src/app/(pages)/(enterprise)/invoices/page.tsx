@@ -4,7 +4,7 @@ import { Button } from "@components/ui/button";
 import { DataTable } from "@components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
-import { Printer, Send } from "lucide-react";
+import { Plus, Printer, Send } from "lucide-react";
 import Link from "next/link";
 
 type Invoice = {
@@ -115,7 +115,10 @@ export default function InvoicePage() {
       <div className="w-full flex flex-row justify-between items-center">
         <h1 className="font-amica text-4xl">Mes factures</h1>
         <Button asChild>
-          <Link href={"/invoices/create"}>Créer une facture</Link>
+          <Link href={"/invoices/create"}>
+            <Plus size={20} />
+            Créer une facture
+          </Link>
         </Button>
       </div>
       <DataTable

@@ -1,5 +1,6 @@
 model Invoice {
   id           Int        @id @default(autoincrement())
+  number       String
   name         String
   date         DateTime
   customerId   Int
@@ -7,8 +8,21 @@ model Invoice {
   createdAt    DateTime
   updatedAt    DateTime
   mediaId      Int?       @unique
-  isPaid       Boolean
+  type         InvoiceType
+  status       StatusInvoice
   customer     Customer   @relation(fields: [customerId], references: [id])
   enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
   media        Media?     @relation(fields: [mediaId], references: [id])
+}
+
+enum StatusInvoice {
+  WAITING_VALIDATION
+  VALIDATE
+  WAITING_PAYED
+  PAYED
+}
+
+enum InvoiceType {
+  QUOTE
+  INVOICE
 }
