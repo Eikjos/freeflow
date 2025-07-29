@@ -24,6 +24,13 @@ export type TaskData = {
   mediaIds: number[];
 };
 
+export type TaskFilter = {
+  id?: number;
+  name?: string;
+  customerId?: number;
+  [key: string]: string | number | undefined;
+};
+
 export const CreateTaskValidation = z.object({
   name: z.string().min(1, { message: "Le nom est requis" }),
   description: z.string(),

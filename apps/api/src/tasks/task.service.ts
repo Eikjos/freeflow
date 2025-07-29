@@ -5,8 +5,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
-import { mapToTask } from 'src/dtos/tasks/task.dto';
+import TaskFilterDto from 'src/dtos/tasks/task-filter.dto';
+import { mapToTask, TaskDto } from 'src/dtos/tasks/task.dto';
+import {
+  PaginationFilterDto,
+  PaginationResultDto,
+} from 'src/dtos/utils/pagination-result.dto';
 import { MediaService } from 'src/media/media.service';
 import { PrismaService } from 'src/prisma.service';
 
@@ -16,6 +22,48 @@ export default class TaskService {
     private readonly prisma: PrismaService,
     private readonly mediaService: MediaService,
   ) {}
+
+  async getAll(
+    filter: PaginationFilterDto<TaskFilterDto>,
+  ): Promise<PaginationResultDto<TaskDto>> {
+    const where: Prisma.TaskWhereInput = {};
+
+    if (filter.filter.name) {
+      where.name = { contains: filter.filter.name, mode: 'insensitive' };
+    }
+
+    if (filter.filter.customerId) {
+      where.column = {
+        project: {
+          customerId: filter.filter.customerId,
+        },
+      };
+    }
+
+    const orderBy = filter.asc
+      ? { [filter.asc]: 'asc' }
+      : filter.desc
+        ? { [filter.desc]: 'desc' }
+        : undefined;
+
+    const tasks = await this.prisma.task.findMany({
+      where,
+      orderBy,
+      take: filter.pageSize,
+      skip: filter.page * filter.pageSize,
+    });
+
+    const totalItems = await this.prisma.task.count({
+      where,
+    });
+
+    return {
+      data: tasks.map((t) => mapToTask(t, null)),
+      totalItems,
+      page: filter.page,
+      pageSize: filter.pageSize,
+    };
+  }
 
   async delete(taskId: number) {
     const task = await this.prisma.task.findFirst({

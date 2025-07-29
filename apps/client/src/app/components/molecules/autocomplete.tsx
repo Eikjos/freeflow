@@ -17,17 +17,20 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "../../../lib/utils";
 import { HttpResponse } from "../../../types/http-response";
 
-type AutoCompleteProps<TData extends Record<string, string | number>> =
-  {} & Omit<AutoCompleteWithoutControlProps<TData>, "onChange"> &
-    Omit<InputProps, "type" | "value" | "defaultValue" | "onChange">;
+type AutoCompleteProps<
+  TFilter extends Record<string, string | number>,
+  TData extends Record<string, unknown> = TFilter,
+> = {} & Omit<AutoCompleteWithoutControlProps<TFilter, TData>, "onChange"> &
+  Omit<InputProps, "type" | "value" | "defaultValue" | "onChange">;
 
 type AutoCompleteWithoutControlProps<
-  TData extends Record<string, string | number>,
+  TFilter extends Record<string, string | number>,
+  TData extends Record<string, unknown> = TFilter,
 > = {
   queryOptions: (
-    filter: PaginationFilter<TData>
+    filter: PaginationFilter<TFilter>
   ) => UseQueryOptions<HttpResponse<PaginationResult<TData>>, Error>;
-  filterField: keyof TData;
+  filterField: keyof TFilter;
   fieldIdentifier: keyof TData;
   render: (data: TData) => string;
   value?: number;
@@ -58,7 +61,8 @@ function AutoCompleteItem({ name, value, onClick }: AutocompleteItemProps) {
 }
 
 function AutoCompleteWithoutControl<
-  TData extends Record<string, string | number>,
+  TFilter extends Record<string, string | number>,
+  TData extends Record<string, unknown> = TFilter,
 >({
   queryOptions,
   filterField,
@@ -68,21 +72,23 @@ function AutoCompleteWithoutControl<
   value,
   error,
   ...props
-}: AutoCompleteWithoutControlProps<TData>) {
+}: AutoCompleteWithoutControlProps<TFilter, TData>) {
   const [open, setOpen] = useState<boolean>(false);
   const [currentValue, setCurrentValue] = useState<number | undefined>(value);
   const [displayValue, setDisplayValue] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const [filterApplied, setFilterApplied] = useState<PaginationFilter<TData>>({
-    page: 0,
-    pageSize: 20,
-    filter: value
-      ? ({ [fieldIdentifier]: value } as Partial<TData>)
-      : ({} as Partial<TData>),
-    asc: filterField,
-  });
+  const [filterApplied, setFilterApplied] = useState<PaginationFilter<TFilter>>(
+    {
+      page: 0,
+      pageSize: 20,
+      filter: value
+        ? ({ [fieldIdentifier]: value } as Partial<TFilter>)
+        : ({} as Partial<TFilter>),
+      asc: filterField,
+    }
+  );
 
   const handleChange = (newValue: number, newDisplayValue: string) => {
     setCurrentValue(newValue);
@@ -105,9 +111,9 @@ function AutoCompleteWithoutControl<
   };
 
   const handleFilter = (value: string) => {
-    const updatedFilter: Partial<TData> = {};
+    const updatedFilter: Partial<TFilter> = {};
 
-    updatedFilter[filterField] = value as TData[keyof TData];
+    updatedFilter[filterField] = value as TFilter[keyof TFilter];
     setDisplayValue(value);
     setFilterApplied((prev) => ({
       ...prev,
@@ -124,7 +130,7 @@ function AutoCompleteWithoutControl<
       data.ok &&
       currentValue === value &&
       filterApplied.filter &&
-      filterApplied.filter[fieldIdentifier] !== undefined
+      filterApplied.filter[filterField] !== undefined
     ) {
       if (data?.data?.data[0]) setDisplayValue(render(data?.data?.data[0]));
     }
@@ -215,8 +221,9 @@ function AutoCompleteWithoutControl<
 }
 
 export default function Autocomplete<
-  TData extends Record<string, string | number>,
->({ ...props }: AutoCompleteProps<TData>) {
+  TFilter extends Record<string, string | number>,
+  TData extends Record<string, unknown> = TFilter,
+>({ ...props }: AutoCompleteProps<TFilter, TData>) {
   return (
     <FormField
       name={props.name ?? ""}

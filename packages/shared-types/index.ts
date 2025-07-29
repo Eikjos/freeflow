@@ -3,6 +3,7 @@ export * from "./types/columns";
 export * from "./types/countries";
 export * from "./types/customers";
 export * from "./types/enterprises";
+export * from "./types/invoices";
 export * from "./types/juridic-shapes";
 export * from "./types/projects";
 export * from "./types/tasks";

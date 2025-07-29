@@ -2,24 +2,32 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   Param,
   ParseIntPipe,
-  Post,
   Put,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import TaskService from './task.service';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { PaginationFilter } from '@repo/shared-types';
 import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
+import TaskFilterDto from 'src/dtos/tasks/task-filter.dto';
+import { AccessTokenGuard } from 'src/guards/access-token.guard';
+import TaskService from './task.service';
 
 @Controller('/tasks')
 export default class TasksController {
   constructor(private readonly taskService: TaskService) {}
+
+  @UseGuards(AccessTokenGuard)
+  @Get()
+  async getAll(filter: PaginationFilter<TaskFilterDto>) {
+    return this.taskService.getAll(filter);
+  }
 
   @UseGuards(AccessTokenGuard)
   @Delete(':id/medias/:mediaId')

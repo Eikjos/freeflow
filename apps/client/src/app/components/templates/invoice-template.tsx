@@ -7,7 +7,6 @@ import {
   View,
 } from "@react-pdf/renderer";
 
-// Create styles
 const styles = StyleSheet.create({
   page: {
     margin: 10,
@@ -118,7 +117,13 @@ const styles = StyleSheet.create({
 });
 
 // Create Document Component
-const InvoiceTemplate = ({ title }: { title?: string }) => (
+const InvoiceTemplate = ({
+  title,
+  number,
+}: {
+  title?: string;
+  number?: string;
+}) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.header}>
@@ -129,7 +134,7 @@ const InvoiceTemplate = ({ title }: { title?: string }) => (
       </View>
       <View style={styles.containerHeader}>
         <View style={styles.containerInfo}>
-          <Text style={styles.textImportant}>Facture n° 2025-000XXX</Text>
+          <Text style={styles.textImportant}>Facture n° {number}</Text>
           <View>
             <Text style={[styles.text]}>Date : 10/05/2025</Text>
             <Text style={styles.text}>Paiement à la réception</Text>
@@ -156,7 +161,7 @@ const InvoiceTemplate = ({ title }: { title?: string }) => (
         </View>
       </View>
 
-      <Text style={styles.title}>Facture sur l'évolution de juin 2025</Text>
+      <Text style={styles.title}>{title}</Text>
       <View style={styles.table}>
         {/* Header */}
         <View style={styles.tableRow}>
