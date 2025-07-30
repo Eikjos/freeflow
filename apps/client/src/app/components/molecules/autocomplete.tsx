@@ -67,6 +67,7 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
   defaultValue,
   value,
   error,
+  disabled = false,
   ...props
 }: AutoCompleteWithoutControlProps<TData>) {
   const [open, setOpen] = useState<boolean>(false);
@@ -74,6 +75,7 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
   const [currentValue, setCurrentValue] = useState<number | undefined>(
     defaultValue
   );
+  const [hasTyped, setHasTyped] = useState(false);
   const [displayValue, setDisplayValue] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -96,15 +98,27 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
     inputRef.current?.focus();
   };
 
+  const handleOpen = () => {
+    if (!disabled) {
+      setOpen((prev) => !prev);
+    }
+  };
+
+  const queryParams = hasTyped
+    ? { search: displayValue }
+    : currentValue
+      ? { id: currentValue }
+      : {};
+
   const { data, isLoading } = useQuery({
-    ...queryOptions(
-      !isFisrt && displayValue !== ""
-        ? { search: displayValue }
-        : value
-          ? { id: currentValue }
-          : {}
-    ),
+    ...queryOptions(queryParams),
+    enabled: !disabled,
   });
+
+  const handleFilter = (value: string) => {
+    setDisplayValue((prev) => value);
+    setHasTyped(true);
+  };
 
   useEffect(() => {
     if (
@@ -149,15 +163,16 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
               "border-destructive text-destructive": error,
             }
           )}
-          onChange={(e) => setDisplayValue(e.currentTarget.value)}
+          onChange={(e) => handleFilter(e.currentTarget.value)}
           onFocus={() => setOpen(true)}
           placeholder={placeholder}
           value={displayValue}
+          disabled={disabled}
           ref={inputRef}
         />
         <span
           className="absolute top-3 right-2 cursor-pointer"
-          onClick={() => setOpen(!open)}
+          onClick={handleOpen}
         >
           {currentValue === undefined && open ? (
             <ChevronUp size={20} className="text-gray-500" />

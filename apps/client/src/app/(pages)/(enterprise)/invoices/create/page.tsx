@@ -55,6 +55,7 @@ export default function CreateInvoicesPage() {
             />
             <Autocomplete
               label={"common.customer"}
+              placeholder="Sélectionner un client"
               queryOptions={(filter) =>
                 getAllCustomersQueryOptions({
                   page: 0,
