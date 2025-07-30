@@ -6,12 +6,12 @@ import { Button } from "@components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { Select } from "@components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import { InvoiceCreateData, InvoiceCreateValidation } from "@repo/shared-types";
 import { useMemo, useReducer } from "react";
 import { useForm } from "react-hook-form";
+import { getAllCustomersQueryOptions } from "../../../../../lib/api/customers";
 import { getAllTasksQueryOptions } from "../../../../../lib/api/tasks";
 
 export default function CreateInvoicesPage() {
@@ -53,17 +53,41 @@ export default function CreateInvoicesPage() {
               type="number"
               {...form.register("number", { onBlur: forceUpdate })}
             />
-            <Select
+            <Autocomplete
               label={"common.customer"}
-              values={[]}
+              queryOptions={(filter) =>
+                getAllCustomersQueryOptions({
+                  page: 0,
+                  pageSize: 20,
+                  asc: "name",
+                  filter: {
+                    name: filter.search,
+                    id: filter.id,
+                  },
+                })
+              }
+              render={(item) => item.name}
+              filterField="name"
+              fieldIdentifier="id"
               {...form.register("customerId", { onBlur: forceUpdate })}
             />
             <Autocomplete
-              queryOptions={getAllTasksQueryOptions}
+              queryOptions={(filter) =>
+                getAllTasksQueryOptions({
+                  page: 0,
+                  pageSize: 20,
+                  asc: "name",
+                  filter: {
+                    name: filter.search,
+                    id: filter.id,
+                    customerId: form.getValues().customerId,
+                  },
+                })
+              }
+              disabled={!form.getValues().customerId}
               filterField="name"
               render={(task) => `${task.name}`}
               fieldIdentifier="id"
-              {...form.register("customerId")}
               label="Tâches"
               className="mt-3"
               placeholder="Sélectionner une tâche"

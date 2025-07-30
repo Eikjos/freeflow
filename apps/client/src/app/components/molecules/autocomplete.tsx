@@ -10,30 +10,29 @@ import {
 } from "@components/ui/form";
 import { InputProps } from "@components/ui/input";
 import Loading from "@components/ui/loading";
-import { PaginationFilter, PaginationResult } from "@repo/shared-types";
+import { PaginationResult } from "@repo/shared-types";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "../../../lib/utils";
 import { HttpResponse } from "../../../types/http-response";
 
-type AutoCompleteProps<
-  TFilter extends Record<string, string | number>,
-  TData extends Record<string, unknown> = TFilter,
-> = {} & Omit<AutoCompleteWithoutControlProps<TFilter, TData>, "onChange"> &
+type AutoCompleteProps<TData extends Record<string, unknown>> = {} & Omit<
+  AutoCompleteWithoutControlProps<TData>,
+  "onChange"
+> &
   Omit<InputProps, "type" | "value" | "defaultValue" | "onChange">;
 
-type AutoCompleteWithoutControlProps<
-  TFilter extends Record<string, string | number>,
-  TData extends Record<string, unknown> = TFilter,
-> = {
-  queryOptions: (
-    filter: PaginationFilter<TFilter>
-  ) => UseQueryOptions<HttpResponse<PaginationResult<TData>>, Error>;
-  filterField: keyof TFilter;
+type AutoCompleteWithoutControlProps<TData extends Record<string, unknown>> = {
+  queryOptions: (filter: {
+    id?: number;
+    search?: string;
+  }) => UseQueryOptions<HttpResponse<PaginationResult<TData>>, Error>;
+  filterField: keyof TData;
   fieldIdentifier: keyof TData;
   render: (data: TData) => string;
   value?: number;
+  defaultValue?: number;
   className?: string;
   placeholder?: string;
   error?: string;
@@ -60,35 +59,24 @@ function AutoCompleteItem({ name, value, onClick }: AutocompleteItemProps) {
   );
 }
 
-function AutoCompleteWithoutControl<
-  TFilter extends Record<string, string | number>,
-  TData extends Record<string, unknown> = TFilter,
->({
+function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
   queryOptions,
-  filterField,
   fieldIdentifier,
   render,
   placeholder,
+  defaultValue,
   value,
   error,
   ...props
-}: AutoCompleteWithoutControlProps<TFilter, TData>) {
+}: AutoCompleteWithoutControlProps<TData>) {
   const [open, setOpen] = useState<boolean>(false);
-  const [currentValue, setCurrentValue] = useState<number | undefined>(value);
+  let isFisrt = true;
+  const [currentValue, setCurrentValue] = useState<number | undefined>(
+    defaultValue
+  );
   const [displayValue, setDisplayValue] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const [filterApplied, setFilterApplied] = useState<PaginationFilter<TFilter>>(
-    {
-      page: 0,
-      pageSize: 20,
-      filter: value
-        ? ({ [fieldIdentifier]: value } as Partial<TFilter>)
-        : ({} as Partial<TFilter>),
-      asc: filterField,
-    }
-  );
 
   const handleChange = (newValue: number, newDisplayValue: string) => {
     setCurrentValue(newValue);
@@ -96,44 +84,40 @@ function AutoCompleteWithoutControl<
     if (props.onChange) {
       props.onChange(newValue);
     }
-    handleFilter(newDisplayValue);
     setOpen(false);
   };
 
   const handleClear = () => {
     setCurrentValue(undefined);
     setDisplayValue("");
-    handleFilter("");
     if (props.onChange) {
       props.onChange();
     }
     inputRef.current?.focus();
   };
 
-  const handleFilter = (value: string) => {
-    const updatedFilter: Partial<TFilter> = {};
-
-    updatedFilter[filterField] = value as TFilter[keyof TFilter];
-    setDisplayValue(value);
-    setFilterApplied((prev) => ({
-      ...prev,
-      filter: updatedFilter,
-      asc: filterField,
-    }));
-  };
-
-  const { data, isLoading } = useQuery({ ...queryOptions(filterApplied) });
+  const { data, isLoading } = useQuery({
+    ...queryOptions(
+      !isFisrt && displayValue !== ""
+        ? { search: displayValue }
+        : value
+          ? { id: currentValue }
+          : {}
+    ),
+  });
 
   useEffect(() => {
     if (
       data &&
       data.ok &&
-      currentValue === value &&
-      filterApplied.filter &&
-      filterApplied.filter[filterField] !== undefined
+      currentValue === defaultValue &&
+      data.data?.data.length === 1
     ) {
-      if (data?.data?.data[0]) setDisplayValue(render(data?.data?.data[0]));
+      if (data?.data?.data[0]) {
+        setDisplayValue((prev) => render(data?.data?.data[0]!));
+      }
     }
+    isFisrt = false;
   }, [data]);
 
   useEffect(() => {
@@ -165,7 +149,7 @@ function AutoCompleteWithoutControl<
               "border-destructive text-destructive": error,
             }
           )}
-          onChange={(e) => handleFilter(e.currentTarget.value)}
+          onChange={(e) => setDisplayValue(e.currentTarget.value)}
           onFocus={() => setOpen(true)}
           placeholder={placeholder}
           value={displayValue}
@@ -220,10 +204,9 @@ function AutoCompleteWithoutControl<
   );
 }
 
-export default function Autocomplete<
-  TFilter extends Record<string, string | number>,
-  TData extends Record<string, unknown> = TFilter,
->({ ...props }: AutoCompleteProps<TFilter, TData>) {
+export default function Autocomplete<TData extends Record<string, unknown>>({
+  ...props
+}: AutoCompleteProps<TData>) {
   return (
     <FormField
       name={props.name ?? ""}

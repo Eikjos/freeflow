@@ -7,15 +7,15 @@ import {
   Param,
   ParseIntPipe,
   Put,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
-import { PaginationFilter } from '@repo/shared-types';
 import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
-import TaskFilterDto from 'src/dtos/tasks/task-filter.dto';
+import { TaskPaginationFilterDto } from 'src/dtos/tasks/task-filter.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import TaskService from './task.service';
 
@@ -25,7 +25,7 @@ export default class TasksController {
 
   @UseGuards(AccessTokenGuard)
   @Get()
-  async getAll(filter: PaginationFilter<TaskFilterDto>) {
+  async getAll(@Query() filter: TaskPaginationFilterDto) {
     return this.taskService.getAll(filter);
   }
 

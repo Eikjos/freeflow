@@ -18,9 +18,6 @@ export const getAllTasksQueryOptions = (
   pagination: PaginationFilter<TaskFilter>
 ): UseQueryOptions<HttpResponse<PaginationResult<TaskData>>, Error> => ({
   queryKey: ["tasks", pagination],
-  queryFn: ({ queryKey }) => {
-    const [, filter] = queryKey as [string, PaginationFilter<TaskFilter>];
-    return getAllTasks(filter);
-  },
+  queryFn: () => getAllTasks(pagination),
   retry: false,
 });

@@ -7,12 +7,9 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
-import TaskFilterDto from 'src/dtos/tasks/task-filter.dto';
+import { TaskPaginationFilterDto } from 'src/dtos/tasks/task-filter.dto';
 import { mapToTask, TaskDto } from 'src/dtos/tasks/task.dto';
-import {
-  PaginationFilterDto,
-  PaginationResultDto,
-} from 'src/dtos/utils/pagination-result.dto';
+import { PaginationResultDto } from 'src/dtos/utils/pagination-result.dto';
 import { MediaService } from 'src/media/media.service';
 import { PrismaService } from 'src/prisma.service';
 
@@ -24,20 +21,22 @@ export default class TaskService {
   ) {}
 
   async getAll(
-    filter: PaginationFilterDto<TaskFilterDto>,
+    filter: TaskPaginationFilterDto,
   ): Promise<PaginationResultDto<TaskDto>> {
     const where: Prisma.TaskWhereInput = {};
 
-    if (filter.filter.name) {
-      where.name = { contains: filter.filter.name, mode: 'insensitive' };
-    }
+    if (filter.filter) {
+      if (filter.filter.name) {
+        where.name = { contains: filter.filter.name, mode: 'insensitive' };
+      }
 
-    if (filter.filter.customerId) {
-      where.column = {
-        project: {
-          customerId: filter.filter.customerId,
-        },
-      };
+      if (filter.filter.customerId) {
+        where.column = {
+          project: {
+            customerId: filter.filter.customerId,
+          },
+        };
+      }
     }
 
     const orderBy = filter.asc
