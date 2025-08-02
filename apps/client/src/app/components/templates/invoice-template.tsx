@@ -6,6 +6,10 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
+import { CustomerDetailModel } from "@repo/shared-types";
+import dayjs from "dayjs";
+import { useMemo, useState } from "react";
+import { getCustomerById } from "../../../lib/api/customers";
 
 const styles = StyleSheet.create({
   page: {
@@ -120,36 +124,45 @@ const styles = StyleSheet.create({
 const InvoiceTemplate = ({
   title,
   number,
+  customerId,
+  date,
 }: {
   title?: string;
   number?: string;
-}) => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.header}>
-        <View style={styles.containerLogo}>
-          <Image src={"/assets/freeflow.png"} style={styles.logo} />
-          <Text>Freeflow</Text>
-        </View>
-      </View>
-      <View style={styles.containerHeader}>
-        <View style={styles.containerInfo}>
-          <Text style={styles.textImportant}>Facture n° {number}</Text>
-          <View>
-            <Text style={[styles.text]}>Date : 10/05/2025</Text>
-            <Text style={styles.text}>Paiement à la réception</Text>
+  date?: Date;
+  customerId?: number;
+}) => {
+  const [customer, setCustomer] = useState<CustomerDetailModel>();
+
+  useMemo(async () => {
+    if (customerId) {
+      const c = getCustomerById(customerId?.toString());
+      setCustomer((await c).data);
+    } else {
+      setCustomer(undefined);
+    }
+  }, [customerId]);
+
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={styles.header}>
+          <View style={styles.containerLogo}>
+            <Image src={"/assets/freeflow.png"} style={styles.logo} />
+            <Text>Freeflow</Text>
           </View>
         </View>
-        <View style={styles.informationContainer}>
-          <View>
-            <Text style={styles.textImportant}>Nom de l'enterprise</Text>
-            <Text style={styles.text}>CP, Ville</Text>
-            <Text style={styles.text}>Téléphone / Email</Text>
-            <Text style={styles.text}>Siret: 443141431531513</Text>
-            <Text style={styles.text}>N°TVA: FR76EKF?ZLFA$</Text>
+        <View style={styles.containerHeader}>
+          <View style={styles.containerInfo}>
+            <Text style={styles.textImportant}>Facture n° {number}</Text>
+            <View>
+              <Text style={[styles.text]}>
+                Date : {date ? dayjs(date).format("DD/MM/YYYY") : ""}
+              </Text>
+              <Text style={styles.text}>Paiement à la réception</Text>
+            </View>
           </View>
-          <View style={styles.informationCustomerContainer}>
-            <Text style={styles.text}>Facturé à</Text>
+          <View style={styles.informationContainer}>
             <View>
               <Text style={styles.textImportant}>Nom de l'enterprise</Text>
               <Text style={styles.text}>CP, Ville</Text>
@@ -157,97 +170,117 @@ const InvoiceTemplate = ({
               <Text style={styles.text}>Siret: 443141431531513</Text>
               <Text style={styles.text}>N°TVA: FR76EKF?ZLFA$</Text>
             </View>
-          </View>
-        </View>
-      </View>
-
-      <Text style={styles.title}>{title}</Text>
-      <View style={styles.table}>
-        {/* Header */}
-        <View style={styles.tableRow}>
-          <View style={{ ...styles.tableColHeader, width: "100%" }}>
-            <Text style={styles.text}>Désignation</Text>
-          </View>
-          <View style={styles.tableColHeader}>
-            <Text style={styles.text}>Quantité</Text>
-          </View>
-          <View style={styles.tableColHeader}>
-            <Text style={styles.text}>Prix Unit.</Text>
-          </View>
-          <View style={styles.tableColHeader}>
-            <Text style={styles.text}>Prix HT</Text>
-          </View>
-        </View>
-
-        {/* Row 1 */}
-        <View style={styles.tableRow}>
-          <View style={{ ...styles.tableCol, width: "100%" }}>
-            <Text style={styles.text}>Alice</Text>
-          </View>
-          <View style={styles.tableCol}>
-            <Text style={styles.text}>30</Text>
-          </View>
-          <View style={styles.tableCol}>
-            <Text style={styles.text}>25</Text>
-          </View>
-          <View style={styles.tableCol}>
-            <Text style={styles.text}>France</Text>
+            {customer && (
+              <View style={styles.informationCustomerContainer}>
+                <Text style={styles.text}>Facturé à</Text>
+                <View>
+                  <Text style={styles.textImportant}>{customer?.name}</Text>
+                  <Text style={styles.text}>
+                    {customer.address} {"\n"}
+                    {customer?.zipCode}, {customer?.city}
+                  </Text>
+                  <Text style={styles.text}>
+                    {customer?.email}{" "}
+                    {customer?.phone ? `/ ${customer.phone}` : ""}
+                  </Text>
+                  <Text style={styles.text}>Siret: {customer?.siret}</Text>
+                  <Text style={styles.text}>N°TVA: {customer?.tvaNumber}</Text>
+                </View>
+              </View>
+            )}
           </View>
         </View>
 
-        {/* Row 2 */}
-        <View style={styles.tableRow}>
-          <View style={{ ...styles.tableCol, width: "100%" }}>
-            <Text style={styles.text}>Bob</Text>
+        <Text style={styles.title}>{title}</Text>
+        <View style={styles.table}>
+          {/* Header */}
+          <View style={styles.tableRow}>
+            <View style={{ ...styles.tableColHeader, width: "100%" }}>
+              <Text style={styles.text}>Désignation</Text>
+            </View>
+            <View style={styles.tableColHeader}>
+              <Text style={styles.text}>Quantité</Text>
+            </View>
+            <View style={styles.tableColHeader}>
+              <Text style={styles.text}>Prix Unit.</Text>
+            </View>
+            <View style={styles.tableColHeader}>
+              <Text style={styles.text}>Prix HT</Text>
+            </View>
           </View>
-          <View style={styles.tableCol}>
-            <Text style={styles.text}>30</Text>
-          </View>
-          <View style={styles.tableCol}>
-            <Text style={styles.text}>30</Text>
-          </View>
-          <View style={styles.tableCol}>
-            <Text style={styles.text}>Canada</Text>
-          </View>
-        </View>
-      </View>
 
-      <View style={styles.tableResume}>
-        <View style={styles.tableRow}>
-          <View style={{ ...styles.tableColHeader, width: "50%" }}>
-            <Text style={styles.text}>Total HT</Text>
+          {/* Row 1 */}
+          <View style={styles.tableRow}>
+            <View style={{ ...styles.tableCol, width: "100%" }}>
+              <Text style={styles.text}>Alice</Text>
+            </View>
+            <View style={styles.tableCol}>
+              <Text style={styles.text}>30</Text>
+            </View>
+            <View style={styles.tableCol}>
+              <Text style={styles.text}>25</Text>
+            </View>
+            <View style={styles.tableCol}>
+              <Text style={styles.text}>France</Text>
+            </View>
           </View>
-          <View style={{ ...styles.tableCol, width: "50%", borderTopWidth: 1 }}>
-            <Text style={styles.text}>225.00$</Text>
+
+          {/* Row 2 */}
+          <View style={styles.tableRow}>
+            <View style={{ ...styles.tableCol, width: "100%" }}>
+              <Text style={styles.text}>Bob</Text>
+            </View>
+            <View style={styles.tableCol}>
+              <Text style={styles.text}>30</Text>
+            </View>
+            <View style={styles.tableCol}>
+              <Text style={styles.text}>30</Text>
+            </View>
+            <View style={styles.tableCol}>
+              <Text style={styles.text}>Canada</Text>
+            </View>
           </View>
         </View>
-        <View style={styles.tableRow}>
-          <View style={{ ...styles.tableColHeader, width: "50%" }}>
-            <Text style={styles.text}>TVA</Text>
+
+        <View style={styles.tableResume}>
+          <View style={styles.tableRow}>
+            <View style={{ ...styles.tableColHeader, width: "50%" }}>
+              <Text style={styles.text}>Total HT</Text>
+            </View>
+            <View
+              style={{ ...styles.tableCol, width: "50%", borderTopWidth: 1 }}
+            >
+              <Text style={styles.text}>225.00$</Text>
+            </View>
           </View>
-          <View style={{ ...styles.tableCol, width: "50%" }}>
-            <Text style={styles.text}>20.00%</Text>
+          <View style={styles.tableRow}>
+            <View style={{ ...styles.tableColHeader, width: "50%" }}>
+              <Text style={styles.text}>TVA</Text>
+            </View>
+            <View style={{ ...styles.tableCol, width: "50%" }}>
+              <Text style={styles.text}>20.00%</Text>
+            </View>
+          </View>
+          <View style={styles.tableRow}>
+            <View style={{ ...styles.tableColHeader, width: "50%" }}>
+              <Text style={styles.text}>Total TTC</Text>
+            </View>
+            <View style={{ ...styles.tableCol, width: "50%" }}>
+              <Text style={styles.text}>225.00$</Text>
+            </View>
           </View>
         </View>
-        <View style={styles.tableRow}>
-          <View style={{ ...styles.tableColHeader, width: "50%" }}>
-            <Text style={styles.text}>Total TTC</Text>
-          </View>
-          <View style={{ ...styles.tableCol, width: "50%" }}>
-            <Text style={styles.text}>225.00$</Text>
-          </View>
-        </View>
-      </View>
-      <Text style={styles.textTVA}>
-        TVA non applicable, article 293 B du CGI. Paiement sous 30 jours à
-        compter de la date de facture. Tout retard de paiement entraînera des
-        pénalités au taux de 10% annuel, ainsi qu'une indemnité forfaitaire de
-        40 € pour frais de recouvrement (article L441-10 du Code de commerce).
-        Coordonnées bancaires : FR76 3000 4000 5000 0000 0000 123 - Titulaire :
-        Jean Dupont
-      </Text>
-    </Page>
-  </Document>
-);
+        <Text style={styles.textTVA}>
+          TVA non applicable, article 293 B du CGI. Paiement sous 30 jours à
+          compter de la date de facture. Tout retard de paiement entraînera des
+          pénalités au taux de 10% annuel, ainsi qu'une indemnité forfaitaire de
+          40 € pour frais de recouvrement (article L441-10 du Code de commerce).
+          Coordonnées bancaires : FR76 3000 4000 5000 0000 0000 123 - Titulaire
+          : Jean Dupont
+        </Text>
+      </Page>
+    </Document>
+  );
+};
 
 export default InvoiceTemplate;

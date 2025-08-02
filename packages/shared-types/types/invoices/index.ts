@@ -3,6 +3,7 @@ import { z } from "zod";
 export type InvoiceCreateData = {
   number: string;
   title: string;
+  date: Date;
   customerId: number;
   tasks: TaskInvoice[];
 };
@@ -16,6 +17,7 @@ export const InvoiceCreateValidation = z.object({
   number: z.string().min(1, { message: "the number of invoice is required" }),
   title: z.string().min(1, { message: "The title is required" }),
   customerId: z.number({ required_error: "Le client est requis" }),
+  date: z.date(),
   tasks: z.array(
     z.object({
       taskId: z.number(),

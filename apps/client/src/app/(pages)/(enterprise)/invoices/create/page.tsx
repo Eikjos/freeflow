@@ -4,6 +4,7 @@ import Autocomplete from "@components/molecules/autocomplete";
 import InvoiceTemplate from "@components/templates/invoice-template";
 import { Button } from "@components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
+import { DateInput } from "@components/ui/date-input";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,12 +16,16 @@ import { getAllCustomersQueryOptions } from "../../../../../lib/api/customers";
 import { getAllTasksQueryOptions } from "../../../../../lib/api/tasks";
 
 export default function CreateInvoicesPage() {
-  const [update, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [update, forceUpdate] = useReducer((x) => {
+    console.log("update");
+    return x + 1;
+  }, 0);
   const form = useForm<InvoiceCreateData>({
     resolver: zodResolver(InvoiceCreateValidation),
     defaultValues: {
       title: "",
       number: "",
+      date: new Date(),
       tasks: [],
     },
   });
@@ -30,6 +35,8 @@ export default function CreateInvoicesPage() {
       <InvoiceTemplate
         title={form.getValues().title}
         number={form.getValues().number}
+        date={form.getValues().date}
+        customerId={form.getValues().customerId}
       />
     );
   }, [update]);
@@ -53,6 +60,10 @@ export default function CreateInvoicesPage() {
               type="number"
               {...form.register("number", { onBlur: forceUpdate })}
             />
+            <DateInput
+              label={"common.number"}
+              {...form.register("date", { onBlur: forceUpdate })}
+            />
             <Autocomplete
               label={"common.customer"}
               placeholder="Sélectionner un client"
@@ -70,7 +81,7 @@ export default function CreateInvoicesPage() {
               render={(item) => item.name}
               filterField="name"
               fieldIdentifier="id"
-              {...form.register("customerId", { onBlur: forceUpdate })}
+              {...form.register("customerId", { onChange: forceUpdate })}
             />
             <Autocomplete
               queryOptions={(filter) =>
@@ -95,8 +106,8 @@ export default function CreateInvoicesPage() {
               {...form.register("tasks", { onBlur: forceUpdate })}
             />
           </Form>
-          <div>
-            <p>Tasks</p>
+          <div className="mt-4">
+            <p>Les lignes de facturation</p>
           </div>
           <PDFDownloadLink document={invoiceDoc} fileName="invoice-1.pdf">
             {({ blob, url, loading, error }) => (
