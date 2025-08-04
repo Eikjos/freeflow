@@ -36,6 +36,8 @@ type AutoCompleteWithoutControlProps<TData extends Record<string, unknown>> = {
   className?: string;
   placeholder?: string;
   error?: string;
+  onAdd?: () => void;
+  addLabel?: string;
   onChange?: (value?: number) => void;
 } & Omit<InputProps, "type" | "value" | "defaultValue" | "onChange">;
 
@@ -67,11 +69,12 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
   defaultValue,
   value,
   error,
+  onAdd,
+  addLabel,
   disabled = false,
   ...props
 }: AutoCompleteWithoutControlProps<TData>) {
   const [open, setOpen] = useState<boolean>(false);
-  let isFisrt = true;
   const [currentValue, setCurrentValue] = useState<number | undefined>(
     defaultValue
   );
@@ -131,7 +134,6 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
         setDisplayValue((prev) => render(data?.data?.data[0]!));
       }
     }
-    isFisrt = false;
   }, [data]);
 
   useEffect(() => {
@@ -199,18 +201,39 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
                 <Loading />
               </div>
             ) : data && data.ok && data.data?.data.length ? (
-              data.data.data.map((item, index) => (
-                <AutoCompleteItem
-                  name={render(item)}
-                  value={item[fieldIdentifier] as number}
-                  onClick={handleChange}
-                  key={index}
-                />
-              ))
+              <>
+                {data.data.data.map((item, index) => (
+                  <AutoCompleteItem
+                    name={render(item)}
+                    value={item[fieldIdentifier] as number}
+                    onClick={handleChange}
+                    key={index}
+                  />
+                ))}
+                {onAdd && (
+                  <AutoCompleteItem
+                    name={addLabel!}
+                    value={0}
+                    onClick={() => {
+                      setOpen(false);
+                      onAdd();
+                    }}
+                  />
+                )}
+              </>
             ) : (
-              <div className="px-2 py-1 text-gray-500">
-                Aucun résultat trouvé
-              </div>
+              <>
+                <div className="px-2 py-1 text-gray-500">
+                  Aucun résultat trouvé
+                </div>
+                {onAdd && (
+                  <AutoCompleteItem
+                    name={addLabel!}
+                    value={0}
+                    onClick={onAdd}
+                  />
+                )}
+              </>
             )}
           </div>
         </div>

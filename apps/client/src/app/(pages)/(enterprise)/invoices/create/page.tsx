@@ -9,17 +9,20 @@ import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
-import { InvoiceCreateData, InvoiceCreateValidation } from "@repo/shared-types";
-import { useMemo, useReducer } from "react";
+import {
+  InvoiceCreateData,
+  InvoiceCreateValidation,
+  TaskData,
+} from "@repo/shared-types";
+import { useMemo, useReducer, useState } from "react";
 import { useForm } from "react-hook-form";
 import { getAllCustomersQueryOptions } from "../../../../../lib/api/customers";
 import { getAllTasksQueryOptions } from "../../../../../lib/api/tasks";
+import CreateInvoiceLineModal from "@components/organisms/create-invoice-line-dialog";
 
 export default function CreateInvoicesPage() {
-  const [update, forceUpdate] = useReducer((x) => {
-    console.log("update");
-    return x + 1;
-  }, 0);
+  const [update, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
   const form = useForm<InvoiceCreateData>({
     resolver: zodResolver(InvoiceCreateValidation),
     defaultValues: {
@@ -27,6 +30,12 @@ export default function CreateInvoicesPage() {
       number: "",
       date: new Date(),
       tasks: [],
+    },
+  });
+
+  const formTask = useForm<TaskData>({
+    defaultValues: {
+      name: "",
     },
   });
 
@@ -103,6 +112,8 @@ export default function CreateInvoicesPage() {
               label="Tâches"
               className="mt-3"
               placeholder="Sélectionner une tâche"
+              onAdd={() => setModalTaskOpen(true)}
+              addLabel={"Ajouter une tâche"}
               {...form.register("tasks", { onBlur: forceUpdate })}
             />
           </Form>
@@ -118,6 +129,11 @@ export default function CreateInvoicesPage() {
           </PDFDownloadLink>
         </CardContent>
       </Card>
+      <CreateInvoiceLineModal
+        open={modalTaskOpen}
+        handleOpen={(value) => setModalTaskOpen(value)}
+        handleSubmit={(value) => console.log(value)}
+      />
       <PDFViewer className="w-full h-5/6 rounded-md" showToolbar={false}>
         {invoiceDoc}
       </PDFViewer>

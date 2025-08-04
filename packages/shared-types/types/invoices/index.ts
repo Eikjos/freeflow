@@ -8,6 +8,12 @@ export type InvoiceCreateData = {
   tasks: TaskInvoice[];
 };
 
+export type InvoiceLineData = {
+  name: string;
+  quantity: number;
+  unitPrice: number;
+};
+
 export type TaskInvoice = {
   taskId: number;
   amount: number;
@@ -24,4 +30,10 @@ export const InvoiceCreateValidation = z.object({
       amount: z.number().min(0, { message: "The amount must be positive" }),
     })
   ),
+});
+
+export const InvoiceLineValidation = z.object({
+  name: z.string().min(1, { message: "name.required" }),
+  quantity: z.coerce.number().min(1, { message: "quantity.required" }),
+  unitPrice: z.coerce.number(),
 });
