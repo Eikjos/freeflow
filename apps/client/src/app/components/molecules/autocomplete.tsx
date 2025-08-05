@@ -223,9 +223,15 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
               </>
             ) : (
               <>
-                <div className="px-2 py-1 text-gray-500">
-                  Aucun résultat trouvé
-                </div>
+                <Button
+                  type="button"
+                  variant={"select"}
+                  className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                  disabled
+                  tabIndex={0}
+                >
+                  <span className="text-left">Aucun résultat trouvé</span>
+                </Button>
                 {onAdd && (
                   <AutoCompleteItem
                     name={addLabel!}

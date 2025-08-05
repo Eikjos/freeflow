@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
-import { CustomerDetailModel } from "@repo/shared-types";
+import { CustomerDetailModel, InvoiceLineData } from "@repo/shared-types";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { getCustomerById } from "../../../lib/api/customers";
@@ -126,11 +126,13 @@ const InvoiceTemplate = ({
   number,
   customerId,
   date,
+  lines,
 }: {
   title?: string;
   number?: string;
   date?: Date;
   customerId?: number;
+  lines: InvoiceLineData[];
 }) => {
   const [customer, setCustomer] = useState<CustomerDetailModel>();
 
@@ -142,6 +144,22 @@ const InvoiceTemplate = ({
       setCustomer(undefined);
     }
   }, [customerId]);
+
+  const formatPrice = (value: number) =>
+    new Intl.NumberFormat("FR-fr", {
+      style: "currency",
+      currency: "EUR",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value);
+
+  const sum = (values: number[]) => {
+    let result = 0;
+    values.map((v) => {
+      result += v;
+    });
+    return result;
+  };
 
   return (
     <Document>
@@ -209,37 +227,25 @@ const InvoiceTemplate = ({
             </View>
           </View>
 
-          {/* Row 1 */}
-          <View style={styles.tableRow}>
-            <View style={{ ...styles.tableCol, width: "100%" }}>
-              <Text style={styles.text}>Alice</Text>
+          {/* Rows */}
+          {lines.map((line, index) => (
+            <View style={styles.tableRow} key={index}>
+              <View style={{ ...styles.tableCol, width: "100%" }}>
+                <Text style={styles.text}>{line.name}</Text>
+              </View>
+              <View style={styles.tableCol}>
+                <Text style={styles.text}>{line.quantity}</Text>
+              </View>
+              <View style={styles.tableCol}>
+                <Text style={styles.text}>{formatPrice(line.unitPrice)}</Text>
+              </View>
+              <View style={styles.tableCol}>
+                <Text style={styles.text}>
+                  {formatPrice(line.unitPrice * line.quantity)}
+                </Text>
+              </View>
             </View>
-            <View style={styles.tableCol}>
-              <Text style={styles.text}>30</Text>
-            </View>
-            <View style={styles.tableCol}>
-              <Text style={styles.text}>25</Text>
-            </View>
-            <View style={styles.tableCol}>
-              <Text style={styles.text}>France</Text>
-            </View>
-          </View>
-
-          {/* Row 2 */}
-          <View style={styles.tableRow}>
-            <View style={{ ...styles.tableCol, width: "100%" }}>
-              <Text style={styles.text}>Bob</Text>
-            </View>
-            <View style={styles.tableCol}>
-              <Text style={styles.text}>30</Text>
-            </View>
-            <View style={styles.tableCol}>
-              <Text style={styles.text}>30</Text>
-            </View>
-            <View style={styles.tableCol}>
-              <Text style={styles.text}>Canada</Text>
-            </View>
-          </View>
+          ))}
         </View>
 
         <View style={styles.tableResume}>
@@ -250,7 +256,9 @@ const InvoiceTemplate = ({
             <View
               style={{ ...styles.tableCol, width: "50%", borderTopWidth: 1 }}
             >
-              <Text style={styles.text}>225.00$</Text>
+              <Text style={styles.text}>
+                {formatPrice(sum(lines.map((e) => e.quantity * e.unitPrice)))}
+              </Text>
             </View>
           </View>
           <View style={styles.tableRow}>
@@ -266,7 +274,11 @@ const InvoiceTemplate = ({
               <Text style={styles.text}>Total TTC</Text>
             </View>
             <View style={{ ...styles.tableCol, width: "50%" }}>
-              <Text style={styles.text}>225.00$</Text>
+              <Text style={styles.text}>
+                {formatPrice(
+                  sum(lines.map((e) => e.quantity * e.unitPrice)) * 1.2
+                )}
+              </Text>
             </View>
           </View>
         </View>
