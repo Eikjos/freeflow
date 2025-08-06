@@ -14,6 +14,10 @@ export const getAllTasks = async (pagination: PaginationFilter<TaskFilter>) => {
   return await client<PaginationResult<TaskData>>(`tasks?${query}`);
 };
 
+export const getTasksById = async (id: number) => {
+  return await client<TaskData>(`tasks/${id}`);
+};
+
 export const getAllTasksQueryOptions = (
   pagination: PaginationFilter<TaskFilter>
 ): UseQueryOptions<HttpResponse<PaginationResult<TaskData>>, Error> => ({

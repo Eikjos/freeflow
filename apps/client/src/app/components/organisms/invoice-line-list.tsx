@@ -21,7 +21,7 @@ export default function InvoiceLineList({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full py-2 px-4 rounded-md bg-gray-200/20 mt-4">
       {invoices.map((invoice, index) => (
         <div key={index}>
           <InvoiceLine

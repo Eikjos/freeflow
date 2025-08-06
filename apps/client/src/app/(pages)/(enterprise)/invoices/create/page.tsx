@@ -19,10 +19,14 @@ import {
 import { useMemo, useReducer, useState } from "react";
 import { useForm } from "react-hook-form";
 import { getAllCustomersQueryOptions } from "../../../../../lib/api/customers";
-import { getAllTasksQueryOptions } from "../../../../../lib/api/tasks";
+import {
+  getAllTasksQueryOptions,
+  getTasksById,
+} from "../../../../../lib/api/tasks";
 
 export default function CreateInvoicesPage() {
   const [update, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [autocompleteKey, setAutocompleteKey] = useReducer((x) => x + 1, 0);
   const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
   const [invoiceLines, setInvoiceLines] = useState<InvoiceLineData[]>([]);
   const form = useForm<InvoiceCreateData>({
@@ -57,6 +61,24 @@ export default function CreateInvoicesPage() {
     forceUpdate();
   };
 
+  const handleChangeTask = async (value: number) => {
+    const invoiceLine = await getTasksById(value);
+    if (
+      invoiceLine.ok &&
+      !invoiceLines.some((e) => e.name === invoiceLine.data?.name)
+    ) {
+      setInvoiceLines((prev) => [
+        ...prev,
+        {
+          name: invoiceLine.data?.name,
+          quantity: 1,
+          unitPrice: 0.0,
+        } as InvoiceLineData,
+      ]);
+    }
+    setAutocompleteKey();
+  };
+
   return (
     <div className="h-full">
       <Card className="mb-10">
@@ -67,6 +89,7 @@ export default function CreateInvoicesPage() {
           <Form {...form}>
             <Input
               label={"common.title"}
+              placeholder="Titre de la facture"
               {...form.register("title", {
                 onBlur: forceUpdate,
               })}
@@ -74,6 +97,7 @@ export default function CreateInvoicesPage() {
             <Input
               label={"common.number"}
               type="number"
+              placeholder="Numéro de la facture"
               {...form.register("number", { onBlur: forceUpdate })}
             />
             <DateInput
@@ -100,6 +124,7 @@ export default function CreateInvoicesPage() {
               {...form.register("customerId", { onChange: forceUpdate })}
             />
             <Autocomplete
+              key={autocompleteKey}
               queryOptions={(filter) =>
                 getAllTasksQueryOptions({
                   page: 0,
@@ -121,19 +146,25 @@ export default function CreateInvoicesPage() {
               placeholder="Sélectionner une tâche"
               onAdd={() => setModalTaskOpen(true)}
               addLabel={"Ajouter une tâche"}
-              {...form.register("tasks", { onBlur: forceUpdate })}
+              {...form.register("tasks", {
+                onBlur: forceUpdate,
+                value: [],
+                onChange: (event) => handleChangeTask(event.target.value),
+              })}
             />
           </Form>
-          <div className="mt-4">
-            <p>Les lignes de facturation</p>
-            <InvoiceLineList
-              invoices={invoiceLines}
-              handleChange={handleChangeInvoiceLine}
-            />
-          </div>
+          {invoiceLines.length > 0 && (
+            <div className="mt-4">
+              <p>Les lignes de facturation</p>
+              <InvoiceLineList
+                invoices={invoiceLines}
+                handleChange={handleChangeInvoiceLine}
+              />
+            </div>
+          )}
           <PDFDownloadLink document={invoiceDoc} fileName="invoice-1.pdf">
             {({ blob, url, loading, error }) => (
-              <Button>
+              <Button className="mt-4">
                 {loading ? "Loading document..." : "Download now!"}
               </Button>
             )}

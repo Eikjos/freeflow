@@ -4,6 +4,7 @@ import { Input } from "@components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InvoiceLineData, InvoiceLineValidation } from "@repo/shared-types";
 import { Trash } from "lucide-react";
+import { useReducer } from "react";
 import { useForm } from "react-hook-form";
 
 type InvoiceLineProps = {
@@ -17,6 +18,7 @@ export default function InvoiceLine({
   onChange,
   onDelete,
 }: InvoiceLineProps) {
+  const [totalKey, updateTotalKey] = useReducer((x) => x + 1, 0);
   const form = useForm<InvoiceLineData>({
     resolver: zodResolver(InvoiceLineValidation),
     defaultValues: {
@@ -33,10 +35,15 @@ export default function InvoiceLine({
       form.setValue("quantity", 1);
       form.setValue("unitPrice", value);
       onChange(form.getValues());
+    } else {
+      form.setValue("quantity", 1);
+      form.setValue("unitPrice", 0);
+      onChange(form.getValues());
     }
   };
 
   const handleBlur = () => {
+    updateTotalKey();
     onChange(form.getValues());
   };
 
@@ -65,11 +72,12 @@ export default function InvoiceLine({
             <div className="flex flex-row items-center gap-2">
               <span className="text-sm">Total HT</span>
               <Input
+                key={totalKey}
                 type="number"
                 step="0.5"
-                value={quantity * unitPrice}
-                onChange={(event) =>
-                  handleChangeTotal(event.currentTarget.valueAsNumber)
+                defaultValue={quantity * unitPrice}
+                onBlur={(event) =>
+                  handleChangeTotal(parseFloat(event.currentTarget.value))
                 }
               />
               <span>€</span>

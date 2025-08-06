@@ -64,6 +64,15 @@ export default class TaskService {
     };
   }
 
+  async findById(taskId: number) {
+    const task = await this.prisma.task.findFirst({
+      where: { id: taskId },
+    });
+    if (!task) throw new HttpException('', HttpStatus.NOT_FOUND);
+
+    return task;
+  }
+
   async delete(taskId: number) {
     const task = await this.prisma.task.findFirst({
       where: { id: taskId },

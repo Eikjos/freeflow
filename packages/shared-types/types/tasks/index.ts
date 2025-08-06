@@ -28,7 +28,6 @@ export type TaskFilter = {
   id?: number;
   name?: string;
   customerId?: number;
-  [key: string]: string | number | undefined;
 };
 
 export const CreateTaskValidation = z.object({
