@@ -32,7 +32,7 @@ export class CreateEnterpriseDto implements EnterpriseCreateModel {
   city: string;
   @ApiProperty({ description: 'Enterprise number tva' })
   @IsString()
-  TVANumber: string;
+  tvaNumber: string;
   @ApiProperty({ description: 'Enterprise social capital' })
   @IsInt()
   @IsOptional()

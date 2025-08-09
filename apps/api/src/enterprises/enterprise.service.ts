@@ -3,6 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import AuthService from 'src/auth/auth.service';
 import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
+import InvoiceInformationDto from 'src/dtos/invoices/invoice-information.dto';
 import { MediaService } from 'src/media/media.service';
 import { PrismaService } from 'src/prisma.service';
 import {
@@ -42,7 +43,7 @@ export default class EnterpriseService {
         users: {
           connect: [{ id: userId }],
         },
-        tvaNumber: model.TVANumber,
+        tvaNumber: model.tvaNumber,
         countryId: parseInt(model.countryId),
         mediaId: mediaId > 0 ? mediaId : null,
         sales: {
@@ -86,11 +87,38 @@ export default class EnterpriseService {
         insee.etablissement.uniteLegale.categorieJuridiqueUniteLegale,
       socialCapital: insee.etablissement.uniteLegale.capitalSocialUniteLegale,
       countryId: '60',
-      TVANumber:
+      tvaNumber:
         'FR' +
         this.getCleControleTVANumber(insee.etablissement.siren) +
         insee.etablissement.siren,
     };
+  }
+
+  async getInformationForInvoice(
+    enterpriseId: number,
+  ): Promise<InvoiceInformationDto> {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+      include: { juridicShape: true },
+    });
+    if (!enterprise) throw new NotFoundException();
+    const {
+      prefixe,
+      lastInvoiceNumber,
+      juridicShape,
+      juridicShapeId,
+      ...rest
+    } = enterprise;
+    const invoiceInformation: InvoiceInformationDto = {
+      prefixe: prefixe ?? '',
+      lastNumber: lastInvoiceNumber + 1,
+      enterprise: {
+        ...rest,
+        juridicShape: juridicShape.designation,
+        countryId: rest.countryId.toString(),
+      },
+    };
+    return invoiceInformation;
   }
 
   // -- Tools --

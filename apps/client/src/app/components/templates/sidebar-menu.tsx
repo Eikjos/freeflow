@@ -12,8 +12,8 @@ import {
 import { EnterpriseInfo } from "../../../types/enterprise-info-type";
 
 type SidebarMenuProps = {
-  enterprise: EnterpriseInfo | null;
   className?: string;
+  enterprise?: EnterpriseInfo;
 };
 
 export default async function SidebarMenu({

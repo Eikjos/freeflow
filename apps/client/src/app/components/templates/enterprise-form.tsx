@@ -12,9 +12,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import { getAllCountriesQueryOptions } from "../../../lib/api/countries";
+import { fetchEnterpriseInfo } from "../../../lib/api/enterprise";
 import { getAllJuridicShapesQueryOptions } from "../../../lib/api/juridic-shapes";
 import { Card, CardContent } from "../ui/card";
-import { fetchEnterpriseInfo } from "../../../lib/api/enterprise";
 
 const EnterpriseForm = () => {
   const t = useTranslations();
@@ -31,7 +31,7 @@ const EnterpriseForm = () => {
       "name",
       "address",
       "city",
-      "TVANumber",
+      "tvaNumber",
       "zipCode",
       "juridicShape",
       "countryId",
@@ -101,7 +101,7 @@ const EnterpriseForm = () => {
                   label={t("enterprise.tvaNumber")}
                   placeholder={t("enterprise.tvaNumber")}
                   className="mt-3"
-                  {...form.register("TVANumber")}
+                  {...form.register("tvaNumber")}
                 />
               </div>
               <div className="w-1/3 border-r-[3px] border-secondary pl-2 pr-5 py-3 flex flex-col items-center h-full">

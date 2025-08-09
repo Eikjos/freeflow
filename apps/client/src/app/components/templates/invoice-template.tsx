@@ -6,10 +6,15 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
-import { CustomerDetailModel, InvoiceLineData } from "@repo/shared-types";
+import {
+  CustomerDetailModel,
+  InvoiceInformation,
+  InvoiceLineData,
+} from "@repo/shared-types";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { getCustomerById } from "../../../lib/api/customers";
+import { getMediaUrl } from "../../../lib/utils";
 
 const styles = StyleSheet.create({
   page: {
@@ -127,12 +132,18 @@ const InvoiceTemplate = ({
   customerId,
   date,
   lines,
+  information,
+  maskName,
+  excludeTva,
 }: {
   title?: string;
   number?: string;
   date?: Date;
   customerId?: number;
   lines: InvoiceLineData[];
+  information?: InvoiceInformation;
+  maskName?: boolean;
+  excludeTva?: boolean;
 }) => {
   const [customer, setCustomer] = useState<CustomerDetailModel>();
 
@@ -166,8 +177,15 @@ const InvoiceTemplate = ({
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <View style={styles.containerLogo}>
-            <Image src={"/assets/freeflow.png"} style={styles.logo} />
-            <Text>Freeflow</Text>
+            {information?.enterprise.mediaId && (
+              <Image
+                src={getMediaUrl(information?.enterprise.mediaId)}
+                style={styles.logo}
+              />
+            )}
+            {!maskName && information?.enterprise.mediaId && (
+              <Text>{information?.enterprise.name}</Text>
+            )}
           </View>
         </View>
         <View style={styles.containerHeader}>
@@ -182,11 +200,21 @@ const InvoiceTemplate = ({
           </View>
           <View style={styles.informationContainer}>
             <View>
-              <Text style={styles.textImportant}>Nom de l'enterprise</Text>
-              <Text style={styles.text}>CP, Ville</Text>
-              <Text style={styles.text}>Téléphone / Email</Text>
-              <Text style={styles.text}>Siret: 443141431531513</Text>
-              <Text style={styles.text}>N°TVA: FR76EKF?ZLFA$</Text>
+              <Text style={styles.textImportant}>
+                {information?.enterprise.name}
+              </Text>
+              <Text
+                style={styles.text}
+              >{`${information?.enterprise.zipCode}, ${information?.enterprise.city}`}</Text>
+              <Text style={styles.text}>
+                {/* {enterprise?.email} {enterprise?.phone ? `/ ${enterprise.phone}` : ""} */}
+              </Text>
+              <Text
+                style={styles.text}
+              >{`Siret: ${information?.enterprise.siret}`}</Text>
+              <Text
+                style={styles.text}
+              >{`n° TVA: ${information?.enterprise.tvaNumber}`}</Text>
             </View>
             {customer && (
               <View style={styles.informationCustomerContainer}>
@@ -266,7 +294,7 @@ const InvoiceTemplate = ({
               <Text style={styles.text}>TVA</Text>
             </View>
             <View style={{ ...styles.tableCol, width: "50%" }}>
-              <Text style={styles.text}>20.00%</Text>
+              <Text style={styles.text}>{excludeTva ? "0.00%" : "20.00%"}</Text>
             </View>
           </View>
           <View style={styles.tableRow}>
@@ -276,20 +304,28 @@ const InvoiceTemplate = ({
             <View style={{ ...styles.tableCol, width: "50%" }}>
               <Text style={styles.text}>
                 {formatPrice(
-                  sum(lines.map((e) => e.quantity * e.unitPrice)) * 1.2
+                  sum(lines.map((e) => e.quantity * e.unitPrice)) *
+                    (excludeTva ? 1 : 1.2)
                 )}
               </Text>
             </View>
           </View>
         </View>
-        <Text style={styles.textTVA}>
-          TVA non applicable, article 293 B du CGI. Paiement sous 30 jours à
-          compter de la date de facture. Tout retard de paiement entraînera des
-          pénalités au taux de 10% annuel, ainsi qu'une indemnité forfaitaire de
-          40 € pour frais de recouvrement (article L441-10 du Code de commerce).
-          Coordonnées bancaires : FR76 3000 4000 5000 0000 0000 123 - Titulaire
-          : Jean Dupont
-        </Text>
+        {excludeTva ? (
+          <Text style={styles.textTVA}>
+            TVA non applicable, article 293 B du CGI. Paiement sous 30 jours à
+            compter de la date de facture. Tout retard de paiement entraînera
+            des pénalités au taux de 10% annuel, ainsi qu'une indemnité
+            forfaitaire de 40 € pour frais de recouvrement (article L441-10 du
+            Code de commerce). Coordonnées bancaires : FR76 3000 4000 5000 0000
+            0000 123 - Titulaire : Jean Dupont
+          </Text>
+        ) : (
+          <Text style={styles.textTVA}>
+            Coordonnées bancaires : FR76 3000 4000 5000 0000 0000 123 -
+            Titulaire : Jean Dupont
+          </Text>
+        )}
       </Page>
     </Document>
   );

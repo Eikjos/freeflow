@@ -11,6 +11,8 @@ model Enterprise {
   zipCode        String
   email          String
   phone          String
+  prefixe        String?
+  lastInvoiceNumber Int               @default(0)
   contacts       Contact[]
   country        Country              @relation(fields: [countryId], references: [id])
   juridicShape   JuridicShape         @relation(fields: [juridicShapeId], references: [code])

@@ -14,8 +14,9 @@ export type EnterpriseInformation = {
   siret: string;
   address: string;
   zipCode: string;
+  mediaId?: number;
   city: string;
-  TVANumber: string;
+  tvaNumber: string;
   juridicShape: string;
   socialCapital?: number;
   countryId: string;

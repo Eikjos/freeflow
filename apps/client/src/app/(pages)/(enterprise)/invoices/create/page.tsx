@@ -6,36 +6,51 @@ import InvoiceLineList from "@components/organisms/invoice-line-list";
 import InvoiceTemplate from "@components/templates/invoice-template";
 import { Button } from "@components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
+import { Checkbox } from "@components/ui/checkbox";
 import { DateInput } from "@components/ui/date-input";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckedState } from "@radix-ui/react-checkbox";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import {
   InvoiceCreateData,
   InvoiceCreateValidation,
   InvoiceLineData,
 } from "@repo/shared-types";
+import { useQuery } from "@tanstack/react-query";
+import { useEnterprise } from "providers/enterprise-provider";
 import { useMemo, useReducer, useState } from "react";
 import { useForm } from "react-hook-form";
 import { getAllCustomersQueryOptions } from "../../../../../lib/api/customers";
+import { getInformationForInvoiceQueryOptions } from "../../../../../lib/api/enterprise";
 import {
   getAllTasksQueryOptions,
   getTasksById,
 } from "../../../../../lib/api/tasks";
 
 export default function CreateInvoicesPage() {
+  const { enterprise } = useEnterprise();
+  const [maskNameOnInvoice, setMaskNameOnInvoice] = useState<boolean>(true);
+  const [excludeTva, setExcludeTva] = useState<boolean>(false);
   const [update, forceUpdate] = useReducer((x) => x + 1, 0);
   const [autocompleteKey, setAutocompleteKey] = useReducer((x) => x + 1, 0);
   const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
   const [invoiceLines, setInvoiceLines] = useState<InvoiceLineData[]>([]);
+  const invoiceInformation = useQuery({
+    ...getInformationForInvoiceQueryOptions(enterprise?.id!),
+    enabled: enterprise?.id !== undefined,
+  });
   const form = useForm<InvoiceCreateData>({
     resolver: zodResolver(InvoiceCreateValidation),
     defaultValues: {
       title: "",
-      number: "",
+      number: (invoiceInformation.data?.ok
+        ? (invoiceInformation?.data?.data?.lastNumber ?? 0)
+        : 0
+      ).toString(),
       date: new Date(),
-      tasks: [],
+      InvoiceLine: [],
     },
   });
 
@@ -46,10 +61,13 @@ export default function CreateInvoicesPage() {
         number={form.getValues().number}
         date={form.getValues().date}
         customerId={form.getValues().customerId}
+        information={invoiceInformation.data?.data}
+        maskName={maskNameOnInvoice}
+        excludeTva={excludeTva}
         lines={invoiceLines}
       />
     );
-  }, [update]);
+  }, [update, invoiceInformation.data]);
 
   const appendInvoiceLine = (value: InvoiceLineData) => {
     setInvoiceLines((prev) => [...prev, value]);
@@ -79,6 +97,16 @@ export default function CreateInvoicesPage() {
     setAutocompleteKey();
   };
 
+  const handleMashNameChange = (checked: CheckedState) => {
+    setMaskNameOnInvoice(checked ? true : false);
+    forceUpdate();
+  };
+
+  const handleExcludeTvaChange = (checked: CheckedState) => {
+    setExcludeTva(checked ? true : false);
+    forceUpdate();
+  };
+
   return (
     <div className="h-full">
       <Card className="mb-10">
@@ -86,6 +114,18 @@ export default function CreateInvoicesPage() {
           <CardTitle>Creation d'une facture</CardTitle>
         </CardHeader>
         <CardContent>
+          <div className="flex flex-rox justify-end gap-4">
+            <Checkbox
+              label="Masquer le nom"
+              checked={maskNameOnInvoice}
+              onCheckedChange={handleMashNameChange}
+            />
+            <Checkbox
+              label="Ne pas inclure la TVA"
+              checked={excludeTva}
+              onCheckedChange={handleExcludeTvaChange}
+            />
+          </div>
           <Form {...form}>
             <Input
               label={"common.title"}
@@ -146,7 +186,7 @@ export default function CreateInvoicesPage() {
               placeholder="Sélectionner une tâche"
               onAdd={() => setModalTaskOpen(true)}
               addLabel={"Ajouter une tâche"}
-              {...form.register("tasks", {
+              {...form.register("InvoiceLine", {
                 onBlur: forceUpdate,
                 value: [],
                 onChange: (event) => handleChangeTask(event.target.value),

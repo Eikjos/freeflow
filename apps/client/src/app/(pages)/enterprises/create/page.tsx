@@ -24,7 +24,7 @@ const CreateEnterprisePage = () => {
       address: "",
       city: "",
       phone: "",
-      TVANumber: "",
+      tvaNumber: "",
       email: "",
       zipCode: "",
     },

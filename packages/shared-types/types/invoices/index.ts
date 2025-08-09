@@ -1,3 +1,4 @@
+import { EnterpriseInformation } from "types/enterprises";
 import { z } from "zod";
 
 export type InvoiceCreateData = {
@@ -12,6 +13,12 @@ export type InvoiceLineData = {
   name: string;
   quantity: number;
   unitPrice: number;
+};
+
+export type InvoiceInformation = {
+  enterprise: EnterpriseInformation;
+  prefixe: string;
+  lastNumber: number;
 };
 
 export const InvoiceCreateValidation = z.object({
