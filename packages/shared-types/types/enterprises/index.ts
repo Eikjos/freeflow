@@ -25,6 +25,8 @@ export type EnterpriseInformation = {
 export type EnterpriseCreateModel = {
   email: string;
   phone: string;
+  prefixeInvoice?: string;
+  lastInvoiceNumber?: number;
   logo?: File;
   [key: string]: any;
 } & Omit<EnterpriseInformation, "id">;

@@ -317,14 +317,10 @@ const InvoiceTemplate = ({
             compter de la date de facture. Tout retard de paiement entraînera
             des pénalités au taux de 10% annuel, ainsi qu'une indemnité
             forfaitaire de 40 € pour frais de recouvrement (article L441-10 du
-            Code de commerce). Coordonnées bancaires : FR76 3000 4000 5000 0000
-            0000 123 - Titulaire : Jean Dupont
+            Code de commerce).
           </Text>
         ) : (
-          <Text style={styles.textTVA}>
-            Coordonnées bancaires : FR76 3000 4000 5000 0000 0000 123 -
-            Titulaire : Jean Dupont
-          </Text>
+          <Text style={styles.textTVA}></Text>
         )}
       </Page>
     </Document>
