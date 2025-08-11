@@ -25,8 +25,11 @@ const CreateEnterprisePage = () => {
       city: "",
       phone: "",
       tvaNumber: "",
+      juridicShape: "",
       email: "",
       zipCode: "",
+      prefixeInvoice: "",
+      lastInvoiceNumber: 0,
     },
   });
 

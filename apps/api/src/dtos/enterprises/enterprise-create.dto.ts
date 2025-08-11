@@ -52,4 +52,16 @@ export class CreateEnterpriseDto implements EnterpriseCreateModel {
     format: 'binary',
   })
   logo: File;
+  @ApiProperty({
+    description: 'Enterprise last invoice number',
+    required: false,
+  })
+  @IsOptional()
+  lastInvoiceNumber?: number;
+  @ApiProperty({
+    description: 'Prefixe for invoice',
+    required: false,
+  })
+  @IsOptional()
+  prefixeInvoice?: string;
 }

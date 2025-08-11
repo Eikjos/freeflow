@@ -103,14 +103,14 @@ export default class EnterpriseService {
     });
     if (!enterprise) throw new NotFoundException();
     const {
-      prefixe,
+      prefixeInvoice,
       lastInvoiceNumber,
       juridicShape,
       juridicShapeId,
       ...rest
     } = enterprise;
     const invoiceInformation: InvoiceInformationDto = {
-      prefixe: prefixe ?? '',
+      prefixe: prefixeInvoice ?? '',
       lastNumber: lastInvoiceNumber + 1,
       enterprise: {
         ...rest,

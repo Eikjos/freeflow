@@ -167,26 +167,39 @@ const EnterpriseForm = () => {
                 </div>
               </div>
               <div>
-                <div className="flex flex-row items-center gap-4">
-                  <Separator />
+                <div className="flex flex-row items-center gap-4 justify-center mt-4">
+                  <Separator className="w-1/3 bg-secondary" />
                   <h2>Informations pour la facturation</h2>
-                  <Separator />
+                  <Separator className="w-1/3 bg-secondary" />
                 </div>
-                <div className="flex flex-row items-center justify-center gap-10">
+                <div className="flex flex-row items-center justify-center gap-10 mt-3">
                   <Input
                     type="text"
                     label="Préfixe pour les factures"
                     {...form.register("prefixeInvoice")}
-                    description="Pout utiliser votre préfixe de facture."
+                    description="Pour utiliser votre préfixe de facture."
                   />
                   <Input
                     type="number"
+                    min="0"
                     label="Votre dernière numéro de facture"
-                    {...form.register("lastNumberInvoice")}
+                    {...form.register("lastInvoiceNumber")}
                     description="Pour éviter des trous sur la numérotation de facture."
                   />
                 </div>
               </div>
+              <Button onClick={() => form.trigger()} type="button">
+                Click me !!
+              </Button>
+              <ul>
+                {Object.entries(form.formState.errors).map(
+                  ([fieldName, error]) => (
+                    <li key={fieldName}>
+                      {fieldName} - {error?.message?.toString()}
+                    </li>
+                  )
+                )}
+              </ul>
             </form>
           </Form>
         </CardContent>
