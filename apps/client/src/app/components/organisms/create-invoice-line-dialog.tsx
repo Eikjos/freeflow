@@ -33,7 +33,7 @@ export default function CreateInvoiceLineModal({
   });
   const quantity = form.watch("quantity");
   const unitPrice = form.watch("unitPrice");
-  const userLocale = navigator.language;
+  const userLocale = "fr-FR";
   const currency = "EUR";
 
   const formatPrice = (value: number) =>

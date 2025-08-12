@@ -4,15 +4,15 @@ import Autocomplete from "@components/molecules/autocomplete";
 import CreateInvoiceLineModal from "@components/organisms/create-invoice-line-dialog";
 import InvoiceLineList from "@components/organisms/invoice-line-list";
 import InvoiceTemplate from "@components/templates/invoice-template";
-import { Button } from "@components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Checkbox } from "@components/ui/checkbox";
 import { DateInput } from "@components/ui/date-input";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
+import Loading from "@components/ui/loading";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckedState } from "@radix-ui/react-checkbox";
-import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import { PDFViewer } from "@react-pdf/renderer";
 import {
   InvoiceCreateData,
   InvoiceCreateValidation,
@@ -20,7 +20,7 @@ import {
 } from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
 import { useEnterprise } from "providers/enterprise-provider";
-import { useMemo, useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useForm } from "react-hook-form";
 import { getAllCustomersQueryOptions } from "../../../../../lib/api/customers";
 import { getInformationForInvoiceQueryOptions } from "../../../../../lib/api/enterprise";
@@ -37,37 +37,27 @@ export default function CreateInvoicesPage() {
   const [autocompleteKey, setAutocompleteKey] = useReducer((x) => x + 1, 0);
   const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
   const [invoiceLines, setInvoiceLines] = useState<InvoiceLineData[]>([]);
-  const invoiceInformation = useQuery({
+  const { data, isSuccess, isLoading } = useQuery({
     ...getInformationForInvoiceQueryOptions(enterprise?.id!),
     enabled: enterprise?.id !== undefined,
   });
+
   const form = useForm<InvoiceCreateData>({
     resolver: zodResolver(InvoiceCreateValidation),
     defaultValues: {
       title: "",
-      number: (invoiceInformation.data?.ok
-        ? (invoiceInformation?.data?.data?.lastNumber ?? 0)
-        : 0
-      ).toString(),
+      number: "1",
       date: new Date(),
       InvoiceLine: [],
     },
   });
 
-  const invoiceDoc = useMemo(() => {
-    return (
-      <InvoiceTemplate
-        title={form.getValues().title}
-        number={form.getValues().number}
-        date={form.getValues().date}
-        customerId={form.getValues().customerId}
-        information={invoiceInformation.data?.data}
-        maskName={maskNameOnInvoice}
-        excludeTva={excludeTva}
-        lines={invoiceLines}
-      />
-    );
-  }, [update, invoiceInformation.data]);
+  useEffect(() => {
+    if (data?.data?.lastNumber !== undefined && isSuccess) {
+      form.setValue("number", (data.data.lastNumber ?? 1).toString());
+    }
+    forceUpdate();
+  }, [data?.data]);
 
   const appendInvoiceLine = (value: InvoiceLineData) => {
     setInvoiceLines((prev) => [...prev, value]);
@@ -106,6 +96,14 @@ export default function CreateInvoicesPage() {
     setExcludeTva(checked ? true : false);
     forceUpdate();
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-full flex-row flex justify-center items-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div className="h-full">
@@ -202,13 +200,6 @@ export default function CreateInvoicesPage() {
               />
             </div>
           )}
-          <PDFDownloadLink document={invoiceDoc} fileName="invoice-1.pdf">
-            {({ blob, url, loading, error }) => (
-              <Button className="mt-4">
-                {loading ? "Loading document..." : "Download now!"}
-              </Button>
-            )}
-          </PDFDownloadLink>
         </CardContent>
       </Card>
       <CreateInvoiceLineModal
@@ -216,8 +207,21 @@ export default function CreateInvoicesPage() {
         handleOpen={(value) => setModalTaskOpen(value)}
         handleSubmit={(value) => appendInvoiceLine(value)}
       />
-      <PDFViewer className="w-full h-5/6 rounded-md" showToolbar={false}>
-        {invoiceDoc}
+      <PDFViewer
+        className="w-full h-5/6 rounded-md"
+        showToolbar={false}
+        key={update}
+      >
+        <InvoiceTemplate
+          title={form.getValues().title}
+          number={form.getValues().number}
+          date={form.getValues().date}
+          customerId={form.getValues().customerId}
+          information={data?.data}
+          maskName={maskNameOnInvoice}
+          excludeTva={excludeTva}
+          lines={invoiceLines}
+        />
       </PDFViewer>
     </div>
   );

@@ -127,8 +127,9 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
     if (
       data &&
       data.ok &&
+      data.data?.totalItems === 1 &&
       currentValue === defaultValue &&
-      data.data?.data.length === 1
+      currentValue !== undefined
     ) {
       if (data?.data?.data[0]) {
         setDisplayValue((prev) => render(data?.data?.data[0]!));

@@ -44,6 +44,8 @@ export default class EnterpriseService {
           connect: [{ id: userId }],
         },
         tvaNumber: model.tvaNumber,
+        prefixeInvoice: model.prefixeInvoice ?? '',
+        lastInvoiceNumber: model.lastInvoiceNumber ?? 0,
         countryId: parseInt(model.countryId),
         mediaId: mediaId > 0 ? mediaId : null,
         sales: {
@@ -106,6 +108,7 @@ export default class EnterpriseService {
       prefixeInvoice,
       lastInvoiceNumber,
       juridicShape,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       juridicShapeId,
       ...rest
     } = enterprise;

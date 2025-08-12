@@ -157,12 +157,14 @@ const InvoiceTemplate = ({
   }, [customerId]);
 
   const formatPrice = (value: number) =>
-    new Intl.NumberFormat("FR-fr", {
+    new Intl.NumberFormat("fr-FR", {
       style: "currency",
       currency: "EUR",
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(value);
+    })
+      .format(value)
+      .replace(/\u202F/g, " ");
 
   const sum = (values: number[]) => {
     let result = 0;
@@ -190,7 +192,9 @@ const InvoiceTemplate = ({
         </View>
         <View style={styles.containerHeader}>
           <View style={styles.containerInfo}>
-            <Text style={styles.textImportant}>Facture n° {number}</Text>
+            <Text style={styles.textImportant}>
+              Facture n°{information?.prefixe}-{String(number).padStart(5, "0")}
+            </Text>
             <View>
               <Text style={[styles.text]}>
                 Date : {date ? dayjs(date).format("DD/MM/YYYY") : ""}
@@ -256,24 +260,34 @@ const InvoiceTemplate = ({
           </View>
 
           {/* Rows */}
-          {lines.map((line, index) => (
-            <View style={styles.tableRow} key={index}>
-              <View style={{ ...styles.tableCol, width: "100%" }}>
-                <Text style={styles.text}>{line.name}</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.text}>{line.quantity}</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.text}>{formatPrice(line.unitPrice)}</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.text}>
-                  {formatPrice(line.unitPrice * line.quantity)}
-                </Text>
-              </View>
-            </View>
-          ))}
+          <>
+            {lines &&
+              lines.length > 0 &&
+              lines.map((line, index) => {
+                const name = line?.name ?? "";
+                const quantity = line?.quantity ?? 0;
+                const unitPrice = line?.unitPrice ?? 0;
+
+                return (
+                  <View style={styles.tableRow} key={index}>
+                    <View style={{ ...styles.tableCol, width: "100%" }}>
+                      <Text style={styles.text}>{name}</Text>
+                    </View>
+                    <View style={styles.tableCol}>
+                      <Text style={styles.text}>{quantity}</Text>
+                    </View>
+                    <View style={styles.tableCol}>
+                      <Text style={styles.text}>{formatPrice(unitPrice)}</Text>
+                    </View>
+                    <View style={styles.tableCol}>
+                      <Text style={styles.text}>
+                        {formatPrice(unitPrice * quantity)}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              })}
+          </>
         </View>
 
         <View style={styles.tableResume}>
@@ -320,7 +334,12 @@ const InvoiceTemplate = ({
             Code de commerce).
           </Text>
         ) : (
-          <Text style={styles.textTVA}></Text>
+          <Text style={styles.textTVA}>
+            Paiement sous 30 jours à compter de la date de facture. Tout retard
+            de paiement entraînera des pénalités au taux de 10% annuel, ainsi
+            qu'une indemnité forfaitaire de 40 € pour frais de recouvrement
+            (article L441-10 du Code de commerce).
+          </Text>
         )}
       </Page>
     </Document>
