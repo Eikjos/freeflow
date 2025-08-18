@@ -90,6 +90,9 @@ const styles = StyleSheet.create({
     fontSize: 8,
     marginTop: 25,
   },
+  TVAContainer: {
+    width: "95%",
+  },
   tableResume: {
     width: "30%",
     marginTop: 25,
@@ -312,22 +315,24 @@ const InvoiceTemplate = ({
             </View>
           </View>
         </View>
-        {excludeTva ? (
-          <Text style={styles.textTVA}>
-            TVA non applicable, article 293 B du CGI. Paiement sous 30 jours à
-            compter de la date de facture. Tout retard de paiement entraînera
-            des pénalités au taux de 10% annuel, ainsi qu'une indemnité
-            forfaitaire de 40 € pour frais de recouvrement (article L441-10 du
-            Code de commerce).
-          </Text>
-        ) : (
-          <Text style={styles.textTVA}>
-            Paiement sous 30 jours à compter de la date de facture. Tout retard
-            de paiement entraînera des pénalités au taux de 10% annuel, ainsi
-            qu'une indemnité forfaitaire de 40 € pour frais de recouvrement
-            (article L441-10 du Code de commerce).
-          </Text>
-        )}
+        <View style={styles.TVAContainer}>
+          {excludeTva ? (
+            <Text style={styles.textTVA}>
+              TVA non applicable, article 293 B du CGI. Paiement sous 30 jours à
+              compter de la date de facture. Tout retard de paiement entraînera
+              des pénalités au taux de 10% annuel, ainsi qu'une indemnité
+              forfaitaire de 40 € pour frais de recouvrement (article L441-10 du
+              Code de commerce).
+            </Text>
+          ) : (
+            <Text style={styles.textTVA}>
+              Paiement sous 30 jours à compter de la date de facture. Tout
+              retard de paiement entraînera des pénalités au taux de 10% annuel,
+              ainsi qu'une indemnité forfaitaire de 40 € pour frais de
+              recouvrement (article L441-10 du Code de commerce).
+            </Text>
+          )}
+        </View>
       </Page>
     </Document>
   );
