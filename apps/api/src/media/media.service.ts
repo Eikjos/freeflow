@@ -4,10 +4,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { log } from 'console';
 import * as fs from 'fs';
 import * as path from 'path';
-import { throwError } from 'rxjs';
 import { MediaDto } from 'src/dtos/media/media-dto';
 import { PrismaService } from 'src/prisma.service';
 
@@ -16,11 +14,13 @@ export class MediaService {
   constructor(private readonly prisma: PrismaService) {}
 
   // - Methods
-  async upload(file: Express.Multer.File) {
+  async upload(file: Express.Multer.File, pathname?: string) {
     try {
       const extension = path.extname(file.originalname);
       const fileName = `${path.parse(file.originalname).name}-${Date.now()}${extension}`;
-      const uploadPath = this.getUploadPath(extension);
+      const uploadPath = pathname
+        ? `uploads/${pathname}`
+        : this.getUploadPath(extension);
       const filePath = path.join(uploadPath, fileName);
 
       // Créez le dossier si nécessaire

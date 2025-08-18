@@ -6,7 +6,9 @@ export type InvoiceCreateData = {
   title: string;
   date: Date;
   customerId: number;
-  InvoiceLine: InvoiceLineData[];
+  excludeTva?: boolean;
+  invoiceLines: InvoiceLineData[];
+  [key: string]: any;
 };
 
 export type InvoiceLineData = {

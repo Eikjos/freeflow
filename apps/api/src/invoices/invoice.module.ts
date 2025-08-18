@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
+import { MediaModule } from 'src/media/media.module';
 import { PrismaService } from 'src/prisma.service';
 import InvoiceController from './invoice.controller';
 import InvoiceService from './invoice.service';
 
 @Module({
-  imports: [],
+  imports: [MediaModule],
   providers: [PrismaService, InvoiceService],
   controllers: [InvoiceController],
 })

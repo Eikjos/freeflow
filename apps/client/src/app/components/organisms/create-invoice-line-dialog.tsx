@@ -56,15 +56,15 @@ export default function CreateInvoiceLineModal({
   };
 
   return (
-    <Form {...form}>
-      <form>
-        <Dialog open={open} onOpenChange={handleOpenModal}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle className="text-3xl">
-                Ajouter une ligne de facturation
-              </DialogTitle>
-            </DialogHeader>
+    <Dialog open={open} onOpenChange={handleOpenModal}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="text-3xl">
+            Ajouter une ligne de facturation
+          </DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form>
             <Input label={"Nom"} placeholder="Nom" {...form.register("name")} />
             <Input
               label={"Quantité"}
@@ -87,9 +87,9 @@ export default function CreateInvoiceLineModal({
             <DialogFooter>
               <Button onClick={form.handleSubmit(onSubmit)}>Créer</Button>
             </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </form>
-    </Form>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }

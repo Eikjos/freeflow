@@ -1,0 +1,8 @@
+model InvoiceLine {
+  id      Int @id() @default(autoincrement())
+  name    String
+  quantity    Int
+  prixUnit    Float
+  invoiceId   Int
+  invoice     Invoice @relation(fields: [invoiceId], references: [id])
+}

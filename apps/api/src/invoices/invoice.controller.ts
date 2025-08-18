@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  HttpCode,
   Post,
   Req,
   UploadedFile,
@@ -8,8 +9,9 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
+import { CreateInvoiceDto } from 'src/dtos/invoices/invoice-create.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import InvoiceService from './invoice.service';
 
@@ -17,15 +19,20 @@ import InvoiceService from './invoice.service';
 @ApiTags('Invoices')
 @ApiBearerAuth()
 export default class InvoiceController {
-  constructor(readonly invoiceService: InvoiceService) {}
+  constructor(private readonly invoiceService: InvoiceService) {}
 
   @Post()
   @UseGuards(AccessTokenGuard)
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('invoice'))
+  @HttpCode(200)
   async create(
-    @Body() body: CreateEnterpriseDto,
+    @Body() body: CreateInvoiceDto,
     @UploadedFile()
-    logo: Express.Multer.File,
+    invoice: Express.Multer.File,
     @Req() req: Request,
-  ) {}
+  ) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return this.invoiceService.createInvoice(body, invoice, enterpriseId);
+  }
 }

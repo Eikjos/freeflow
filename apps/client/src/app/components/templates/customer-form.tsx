@@ -60,10 +60,9 @@ export default function CustomerForm({
   ) => {
     if (data) {
       // eslint-disable-next-line no-unused-vars
-      const { juridicShape, TVANumber, ...customerInfo } = data;
+      const { juridicShape, ...customerInfo } = data;
       form.reset({
         ...customerInfo,
-        tvaNumber: TVANumber,
         email,
         phone,
       });

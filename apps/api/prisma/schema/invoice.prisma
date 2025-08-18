@@ -13,6 +13,8 @@ model Invoice {
   customer     Customer   @relation(fields: [customerId], references: [id])
   enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
   media        Media?     @relation(fields: [mediaId], references: [id])
+  invoiceLines  InvoiceLine[]
+  excludeTva   Boolean  @default(false)
 }
 
 enum StatusInvoice {

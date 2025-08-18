@@ -12,8 +12,6 @@ import {
   InvoiceLineData,
 } from "@repo/shared-types";
 import dayjs from "dayjs";
-import { useMemo, useState } from "react";
-import { getCustomerById } from "../../../lib/api/customers";
 import { getMediaUrl } from "../../../lib/utils";
 
 const styles = StyleSheet.create({
@@ -129,7 +127,7 @@ const styles = StyleSheet.create({
 const InvoiceTemplate = ({
   title,
   number,
-  customerId,
+  customer,
   date,
   lines,
   information,
@@ -139,23 +137,12 @@ const InvoiceTemplate = ({
   title?: string;
   number?: string;
   date?: Date;
-  customerId?: number;
+  customer?: CustomerDetailModel;
   lines: InvoiceLineData[];
   information?: InvoiceInformation;
   maskName?: boolean;
   excludeTva?: boolean;
 }) => {
-  const [customer, setCustomer] = useState<CustomerDetailModel>();
-
-  useMemo(async () => {
-    if (customerId) {
-      const c = getCustomerById(customerId?.toString());
-      setCustomer((await c).data);
-    } else {
-      setCustomer(undefined);
-    }
-  }, [customerId]);
-
   const formatPrice = (value: number) =>
     new Intl.NumberFormat("fr-FR", {
       style: "currency",

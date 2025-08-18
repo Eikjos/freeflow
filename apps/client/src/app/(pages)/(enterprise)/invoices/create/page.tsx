@@ -4,6 +4,7 @@ import Autocomplete from "@components/molecules/autocomplete";
 import CreateInvoiceLineModal from "@components/organisms/create-invoice-line-dialog";
 import InvoiceLineList from "@components/organisms/invoice-line-list";
 import InvoiceTemplate from "@components/templates/invoice-template";
+import { Button } from "@components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Checkbox } from "@components/ui/checkbox";
 import { DateInput } from "@components/ui/date-input";
@@ -12,17 +13,23 @@ import { Input } from "@components/ui/input";
 import Loading from "@components/ui/loading";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckedState } from "@radix-ui/react-checkbox";
-import { PDFViewer } from "@react-pdf/renderer";
+import { PDFViewer, pdf } from "@react-pdf/renderer";
 import {
   InvoiceCreateData,
   InvoiceCreateValidation,
   InvoiceLineData,
 } from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
+import { createInvoice } from "actions/invoice";
+import { useRouter } from "next/navigation";
 import { useEnterprise } from "providers/enterprise-provider";
 import { useEffect, useReducer, useState } from "react";
 import { useForm } from "react-hook-form";
-import { getAllCustomersQueryOptions } from "../../../../../lib/api/customers";
+import { toast } from "sonner";
+import {
+  getAllCustomersQueryOptions,
+  getCustomerByIdOptions,
+} from "../../../../../lib/api/customers";
 import { getInformationForInvoiceQueryOptions } from "../../../../../lib/api/enterprise";
 import {
   getAllTasksQueryOptions,
@@ -31,25 +38,30 @@ import {
 
 export default function CreateInvoicesPage() {
   const { enterprise } = useEnterprise();
+  const router = useRouter();
   const [maskNameOnInvoice, setMaskNameOnInvoice] = useState<boolean>(true);
-  const [excludeTva, setExcludeTva] = useState<boolean>(false);
   const [update, forceUpdate] = useReducer((x) => x + 1, 0);
   const [autocompleteKey, setAutocompleteKey] = useReducer((x) => x + 1, 0);
   const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
-  const [invoiceLines, setInvoiceLines] = useState<InvoiceLineData[]>([]);
   const { data, isSuccess, isLoading } = useQuery({
     ...getInformationForInvoiceQueryOptions(enterprise?.id!),
     enabled: enterprise?.id !== undefined,
   });
-
   const form = useForm<InvoiceCreateData>({
     resolver: zodResolver(InvoiceCreateValidation),
     defaultValues: {
       title: "",
       number: "1",
       date: new Date(),
-      InvoiceLine: [],
+      invoiceLines: [],
+      excludeTva: false,
     },
+    mode: "all",
+  });
+  const customerId = form.watch("customerId");
+  const customer = useQuery({
+    ...getCustomerByIdOptions(customerId ? customerId.toString() : ""),
+    enabled: customerId !== undefined,
   });
 
   useEffect(() => {
@@ -60,28 +72,26 @@ export default function CreateInvoicesPage() {
   }, [data?.data]);
 
   const appendInvoiceLine = (value: InvoiceLineData) => {
-    setInvoiceLines((prev) => [...prev, value]);
+    const invoiceLinesOld = form.getValues().invoiceLines;
+    form.setValue("invoiceLines", [...invoiceLinesOld, value]);
     forceUpdate();
   };
 
   const handleChangeInvoiceLine = (values: InvoiceLineData[]) => {
-    setInvoiceLines(values);
+    form.setValue("invoiceLines", values);
     forceUpdate();
   };
 
   const handleChangeTask = async (value: number) => {
     const invoiceLine = await getTasksById(value);
+    const invoiceLinesOld = form.getValues().invoiceLines;
     if (
       invoiceLine.ok &&
-      !invoiceLines.some((e) => e.name === invoiceLine.data?.name)
+      !invoiceLinesOld.some((e) => e.name === invoiceLine.data?.name)
     ) {
-      setInvoiceLines((prev) => [
-        ...prev,
-        {
-          name: invoiceLine.data?.name,
-          quantity: 1,
-          unitPrice: 0.0,
-        } as InvoiceLineData,
+      form.setValue("invoiceLine", [
+        ...invoiceLinesOld,
+        { name: invoiceLine.data?.name, quantity: 1, unitPrice: 0.0 },
       ]);
     }
     setAutocompleteKey();
@@ -93,8 +103,46 @@ export default function CreateInvoicesPage() {
   };
 
   const handleExcludeTvaChange = (checked: CheckedState) => {
-    setExcludeTva(checked ? true : false);
+    form.setValue("excludeTva", checked ? true : false);
     forceUpdate();
+  };
+
+  const onSubmit = async (values: InvoiceCreateData) => {
+    const invoiceBlob = await pdf(
+      <InvoiceTemplate
+        title={values.title}
+        number={values.number}
+        date={values.date}
+        customer={customer.data?.data}
+        information={data?.data}
+        maskName={maskNameOnInvoice}
+        excludeTva={values.excludeTva}
+        lines={values.invoiceLines}
+      />
+    ).toBlob();
+
+    createInvoice(
+      {
+        ...values,
+        excludeTva: values.excludeTva ?? false,
+        number: `${data?.data?.prefixe}-${String(values.number).padStart(5, "0")}`,
+      },
+      new File(
+        [invoiceBlob],
+        `invoice-${data?.data?.prefixe}-${values.number}.pdf`
+      )
+    )
+      .then((res) => {
+        if (res === null) {
+          toast.error("Il y a eu une erreur.");
+        } else {
+          toast.success("La facture a bien été créé.");
+          router.push("/invoices");
+        }
+      })
+      .catch((err: Error) => {
+        toast.error(err.message);
+      });
   };
 
   if (isLoading) {
@@ -118,88 +166,98 @@ export default function CreateInvoicesPage() {
               checked={maskNameOnInvoice}
               onCheckedChange={handleMashNameChange}
             />
-            <Checkbox
-              label="Ne pas inclure la TVA"
-              checked={excludeTva}
-              onCheckedChange={handleExcludeTvaChange}
-            />
+            {data?.data?.enterprise.juridicShape ===
+              "Entrepreneur individuel" && (
+              <Checkbox
+                label="Ne pas inclure la TVA"
+                checked={form.getValues().excludeTva}
+                onCheckedChange={handleExcludeTvaChange}
+              />
+            )}
           </div>
           <Form {...form}>
-            <Input
-              label={"common.title"}
-              placeholder="Titre de la facture"
-              {...form.register("title", {
-                onBlur: forceUpdate,
-              })}
-            />
-            <Input
-              label={"common.number"}
-              type="number"
-              placeholder="Numéro de la facture"
-              {...form.register("number", { onBlur: forceUpdate })}
-            />
-            <DateInput
-              label={"common.number"}
-              {...form.register("date", { onBlur: forceUpdate })}
-            />
-            <Autocomplete
-              label={"common.customer"}
-              placeholder="Sélectionner un client"
-              queryOptions={(filter) =>
-                getAllCustomersQueryOptions({
-                  page: 0,
-                  pageSize: 20,
-                  asc: "name",
-                  filter: {
-                    name: filter.search,
-                    id: filter.id,
-                  },
-                })
-              }
-              render={(item) => item.name}
-              filterField="name"
-              fieldIdentifier="id"
-              {...form.register("customerId", { onChange: forceUpdate })}
-            />
-            <Autocomplete
-              key={autocompleteKey}
-              queryOptions={(filter) =>
-                getAllTasksQueryOptions({
-                  page: 0,
-                  pageSize: 20,
-                  asc: "name",
-                  filter: {
-                    name: filter.search,
-                    id: filter.id,
-                    customerId: form.getValues().customerId,
-                  },
-                })
-              }
-              disabled={!form.getValues().customerId}
-              filterField="name"
-              render={(task) => `${task.name}`}
-              fieldIdentifier="id"
-              label="Tâches"
-              className="mt-3"
-              placeholder="Sélectionner une tâche"
-              onAdd={() => setModalTaskOpen(true)}
-              addLabel={"Ajouter une tâche"}
-              {...form.register("InvoiceLine", {
-                onBlur: forceUpdate,
-                value: [],
-                onChange: (event) => handleChangeTask(event.target.value),
-              })}
-            />
+            <form>
+              <Input
+                label={"common.title"}
+                placeholder="Titre de la facture"
+                {...form.register("title", {
+                  onBlur: forceUpdate,
+                })}
+              />
+              <Input
+                label={"common.number"}
+                type="number"
+                placeholder="Numéro de la facture"
+                {...form.register("number", { onBlur: forceUpdate })}
+              />
+              <DateInput
+                label={"common.number"}
+                {...form.register("date", { onBlur: forceUpdate })}
+              />
+              <Autocomplete
+                label={"common.customer"}
+                placeholder="Sélectionner un client"
+                queryOptions={(filter) =>
+                  getAllCustomersQueryOptions({
+                    page: 0,
+                    pageSize: 20,
+                    asc: "name",
+                    filter: {
+                      name: filter.search,
+                      id: filter.id,
+                    },
+                  })
+                }
+                render={(item) => item.name}
+                filterField="name"
+                fieldIdentifier="id"
+                {...form.register("customerId", { onChange: forceUpdate })}
+              />
+              <Autocomplete
+                key={autocompleteKey}
+                queryOptions={(filter) =>
+                  getAllTasksQueryOptions({
+                    page: 0,
+                    pageSize: 20,
+                    asc: "name",
+                    filter: {
+                      name: filter.search,
+                      id: filter.id,
+                      customerId: form.getValues().customerId,
+                    },
+                  })
+                }
+                disabled={!form.getValues().customerId}
+                filterField="name"
+                render={(task) => `${task.name}`}
+                fieldIdentifier="id"
+                label="Tâches"
+                className="mt-3"
+                placeholder="Sélectionner une tâche"
+                onAdd={() => setModalTaskOpen(true)}
+                addLabel={"Ajouter une tâche"}
+                {...form.register("InvoiceLine", {
+                  onBlur: forceUpdate,
+                  value: [],
+                  onChange: (event) => handleChangeTask(event.target.value),
+                })}
+              />
+            </form>
           </Form>
-          {invoiceLines.length > 0 && (
+          {form.getValues().invoiceLines.length > 0 && (
             <div className="mt-4">
               <p>Les lignes de facturation</p>
               <InvoiceLineList
-                invoices={invoiceLines}
+                invoices={form.getValues().invoiceLines}
                 handleChange={handleChangeInvoiceLine}
               />
             </div>
           )}
+          <div className="flex flex-row justify-end mt-4">
+            <Button onClick={form.handleSubmit(onSubmit)}>
+              Enregistrer et envoyer
+            </Button>
+          </div>
         </CardContent>
       </Card>
       <CreateInvoiceLineModal
@@ -216,11 +274,11 @@ export default function CreateInvoicesPage() {
           title={form.getValues().title}
           number={form.getValues().number}
           date={form.getValues().date}
-          customerId={form.getValues().customerId}
+          customer={customer?.data?.data}
           information={data?.data}
           maskName={maskNameOnInvoice}
-          excludeTva={excludeTva}
-          lines={invoiceLines}
+          excludeTva={form.getValues().excludeTva}
+          lines={form.getValues().invoiceLines}
         />
       </PDFViewer>
     </div>
