@@ -9,7 +9,7 @@ export class PaginationResultDto<T> implements PaginationResult<T> {
   totalItems: number;
 }
 
-export class PaginationFilterDto<T extends Record<string, string | number>>
+export class PaginationFilterDto<T extends Record<string, any>>
   implements PaginationFilter<T>
 {
   @ApiProperty({

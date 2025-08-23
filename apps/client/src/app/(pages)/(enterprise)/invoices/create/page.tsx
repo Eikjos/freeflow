@@ -17,7 +17,7 @@ import { PDFViewer, pdf } from "@react-pdf/renderer";
 import {
   InvoiceCreateData,
   InvoiceCreateValidation,
-  InvoiceLineData,
+  InvoiceLineCreateData,
 } from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
 import { createInvoice } from "actions/invoice";
@@ -71,13 +71,13 @@ export default function CreateInvoicesPage() {
     forceUpdate();
   }, [data?.data]);
 
-  const appendInvoiceLine = (value: InvoiceLineData) => {
+  const appendInvoiceLine = (value: InvoiceLineCreateData) => {
     const invoiceLinesOld = form.getValues().invoiceLines;
     form.setValue("invoiceLines", [...invoiceLinesOld, value]);
     forceUpdate();
   };
 
-  const handleChangeInvoiceLine = (values: InvoiceLineData[]) => {
+  const handleChangeInvoiceLine = (values: InvoiceLineCreateData[]) => {
     form.setValue("invoiceLines", values);
     forceUpdate();
   };

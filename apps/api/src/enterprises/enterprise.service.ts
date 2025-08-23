@@ -6,10 +6,7 @@ import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-inform
 import InvoiceInformationDto from 'src/dtos/invoices/invoice-information.dto';
 import { MediaService } from 'src/media/media.service';
 import { PrismaService } from 'src/prisma.service';
-import {
-  EtablissementResponse,
-  SireneAuthentification,
-} from 'src/types/sirene-api';
+import { EtablissementResponse } from 'src/types/sirene-api';
 
 @Injectable()
 export default class EnterpriseService {
@@ -126,22 +123,12 @@ export default class EnterpriseService {
 
   // -- Tools --
   private async getInseeInformation(siret: string) {
-    // Récupération du jeton d'authentification
-    const header = {
-      Authorization: 'Basic ' + process.env.INSEE_API_KEY,
-    };
-    const token = await this.httpService.axiosRef.post<SireneAuthentification>(
-      'https://api.insee.fr/token',
-      'grant_type=client_credentials',
-      { headers: header },
-    );
     // Récupération des informations de l'entreprise
     const url =
-      'https://api.insee.fr/entreprises/sirene/V3.11/siret/' +
-      siret.replace(/\s+/g, '');
+      'https://api.insee.fr/api-sirene/3.11/siret/' + siret.replace(/\s+/g, '');
     return await this.httpService.axiosRef
       .get<EtablissementResponse>(url, {
-        headers: { Authorization: 'Bearer ' + token.data.access_token },
+        headers: { 'X-INSEE-Api-Key-Integration': process.env.INSEE_API_KEY },
       })
       .then((res) => {
         return res.data;

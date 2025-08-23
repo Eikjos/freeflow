@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
@@ -12,6 +14,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { CreateInvoiceDto } from 'src/dtos/invoices/invoice-create.dto';
+import { InvoiceFilterDto } from 'src/dtos/invoices/invoice-filter.dto';
+import { PaginationFilterDto } from 'src/dtos/utils/pagination-result.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import InvoiceService from './invoice.service';
 
@@ -34,5 +38,15 @@ export default class InvoiceController {
   ) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.invoiceService.createInvoice(body, invoice, enterpriseId);
+  }
+
+  @Get()
+  @UseGuards(AccessTokenGuard)
+  async findAll(
+    @Query() filter: PaginationFilterDto<InvoiceFilterDto>,
+    @Req() req: Request,
+  ) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return this.invoiceService.findAll(filter, enterpriseId);
   }
 }

@@ -1,22 +1,22 @@
 import InvoiceLine from "@components/molecules/invoice-line";
-import { InvoiceLineData } from "@repo/shared-types";
+import { InvoiceLineCreateData } from "@repo/shared-types";
 
 type InvoiceLineListProps = {
-  invoices: InvoiceLineData[];
-  handleChange: (values: InvoiceLineData[]) => void;
+  invoices: InvoiceLineCreateData[];
+  handleChange: (values: InvoiceLineCreateData[]) => void;
 };
 
 export default function InvoiceLineList({
   invoices,
   handleChange,
 }: InvoiceLineListProps) {
-  const handleChangeLine = (value: InvoiceLineData) => {
+  const handleChangeLine = (value: InvoiceLineCreateData) => {
     const index = invoices.findIndex((e) => e.name === value.name);
     invoices[index] = value;
     handleChange(invoices);
   };
 
-  const handleDeleteLine = (value: InvoiceLineData) => {
+  const handleDeleteLine = (value: InvoiceLineCreateData) => {
     handleChange(invoices.filter((e) => e.name !== value.name));
   };
 

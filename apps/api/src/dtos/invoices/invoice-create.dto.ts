@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { InvoiceCreateData, InvoiceLineData } from '@repo/shared-types';
+import { InvoiceCreateData, InvoiceLineCreateData } from '@repo/shared-types';
 import { Transform } from 'class-transformer';
 import {
   IsArray,
@@ -40,7 +40,7 @@ export class CreateInvoiceDto implements InvoiceCreateData {
   invoice: File;
 }
 
-export class CreateInvoiceLineDto implements InvoiceLineData {
+export class CreateInvoiceLineDto implements InvoiceLineCreateData {
   @ApiProperty({ description: 'Invoice line name' })
   @IsString()
   name: string;

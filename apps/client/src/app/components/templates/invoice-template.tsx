@@ -9,7 +9,7 @@ import {
 import {
   CustomerDetailModel,
   InvoiceInformation,
-  InvoiceLineData,
+  InvoiceLineCreateData,
 } from "@repo/shared-types";
 import dayjs from "dayjs";
 import { getMediaUrl } from "../../../lib/utils";
@@ -141,7 +141,7 @@ const InvoiceTemplate = ({
   number?: string;
   date?: Date;
   customer?: CustomerDetailModel;
-  lines: InvoiceLineData[];
+  lines: InvoiceLineCreateData[];
   information?: InvoiceInformation;
   maskName?: boolean;
   excludeTva?: boolean;

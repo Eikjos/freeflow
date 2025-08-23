@@ -2,15 +2,19 @@ import { Button } from "@components/ui/button";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InvoiceLineData, InvoiceLineValidation } from "@repo/shared-types";
+import {
+  InvoiceLineCreateData,
+  InvoiceLineData,
+  InvoiceLineValidation,
+} from "@repo/shared-types";
 import { Trash } from "lucide-react";
 import { useReducer } from "react";
 import { useForm } from "react-hook-form";
 
 type InvoiceLineProps = {
-  invoice: InvoiceLineData;
-  onChange: (value: InvoiceLineData) => void;
-  onDelete: (value: InvoiceLineData) => void;
+  invoice: InvoiceLineCreateData;
+  onChange: (value: InvoiceLineCreateData) => void;
+  onDelete: (value: InvoiceLineCreateData) => void;
 };
 
 export default function InvoiceLine({

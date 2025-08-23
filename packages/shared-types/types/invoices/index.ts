@@ -1,5 +1,33 @@
+import { CustomerModel } from "types/customers";
 import { EnterpriseInformation } from "types/enterprises";
 import { z } from "zod";
+
+export type InvoiceStatus =
+  | "WAITING_VALIDATION"
+  | "VALIDATE"
+  | "WAITING_PAYED"
+  | "PAYED";
+export type InvoiceType = "QUOTE" | "INVOICE";
+
+export type InvoiceData = {
+  id: number;
+  number: string;
+  title: string;
+  date: Date;
+  invoiceLines: InvoiceLineData[];
+  totalAmount: number;
+  status: InvoiceStatus;
+  type: InvoiceType;
+  mediaId: number;
+  customer: CustomerModel;
+};
+
+export type InvoiceLineData = {
+  id: number;
+  name: string;
+  quantity: number;
+  unitPrice: number;
+};
 
 export type InvoiceCreateData = {
   number: string;
@@ -7,11 +35,11 @@ export type InvoiceCreateData = {
   date: Date;
   customerId: number;
   excludeTva?: boolean;
-  invoiceLines: InvoiceLineData[];
+  invoiceLines: InvoiceLineCreateData[];
   [key: string]: any;
 };
 
-export type InvoiceLineData = {
+export type InvoiceLineCreateData = {
   name: string;
   quantity: number;
   unitPrice: number;
