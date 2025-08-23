@@ -114,12 +114,20 @@ export default function InvoicePage() {
     <>
       <div className="w-full flex flex-row justify-between items-center">
         <h1 className="font-amica text-4xl">Mes factures</h1>
-        <Button asChild>
-          <Link href={"/invoices/create"}>
-            <Plus size={20} />
-            Créer une facture
-          </Link>
-        </Button>
+        <div className="flex flex-row gap-4">
+          <Button asChild variant={"outline"}>
+            <Link href={"/devis/create"}>
+              <Plus size={20} />
+              Créer un devis
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link href={"//create"}>
+              <Plus size={20} />
+              Créer une facture
+            </Link>
+          </Button>
+        </div>
       </div>
       <DataTable
         columns={columnsDef}

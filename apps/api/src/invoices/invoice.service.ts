@@ -37,7 +37,7 @@ export default class InvoiceService {
     // upload invoice
     const mediaId = await this.mediaService.upload(
       invoiceFile,
-      `${enterprise.id}/invoices/${invoice.date.getFullYear()}`,
+      `${enterprise.id}/${invoice.type === 'INVOICE' ? 'invoices' : 'devis'}/${invoice.date.getFullYear()}`,
     );
     // create invoice in database
     const invoiceEntity = await this.prisma.invoice.create({
@@ -48,10 +48,11 @@ export default class InvoiceService {
         customerId: invoice.customerId,
         enterpriseId: enterpriseId,
         number: invoice.number,
-        type: 'INVOICE',
+        type: invoice.type,
         createdAt: new Date(),
         updatedAt: new Date(),
-        status: 'WAITING_PAYED',
+        status:
+          invoice.type === 'INVOICE' ? 'WAITING_PAYED' : 'WAITING_VALIDATION',
         excludeTva: invoice.excludeTva,
         invoiceLines: {
           create: invoice.invoiceLines.map((e) => ({

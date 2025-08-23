@@ -34,6 +34,7 @@ export type InvoiceCreateData = {
   title: string;
   date: Date;
   customerId: number;
+  type: InvoiceType;
   excludeTva?: boolean;
   invoiceLines: InvoiceLineCreateData[];
   [key: string]: any;

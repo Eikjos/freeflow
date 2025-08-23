@@ -1,15 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { InvoiceType } from '@prisma/client';
 import { InvoiceCreateData, InvoiceLineCreateData } from '@repo/shared-types';
 import { Transform } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
   IsDate,
+  IsEnum,
   IsNumber,
   IsString,
 } from 'class-validator';
 
 export class CreateInvoiceDto implements InvoiceCreateData {
+  [key: string]: any;
+  @ApiProperty({ description: 'Invoice type' })
+  @IsEnum(InvoiceType)
+  type: InvoiceType;
   @ApiProperty({ description: 'Invoice number' })
   @IsString()
   number: string;

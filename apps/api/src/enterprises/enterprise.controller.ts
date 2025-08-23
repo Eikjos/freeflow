@@ -80,4 +80,10 @@ export default class EnterprisesController {
   async getInformationForInvoice(@Param('id', ParseIntPipe) id: number) {
     return this.enterpriseService.getInformationForInvoice(id);
   }
+
+  @UseGuards(AccessTokenGuard)
+  @Get(':id/get-information-for-devis')
+  async getInformationForDevis(@Param('id', ParseIntPipe) id: number) {
+    return this.enterpriseService.getInformationForDevis(id);
+  }
 }

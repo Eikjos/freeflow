@@ -14,3 +14,14 @@ export const getInformationForInvoiceQueryOptions = (id: number) => ({
   queryKey: ["enterprise", "invoice", id],
   retry: false,
 });
+
+export const getInformationForDevis = async (id: number) =>
+  await client<InvoiceInformation>(
+    `enterprises/${id}/get-information-for-devis`
+  );
+
+export const getInformationForDevisQueryOptions = (id: number) => ({
+  queryFn: () => getInformationForDevis(id),
+  queryKey: ["enterprise", "devis", id],
+  retry: false,
+});

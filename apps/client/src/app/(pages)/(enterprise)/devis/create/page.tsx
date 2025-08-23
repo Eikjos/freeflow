@@ -3,7 +3,7 @@
 import Autocomplete from "@components/molecules/autocomplete";
 import CreateInvoiceLineModal from "@components/organisms/create-invoice-line-dialog";
 import InvoiceLineList from "@components/organisms/invoice-line-list";
-import InvoiceTemplate from "@components/templates/invoice-template";
+import DevisTemplate from "@components/templates/devis-template";
 import { Button } from "@components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Checkbox } from "@components/ui/checkbox";
@@ -30,13 +30,13 @@ import {
   getAllCustomersQueryOptions,
   getCustomerByIdOptions,
 } from "../../../../../lib/api/customers";
-import { getInformationForInvoiceQueryOptions } from "../../../../../lib/api/enterprise";
+import { getInformationForDevisQueryOptions } from "../../../../../lib/api/enterprise";
 import {
   getAllTasksQueryOptions,
   getTasksById,
 } from "../../../../../lib/api/tasks";
 
-export default function CreateInvoicesPage() {
+export default function CreateDevisPage() {
   const { enterprise } = useEnterprise();
   const router = useRouter();
   const [maskNameOnInvoice, setMaskNameOnInvoice] = useState<boolean>(true);
@@ -44,7 +44,7 @@ export default function CreateInvoicesPage() {
   const [autocompleteKey, setAutocompleteKey] = useReducer((x) => x + 1, 0);
   const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
   const { data, isSuccess, isLoading } = useQuery({
-    ...getInformationForInvoiceQueryOptions(enterprise?.id!),
+    ...getInformationForDevisQueryOptions(enterprise?.id!),
     enabled: enterprise?.id !== undefined,
   });
   const form = useForm<InvoiceCreateData>({
@@ -52,8 +52,8 @@ export default function CreateInvoicesPage() {
     defaultValues: {
       title: "",
       number: "1",
-      type: "INVOICE",
       date: new Date(),
+      type: "QUOTE",
       invoiceLines: [],
       excludeTva: false,
     },
@@ -110,7 +110,7 @@ export default function CreateInvoicesPage() {
 
   const onSubmit = async (values: InvoiceCreateData) => {
     const invoiceBlob = await pdf(
-      <InvoiceTemplate
+      <DevisTemplate
         title={values.title}
         number={values.number}
         date={values.date}
@@ -125,14 +125,11 @@ export default function CreateInvoicesPage() {
     createInvoice(
       {
         ...values,
-        type: "INVOICE",
+        type: "QUOTE",
         excludeTva: values.excludeTva ?? false,
-        number: `${data?.data?.prefixe}-${String(values.number).padStart(5, "0")}`,
+        number: `Devis-${String(values.number).padStart(5, "0")}`,
       },
-      new File(
-        [invoiceBlob],
-        `invoice-${data?.data?.prefixe}-${values.number}.pdf`
-      )
+      new File([invoiceBlob], `devis-${values.number}.pdf`)
     )
       .then((res) => {
         if (res === null) {
@@ -159,7 +156,7 @@ export default function CreateInvoicesPage() {
     <div className="h-full">
       <Card className="mb-10">
         <CardHeader>
-          <CardTitle>Creation d'une facture</CardTitle>
+          <CardTitle>Creation d'un devis</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-rox justify-end gap-4">
@@ -185,12 +182,6 @@ export default function CreateInvoicesPage() {
                 {...form.register("title", {
                   onBlur: forceUpdate,
                 })}
-              />
-              <Input
-                label={"common.number"}
-                type="number"
-                placeholder="Numéro de la facture"
-                {...form.register("number", { onBlur: forceUpdate })}
               />
               <DateInput
                 label={"common.number"}
@@ -272,7 +263,7 @@ export default function CreateInvoicesPage() {
         showToolbar={false}
         key={update}
       >
-        <InvoiceTemplate
+        <DevisTemplate
           title={form.getValues().title}
           number={form.getValues().number}
           date={form.getValues().date}

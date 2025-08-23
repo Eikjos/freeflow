@@ -121,6 +121,37 @@ export default class EnterpriseService {
     return invoiceInformation;
   }
 
+  async getInformationForDevis(
+    enterpriseId: number,
+  ): Promise<InvoiceInformationDto> {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+      include: { juridicShape: true },
+    });
+    if (!enterprise) throw new NotFoundException();
+    const {
+      prefixeInvoice,
+      lastInvoiceNumber,
+      juridicShape,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      juridicShapeId,
+      ...rest
+    } = enterprise;
+    const devisCount = await this.prisma.invoice.count({
+      where: { enterpriseId, type: 'QUOTE' },
+    });
+    const invoiceInformation: InvoiceInformationDto = {
+      prefixe: prefixeInvoice ?? '',
+      lastNumber: devisCount + 1,
+      enterprise: {
+        ...rest,
+        juridicShape: juridicShape.designation,
+        countryId: rest.countryId.toString(),
+      },
+    };
+    return invoiceInformation;
+  }
+
   // -- Tools --
   private async getInseeInformation(siret: string) {
     // Récupération des informations de l'entreprise
