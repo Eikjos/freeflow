@@ -1,3 +1,4 @@
+import { InvoiceStatus } from "@repo/shared-types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -79,3 +80,16 @@ export const formatPrice = (
   })
     .format(value)
     .replace(/\u202F/g, " ");
+
+export const invoiceStatusToString = (invoiceStatus: InvoiceStatus) => {
+  switch (invoiceStatus) {
+    case "WAITING_VALIDATION":
+      return "En attente de validation";
+    case "VALIDATE":
+      return "Valider";
+    case "WAITING_PAYED":
+      return "En attente de paiement";
+    case "PAYED":
+      return "Payée";
+  }
+};

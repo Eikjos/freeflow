@@ -11,9 +11,11 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
+import dayjs from "dayjs";
 import { Plus, Printer, Send } from "lucide-react";
 import Link from "next/link";
 import { getAllInvoiceQueryOptions } from "../../../../lib/api/invoices";
+import { invoiceStatusToString } from "../../../../lib/utils";
 
 const columnsDef: ColumnDef<InvoiceData>[] = [
   {
@@ -34,6 +36,13 @@ const columnsDef: ColumnDef<InvoiceData>[] = [
     ),
   },
   {
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ row }) => (
+      <span>{dayjs(row.getValue("date")).format("DD/MM/YYYY")}</span>
+    ),
+  },
+  {
     accessorKey: "status",
     header: "Statut",
     cell: ({ row }) => (
@@ -46,7 +55,7 @@ const columnsDef: ColumnDef<InvoiceData>[] = [
               : "text-red-700"
           )}
         >
-          {row.getValue("status")}
+          {invoiceStatusToString(row.getValue("status"))}
         </span>
       </>
     ),
