@@ -17,6 +17,7 @@ export class InvoiceDto implements InvoiceData {
   status: InvoiceStatus;
   type: InvoiceType;
   mediaId: number;
+  excludeTva: boolean;
   customer: CustomerDto;
 }
 
@@ -37,6 +38,7 @@ export const mapToDto = (
     status: invoice.status,
     invoiceLines: invoiceLines.map((e) => mapInvoiceLineToDto(e)),
     totalAmount: totalAmount,
+    excludeTva: invoice.excludeTva,
     customer: mapCustomerToDto(customer),
     mediaId: invoice.mediaId,
   };

@@ -2,64 +2,26 @@
 
 import { Button } from "@components/ui/button";
 import { DataTable } from "@components/ui/data-table";
+import {
+  InvoiceData,
+  InvoiceFilter,
+  InvoiceLineData,
+  PaginationFilter,
+} from "@repo/shared-types";
+import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
 import { Plus, Printer, Send } from "lucide-react";
 import Link from "next/link";
+import { getAllInvoiceQueryOptions } from "../../../../lib/api/invoices";
 
-type Invoice = {
-  id: number;
-  amount: number;
-  status: "PAYED";
-  customer: string;
-  type: "INVOICE" | "DEVIS";
-};
-
-const data: Invoice[] = [
+const columnsDef: ColumnDef<InvoiceData>[] = [
   {
-    id: 1,
-    amount: 125.0,
-    status: "PAYED",
-    customer: "Client",
-    type: "INVOICE",
+    accessorKey: "number",
+    header: "Numéro",
   },
   {
-    id: 2,
-    amount: 125.0,
-    status: "PAYED",
-    customer: "Client",
-    type: "INVOICE",
-  },
-  {
-    id: 3,
-    amount: 125.0,
-    status: "PAYED",
-    customer: "Client",
-    type: "INVOICE",
-  },
-  {
-    id: 4,
-    amount: 125.0,
-    status: "PAYED",
-    customer: "Client",
-    type: "INVOICE",
-  },
-  {
-    id: 5,
-    amount: 125.0,
-    status: "PAYED",
-    customer: "Client",
-    type: "INVOICE",
-  },
-];
-
-const columnsDef: ColumnDef<Invoice>[] = [
-  {
-    accessorKey: "id",
-    header: "",
-  },
-  {
-    accessorKey: "customer",
+    accessorKey: "customer.name",
     header: "Client",
   },
   {
@@ -67,7 +29,7 @@ const columnsDef: ColumnDef<Invoice>[] = [
     header: "Type",
     cell: ({ row }) => (
       <>
-        <span>{row.getValue("type")}</span>
+        <span>{row.getValue("type") === "INVOICE" ? "Facture" : "Devis"}</span>
       </>
     ),
   },
@@ -78,7 +40,8 @@ const columnsDef: ColumnDef<Invoice>[] = [
       <>
         <span
           className={clsx(
-            row.getValue("status") === "PAYED"
+            row.getValue("status") === "PAYED" ||
+              row.getValue("status") === "VALIDATE"
               ? "text-green-700"
               : "text-red-700"
           )}
@@ -89,13 +52,21 @@ const columnsDef: ColumnDef<Invoice>[] = [
     ),
   },
   {
-    accessorKey: "amount",
+    accessorKey: "invoiceLines",
     header: "Montant",
-    cell: ({ row }) => (
-      <>
-        <span>{row.getValue("amount")} €</span>
-      </>
-    ),
+    cell: ({ row }) => {
+      const invoiceLines: InvoiceLineData[] = row.getValue("invoiceLines");
+      const totalAmount =
+        invoiceLines
+          .map((e) => e.quantity * e.unitPrice)
+          .reduce((prev, a) => prev + a, 0) *
+        (row.original.excludeTva === true ? 1 : 1.2);
+      return (
+        <>
+          <span>{totalAmount} €</span>
+        </>
+      );
+    },
   },
   {
     id: "actions",
@@ -110,6 +81,14 @@ const columnsDef: ColumnDef<Invoice>[] = [
 ];
 
 export default function InvoicePage() {
+  const filter: PaginationFilter<InvoiceFilter> = {
+    page: 0,
+    pageSize: 10,
+  };
+  const { data, isLoading } = useQuery(getAllInvoiceQueryOptions(filter));
+
+  console.log("Invoices query result:", data);
+
   return (
     <>
       <div className="w-full flex flex-row justify-between items-center">
@@ -131,8 +110,9 @@ export default function InvoicePage() {
       </div>
       <DataTable
         columns={columnsDef}
-        data={data}
-        pageSize={2}
+        data={data?.data?.data ?? []}
+        isLoading={isLoading}
+        pageSize={filter.pageSize}
         className="mt-10"
       />
     </>

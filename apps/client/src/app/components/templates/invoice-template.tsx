@@ -12,7 +12,7 @@ import {
   InvoiceLineCreateData,
 } from "@repo/shared-types";
 import dayjs from "dayjs";
-import { getMediaUrl } from "../../../lib/utils";
+import { formatPrice, getMediaUrl } from "../../../lib/utils";
 
 const styles = StyleSheet.create({
   page: {
@@ -146,16 +146,6 @@ const InvoiceTemplate = ({
   maskName?: boolean;
   excludeTva?: boolean;
 }) => {
-  const formatPrice = (value: number) =>
-    new Intl.NumberFormat("fr-FR", {
-      style: "currency",
-      currency: "EUR",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })
-      .format(value)
-      .replace(/\u202F/g, " ");
-
   const sum = (values: number[]) => {
     let result = 0;
     values.map((v) => {
@@ -267,11 +257,13 @@ const InvoiceTemplate = ({
                       <Text style={styles.text}>{quantity}</Text>
                     </View>
                     <View style={styles.tableCol}>
-                      <Text style={styles.text}>{formatPrice(unitPrice)}</Text>
+                      <Text style={styles.text}>
+                        {formatPrice(unitPrice, "FR-fr", "EUR")}
+                      </Text>
                     </View>
                     <View style={styles.tableCol}>
                       <Text style={styles.text}>
-                        {formatPrice(unitPrice * quantity)}
+                        {formatPrice(unitPrice * quantity, "FR-fr", "EUR")}
                       </Text>
                     </View>
                   </View>
@@ -289,7 +281,11 @@ const InvoiceTemplate = ({
               style={{ ...styles.tableCol, width: "50%", borderTopWidth: 1 }}
             >
               <Text style={styles.text}>
-                {formatPrice(sum(lines.map((e) => e.quantity * e.unitPrice)))}
+                {formatPrice(
+                  sum(lines.map((e) => e.quantity * e.unitPrice)),
+                  "FR-fr",
+                  "EUR"
+                )}
               </Text>
             </View>
           </View>
@@ -309,7 +305,9 @@ const InvoiceTemplate = ({
               <Text style={styles.text}>
                 {formatPrice(
                   sum(lines.map((e) => e.quantity * e.unitPrice)) *
-                    (excludeTva ? 1 : 1.2)
+                    (excludeTva ? 1 : 1.2),
+                  "FR-fr",
+                  "EUR"
                 )}
               </Text>
             </View>

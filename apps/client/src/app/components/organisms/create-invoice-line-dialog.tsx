@@ -11,6 +11,7 @@ import { Input } from "@components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InvoiceLineData, InvoiceLineValidation } from "@repo/shared-types";
 import { useForm } from "react-hook-form";
+import { formatPrice } from "../../../lib/utils";
 
 export type CreateInvoiceLineModal = {
   open: boolean;
@@ -35,14 +36,6 @@ export default function CreateInvoiceLineModal({
   const unitPrice = form.watch("unitPrice");
   const userLocale = "fr-FR";
   const currency = "EUR";
-
-  const formatPrice = (value: number) =>
-    new Intl.NumberFormat(userLocale, {
-      style: "currency",
-      currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
 
   const onSubmit = (values: InvoiceLineData) => {
     handleSubmit(values);
@@ -81,8 +74,8 @@ export default function CreateInvoiceLineModal({
               })}
             />
             <p>
-              {quantity} x {formatPrice(unitPrice)} ={" "}
-              {formatPrice(quantity * unitPrice)}
+              {quantity} x {formatPrice(unitPrice, userLocale, currency)} ={" "}
+              {formatPrice(quantity * unitPrice, userLocale, currency)}
             </p>
             <DialogFooter>
               <Button onClick={form.handleSubmit(onSubmit)}>Créer</Button>

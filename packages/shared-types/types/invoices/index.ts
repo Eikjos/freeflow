@@ -18,6 +18,7 @@ export type InvoiceData = {
   totalAmount: number;
   status: InvoiceStatus;
   type: InvoiceType;
+  excludeTva: boolean;
   mediaId: number;
   customer: CustomerModel;
 };
@@ -73,3 +74,13 @@ export const InvoiceLineValidation = z.object({
   quantity: z.coerce.number().min(1, { message: "quantity.required" }),
   unitPrice: z.coerce.number(),
 });
+
+export type InvoiceFilter = {
+  number: string;
+  customerId: number;
+  type: InvoiceType;
+  status: InvoiceStatus;
+  startDate: Date;
+  endData: Date;
+  [key: string]: string | number | Date;
+};

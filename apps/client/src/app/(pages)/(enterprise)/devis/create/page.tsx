@@ -19,7 +19,7 @@ import {
   InvoiceCreateValidation,
   InvoiceLineCreateData,
 } from "@repo/shared-types";
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useQuery } from "@tanstack/react-query";
 import { createInvoice } from "actions/invoice";
 import { useRouter } from "next/navigation";
 import { useEnterprise } from "providers/enterprise-provider";
@@ -127,7 +127,7 @@ export default function CreateDevisPage() {
         ...values,
         type: "QUOTE",
         excludeTva: values.excludeTva ?? false,
-        number: `Devis-${String(values.number).padStart(5, "0")}`,
+        number: `DEV-${String(values.number).padStart(5, "0")}`,
       },
       new File([invoiceBlob], `devis-${values.number}.pdf`)
     )
@@ -136,6 +136,7 @@ export default function CreateDevisPage() {
           toast.error("Il y a eu une erreur.");
         } else {
           toast.success("La facture a bien été créé.");
+
           router.push("/invoices");
         }
       })

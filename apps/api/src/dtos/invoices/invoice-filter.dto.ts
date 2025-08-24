@@ -1,7 +1,8 @@
 import { InvoiceType, StatusInvoice } from '@prisma/client';
+import { InvoiceFilter } from '@repo/shared-types';
 import { IsDate, IsNumber, IsString } from 'class-validator';
 
-export class InvoiceFilterDto {
+export class InvoiceFilterDto implements InvoiceFilter {
   @IsString()
   number: string;
   @IsNumber()

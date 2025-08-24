@@ -6,8 +6,14 @@ import {
 import { Prisma } from '@prisma/client';
 import { CreateInvoiceDto } from 'src/dtos/invoices/invoice-create.dto';
 import { InvoiceFilterDto } from 'src/dtos/invoices/invoice-filter.dto';
-import { mapToDto as mapInvoiceToDto } from 'src/dtos/invoices/invoice.dto';
-import { PaginationFilterDto } from 'src/dtos/utils/pagination-result.dto';
+import {
+  InvoiceDto,
+  mapToDto as mapInvoiceToDto,
+} from 'src/dtos/invoices/invoice.dto';
+import {
+  PaginationFilterDto,
+  PaginationResultDto,
+} from 'src/dtos/utils/pagination-result.dto';
 import { MediaService } from 'src/media/media.service';
 import { PrismaService } from 'src/prisma.service';
 
@@ -80,7 +86,7 @@ export default class InvoiceService {
   async findAll(
     filter: PaginationFilterDto<InvoiceFilterDto>,
     enterpriseId: number,
-  ) {
+  ): Promise<PaginationResultDto<InvoiceDto>> {
     let filterQuery: Prisma.InvoiceWhereInput = { enterpriseId };
 
     if (filter.filter) {
@@ -108,6 +114,15 @@ export default class InvoiceService {
       skip: filter.page * filter.pageSize,
     });
 
-    return invoices.map((i) => mapInvoiceToDto(i, i.invoiceLines, i.customer));
+    const totalItems = await this.prisma.invoice.count({
+      where: filterQuery,
+    });
+
+    return {
+      data: invoices.map((i) => mapInvoiceToDto(i, i.invoiceLines, i.customer)),
+      totalItems: totalItems,
+      page: filter.page,
+      pageSize: filter.pageSize,
+    };
   }
 }
