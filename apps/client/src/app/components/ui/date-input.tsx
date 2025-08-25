@@ -3,6 +3,7 @@
 import { CalendarIcon } from "lucide-react";
 
 import { cva, VariantProps } from "class-variance-authority";
+import clsx from "clsx";
 import dayjs from "dayjs";
 import { ComponentProps } from "react";
 import { cn } from "../../../lib/utils";
@@ -41,12 +42,18 @@ const inputVariant = cva(
   }
 );
 
-export function DateInput({ name, label, placeholder, ...props }: InputProps) {
+export function DateInput({
+  name,
+  label,
+  placeholder,
+  className,
+  ...props
+}: InputProps) {
   return (
     <FormField
       name={name!}
       render={({ field }) => (
-        <FormItem className="flex flex-col">
+        <FormItem className={clsx("flex flex-col", className)}>
           <FormLabel>{label}</FormLabel>
           <Popover>
             <PopoverTrigger asChild>

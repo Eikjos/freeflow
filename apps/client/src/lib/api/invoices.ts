@@ -1,19 +1,19 @@
 import {
   InvoiceData,
-  InvoiceFilter,
+  InvoiceFilterData,
   PaginationFilter,
   PaginationResult,
 } from "@repo/shared-types";
 import { client } from "../client";
 import { generateQueryString } from "../utils";
 
-export const getAllInvoice = (filter: PaginationFilter<InvoiceFilter>) => {
+export const getAllInvoice = (filter: PaginationFilter<InvoiceFilterData>) => {
   const query = generateQueryString(filter);
   return client<PaginationResult<InvoiceData>>(`invoices?${query}`);
 };
 
 export const getAllInvoiceQueryOptions = (
-  filter: PaginationFilter<InvoiceFilter>
+  filter: PaginationFilter<InvoiceFilterData>
 ) => ({
   queryFn: () => getAllInvoice(filter),
   queryKey: ["invoices", filter],

@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CreateInvoiceDto } from 'src/dtos/invoices/invoice-create.dto';
-import { InvoiceFilterDto } from 'src/dtos/invoices/invoice-filter.dto';
+import { InvoiceFilterDataDto } from 'src/dtos/invoices/invoice-filter.dto';
 import {
   InvoiceDto,
   mapToDto as mapInvoiceToDto,
@@ -84,7 +84,7 @@ export default class InvoiceService {
   }
 
   async findAll(
-    filter: PaginationFilterDto<InvoiceFilterDto>,
+    filter: PaginationFilterDto<InvoiceFilterDataDto>,
     enterpriseId: number,
   ): Promise<PaginationResultDto<InvoiceDto>> {
     let filterQuery: Prisma.InvoiceWhereInput = { enterpriseId };

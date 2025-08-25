@@ -21,7 +21,6 @@ import { cn } from "../../../lib/utils";
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
-  pageSize: number;
   className?: string;
   isLoading?: boolean;
 }

@@ -75,7 +75,7 @@ export const InvoiceLineValidation = z.object({
   unitPrice: z.coerce.number(),
 });
 
-export type InvoiceFilter = {
+export type InvoiceFilterData = {
   number: string;
   customerId: number;
   type: InvoiceType;
