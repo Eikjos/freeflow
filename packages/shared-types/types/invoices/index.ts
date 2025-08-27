@@ -81,6 +81,6 @@ export type InvoiceFilterData = {
   type: InvoiceType;
   status: InvoiceStatus;
   startDate: Date;
-  endData: Date;
+  endDate: Date;
   [key: string]: string | number | Date;
 };

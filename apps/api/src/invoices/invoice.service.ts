@@ -103,7 +103,19 @@ export default class InvoiceService {
         filterQuery = { ...filterQuery, status: filter.filter.status };
       }
       if (filter.filter.startDate) {
-        filterQuery = { ...filterQuery };
+        filterQuery = {
+          ...filterQuery,
+          date: { gte: filter.filter.startDate },
+        };
+      }
+      if (filter.filter.endDate) {
+        filterQuery = { ...filterQuery, date: { lte: filter.filter.endDate } };
+      }
+      if (filter.filter.customerId) {
+        filterQuery = {
+          ...filterQuery,
+          customerId: parseInt(`${filter.filter.customerId}`),
+        };
       }
     }
 

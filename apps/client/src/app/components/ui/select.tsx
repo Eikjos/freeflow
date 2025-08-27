@@ -1,7 +1,7 @@
 "use client";
 
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { Check, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, X } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "../../../lib/utils";
@@ -24,19 +24,37 @@ const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => (
-  <SelectPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-[1px] focus:ring-ring focus:ring-offset-[0.5px] disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
-      className
+  <div className="relative w-full">
+    <SelectPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm",
+        className
+      )}
+      {...props}
+    >
+      {children}
+      {!props.value && (
+        <SelectPrimitive.Icon asChild>
+          <ChevronDown className="h-4 w-4 opacity-50" />
+        </SelectPrimitive.Icon>
+      )}
+    </SelectPrimitive.Trigger>
+
+    {props.value && (
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          props.onChange?.(e); // reset
+        }}
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+      >
+        <X className="h-4 w-4" />
+      </button>
     )}
-    {...props}
-  >
-    {children}
-    <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-4 w-4 opacity-50" />
-    </SelectPrimitive.Icon>
-  </SelectPrimitive.Trigger>
+  </div>
 ));
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
@@ -170,9 +188,12 @@ const Select = ({ className, ...props }: SelectProps) => {
       render={({ field }) => (
         <FormItem className={cn(className)}>
           <FormLabel>{props.label}</FormLabel>
-          <SelectRoot onValueChange={field.onChange} value={field.value}>
+          <SelectRoot onValueChange={field.onChange} value={field.value ?? ""}>
             <FormControl>
-              <SelectTrigger>
+              <SelectTrigger
+                value={field.value ?? ""}
+                onChange={field.onChange}
+              >
                 <SelectValue placeholder={props.placeholder} />
               </SelectTrigger>
             </FormControl>

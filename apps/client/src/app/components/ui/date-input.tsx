@@ -6,6 +6,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { ComponentProps } from "react";
+import { Matcher } from "react-day-picker";
 import { cn } from "../../../lib/utils";
 import { Button } from "./button";
 import { Calendar } from "./calendar";
@@ -19,10 +20,15 @@ import {
 } from "./form";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
-export type InputProps = Omit<ComponentProps<"input">, "name"> & {
+export type DateInputProps = Omit<
+  ComponentProps<"input">,
+  "name" | "max" | "min"
+> & {
   name?: string;
   description?: string;
   label?: string;
+  maxDate?: Date;
+  minDate?: Date;
   error?: string; // Ajout pour les erreurs sans react-hook-form
 } & VariantProps<typeof inputVariant>;
 
@@ -47,8 +53,22 @@ export function DateInput({
   label,
   placeholder,
   className,
+  minDate,
+  maxDate,
   ...props
-}: InputProps) {
+}: DateInputProps) {
+  const disbledDate: Matcher[] = [];
+  if (minDate) {
+    disbledDate.push({
+      before: minDate,
+    });
+  }
+  if (maxDate) {
+    disbledDate.push({
+      after: maxDate,
+    });
+  }
+
   return (
     <FormField
       name={name!}
@@ -82,6 +102,7 @@ export function DateInput({
                   field.onChange(value);
                   field.onBlur();
                 }}
+                disabled={disbledDate}
                 captionLayout="dropdown"
               />
             </PopoverContent>

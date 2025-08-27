@@ -12,6 +12,6 @@ export class InvoiceFilterDataDto implements InvoiceFilterData {
   @IsDate()
   startDate: Date;
   @IsDate()
-  endData: Date;
+  endDate: Date;
   [key: string]: string | number | Date;
 }

@@ -75,16 +75,12 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
   ...props
 }: AutoCompleteWithoutControlProps<TData>) {
   const [open, setOpen] = useState<boolean>(false);
-  const [currentValue, setCurrentValue] = useState<number | undefined>(
-    defaultValue
-  );
   const [hasTyped, setHasTyped] = useState(false);
   const [displayValue, setDisplayValue] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleChange = (newValue: number, newDisplayValue: string) => {
-    setCurrentValue(newValue);
     setDisplayValue(newDisplayValue);
     if (props.onChange) {
       props.onChange(newValue);
@@ -93,7 +89,6 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
   };
 
   const handleClear = () => {
-    setCurrentValue(undefined);
     setDisplayValue("");
     if (props.onChange) {
       props.onChange();
@@ -109,8 +104,8 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
 
   const queryParams = hasTyped
     ? { search: displayValue }
-    : currentValue
-      ? { id: currentValue }
+    : value
+      ? { id: value }
       : {};
 
   const { data, isLoading } = useQuery({
@@ -128,14 +123,25 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
       data &&
       data.ok &&
       data.data?.totalItems === 1 &&
-      currentValue === defaultValue &&
-      currentValue !== undefined
+      value === defaultValue &&
+      value !== undefined
     ) {
       if (data?.data?.data[0]) {
         setDisplayValue((prev) => render(data?.data?.data[0]!));
+      } else {
+        setDisplayValue("");
       }
     }
   }, [data]);
+
+  useEffect(() => {
+    if (!value) {
+      setDisplayValue("");
+      if (props.onChange) {
+        props.onChange();
+      }
+    }
+  }, [value]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -177,11 +183,11 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
           className="absolute top-3 right-2 cursor-pointer"
           onClick={handleOpen}
         >
-          {currentValue === undefined && open ? (
+          {value === undefined && open ? (
             <ChevronUp size={20} className="text-gray-500" />
           ) : (
             <>
-              {currentValue === undefined ? (
+              {value === undefined ? (
                 <ChevronDown size={20} className="text-gray-500" />
               ) : (
                 <X size={15} className="text-gray-500" onClick={handleClear} />

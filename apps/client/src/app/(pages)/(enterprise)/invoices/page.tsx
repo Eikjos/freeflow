@@ -8,16 +8,19 @@ import { InvoiceFilterData, PaginationFilter } from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { getAllInvoiceQueryOptions } from "../../../../lib/api/invoices";
 
 export default function InvoicePage() {
-  const filter: PaginationFilter<InvoiceFilterData> = {
+  const [filter, setFilter] = useState<InvoiceFilterData>();
+  const paginationFilter: PaginationFilter<InvoiceFilterData> = {
     page: 0,
     pageSize: 10,
+    filter: filter,
   };
-  const { data, isLoading } = useQuery(getAllInvoiceQueryOptions(filter));
-
-  console.log("Invoices query result:", data);
+  const { data, isLoading } = useQuery(
+    getAllInvoiceQueryOptions(paginationFilter)
+  );
 
   return (
     <>
@@ -38,7 +41,11 @@ export default function InvoicePage() {
           </Button>
         </div>
       </div>
-      <InvoiceFilter className="mt-10" />
+      <InvoiceFilter
+        className="mt-10"
+        filter={filter}
+        onChangeFilter={(filter) => setFilter(filter)}
+      />
       <InvoiceTable
         data={data?.data?.data ?? []}
         isLoading={isLoading}
@@ -46,9 +53,9 @@ export default function InvoicePage() {
       />
       <Pagination
         className="mt-10"
-        page={filter.page}
-        pageSize={filter.pageSize}
-        onChangePage={(value) => (filter.page = value)}
+        page={paginationFilter.page}
+        pageSize={paginationFilter.pageSize}
+        onChangePage={(value) => (paginationFilter.page = value)}
         totalItems={data?.data?.totalItems ?? 0}
       />
     </>
