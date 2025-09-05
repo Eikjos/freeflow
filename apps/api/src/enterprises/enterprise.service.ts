@@ -24,8 +24,6 @@ export default class EnterpriseService {
     logo: Express.Multer.File,
     userId: number,
   ) {
-    // save media
-    const mediaId = await this.mediaService.upload(logo);
     // save enterprise
     const enterprise = await this.prisma.enterprise.create({
       data: {
@@ -44,7 +42,7 @@ export default class EnterpriseService {
         prefixeInvoice: model.prefixeInvoice ?? '',
         lastInvoiceNumber: model.lastInvoiceNumber ?? 0,
         countryId: parseInt(model.countryId),
-        mediaId: mediaId > 0 ? mediaId : null,
+        mediaId: null,
         sales: {
           create: {
             number: 0,
@@ -53,6 +51,18 @@ export default class EnterpriseService {
         },
       },
     });
+
+    // if enterprise save - save image
+    if (enterprise.id && logo) {
+      const mediaId = await this.mediaService.upload(
+        logo,
+        `${enterprise.id}/images`,
+      );
+      await this.prisma.enterprise.update({
+        where: { id: enterprise.id },
+        data: { mediaId },
+      });
+    }
     const user = await this.prisma.user.findFirst({ where: { id: userId } });
     return this.authService.generateToken(user, enterprise);
   }

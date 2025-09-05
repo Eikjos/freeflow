@@ -8,12 +8,14 @@ import {
   ParseIntPipe,
   Put,
   Query,
+  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { Request } from 'express';
 import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
 import { TaskPaginationFilterDto } from 'src/dtos/tasks/task-filter.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
@@ -58,8 +60,15 @@ export default class TasksController {
     @Body() model: CreateTaskDto,
     @UploadedFiles()
     files: Express.Multer.File[],
+    @Req() req: Request,
   ) {
-    return await this.taskService.update(id, model, files);
+    const enterpriseId = req.user['enterpriseId'];
+    return await this.taskService.update(
+      id,
+      model,
+      parseInt(enterpriseId),
+      files,
+    );
   }
 
   @UseGuards(AccessTokenGuard)

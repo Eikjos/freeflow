@@ -193,6 +193,7 @@ const Select = ({ className, ...props }: SelectProps) => {
               <SelectTrigger
                 value={field.value ?? ""}
                 onChange={field.onChange}
+                className="data-[placeholder]:text-muted-foreground"
               >
                 <SelectValue placeholder={props.placeholder} />
               </SelectTrigger>

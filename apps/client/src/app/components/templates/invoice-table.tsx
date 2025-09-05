@@ -1,10 +1,12 @@
+"use client";
+
 import { DataTable } from "@components/ui/data-table";
 import { InvoiceData, InvoiceLineData } from "@repo/shared-types";
 import { ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { Printer, Send } from "lucide-react";
-import { invoiceStatusToString } from "../../../lib/utils";
+import { getMediaUrl, invoiceStatusToString } from "../../../lib/utils";
 
 export type InvoiceTableProps = {
   data: InvoiceData[];
@@ -75,12 +77,16 @@ const columnsDef: ColumnDef<InvoiceData>[] = [
   {
     id: "actions",
     accessorKey: "",
-    cell: () => (
-      <div className="flex flex-row justify-end gap-5 mr-10 ml-auto">
-        <Printer size={15}></Printer>
-        <Send size={15}></Send>
-      </div>
-    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex flex-row justify-end gap-5 mr-10 ml-auto">
+          <a href={getMediaUrl(row.original.mediaId)}>
+            <Printer size={15}></Printer>
+          </a>
+          <Send size={15}></Send>
+        </div>
+      );
+    },
   },
 ];
 

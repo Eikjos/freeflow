@@ -14,13 +14,11 @@ export class MediaService {
   constructor(private readonly prisma: PrismaService) {}
 
   // - Methods
-  async upload(file: Express.Multer.File, pathname?: string) {
+  async upload(file: Express.Multer.File, pathname: string) {
     try {
       const extension = path.extname(file.originalname);
       const fileName = `${path.parse(file.originalname).name}-${Date.now()}${extension}`;
-      const uploadPath = pathname
-        ? `uploads/${pathname}`
-        : this.getUploadPath(extension);
+      const uploadPath = `uploads/${pathname}`;
       const filePath = path.join(uploadPath, fileName);
 
       // Créez le dossier si nécessaire
@@ -34,7 +32,7 @@ export class MediaService {
       // Save in bdd
       const media = await this.prisma.media.create({
         data: {
-          filename: fileName,
+          uploadedPath: filePath,
           extension: extension,
         },
       });
@@ -48,10 +46,7 @@ export class MediaService {
   async download(id: number): Promise<MediaDto> {
     try {
       const media = await this.prisma.media.findFirstOrThrow({ where: { id } });
-      const filePath = path.join(
-        this.getUploadPath(path.extname(media.filename)),
-        media.filename,
-      );
+      const filePath = media.uploadedPath;
 
       if (!fs.existsSync(filePath)) {
         throw new NotFoundException('media.notFound');
@@ -63,7 +58,7 @@ export class MediaService {
       return {
         file: fileBuffer,
         mimeType,
-        filename: this.getOriginalName(media.filename),
+        filename: this.getOriginalName(media.uploadedPath),
       };
     } catch (e) {
       throw new NotFoundException('media.notFound');
@@ -73,10 +68,7 @@ export class MediaService {
   async delete(id: number) {
     const deleted = await this.prisma.media.delete({ where: { id } });
     if (!deleted) throw new HttpException('', HttpStatus.NO_CONTENT);
-    const filePath = path.join(
-      this.getUploadPath(deleted.extension),
-      deleted.filename,
-    );
+    const filePath = deleted.uploadedPath;
     fs.unlink(filePath, (err) => {
       if (err) {
         console.error(err);
@@ -85,7 +77,7 @@ export class MediaService {
     });
   }
 
-  private getUploadPath(extension: string) {
+  getUploadPath(extension: string) {
     if (extension === '.jpg' || extension === '.jpeg' || extension === '.png') {
       return 'uploads/images';
     } else if (extension === '.pdf') {
@@ -110,15 +102,17 @@ export class MediaService {
   }
 
   private getOriginalName(storedFilename: string) {
+    const filename = storedFilename.split('/').reverse()[0];
+
     const dotIndex = storedFilename.lastIndexOf('.');
     const dashIndex = storedFilename.lastIndexOf('-');
 
     if (dotIndex === -1 || dashIndex === -1 || dashIndex > dotIndex) {
-      return storedFilename; // fallback si format inattendu
+      return filename; // fallback si format inattendu
     }
 
-    const base = storedFilename.slice(0, dashIndex);
-    const ext = storedFilename.slice(dotIndex);
+    const base = filename.slice(0, dashIndex);
+    const ext = filename.slice(dotIndex);
     return `${base}${ext}`;
   }
 }

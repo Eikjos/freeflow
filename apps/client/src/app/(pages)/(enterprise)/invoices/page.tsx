@@ -34,7 +34,7 @@ export default function InvoicePage() {
             </Link>
           </Button>
           <Button asChild>
-            <Link href={"//create"}>
+            <Link href={"/invoices/create"}>
               <Plus size={20} />
               Créer une facture
             </Link>
@@ -43,7 +43,6 @@ export default function InvoicePage() {
       </div>
       <InvoiceFilter
         className="mt-10"
-        filter={filter}
         onChangeFilter={(filter) => setFilter(filter)}
       />
       <InvoiceTable

@@ -65,8 +65,8 @@ const EnterpriseForm = () => {
         <CardContent className="py-5 px-8">
           <Form {...form}>
             <form>
-              <div className="flex flex-row gap-2 items-start h-auto">
-                <div className="w-1/3 border-r-[3px] border-secondary pl-2 pr-5 py-3 flex flex-col items-center h-full">
+              <div className="flex flex-row gap-2 items-stretch h-auto">
+                <div className="w-1/3 px-2 py-3 flex flex-col items-center h-full">
                   <h4 className="text-xl font-bold w-full">
                     {t("common.informations")}
                   </h4>
@@ -110,7 +110,11 @@ const EnterpriseForm = () => {
                     {...form.register("tvaNumber")}
                   />
                 </div>
-                <div className="w-1/3 border-r-[3px] border-secondary pl-2 pr-5 py-3 flex flex-col items-center h-full">
+                <Separator
+                  className="h-auto bg-secondary"
+                  orientation="vertical"
+                />
+                <div className="w-1/3 px-2 py-3 flex flex-col items-center">
                   <h4 className="text-xl font-bold w-full">
                     {t("common.localisation")}
                   </h4>
@@ -146,7 +150,11 @@ const EnterpriseForm = () => {
                     {...form.register("countryId")}
                   />
                 </div>
-                <div className="w-1/3 pl-2 pr-5 py-3 flex flex-col items-center h-full">
+                <Separator
+                  className="h-auto bg-secondary"
+                  orientation="vertical"
+                />
+                <div className="w-1/3 px-2 py-3 flex flex-col items-center">
                   <h4 className="text-xl font-bold w-full">
                     {t("common.contact")}
                   </h4>
@@ -188,9 +196,6 @@ const EnterpriseForm = () => {
                   />
                 </div>
               </div>
-              <Button onClick={() => form.trigger()} type="button">
-                Click me !!
-              </Button>
               <ul>
                 {Object.entries(form.formState.errors).map(
                   ([fieldName, error]) => (

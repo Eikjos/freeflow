@@ -14,26 +14,18 @@ import { invoiceStatusToString } from "../../../lib/utils";
 
 type InvoiceFilterProps = {
   className?: string;
-  filter?: InvoiceFilterData;
   onChangeFilter: (filter: InvoiceFilterData | undefined) => void;
 };
 
 export default function InvoiceFilter({
   className,
-  filter,
   onChangeFilter,
 }: InvoiceFilterProps) {
-  const form = useForm<InvoiceFilterData>(
-    filter
-      ? {
-          values: filter,
-        }
-      : {
-          defaultValues: {
-            number: "",
-          },
-        }
-  );
+  const form = useForm<InvoiceFilterData>({
+    defaultValues: {
+      number: "",
+    },
+  });
   const startDate = form.watch("startDate");
   const endDate = form.watch("endDate");
   const statusValues: SelectItemProps[] = [
@@ -71,8 +63,8 @@ export default function InvoiceFilter({
   };
 
   const resetForm = () => {
-    form.reset();
     onChangeFilter(undefined);
+    form.reset();
   };
 
   return (
@@ -85,12 +77,13 @@ export default function InvoiceFilter({
               <Input
                 type="text"
                 label="Numéro"
+                placeholder="Rechercher sur le numéro"
                 className="w-1/4"
                 {...form.register("number")}
               />
               <Autocomplete
                 label={"common.customer"}
-                placeholder="Sélectionner un client"
+                placeholder="Filtrer par client"
                 queryOptions={(filter) =>
                   getAllCustomersQueryOptions({
                     page: 0,
@@ -109,14 +102,16 @@ export default function InvoiceFilter({
                 {...form.register("customerId")}
               />
               <Select
-                label="Status"
+                label="Statut"
                 className="w-1/4"
+                placeholder="Filtrer par statut"
                 values={statusValues}
                 {...form.register("status")}
               />
               <Select
                 label="Type"
                 className="w-1/4"
+                placeholder="Filtrer par type"
                 values={invoiceTypes}
                 {...form.register("type")}
               />
@@ -125,6 +120,7 @@ export default function InvoiceFilter({
               <DateInput
                 {...form.register("startDate")}
                 className="w-1/6"
+                placeholder="Date de début"
                 label="Date de début"
                 maxDate={endDate}
               />
@@ -132,6 +128,7 @@ export default function InvoiceFilter({
               <DateInput
                 {...form.register("endDate")}
                 className="w-1/6"
+                placeholder="Date de fin"
                 label="Date de fin"
                 minDate={startDate}
               />

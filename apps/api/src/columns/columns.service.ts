@@ -43,6 +43,7 @@ export default class ColumnService {
   async createTask(
     columnId: number,
     model: CreateTaskDto,
+    enterpriseId: number,
     files?: Express.Multer.File[],
   ) {
     const column = await this.prisma.column.findFirst({
@@ -76,7 +77,9 @@ export default class ColumnService {
         files?.length > 0
           ? [
               ...(await Promise.all(
-                files.map((f) => this.mediaService.upload(f)),
+                files.map((f) =>
+                  this.mediaService.upload(f, `${enterpriseId}/tasks/files`),
+                ),
               )),
             ]
           : [];

@@ -86,7 +86,9 @@ export default class ProjectService {
       where: { enterpriseId, customerId: model.customerId, isDeleted: false },
     });
     if (!customer) throw new BadRequestException('project.customer.notValid');
-    const mediaId = media ? await this.mediaService.upload(media) : undefined;
+    const mediaId = media
+      ? await this.mediaService.upload(media, `${enterpriseId}/images`)
+      : undefined;
 
     const project = await this.prisma.project.create({
       data: {
@@ -171,7 +173,9 @@ export default class ProjectService {
       where: { enterpriseId, customerId: model.customerId, isDeleted: false },
     });
     if (!customer) throw new BadRequestException('project.customer.notValid');
-    const mediaId = media ? await this.mediaService.upload(media) : undefined;
+    const mediaId = media
+      ? await this.mediaService.upload(media, `${enterpriseId}/images`)
+      : undefined;
 
     project = await this.prisma.project.update({
       where: { id: projectId, enterpriseId: enterpriseId },

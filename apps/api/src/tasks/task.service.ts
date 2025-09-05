@@ -104,6 +104,7 @@ export default class TaskService {
   async update(
     taskId: number,
     model: CreateTaskDto,
+    enterpriseId: number,
     files: Express.Multer.File[],
   ) {
     const task = await this.prisma.task.findFirst({
@@ -137,7 +138,9 @@ export default class TaskService {
         files?.length > 0
           ? [
               ...(await Promise.all(
-                files.map((f) => this.mediaService.upload(f)),
+                files.map((f) =>
+                  this.mediaService.upload(f, `${enterpriseId}/tasks/files`),
+                ),
               )),
             ]
           : [];
