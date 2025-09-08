@@ -19,7 +19,7 @@ import {
   InvoiceCreateValidation,
   InvoiceLineCreateData,
 } from "@repo/shared-types";
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createInvoice } from "actions/invoice";
 import { useRouter } from "next/navigation";
 import { useEnterprise } from "providers/enterprise-provider";
@@ -52,12 +52,12 @@ export default function CreateDevisPage() {
     defaultValues: {
       title: "",
       number: "1",
+      customerId: undefined,
       date: new Date(),
       type: "QUOTE",
       invoiceLines: [],
       excludeTva: false,
     },
-    mode: "all",
   });
   const customerId = form.watch("customerId");
   const customer = useQuery({
@@ -90,9 +90,9 @@ export default function CreateDevisPage() {
       invoiceLine.ok &&
       !invoiceLinesOld.some((e) => e.name === invoiceLine.data?.name)
     ) {
-      form.setValue("invoiceLine", [
+      form.setValue("invoiceLines", [
         ...invoiceLinesOld,
-        { name: invoiceLine.data?.name, quantity: 1, unitPrice: 0.0 },
+        { name: invoiceLine.data?.name!, quantity: 1, unitPrice: 0.0 },
       ]);
     }
     setAutocompleteKey();
@@ -135,7 +135,7 @@ export default function CreateDevisPage() {
         if (res === null) {
           toast.error("Il y a eu une erreur.");
         } else {
-          toast.success("La facture a bien été créé.");
+          toast.success("Le devis a bien été créé.");
 
           router.push("/invoices");
         }
@@ -157,7 +157,7 @@ export default function CreateDevisPage() {
     <div className="h-full">
       <Card className="mb-10">
         <CardHeader>
-          <CardTitle>Creation d'un devis</CardTitle>
+          <CardTitle>Création d'un devis</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-rox justify-end gap-4">
@@ -217,11 +217,11 @@ export default function CreateDevisPage() {
                     filter: {
                       name: filter.search,
                       id: filter.id,
-                      customerId: form.getValues().customerId,
+                      customerId: customerId,
                     },
                   })
                 }
-                disabled={!form.getValues().customerId}
+                disabled={!customerId}
                 filterField="name"
                 render={(task) => `${task.name}`}
                 fieldIdentifier="id"
@@ -230,7 +230,7 @@ export default function CreateDevisPage() {
                 placeholder="Sélectionner une tâche"
                 onAdd={() => setModalTaskOpen(true)}
                 addLabel={"Ajouter une tâche"}
-                {...form.register("InvoiceLine", {
+                {...form.register("invoiceLines", {
                   onBlur: forceUpdate,
                   value: [],
                   onChange: (event) => handleChangeTask(event.target.value),

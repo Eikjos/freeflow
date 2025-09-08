@@ -141,6 +141,7 @@ export default class EnterpriseService {
     if (!enterprise) throw new NotFoundException();
     const {
       prefixeInvoice,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       lastInvoiceNumber,
       juridicShape,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

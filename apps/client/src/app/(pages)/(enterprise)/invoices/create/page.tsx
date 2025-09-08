@@ -21,7 +21,7 @@ import {
 } from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
 import { createInvoice } from "actions/invoice";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEnterprise } from "providers/enterprise-provider";
 import { useEffect, useReducer, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -31,18 +31,25 @@ import {
   getCustomerByIdOptions,
 } from "../../../../../lib/api/customers";
 import { getInformationForInvoiceQueryOptions } from "../../../../../lib/api/enterprise";
+import { getInvoiceByIdQueryOptions } from "../../../../../lib/api/invoices";
 import {
   getAllTasksQueryOptions,
   getTasksById,
 } from "../../../../../lib/api/tasks";
 
 export default function CreateInvoicesPage() {
+  const searchParams = useSearchParams();
+  const devisId = searchParams.get("devisId");
   const { enterprise } = useEnterprise();
   const router = useRouter();
   const [maskNameOnInvoice, setMaskNameOnInvoice] = useState<boolean>(true);
   const [update, forceUpdate] = useReducer((x) => x + 1, 0);
   const [autocompleteKey, setAutocompleteKey] = useReducer((x) => x + 1, 0);
   const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
+  const { data: DevisData, isLoading: isLoadingDevis } = useQuery({
+    ...getInvoiceByIdQueryOptions(parseInt(devisId)),
+    enabled: devisId !== undefined,
+  });
   const { data, isSuccess, isLoading } = useQuery({
     ...getInformationForInvoiceQueryOptions(enterprise?.id!),
     enabled: enterprise?.id !== undefined,
@@ -53,11 +60,11 @@ export default function CreateInvoicesPage() {
       title: "",
       number: "1",
       type: "INVOICE",
+      customerId: undefined,
       date: new Date(),
       invoiceLines: [],
       excludeTva: false,
     },
-    mode: "all",
   });
   const customerId = form.watch("customerId");
   const customer = useQuery({
@@ -71,6 +78,26 @@ export default function CreateInvoicesPage() {
     }
     forceUpdate();
   }, [data?.data]);
+
+  useEffect(() => {
+    if (DevisData?.ok && DevisData.data) {
+      form.setValue("customerId", DevisData.data.customer.id);
+      form.setValue(
+        "invoiceLines",
+        DevisData.data.invoiceLines.map(
+          (e) =>
+            ({
+              name: e.name,
+              quantity: e.quantity,
+              unitPrice: e.unitPrice,
+            }) as InvoiceLineCreateData
+        )
+      );
+      form.setValue("title", DevisData.data.title);
+      form.setValue("excludeTva", DevisData.data.excludeTva);
+      forceUpdate();
+    }
+  }, [DevisData?.data]);
 
   const appendInvoiceLine = (value: InvoiceLineCreateData) => {
     const invoiceLinesOld = form.getValues().invoiceLines;
@@ -90,11 +117,12 @@ export default function CreateInvoicesPage() {
       invoiceLine.ok &&
       !invoiceLinesOld.some((e) => e.name === invoiceLine.data?.name)
     ) {
-      form.setValue("invoiceLine", [
+      form.setValue("invoiceLines", [
         ...invoiceLinesOld,
-        { name: invoiceLine.data?.name, quantity: 1, unitPrice: 0.0 },
+        { name: invoiceLine.data?.name!, quantity: 1, unitPrice: 0.0 },
       ]);
     }
+
     setAutocompleteKey();
   };
 
@@ -147,7 +175,7 @@ export default function CreateInvoicesPage() {
       });
   };
 
-  if (isLoading) {
+  if (isLoading || isLoadingDevis) {
     return (
       <div className="w-full h-full flex-row flex justify-center items-center">
         <Loading />
@@ -198,7 +226,7 @@ export default function CreateInvoicesPage() {
               />
               <Autocomplete
                 label={"common.customer"}
-                placeholder="Sélectionner un client"
+                placeholder={devisId !== null ? "" : "Sélectionner un client"}
                 queryOptions={(filter) =>
                   getAllCustomersQueryOptions({
                     page: 0,
@@ -213,6 +241,7 @@ export default function CreateInvoicesPage() {
                 render={(item) => item.name}
                 filterField="name"
                 fieldIdentifier="id"
+                disabled={devisId !== null}
                 {...form.register("customerId", { onChange: forceUpdate })}
               />
               <Autocomplete
@@ -229,7 +258,7 @@ export default function CreateInvoicesPage() {
                     },
                   })
                 }
-                disabled={!form.getValues().customerId}
+                disabled={!customerId}
                 filterField="name"
                 render={(task) => `${task.name}`}
                 fieldIdentifier="id"
@@ -238,7 +267,7 @@ export default function CreateInvoicesPage() {
                 placeholder="Sélectionner une tâche"
                 onAdd={() => setModalTaskOpen(true)}
                 addLabel={"Ajouter une tâche"}
-                {...form.register("InvoiceLine", {
+                {...form.register("invoiceLine", {
                   onBlur: forceUpdate,
                   value: [],
                   onChange: (event) => handleChangeTask(event.target.value),
@@ -247,11 +276,12 @@ export default function CreateInvoicesPage() {
             </form>
           </Form>
           {form.getValues().invoiceLines.length > 0 && (
-            <div className="mt-4">
+            <div className="mt-4" key={autocompleteKey}>
               <p>Les lignes de facturation</p>
               <InvoiceLineList
                 invoices={form.getValues().invoiceLines}
                 handleChange={handleChangeInvoiceLine}
+                canDelete={devisId === null}
               />
             </div>
           )}

@@ -15,12 +15,14 @@ type InvoiceLineProps = {
   invoice: InvoiceLineCreateData;
   onChange: (value: InvoiceLineCreateData) => void;
   onDelete: (value: InvoiceLineCreateData) => void;
+  canDelete: boolean;
 };
 
 export default function InvoiceLine({
   invoice,
   onChange,
   onDelete,
+  canDelete,
 }: InvoiceLineProps) {
   const [totalKey, updateTotalKey] = useReducer((x) => x + 1, 0);
   const form = useForm<InvoiceLineData>({
@@ -61,6 +63,7 @@ export default function InvoiceLine({
               <span className="text-sm">Quantité</span>
               <Input
                 type="number"
+                disabled={!canDelete}
                 {...form.register("quantity", { onBlur: handleBlur })}
               />
             </div>
@@ -69,6 +72,7 @@ export default function InvoiceLine({
               <Input
                 type="number"
                 step="0.5"
+                disabled={!canDelete}
                 {...form.register("unitPrice", { onBlur: handleBlur })}
               />
               <span>€</span>
@@ -83,13 +87,16 @@ export default function InvoiceLine({
                 onBlur={(event) =>
                   handleChangeTotal(parseFloat(event.currentTarget.value))
                 }
+                disabled={!canDelete}
               />
               <span>€</span>
             </div>
+
             <Button
               type="button"
               variant="destructive"
               onClick={() => onDelete(invoice)}
+              disabled={!canDelete}
             >
               <Trash />
             </Button>

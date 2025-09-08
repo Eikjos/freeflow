@@ -1,11 +1,16 @@
 "use client";
 
 import { DataTable } from "@components/ui/data-table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@components/ui/tooltip";
 import { InvoiceData, InvoiceLineData } from "@repo/shared-types";
 import { ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
 import dayjs from "dayjs";
-import { Printer, Send } from "lucide-react";
+import { FolderInput, Printer, Send } from "lucide-react";
 import { getMediaUrl, invoiceStatusToString } from "../../../lib/utils";
 
 export type InvoiceTableProps = {
@@ -80,10 +85,35 @@ const columnsDef: ColumnDef<InvoiceData>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex flex-row justify-end gap-5 mr-10 ml-auto">
-          <a href={getMediaUrl(row.original.mediaId)}>
-            <Printer size={15}></Printer>
-          </a>
-          <Send size={15}></Send>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a href={`/invoices/create?devisId=${row.original.id}`}>
+                <FolderInput size={15}></FolderInput>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent>Transformer le devis en facture</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger>
+              <a href={getMediaUrl(row.original.mediaId)}>
+                <Printer size={15}></Printer>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent>
+              Imprimer{" "}
+              {row.original.type === "INVOICE" ? `la facture` : `le devis`}
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger>
+              <Send size={15}></Send>
+            </TooltipTrigger>
+            <TooltipContent>
+              Réenvoyer{" "}
+              {row.original.type === "INVOICE" ? `la facture` : `le devis`}
+            </TooltipContent>
+          </Tooltip>
         </div>
       );
     },

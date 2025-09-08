@@ -4,11 +4,13 @@ import { InvoiceLineCreateData } from "@repo/shared-types";
 type InvoiceLineListProps = {
   invoices: InvoiceLineCreateData[];
   handleChange: (values: InvoiceLineCreateData[]) => void;
+  canDelete?: boolean;
 };
 
 export default function InvoiceLineList({
   invoices,
   handleChange,
+  canDelete = false,
 }: InvoiceLineListProps) {
   const handleChangeLine = (value: InvoiceLineCreateData) => {
     const index = invoices.findIndex((e) => e.name === value.name);
@@ -28,6 +30,7 @@ export default function InvoiceLineList({
             invoice={invoice}
             onChange={handleChangeLine}
             onDelete={handleDeleteLine}
+            canDelete={canDelete}
           />
           {index < invoices.length - 1 && (
             <div className="my-4">

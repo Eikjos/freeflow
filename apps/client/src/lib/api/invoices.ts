@@ -19,3 +19,12 @@ export const getAllInvoiceQueryOptions = (
   queryKey: ["invoices", filter],
   retry: false,
 });
+
+export const getInvoiceById = (id: number) =>
+  client<InvoiceData>(`invoices/${id}`);
+
+export const getInvoiceByIdQueryOptions = (id: number) => ({
+  queryFn: () => getInvoiceById(id),
+  queryKey: ["invoices", id],
+  retry: false,
+});

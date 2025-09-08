@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CreateInvoiceDto } from 'src/dtos/invoices/invoice-create.dto';
@@ -71,7 +72,7 @@ export default class InvoiceService {
     });
 
     // If creation OK - increase the number of lastest invoice
-    if (invoiceEntity) {
+    if (invoiceEntity && invoice.type === 'INVOICE') {
       await this.prisma.enterprise.update({
         where: { id: enterpriseId },
         data: {
@@ -136,5 +137,15 @@ export default class InvoiceService {
       page: filter.page,
       pageSize: filter.pageSize,
     };
+  }
+
+  async findById(id: number, enterpriseId: number) {
+    const invoice = await this.prisma.invoice.findFirst({
+      where: { enterpriseId, id },
+      include: { invoiceLines: true, customer: true },
+    });
+    if (!invoice) throw new NotFoundException();
+
+    return mapInvoiceToDto(invoice, invoice.invoiceLines, invoice.customer);
   }
 }

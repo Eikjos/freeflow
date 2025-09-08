@@ -3,6 +3,8 @@ import {
   Controller,
   Get,
   HttpCode,
+  Param,
+  ParseIntPipe,
   Post,
   Query,
   Req,
@@ -48,5 +50,15 @@ export default class InvoiceController {
   ) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.invoiceService.findAll(filter, enterpriseId);
+  }
+
+  @Get(':id')
+  @UseGuards(AccessTokenGuard)
+  async findById(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() request: Request,
+  ) {
+    const enterpriseId = parseInt(request.user['enterpriseId']);
+    return this.invoiceService.findById(id, enterpriseId);
   }
 }

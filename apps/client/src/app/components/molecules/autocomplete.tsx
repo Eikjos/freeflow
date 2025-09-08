@@ -61,7 +61,9 @@ function AutoCompleteItem({ name, value, onClick }: AutocompleteItemProps) {
   );
 }
 
-function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
+export function AutoCompleteWithoutControl<
+  TData extends Record<string, unknown>,
+>({
   queryOptions,
   fieldIdentifier,
   render,
@@ -110,7 +112,6 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
 
   const { data, isLoading } = useQuery({
     ...queryOptions(queryParams),
-    enabled: !disabled,
   });
 
   const handleFilter = (value: string) => {
@@ -119,13 +120,7 @@ function AutoCompleteWithoutControl<TData extends Record<string, unknown>>({
   };
 
   useEffect(() => {
-    if (
-      data &&
-      data.ok &&
-      data.data?.totalItems === 1 &&
-      value === defaultValue &&
-      value !== undefined
-    ) {
+    if (data && data.ok && data.data?.totalItems === 1 && value !== undefined) {
       if (data?.data?.data[0]) {
         setDisplayValue((prev) => render(data?.data?.data[0]!));
       } else {
@@ -270,7 +265,9 @@ export default function Autocomplete<TData extends Record<string, unknown>>({
                 {...field}
                 {...props}
                 error={fieldState.error?.message}
-                onChange={(value) => field.onChange(value)}
+                onChange={(value) => {
+                  field.onChange(value);
+                }}
               />
               <FormMessage />
             </div>
