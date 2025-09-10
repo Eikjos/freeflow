@@ -44,6 +44,10 @@ export class CreateInvoiceDto implements InvoiceCreateData {
     format: 'binary',
   })
   invoice: File;
+  @ApiProperty({ description: 'devisId related to the invoice' })
+  @IsNumber()
+  @Transform(({ value }) => Number(value))
+  devisId?: number;
 }
 
 export class CreateInvoiceLineDto implements InvoiceLineCreateData {

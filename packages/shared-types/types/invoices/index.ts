@@ -38,6 +38,7 @@ export type InvoiceCreateData = {
   type: InvoiceType;
   excludeTva?: boolean;
   invoiceLines: InvoiceLineCreateData[];
+  devisId?: number;
   [key: string]: any;
 };
 

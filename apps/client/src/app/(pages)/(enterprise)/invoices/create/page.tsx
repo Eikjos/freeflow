@@ -47,8 +47,9 @@ export default function CreateInvoicesPage() {
   const [autocompleteKey, setAutocompleteKey] = useReducer((x) => x + 1, 0);
   const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
   const { data: DevisData, isLoading: isLoadingDevis } = useQuery({
-    ...getInvoiceByIdQueryOptions(parseInt(devisId)),
-    enabled: devisId !== undefined,
+    ...getInvoiceByIdQueryOptions(parseInt(devisId ?? "")),
+    enabled:
+      devisId !== undefined && !isNaN(Number(devisId)) && devisId !== null,
   });
   const { data, isSuccess, isLoading } = useQuery({
     ...getInformationForInvoiceQueryOptions(enterprise?.id!),
@@ -156,6 +157,10 @@ export default function CreateInvoicesPage() {
         type: "INVOICE",
         excludeTva: values.excludeTva ?? false,
         number: `${data?.data?.prefixe}-${String(values.number).padStart(5, "0")}`,
+        devisId:
+          devisId !== null && !isNaN(Number(devisId)) && devisId !== null
+            ? parseInt(devisId)
+            : undefined,
       },
       new File(
         [invoiceBlob],

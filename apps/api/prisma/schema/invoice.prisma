@@ -5,9 +5,10 @@ model Invoice {
   date         DateTime
   customerId   Int
   enterpriseId Int
-  createdAt    DateTime
+  createdAt    DateTime @default(now())
   updatedAt    DateTime
   mediaId      Int?       @unique
+  devisId      Int?       @unique
   type         InvoiceType
   status       StatusInvoice
   customer     Customer   @relation(fields: [customerId], references: [id])
@@ -15,6 +16,8 @@ model Invoice {
   media        Media?     @relation(fields: [mediaId], references: [id])
   invoiceLines  InvoiceLine[]
   excludeTva   Boolean  @default(false)
+  devis        Invoice? @relation("devisInvoice", fields: [devisId], references: [id])
+  invoice     Invoice? @relation("devisInvoice")
 }
 
 enum StatusInvoice {

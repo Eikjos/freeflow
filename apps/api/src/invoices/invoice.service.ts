@@ -41,6 +41,13 @@ export default class InvoiceService {
     });
     if (!customer) throw new BadRequestException('customer.not.found');
 
+    if (invoice.devisId) {
+      const devis = await this.prisma.invoice.findFirst({
+        where: { id: invoice.devisId, type: 'QUOTE' },
+      });
+      if (!devis) throw new BadRequestException('devis.not.found');
+    }
+
     // upload invoice
     const mediaId = await this.mediaService.upload(
       invoiceFile,
@@ -58,6 +65,7 @@ export default class InvoiceService {
         type: invoice.type,
         createdAt: new Date(),
         updatedAt: new Date(),
+        devisId: invoice.devisId,
         status:
           invoice.type === 'INVOICE' ? 'WAITING_PAYED' : 'WAITING_VALIDATION',
         excludeTva: invoice.excludeTva,
