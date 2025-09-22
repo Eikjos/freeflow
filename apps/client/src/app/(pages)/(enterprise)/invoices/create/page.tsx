@@ -111,20 +111,22 @@ export default function CreateInvoicesPage() {
     forceUpdate();
   };
 
-  const handleChangeTask = async (value: number) => {
-    const invoiceLine = await getTasksById(value);
-    const invoiceLinesOld = form.getValues().invoiceLines;
-    if (
-      invoiceLine.ok &&
-      !invoiceLinesOld.some((e) => e.name === invoiceLine.data?.name)
-    ) {
-      form.setValue("invoiceLines", [
-        ...invoiceLinesOld,
-        { name: invoiceLine.data?.name!, quantity: 1, unitPrice: 0.0 },
-      ]);
-    }
+  const handleChangeTask = async (value: number | undefined) => {
+    if (value !== undefined) {
+      const invoiceLine = await getTasksById(value);
+      const invoiceLinesOld = form.getValues().invoiceLines;
+      if (
+        invoiceLine.ok &&
+        !invoiceLinesOld.some((e) => e.name === invoiceLine.data?.name)
+      ) {
+        form.setValue("invoiceLines", [
+          ...invoiceLinesOld,
+          { name: invoiceLine.data?.name!, quantity: 1, unitPrice: 0.0 },
+        ]);
+      }
 
-    setAutocompleteKey();
+      setAutocompleteKey();
+    }
   };
 
   const handleMashNameChange = (checked: CheckedState) => {
@@ -148,6 +150,8 @@ export default function CreateInvoicesPage() {
         maskName={maskNameOnInvoice}
         excludeTva={values.excludeTva}
         lines={values.invoiceLines}
+        devisNumber={DevisData?.data?.number}
+        devisDate={DevisData?.data?.date}
       />
     ).toBlob();
 
@@ -274,7 +278,7 @@ export default function CreateInvoicesPage() {
                 addLabel={"Ajouter une tâche"}
                 {...form.register("invoiceLine", {
                   onBlur: forceUpdate,
-                  value: [],
+                  value: undefined,
                   onChange: (event) => handleChangeTask(event.target.value),
                 })}
               />

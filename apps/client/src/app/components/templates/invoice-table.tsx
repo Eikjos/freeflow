@@ -10,7 +10,7 @@ import { InvoiceData, InvoiceLineData } from "@repo/shared-types";
 import { ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
 import dayjs from "dayjs";
-import { FolderInput, Printer, Send } from "lucide-react";
+import { FolderInput, Printer, ReceiptEuro, Send } from "lucide-react";
 import { getMediaUrl, invoiceStatusToString } from "../../../lib/utils";
 
 export type InvoiceTableProps = {
@@ -85,14 +85,27 @@ const columnsDef: ColumnDef<InvoiceData>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex flex-row justify-end gap-5 mr-10 ml-auto">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <a href={`/invoices/create?devisId=${row.original.id}`}>
-                <FolderInput size={15}></FolderInput>
-              </a>
-            </TooltipTrigger>
-            <TooltipContent>Transformer le devis en facture</TooltipContent>
-          </Tooltip>
+          {row.original.type === "QUOTE" &&
+            row.original.status === "VALIDATE" && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <a href={`/invoices/create?devisId=${row.original.id}`}>
+                    <FolderInput size={15}></FolderInput>
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent>Transformer le devis en facture</TooltipContent>
+              </Tooltip>
+            )}
+          {row.original.type === "INVOICE" && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <a href={`/credits/create?invoiceId=${row.original.id}`}>
+                  <ReceiptEuro size={15}></ReceiptEuro>
+                </a>
+              </TooltipTrigger>
+              <TooltipContent>Créer un avoir</TooltipContent>
+            </Tooltip>
+          )}
           <Tooltip>
             <TooltipTrigger>
               <a href={getMediaUrl(row.original.mediaId)}>

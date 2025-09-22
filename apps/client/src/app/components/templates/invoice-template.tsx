@@ -136,6 +136,8 @@ const InvoiceTemplate = ({
   information,
   maskName,
   excludeTva,
+  devisNumber,
+  devisDate,
 }: {
   title?: string;
   number?: string;
@@ -145,6 +147,8 @@ const InvoiceTemplate = ({
   information?: InvoiceInformation;
   maskName?: boolean;
   excludeTva?: boolean;
+  devisNumber?: string;
+  devisDate?: Date;
 }) => {
   const sum = (values: number[]) => {
     let result = 0;
@@ -220,6 +224,13 @@ const InvoiceTemplate = ({
             )}
           </View>
         </View>
+
+        {devisNumber && (
+          <Text style={styles.text}>
+            D'après le devis {devisNumber} du{" "}
+            {dayjs(devisDate).format("DD/MM/YYYY")}.
+          </Text>
+        )}
 
         <Text style={styles.title}>{title}</Text>
         <View style={styles.table}>

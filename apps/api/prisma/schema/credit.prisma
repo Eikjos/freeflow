@@ -1,0 +1,16 @@
+model Credit {
+  id    Int    @id @default(autoincrement())
+  title     String
+  number    String
+  invoiceId    Int
+  invoice   Invoice @relation(fields: [invoiceId], references: [id]) 
+  creditLines   CreditLine[]
+}
+
+model CreditLine {
+  id  Int @id @default(autoincrement())
+  creditId  Int
+  credit    Credit @relation(fields: [creditId], references: [id])
+  name      String
+  price     Float
+}

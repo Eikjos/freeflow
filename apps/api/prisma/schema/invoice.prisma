@@ -18,13 +18,17 @@ model Invoice {
   excludeTva   Boolean  @default(false)
   devis        Invoice? @relation("devisInvoice", fields: [devisId], references: [id])
   invoice     Invoice? @relation("devisInvoice")
+  credits     Credit[]
 }
 
 enum StatusInvoice {
   WAITING_VALIDATION
   VALIDATE
+  REJECTED
   WAITING_PAYED
   PAYED
+  CREDITED
+  PARTIAL_CREDITED
 }
 
 enum InvoiceType {

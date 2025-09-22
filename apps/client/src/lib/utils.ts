@@ -86,10 +86,16 @@ export const invoiceStatusToString = (invoiceStatus: InvoiceStatus) => {
     case "WAITING_VALIDATION":
       return "En attente de validation";
     case "VALIDATE":
-      return "Valider";
+      return "Validé";
     case "WAITING_PAYED":
       return "En attente de paiement";
     case "PAYED":
       return "Payée";
+    case "CREDITED":
+      return "Crédité";
+    case "PARTIAL_CREDITED":
+      return "Partiellement crédité";
+    case "REJECTED":
+      return "Refusé";
   }
 };

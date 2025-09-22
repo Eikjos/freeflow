@@ -120,8 +120,15 @@ export function AutoCompleteWithoutControl<
   };
 
   useEffect(() => {
-    if (data && data.ok && data.data?.totalItems === 1 && value !== undefined) {
+    if (
+      data &&
+      data.ok &&
+      data.data?.totalItems === 1 &&
+      value !== undefined &&
+      value !== null
+    ) {
       if (data?.data?.data[0]) {
+        console.log("e", typeof value);
         setDisplayValue((prev) => render(data?.data?.data[0]!));
       } else {
         setDisplayValue("");

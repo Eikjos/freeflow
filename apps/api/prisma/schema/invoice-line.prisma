@@ -3,6 +3,6 @@ model InvoiceLine {
   name    String
   quantity    Int
   prixUnit    Float
-  invoiceId   Int
-  invoice     Invoice @relation(fields: [invoiceId], references: [id])
+  invoiceId   Int?
+  invoice     Invoice? @relation(fields: [invoiceId], references: [id])
 }

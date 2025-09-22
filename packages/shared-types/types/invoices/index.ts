@@ -1,3 +1,4 @@
+import { CreditForInvoiceData } from "types/credits";
 import { CustomerModel } from "types/customers";
 import { EnterpriseInformation } from "types/enterprises";
 import { z } from "zod";
@@ -5,8 +6,11 @@ import { z } from "zod";
 export type InvoiceStatus =
   | "WAITING_VALIDATION"
   | "VALIDATE"
+  | "REJECTED"
   | "WAITING_PAYED"
-  | "PAYED";
+  | "PAYED"
+  | "CREDITED"
+  | "PARTIAL_CREDITED";
 export type InvoiceType = "QUOTE" | "INVOICE";
 
 export type InvoiceData = {
@@ -21,6 +25,7 @@ export type InvoiceData = {
   excludeTva: boolean;
   mediaId: number;
   customer: CustomerModel;
+  credits: CreditForInvoiceData[];
 };
 
 export type InvoiceLineData = {

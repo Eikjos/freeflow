@@ -1,6 +1,7 @@
 export * from "./types/auth";
 export * from "./types/columns";
 export * from "./types/countries";
+export * from "./types/credits";
 export * from "./types/customers";
 export * from "./types/enterprises";
 export * from "./types/invoices";

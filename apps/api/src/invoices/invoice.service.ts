@@ -130,7 +130,11 @@ export default class InvoiceService {
 
     const invoices = await this.prisma.invoice.findMany({
       where: filterQuery,
-      include: { invoiceLines: true, customer: true },
+      include: {
+        invoiceLines: true,
+        customer: true,
+        credits: { include: { creditLines: true } },
+      },
       take: filter.pageSize,
       skip: filter.page * filter.pageSize,
     });
@@ -140,7 +144,9 @@ export default class InvoiceService {
     });
 
     return {
-      data: invoices.map((i) => mapInvoiceToDto(i, i.invoiceLines, i.customer)),
+      data: invoices.map((i) =>
+        mapInvoiceToDto(i, i.invoiceLines, i.customer, i.credits),
+      ),
       totalItems: totalItems,
       page: filter.page,
       pageSize: filter.pageSize,
@@ -150,10 +156,19 @@ export default class InvoiceService {
   async findById(id: number, enterpriseId: number) {
     const invoice = await this.prisma.invoice.findFirst({
       where: { enterpriseId, id },
-      include: { invoiceLines: true, customer: true },
+      include: {
+        invoiceLines: true,
+        customer: true,
+        credits: { include: { creditLines: true } },
+      },
     });
     if (!invoice) throw new NotFoundException();
 
-    return mapInvoiceToDto(invoice, invoice.invoiceLines, invoice.customer);
+    return mapInvoiceToDto(
+      invoice,
+      invoice.invoiceLines,
+      invoice.customer,
+      invoice.credits,
+    );
   }
 }

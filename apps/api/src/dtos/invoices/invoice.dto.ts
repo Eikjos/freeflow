@@ -1,10 +1,20 @@
-import { Customer, Invoice, InvoiceLine } from '@prisma/client';
+import {
+  Credit,
+  CreditLine,
+  Customer,
+  Invoice,
+  InvoiceLine,
+} from '@prisma/client';
 import {
   InvoiceData,
   InvoiceLineData,
   InvoiceStatus,
   InvoiceType,
 } from '@repo/shared-types';
+import {
+  CreditForInvoiceDto,
+  mapToCreditForInvoiceDto,
+} from '../credits/credit.dto';
 import { CustomerDto, mapCustomerToDto } from '../customers/customer.dto';
 
 export class InvoiceDto implements InvoiceData {
@@ -19,16 +29,19 @@ export class InvoiceDto implements InvoiceData {
   mediaId: number;
   excludeTva: boolean;
   customer: CustomerDto;
+  credits: CreditForInvoiceDto[];
 }
 
 export const mapToDto = (
   invoice: Invoice,
   invoiceLines: InvoiceLine[],
   customer: Customer,
+  credits: (Credit & { creditLines: CreditLine[] })[],
 ): InvoiceDto => {
-  const totalAmount = invoiceLines.reduce((sum, il) => {
-    return sum + il.quantity * il.prixUnit;
-  }, 0);
+  const totalAmount =
+    invoiceLines.reduce((sum, il) => {
+      return sum + il.quantity * il.prixUnit;
+    }, 0) * (invoice.excludeTva ? 1.0 : 1.2);
   return {
     id: invoice.id,
     title: invoice.name,
@@ -41,6 +54,7 @@ export const mapToDto = (
     excludeTva: invoice.excludeTva,
     customer: mapCustomerToDto(customer),
     mediaId: invoice.mediaId,
+    credits: credits.map((e) => mapToCreditForInvoiceDto(e)),
   };
 };
 
