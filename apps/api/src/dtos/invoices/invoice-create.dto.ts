@@ -8,6 +8,7 @@ import {
   IsDate,
   IsEnum,
   IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
 
@@ -46,7 +47,13 @@ export class CreateInvoiceDto implements InvoiceCreateData {
   invoice: File;
   @ApiProperty({ description: 'devisId related to the invoice' })
   @IsNumber()
-  @Transform(({ value }) => Number(value))
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value) {
+      return Number(value);
+    }
+    return undefined;
+  })
   devisId?: number;
 }
 

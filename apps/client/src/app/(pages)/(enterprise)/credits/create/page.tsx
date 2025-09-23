@@ -23,7 +23,7 @@ export default async function CreateCredits({
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 h-full">
       <h1 className="text-4xl font-amica mb-6">
         Créer un avoir sur la facture {invoice.data?.number}
       </h1>

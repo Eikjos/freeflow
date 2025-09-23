@@ -1,16 +1,22 @@
 "use client";
 
 import CreateCreditForm from "@components/templates/create-credit-form";
+import CreditTemplate from "@components/templates/credit-template";
+import Loading from "@components/ui/loading";
 import { Progress } from "@components/ui/progress";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PDFViewer } from "@react-pdf/renderer";
 import {
   CreateCreditData,
   CreateCreditDataValidation,
   CreateCreditLineData,
   InvoiceData,
 } from "@repo/shared-types";
+import { useQuery } from "@tanstack/react-query";
+import { useEnterprise } from "providers/enterprise-provider";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { getInformationForDevisQueryOptions } from "../../../lib/api/enterprise";
 import { formatPrice } from "../../../lib/utils";
 
 type CreateCreditFormProps = {
@@ -20,6 +26,7 @@ type CreateCreditFormProps = {
 export default function CreateCreditFormPage({
   invoice,
 }: CreateCreditFormProps) {
+  const { enterprise } = useEnterprise();
   const initialCreditAmount = invoice.credits
     .map((c) => c.totalAmount)
     .reduce((i, prev) => prev + i, 0);
@@ -42,37 +49,64 @@ export default function CreateCreditFormPage({
       newLine: { title: "", price: 0 },
     },
   });
+  const { data, isSuccess, isLoading } = useQuery({
+    ...getInformationForDevisQueryOptions(enterprise?.id!),
+    enabled: enterprise?.id !== undefined,
+  });
   const creditLines = useWatch({ control: form.control, name: "creditLines" });
 
   useEffect(() => {
     const totalCreditsAmount =
       initialCreditAmount +
       creditLines
-        ?.map((e) => parseFloat(!e.price ? 0 : e.price.toString()))
+        ?.map((e) => parseFloat(!e.price ? "0" : e.price.toString()))
         .reduce((e, prev) => e + prev, 0);
     setRatio((totalCreditsAmount / totalAmount) * 100);
     setCreditTotalAmount(totalCreditsAmount);
   }, [creditLines]);
 
-  return (
-    <FormProvider {...form}>
-      <div className="mb-5">
-        <div className="mb-1">
-          <span
-            style={{
-              marginLeft: `${ratio === 0 ? ratio : ratio > 93 ? 93 : ratio - 1}%`,
-            }}
-          >
-            {formatPrice(creditsTotalAmount, "FR-fr", "EUR")}
-          </span>
-        </div>
-        <Progress value={ratio > 100 ? 100 : ratio} />
+  if (isLoading) {
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        <Loading />
       </div>
-      <CreateCreditForm
-        totalAmountInvoice={totalAmount}
-        totalCreditInvoice={initialCreditAmount}
-      />
-      {/* <PDFViewer showToolbar={false}></PDFViewer> */}
-    </FormProvider>
+    );
+  }
+
+  return (
+    <>
+      <FormProvider {...form}>
+        <div className="mb-5">
+          <div className="mb-1 flex flex-col items-end">
+            <span
+              style={{
+                marginRight: `${ratio === 0 ? 97 : 97 - ratio < 0 ? 0 : 97 - ratio}%`,
+              }}
+            >
+              {formatPrice(creditsTotalAmount, "FR-fr", "EUR")}
+            </span>
+          </div>
+          <Progress value={ratio > 100 ? 100 : ratio} />
+        </div>
+        <CreateCreditForm
+          totalAmountInvoice={totalAmount}
+          totalCreditInvoice={initialCreditAmount}
+        />
+        <PDFViewer
+          showToolbar={false}
+          className="w-full h-full rounded-md mt-4"
+        >
+          <CreditTemplate
+            title={form.getValues().title}
+            date={new Date()}
+            customer={invoice.customer}
+            number={form.getValues().number}
+            information={data?.data}
+            excludeTva={invoice.excludeTva}
+            lines={form.getValues().creditLines}
+          />
+        </PDFViewer>
+      </FormProvider>
+    </>
   );
 }
