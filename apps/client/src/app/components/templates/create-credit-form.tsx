@@ -1,5 +1,6 @@
 import { Button } from "@components/ui/button";
 import { Card, CardContent, CardFooter } from "@components/ui/card";
+import { Checkbox } from "@components/ui/checkbox";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { Separator } from "@components/ui/separator";
@@ -22,7 +23,7 @@ export default function CreateCreditForm({
   totalCreditInvoice = 0,
 }: CreateCreditFormProps) {
   const form = useFormContext<
-    CreateCreditData & { newLine: CreateCreditLineData }
+    CreateCreditData & { newLine: CreateCreditLineData; maskName: boolean }
   >();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -31,11 +32,11 @@ export default function CreateCreditForm({
 
   const addLine = () => {
     const { newLine } = form.getValues();
-    form.clearErrors();
+    form.clearErrors("newLine.price");
+    form.clearErrors("newLine.title");
     const result = CreateCreditLineDataValidation.safeParse(newLine);
     if (!result.success) {
       result.error.errors.forEach((err) => {
-        console.log(err.message);
         return form.setError(
           err.path[0] === "price" ? "newLine.price" : "newLine.title",
           { message: err.message }
@@ -47,15 +48,23 @@ export default function CreateCreditForm({
     // checking that not exceed the amount of invoice
     const previousTotal =
       totalCreditInvoice +
-      fields.map((e) => e.price).reduce((e, prev) => e + prev, 0);
+      fields
+        .map((e) => parseFloat(e.price.toString()))
+        .reduce((e, prev) => e + prev, 0);
+
     const totalCredits = parseFloat(newLine.price.toString()) + previousTotal;
 
-    console.log(totalCredits, totalCreditInvoice, newLine.price);
-
     if (totalAmountInvoice < totalCredits) {
-      form.setError("newLine.price", {
-        message: `Le prix ne doit pas excéder ${formatPrice(totalAmountInvoice - previousTotal, "FR-fr", "EUR")}.`,
-      });
+      if (totalAmountInvoice - previousTotal > 0) {
+        form.setError("newLine.price", {
+          message: `Le prix ne doit pas excéder ${formatPrice(totalAmountInvoice - previousTotal, "FR-fr", "EUR")}.`,
+        });
+      } else {
+        form.setError("newLine.price", {
+          message: `Le prix de l'avoir ne doit pas excéder ${formatPrice(totalAmountInvoice - totalCreditInvoice, "FR-fr", "EUR")}.`,
+        });
+      }
+
       return;
     }
 
@@ -64,11 +73,23 @@ export default function CreateCreditForm({
     form.setValue("newLine.price", 0);
   };
 
+  const handleMaskNameChange = () => {
+    form.setValue("maskName", !form.watch("maskName"));
+  };
+
   return (
     <Form {...form}>
       <form>
         <Card>
           <CardContent className="py-2 px-4">
+            <div className="flex flex-row justify-end mt-2">
+              <Checkbox
+                label="Masquer le nom"
+                checked={form.getValues().maskName}
+                onCheckedChange={handleMaskNameChange}
+              />
+            </div>
+
             <Input label="common.number" {...form.register("number")} />
             <Input label="common.title" {...form.register("title")} />
             <div className="mt-5 pt-5 border-t border-secondary">
@@ -133,7 +154,9 @@ export default function CreateCreditForm({
             )}
 
             <CardFooter className="flex flex-row justify-end mt-5 p-0">
-              <Button type="submit">Créer</Button>
+              <Button type="submit" disabled={!form.formState.isValid}>
+                Créer
+              </Button>
             </CardFooter>
           </CardContent>
         </Card>

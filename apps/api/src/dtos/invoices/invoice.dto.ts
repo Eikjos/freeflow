@@ -15,7 +15,7 @@ import {
   CreditForInvoiceDto,
   mapToCreditForInvoiceDto,
 } from '../credits/credit.dto';
-import { CustomerDto, mapCustomerToDto } from '../customers/customer.dto';
+import { CustomerDetailDto, mapCustomerToDto } from '../customers/customer.dto';
 
 export class InvoiceDto implements InvoiceData {
   id: number;
@@ -28,7 +28,7 @@ export class InvoiceDto implements InvoiceData {
   type: InvoiceType;
   mediaId: number;
   excludeTva: boolean;
-  customer: CustomerDto;
+  customer: CustomerDetailDto;
   credits: CreditForInvoiceDto[];
 }
 

@@ -1,5 +1,5 @@
 import { CreditForInvoiceData } from "types/credits";
-import { CustomerModel } from "types/customers";
+import { CustomerDetailModel } from "types/customers";
 import { EnterpriseInformation } from "types/enterprises";
 import { z } from "zod";
 
@@ -24,7 +24,7 @@ export type InvoiceData = {
   type: InvoiceType;
   excludeTva: boolean;
   mediaId: number;
-  customer: CustomerModel;
+  customer: CustomerDetailModel;
   credits: CreditForInvoiceData[];
 };
 

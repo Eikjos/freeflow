@@ -39,7 +39,9 @@ export default function CreateCreditFormPage({
   const [ratio, setRatio] = useState<number>(
     (creditsTotalAmount / totalAmount) * 100
   );
-  const form = useForm<CreateCreditData & { newLine: CreateCreditLineData }>({
+  const form = useForm<
+    CreateCreditData & { newLine: CreateCreditLineData; maskName: boolean }
+  >({
     resolver: zodResolver(CreateCreditDataValidation),
     defaultValues: {
       title: "",
@@ -47,9 +49,10 @@ export default function CreateCreditFormPage({
       creditLines: [],
       invoiceId: invoice.id,
       newLine: { title: "", price: 0 },
+      maskName: true,
     },
   });
-  const { data, isSuccess, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     ...getInformationForDevisQueryOptions(enterprise?.id!),
     enabled: enterprise?.id !== undefined,
   });
@@ -98,10 +101,11 @@ export default function CreateCreditFormPage({
         >
           <CreditTemplate
             title={form.getValues().title}
-            date={new Date()}
+            invoice={invoice}
             customer={invoice.customer}
             number={form.getValues().number}
             information={data?.data}
+            maskName={form.getValues().maskName}
             excludeTva={invoice.excludeTva}
             lines={form.getValues().creditLines}
           />

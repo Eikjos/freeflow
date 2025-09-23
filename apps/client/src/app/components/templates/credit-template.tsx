@@ -8,9 +8,9 @@ import {
 } from "@react-pdf/renderer";
 import {
   CreateCreditLineData,
-  CustomerModel,
+  CustomerDetailModel,
+  InvoiceData,
   InvoiceInformation,
-  InvoiceLineCreateData,
 } from "@repo/shared-types";
 import dayjs from "dayjs";
 import { formatPrice, getMediaUrl } from "../../../lib/utils";
@@ -132,7 +132,7 @@ const CreditTemplate = ({
   title,
   number,
   customer,
-  date,
+  invoice,
   lines,
   information,
   maskName,
@@ -140,8 +140,8 @@ const CreditTemplate = ({
 }: {
   title?: string;
   number?: string;
-  date?: Date;
-  customer?: CustomerModel;
+  invoice?: InvoiceData;
+  customer?: CustomerDetailModel;
   lines: CreateCreditLineData[];
   information?: InvoiceInformation;
   maskName?: boolean;
@@ -166,21 +166,26 @@ const CreditTemplate = ({
                 style={styles.logo}
               />
             )}
-            {!maskName && information?.enterprise.mediaId && (
-              <Text>{information?.enterprise.name}</Text>
+            {!maskName && information?.enterprise?.mediaId ? (
+              <Text>{information?.enterprise?.name ?? ""}</Text>
+            ) : (
+              <Text></Text>
             )}
           </View>
         </View>
         <View style={styles.containerHeader}>
           <View style={styles.containerInfo}>
             <Text style={styles.textImportant}>
-              Devis n°DEV-{String(number).padStart(5, "0")}
+              Avoir n°AV-{String(number).padStart(5, "0")}
             </Text>
             <View>
               <Text style={[styles.text]}>
-                Date : {date ? dayjs(date).format("DD/MM/YYYY") : ""}
+                Date de la facture :{" "}
+                {invoice?.date ? dayjs(invoice.date).format("DD/MM/YYYY") : ""}
               </Text>
-              <Text style={styles.text}>Devis valable pendant 30 jours</Text>
+              <Text style={styles.text}>
+                Référence Facture : {invoice?.number}
+              </Text>
             </View>
           </View>
           <View style={styles.informationContainer}>
@@ -230,12 +235,6 @@ const CreditTemplate = ({
               <Text style={styles.text}>Désignation</Text>
             </View>
             <View style={styles.tableColHeader}>
-              <Text style={styles.text}>Quantité</Text>
-            </View>
-            <View style={styles.tableColHeader}>
-              <Text style={styles.text}>Prix Unit.</Text>
-            </View>
-            <View style={styles.tableColHeader}>
               <Text style={styles.text}>Prix HT</Text>
             </View>
           </View>
@@ -245,26 +244,21 @@ const CreditTemplate = ({
             {lines &&
               lines.length > 0 &&
               lines.map((line, index) => {
-                const name = line?.name ?? "";
-                const quantity = line?.quantity ?? 0;
-                const unitPrice = line?.unitPrice ?? 0;
+                const title = line?.title ?? "";
+                const price = line?.price ?? 0;
 
                 return (
                   <View style={styles.tableRow} key={index}>
                     <View style={{ ...styles.tableCol, width: "100%" }}>
-                      <Text style={styles.text}>{name}</Text>
-                    </View>
-                    <View style={styles.tableCol}>
-                      <Text style={styles.text}>{quantity}</Text>
+                      <Text style={styles.text}>{title}</Text>
                     </View>
                     <View style={styles.tableCol}>
                       <Text style={styles.text}>
-                        {formatPrice(unitPrice, "FR-fr", "EUR")}
-                      </Text>
-                    </View>
-                    <View style={styles.tableCol}>
-                      <Text style={styles.text}>
-                        {formatPrice(unitPrice * quantity, "FR-fr", "EUR")}
+                        {formatPrice(
+                          price / (excludeTva ? 1.0 : 1.2),
+                          "FR-fr",
+                          "EUR"
+                        )}
                       </Text>
                     </View>
                   </View>
@@ -283,7 +277,7 @@ const CreditTemplate = ({
             >
               <Text style={styles.text}>
                 {formatPrice(
-                  sum(lines.map((e) => e.quantity * e.unitPrice)),
+                  sum(lines.map((e) => e.price)) / (excludeTva ? 1.0 : 1.2),
                   "FR-fr",
                   "EUR"
                 )}
@@ -304,12 +298,7 @@ const CreditTemplate = ({
             </View>
             <View style={{ ...styles.tableCol, width: "50%" }}>
               <Text style={styles.text}>
-                {formatPrice(
-                  sum(lines.map((e) => e.quantity * e.unitPrice)) *
-                    (excludeTva ? 1 : 1.2),
-                  "FR-fr",
-                  "EUR"
-                )}
+                {formatPrice(sum(lines.map((e) => e.price)), "FR-fr", "EUR")}
               </Text>
             </View>
           </View>
@@ -323,43 +312,6 @@ const CreditTemplate = ({
           ) : (
             <Text style={styles.textTVA}></Text>
           )}
-        </View>
-        <View
-          style={{
-            marginTop: "20px",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <View>
-            <Text style={{ fontSize: "12px", fontWeight: "bold" }}>
-              Moyens de paiement
-            </Text>
-            <Text style={{ fontSize: "10px" }}>Virement bancaire</Text>
-          </View>
-          <View
-            style={{
-              borderWidth: "1px",
-              borderColor: "#3e6450",
-              borderRadius: "10px",
-              marginRight: "50px",
-              padding: "10px",
-              paddingBottom: "75px",
-              width: "50%",
-            }}
-          >
-            <Text style={{ fontSize: "12px", fontWeight: "bold" }}>Date:</Text>
-            <Text
-              style={{
-                fontSize: "12px",
-                fontWeight: "bold",
-                marginTop: "20px",
-              }}
-            >
-              Signature:
-            </Text>
-          </View>
         </View>
       </Page>
     </Document>
