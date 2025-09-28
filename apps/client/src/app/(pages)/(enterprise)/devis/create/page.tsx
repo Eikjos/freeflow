@@ -21,6 +21,7 @@ import {
 } from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
 import { createInvoice } from "actions/invoice";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEnterprise } from "providers/enterprise-provider";
 import { useEffect, useReducer, useState } from "react";
@@ -37,6 +38,7 @@ import {
 } from "../../../../../lib/api/tasks";
 
 export default function CreateDevisPage() {
+  const t = useTranslations();
   const { enterprise } = useEnterprise();
   const router = useRouter();
   const [maskNameOnInvoice, setMaskNameOnInvoice] = useState<boolean>(true);
@@ -133,14 +135,9 @@ export default function CreateDevisPage() {
       },
       new File([invoiceBlob], `devis-${values.number}.pdf`)
     )
-      .then((res) => {
-        if (res === null) {
-          toast.error("Il y a eu une erreur.");
-        } else {
-          toast.success("Le devis a bien été créé.");
-
-          router.push("/invoices");
-        }
+      .then(() => {
+        toast.success(t("devis.success.create"));
+        router.push("/invoices");
       })
       .catch((err: Error) => {
         toast.error(err.message);
@@ -159,19 +156,19 @@ export default function CreateDevisPage() {
     <div className="h-full">
       <Card className="mb-10">
         <CardHeader>
-          <CardTitle>Création d'un devis</CardTitle>
+          <CardTitle>{t("devis.create")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-rox justify-end gap-4">
             <Checkbox
-              label="Masquer le nom"
+              label={t("invoice.maskName")}
               checked={maskNameOnInvoice}
               onCheckedChange={handleMashNameChange}
             />
             {data?.data?.enterprise.juridicShape ===
               "Entrepreneur individuel" && (
               <Checkbox
-                label="Ne pas inclure la TVA"
+                label={t("invoice.notIncludeTva")}
                 checked={form.getValues().excludeTva}
                 onCheckedChange={handleExcludeTvaChange}
               />
@@ -180,19 +177,20 @@ export default function CreateDevisPage() {
           <Form {...form}>
             <form>
               <Input
-                label={"common.title"}
-                placeholder="Titre de la facture"
+                label={t("common.title")}
+                placeholder={t("devis.title")}
                 {...form.register("title", {
                   onBlur: forceUpdate,
                 })}
               />
               <DateInput
-                label={"common.number"}
+                label={t("common.number")}
+                placeholder={t("devis.number")}
                 {...form.register("date", { onBlur: forceUpdate })}
               />
               <Autocomplete
-                label={"common.customer"}
-                placeholder="Sélectionner un client"
+                label={t("common.customer")}
+                placeholder={t("customer.select")}
                 queryOptions={(filter) =>
                   getAllCustomersQueryOptions({
                     page: 0,
@@ -227,11 +225,11 @@ export default function CreateDevisPage() {
                 filterField="name"
                 render={(task) => `${task.name}`}
                 fieldIdentifier="id"
-                label="Tâches"
+                label={t("task.name")}
                 className="mt-3"
-                placeholder="Sélectionner une tâche"
+                placeholder={t("task.select")}
                 onAdd={() => setModalTaskOpen(true)}
-                addLabel={"Ajouter une tâche"}
+                addLabel={t("task.add")}
                 {...form.register("invoiceLines", {
                   onBlur: forceUpdate,
                   value: undefined,
@@ -242,7 +240,7 @@ export default function CreateDevisPage() {
           </Form>
           {form.getValues().invoiceLines.length > 0 && (
             <div className="mt-4">
-              <p>Les lignes de facturation</p>
+              <p>{t("invoice.lines.title")}</p>
               <InvoiceLineList
                 invoices={form.getValues().invoiceLines}
                 handleChange={handleChangeInvoiceLine}
@@ -251,7 +249,7 @@ export default function CreateDevisPage() {
           )}
           <div className="flex flex-row justify-end mt-4">
             <Button onClick={form.handleSubmit(onSubmit)}>
-              Enregistrer et envoyer
+              {t("common.submitAndSend")}
             </Button>
           </div>
         </CardContent>

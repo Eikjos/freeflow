@@ -7,11 +7,13 @@ import { Pagination } from "@components/ui/pagination";
 import { InvoiceFilterData, PaginationFilter } from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
 import { getAllInvoiceQueryOptions } from "../../../../lib/api/invoices";
 
 export default function InvoicePage() {
+  const t = useTranslations();
   const [filter, setFilter] = useState<InvoiceFilterData>();
   const paginationFilter: PaginationFilter<InvoiceFilterData> = {
     page: 0,
@@ -25,18 +27,18 @@ export default function InvoicePage() {
   return (
     <>
       <div className="w-full flex flex-row justify-between items-center">
-        <h1 className="font-amica text-4xl">Mes factures</h1>
+        <h1 className="font-amica text-4xl">{t("invoice.titlePage")}</h1>
         <div className="flex flex-row gap-4">
           <Button asChild variant={"outline"}>
             <Link href={"/devis/create"}>
               <Plus size={20} />
-              Créer un devis
+              {t("devis.createButton")}
             </Link>
           </Button>
           <Button asChild>
             <Link href={"/invoices/create"}>
               <Plus size={20} />
-              Créer une facture
+              {t("invoice.createButton")}
             </Link>
           </Button>
         </div>

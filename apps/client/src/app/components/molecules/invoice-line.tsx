@@ -8,6 +8,7 @@ import {
   InvoiceLineValidation,
 } from "@repo/shared-types";
 import { Trash } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useReducer } from "react";
 import { useForm } from "react-hook-form";
 
@@ -24,6 +25,7 @@ export default function InvoiceLine({
   onDelete,
   canDelete,
 }: InvoiceLineProps) {
+  const t = useTranslations();
   const [totalKey, updateTotalKey] = useReducer((x) => x + 1, 0);
   const form = useForm<InvoiceLineData>({
     resolver: zodResolver(InvoiceLineValidation),
@@ -60,7 +62,7 @@ export default function InvoiceLine({
         <form>
           <div className="flex flex-row items-center gap-4">
             <div className="flex flex-row items-center gap-2">
-              <span className="text-sm">Quantité</span>
+              <span className="text-sm">{t("common.quantity")}</span>
               <Input
                 type="number"
                 disabled={!canDelete}
@@ -68,7 +70,7 @@ export default function InvoiceLine({
               />
             </div>
             <div className="flex flex-row items-center gap-2">
-              <span className="text-sm">Prix Unit</span>
+              <span className="text-sm">{t("common.unitPrice")}</span>
               <Input
                 type="number"
                 step="0.5"
@@ -78,7 +80,7 @@ export default function InvoiceLine({
               <span>€</span>
             </div>
             <div className="flex flex-row items-center gap-2">
-              <span className="text-sm">Total HT</span>
+              <span className="text-sm">{t("common.totalHT")}</span>
               <Input
                 key={totalKey}
                 type="number"

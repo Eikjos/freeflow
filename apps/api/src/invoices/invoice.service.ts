@@ -39,13 +39,13 @@ export default class InvoiceService {
         id: invoice.customerId,
       },
     });
-    if (!customer) throw new BadRequestException('customer.not.found');
+    if (!customer) throw new BadRequestException('customer.notFound');
 
     if (invoice.devisId) {
       const devis = await this.prisma.invoice.findFirst({
         where: { id: invoice.devisId, type: 'QUOTE' },
       });
-      if (!devis) throw new BadRequestException('devis.not.found');
+      if (!devis) throw new BadRequestException('devis.notFound');
     }
 
     // upload invoice

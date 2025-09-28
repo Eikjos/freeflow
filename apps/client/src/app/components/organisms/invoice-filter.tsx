@@ -8,6 +8,7 @@ import { Select } from "@components/ui/select";
 import { SelectItemProps } from "@radix-ui/react-select";
 import { InvoiceFilterData } from "@repo/shared-types";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { getAllCustomersQueryOptions } from "../../../lib/api/customers";
 import { invoiceStatusToString } from "../../../lib/utils";
@@ -21,6 +22,7 @@ export default function InvoiceFilter({
   className,
   onChangeFilter,
 }: InvoiceFilterProps) {
+  const t = useTranslations();
   const form = useForm<InvoiceFilterData>({
     defaultValues: {
       number: "",
@@ -72,18 +74,18 @@ export default function InvoiceFilter({
       <CardContent className="">
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Form {...form}>
-            <h4 className="font-semibold">Filtres</h4>
+            <h4 className="font-semibold">{t("common.filters")}</h4>
             <div className="flex flex-row w-full gap-10">
               <Input
                 type="text"
-                label="Numéro"
-                placeholder="Rechercher sur le numéro"
+                label={t("common.number")}
+                placeholder={t("invoice.search.number")}
                 className="w-1/4"
                 {...form.register("number")}
               />
               <Autocomplete
-                label={"common.customer"}
-                placeholder="Filtrer par client"
+                label={t("common.customer")}
+                placeholder={t("invoice.search.customer")}
                 queryOptions={(filter) =>
                   getAllCustomersQueryOptions({
                     page: 0,
@@ -102,16 +104,16 @@ export default function InvoiceFilter({
                 {...form.register("customerId")}
               />
               <Select
-                label="Statut"
+                label={t("common.status")}
                 className="w-1/4"
-                placeholder="Filtrer par statut"
+                placeholder={t("invoice.search.status")}
                 values={statusValues}
                 {...form.register("status")}
               />
               <Select
-                label="Type"
+                label={t("common.type")}
                 className="w-1/4"
-                placeholder="Filtrer par type"
+                placeholder={t("invoice.search.type")}
                 values={invoiceTypes}
                 {...form.register("type")}
               />
@@ -120,25 +122,25 @@ export default function InvoiceFilter({
               <DateInput
                 {...form.register("startDate")}
                 className="w-1/6"
-                placeholder="Date de début"
-                label="Date de début"
+                placeholder={t("common.startDate")}
+                label={t("common.startDate")}
                 maxDate={endDate}
               />
               <span className="pt-5 text-sm">à</span>
               <DateInput
                 {...form.register("endDate")}
                 className="w-1/6"
-                placeholder="Date de fin"
-                label="Date de fin"
+                placeholder={t("common.endDate")}
+                label={t("common.endDate")}
                 minDate={startDate}
               />
             </div>
           </Form>
           <div className="mt-2 flex flex-row justify-end gap-5">
             <Button variant={"outline"} type="button" onClick={resetForm}>
-              Réinitialiser
+              {t("common.reinit")}
             </Button>
-            <Button type="submit">Appliquer</Button>
+            <Button type="submit">{t("common.apply")}</Button>
           </div>
         </form>
       </CardContent>

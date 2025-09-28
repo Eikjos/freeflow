@@ -24,7 +24,7 @@ export default class CreditService {
       },
     });
     if (!invoice) {
-      throw new BadRequestException('invoice.not.found');
+      throw new BadRequestException('invoice.notFound');
     }
     // checking if the credit amount not exceed the invoice amount
     const creditTotalAmount =
@@ -38,7 +38,7 @@ export default class CreditService {
         .map((i) => i.prixUnit * i.quantity)
         .reduce((i, prev) => i + prev, 0) * (invoice.excludeTva ? 1 : 1.2);
     if (creditTotalAmount > invoiceTotalAmount) {
-      throw new BadRequestException('credit.amount.exceed');
+      throw new BadRequestException('credit.amountExceed');
     }
 
     // save the file

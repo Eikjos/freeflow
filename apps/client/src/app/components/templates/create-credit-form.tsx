@@ -14,6 +14,7 @@ import {
 } from "@repo/shared-types";
 import { createCredit } from "actions/credit";
 import { Plus, Trash } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
@@ -33,6 +34,7 @@ export default function CreateCreditForm({
   totalAmountInvoice = 0,
   totalCreditInvoice = 0,
 }: CreateCreditFormProps) {
+  const t = useTranslations();
   const form = useFormContext<
     CreateCreditData & { newLine: CreateCreditLineData; maskName: boolean }
   >();
@@ -67,15 +69,15 @@ export default function CreateCreditForm({
     const totalCredits = parseFloat(newLine.price.toString()) + previousTotal;
 
     if (totalAmountInvoice < totalCredits) {
-      if (totalAmountInvoice - previousTotal > 0) {
-        form.setError("newLine.price", {
-          message: `Le prix ne doit pas excéder ${formatPrice(totalAmountInvoice - previousTotal, "FR-fr", "EUR")}.`,
-        });
-      } else {
-        form.setError("newLine.price", {
-          message: `Le prix de l'avoir ne doit pas excéder ${formatPrice(totalAmountInvoice - totalCreditInvoice, "FR-fr", "EUR")}.`,
-        });
-      }
+      form.setError("newLine.price", {
+        message: t("credit.notExceedAmount", {
+          amount: formatPrice(
+            totalAmountInvoice - totalCreditInvoice,
+            "FR-fr",
+            "EUR"
+          ),
+        }),
+      });
 
       return;
     }
@@ -96,7 +98,13 @@ export default function CreateCreditForm({
       .reduce((i, prev) => prev + i, 0);
     if (totalCreditAmount > totalAmountInvoice - totalCreditInvoice) {
       toast.error(
-        `Le montant de l'avoir est supérieur au montant de la facture. L'avoir ne faut pas qu'il dépasse ${formatPrice(totalAmountInvoice - totalCreditInvoice, "FR-fr", "EUR")}`
+        t("credit.exceedAmountInvoice", {
+          amount: formatPrice(
+            totalAmountInvoice - totalCreditInvoice,
+            "FR-fr",
+            "EUR"
+          ),
+        })
       );
       return;
     }
@@ -120,12 +128,8 @@ export default function CreateCreditForm({
       new File([creditBlob], `credit-AV-${values.number}.pdf`)
     )
       .then((res) => {
-        if (res === null) {
-          toast.error("Il y a eu une erreur.");
-        } else {
-          toast.success("L'avoir a bien été créé.");
-          router.push("/invoices");
-        }
+        toast.success(t("credit.success.create"));
+        router.push("/invoices");
       })
       .catch((err: Error) => {
         toast.error(err.message);
@@ -139,31 +143,31 @@ export default function CreateCreditForm({
           <CardContent className="py-2 px-4">
             <div className="flex flex-row justify-end mt-2">
               <Checkbox
-                label="Masquer le nom"
+                label={t("invoice.maskName")}
                 checked={form.getValues().maskName}
                 onCheckedChange={handleMaskNameChange}
               />
             </div>
 
-            <Input label="common.number" {...form.register("number")} />
-            <Input label="common.title" {...form.register("title")} />
+            <Input label={t("common.number")} {...form.register("number")} />
+            <Input label={t("common.title")} {...form.register("title")} />
             <div className="mt-5 pt-5 border-t border-secondary">
-              <span>Ajouter une nouvelle ligne</span>
+              <span>{t("credit.lines.add")}</span>
               <div className="flex flex-row w-full items-start gap-2">
                 <div className="flex flex-row items-start gap-2 w-full">
                   <Input
-                    label="common.name"
+                    label={t("common.name")}
                     className="w-3/5"
                     error={form.formState.errors.newLine?.title?.message}
                     {...form.register(`newLine.title`)}
                   />
                   <Input
-                    label="price TTC"
+                    label={t("common.priceTTC")}
                     className="w-2/5"
                     type="number"
                     step="0.5"
                     error={form.formState.errors.newLine?.price?.message}
-                    description="Attention l'avoir ne peut pas dépasser le montant de la facture."
+                    description={t("credit.warning.amount")}
                     {...form.register(`newLine.price`)}
                   />
                 </div>
@@ -210,7 +214,7 @@ export default function CreateCreditForm({
 
             <CardFooter className="flex flex-row justify-end mt-5 p-0">
               <Button type="submit" disabled={!form.formState.isValid}>
-                Créer
+                {t("common.create")}
               </Button>
             </CardFooter>
           </CardContent>

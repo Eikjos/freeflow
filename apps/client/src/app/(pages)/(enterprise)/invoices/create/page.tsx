@@ -21,6 +21,7 @@ import {
 } from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
 import { createInvoice } from "actions/invoice";
+import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEnterprise } from "providers/enterprise-provider";
 import { useEffect, useReducer, useState } from "react";
@@ -38,6 +39,7 @@ import {
 } from "../../../../../lib/api/tasks";
 
 export default function CreateInvoicesPage() {
+  const t = useTranslations();
   const searchParams = useSearchParams();
   const devisId = searchParams.get("devisId");
   const { enterprise } = useEnterprise();
@@ -175,7 +177,7 @@ export default function CreateInvoicesPage() {
         if (res === null) {
           toast.error("Il y a eu une erreur.");
         } else {
-          toast.success("La facture a bien été créé.");
+          toast.success(t("invoice.success.create"));
           router.push("/invoices");
         }
       })
@@ -196,19 +198,19 @@ export default function CreateInvoicesPage() {
     <div className="h-full">
       <Card className="mb-10">
         <CardHeader>
-          <CardTitle>Creation d'une facture</CardTitle>
+          <CardTitle>{t("invoice.create")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-rox justify-end gap-4">
             <Checkbox
-              label="Masquer le nom"
+              label={t("invoice.maskName")}
               checked={maskNameOnInvoice}
               onCheckedChange={handleMashNameChange}
             />
             {data?.data?.enterprise.juridicShape ===
               "Entrepreneur individuel" && (
               <Checkbox
-                label="Ne pas inclure la TVA"
+                label={"invoice.notIncludeTva"}
                 checked={form.getValues().excludeTva}
                 onCheckedChange={handleExcludeTvaChange}
               />
@@ -217,25 +219,25 @@ export default function CreateInvoicesPage() {
           <Form {...form}>
             <form>
               <Input
-                label={"common.title"}
-                placeholder="Titre de la facture"
+                label={t("common.title")}
+                placeholder={t("invoice.title")}
                 {...form.register("title", {
                   onBlur: forceUpdate,
                 })}
               />
               <Input
-                label={"common.number"}
+                label={t("common.number")}
                 type="number"
-                placeholder="Numéro de la facture"
+                placeholder={t("invoice.number")}
                 {...form.register("number", { onBlur: forceUpdate })}
               />
               <DateInput
-                label={"common.number"}
+                label={t("common.number")}
                 {...form.register("date", { onBlur: forceUpdate })}
               />
               <Autocomplete
-                label={"common.customer"}
-                placeholder={devisId !== null ? "" : "Sélectionner un client"}
+                label={t("common.customer")}
+                placeholder={devisId !== null ? "" : t("customer.select")}
                 queryOptions={(filter) =>
                   getAllCustomersQueryOptions({
                     page: 0,
@@ -271,11 +273,11 @@ export default function CreateInvoicesPage() {
                 filterField="name"
                 render={(task) => `${task.name}`}
                 fieldIdentifier="id"
-                label="Tâches"
+                label={t("task.name")}
                 className="mt-3"
-                placeholder="Sélectionner une tâche"
+                placeholder={t("task.select")}
                 onAdd={() => setModalTaskOpen(true)}
-                addLabel={"Ajouter une tâche"}
+                addLabel={t("task.add")}
                 {...form.register("invoiceLine", {
                   onBlur: forceUpdate,
                   value: undefined,
@@ -286,7 +288,7 @@ export default function CreateInvoicesPage() {
           </Form>
           {form.getValues().invoiceLines.length > 0 && (
             <div className="mt-4" key={autocompleteKey}>
-              <p>Les lignes de facturation</p>
+              <p>{t("invoice.lines.title")}</p>
               <InvoiceLineList
                 invoices={form.getValues().invoiceLines}
                 handleChange={handleChangeInvoiceLine}
@@ -296,7 +298,7 @@ export default function CreateInvoicesPage() {
           )}
           <div className="flex flex-row justify-end mt-4">
             <Button onClick={form.handleSubmit(onSubmit)}>
-              Enregistrer et envoyer
+              {t("common.submitAndSend")}
             </Button>
           </div>
         </CardContent>

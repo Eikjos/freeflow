@@ -10,6 +10,7 @@ import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InvoiceLineData, InvoiceLineValidation } from "@repo/shared-types";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { formatPrice } from "../../../lib/utils";
 
@@ -24,6 +25,7 @@ export default function CreateInvoiceLineModal({
   handleOpen,
   handleSubmit,
 }: CreateInvoiceLineModal) {
+  const t = useTranslations();
   const form = useForm<InvoiceLineData>({
     resolver: zodResolver(InvoiceLineValidation),
     defaultValues: {
@@ -53,15 +55,15 @@ export default function CreateInvoiceLineModal({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-3xl">
-            Ajouter une ligne de facturation
+            {t("invoice.lines.add")}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form>
             <Input label={"Nom"} placeholder="Nom" {...form.register("name")} />
             <Input
-              label={"Quantité"}
-              placeholder="Quantité"
+              label={t("common.quantity")}
+              placeholder={t("common.quantity")}
               type="number"
               {...form.register("quantity", { valueAsNumber: true })}
             />
@@ -78,7 +80,9 @@ export default function CreateInvoiceLineModal({
               {formatPrice(quantity * unitPrice, userLocale, currency)}
             </p>
             <DialogFooter>
-              <Button onClick={form.handleSubmit(onSubmit)}>Créer</Button>
+              <Button onClick={form.handleSubmit(onSubmit)}>
+                {t("common.create")}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
