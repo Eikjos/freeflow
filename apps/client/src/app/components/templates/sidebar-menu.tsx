@@ -12,8 +12,8 @@ import {
 import { EnterpriseInfo } from "../../../types/enterprise-info-type";
 
 type SidebarMenuProps = {
-  enterprise: EnterpriseInfo | null;
   className?: string;
+  enterprise?: EnterpriseInfo;
 };
 
 export default async function SidebarMenu({
@@ -27,7 +27,7 @@ export default async function SidebarMenu({
     },
     {
       name: "Mes factures",
-      url: "#",
+      url: "/invoices",
     },
     {
       name: "Mes clients",

@@ -10,30 +10,34 @@ import {
 } from "@components/ui/form";
 import { InputProps } from "@components/ui/input";
 import Loading from "@components/ui/loading";
-import { PaginationFilter, PaginationResult } from "@repo/shared-types";
+import { PaginationResult } from "@repo/shared-types";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "../../../lib/utils";
 import { HttpResponse } from "../../../types/http-response";
 
-type AutoCompleteProps<TData extends Record<string, string | number>> =
-  {} & Omit<AutoCompleteWithoutControlProps<TData>, "onChange"> &
-    Omit<InputProps, "type" | "value" | "defaultValue" | "onChange">;
+type AutoCompleteProps<TData extends Record<string, unknown>> = {} & Omit<
+  AutoCompleteWithoutControlProps<TData>,
+  "onChange"
+> &
+  Omit<InputProps, "type" | "value" | "defaultValue" | "onChange">;
 
-type AutoCompleteWithoutControlProps<
-  TData extends Record<string, string | number>,
-> = {
-  queryOptions: (
-    filter: PaginationFilter<TData>
-  ) => UseQueryOptions<HttpResponse<PaginationResult<TData>>, Error>;
+type AutoCompleteWithoutControlProps<TData extends Record<string, unknown>> = {
+  queryOptions: (filter: {
+    id?: number;
+    search?: string;
+  }) => UseQueryOptions<HttpResponse<PaginationResult<TData>>, Error>;
   filterField: keyof TData;
   fieldIdentifier: keyof TData;
   render: (data: TData) => string;
   value?: number;
+  defaultValue?: number;
   className?: string;
   placeholder?: string;
   error?: string;
+  onAdd?: () => void;
+  addLabel?: string;
   onChange?: (value?: number) => void;
 } & Omit<InputProps, "type" | "value" | "defaultValue" | "onChange">;
 
@@ -57,78 +61,89 @@ function AutoCompleteItem({ name, value, onClick }: AutocompleteItemProps) {
   );
 }
 
-function AutoCompleteWithoutControl<
-  TData extends Record<string, string | number>,
+export function AutoCompleteWithoutControl<
+  TData extends Record<string, unknown>,
 >({
   queryOptions,
-  filterField,
   fieldIdentifier,
   render,
   placeholder,
+  defaultValue,
   value,
   error,
+  onAdd,
+  addLabel,
+  disabled = false,
   ...props
 }: AutoCompleteWithoutControlProps<TData>) {
   const [open, setOpen] = useState<boolean>(false);
-  const [currentValue, setCurrentValue] = useState<number | undefined>(value);
+  const [hasTyped, setHasTyped] = useState(false);
   const [displayValue, setDisplayValue] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const [filterApplied, setFilterApplied] = useState<PaginationFilter<TData>>({
-    page: 0,
-    pageSize: 20,
-    filter: value
-      ? ({ [fieldIdentifier]: value } as Partial<TData>)
-      : ({} as Partial<TData>),
-    asc: filterField,
-  });
-
   const handleChange = (newValue: number, newDisplayValue: string) => {
-    setCurrentValue(newValue);
     setDisplayValue(newDisplayValue);
     if (props.onChange) {
       props.onChange(newValue);
     }
-    handleFilter(newDisplayValue);
     setOpen(false);
   };
 
   const handleClear = () => {
-    setCurrentValue(undefined);
     setDisplayValue("");
-    handleFilter("");
     if (props.onChange) {
       props.onChange();
     }
     inputRef.current?.focus();
   };
 
-  const handleFilter = (value: string) => {
-    const updatedFilter: Partial<TData> = {};
-
-    updatedFilter[filterField] = value as TData[keyof TData];
-    setDisplayValue(value);
-    setFilterApplied((prev) => ({
-      ...prev,
-      filter: updatedFilter,
-      asc: filterField,
-    }));
+  const handleOpen = () => {
+    if (!disabled) {
+      setOpen((prev) => !prev);
+    }
   };
 
-  const { data, isLoading } = useQuery({ ...queryOptions(filterApplied) });
+  const queryParams = hasTyped
+    ? { search: displayValue }
+    : value
+      ? { id: value }
+      : {};
+
+  const { data, isLoading } = useQuery({
+    ...queryOptions(queryParams),
+  });
+
+  const handleFilter = (value: string) => {
+    setDisplayValue((prev) => value);
+    setHasTyped(true);
+  };
 
   useEffect(() => {
     if (
       data &&
       data.ok &&
-      currentValue === value &&
-      filterApplied.filter &&
-      filterApplied.filter[fieldIdentifier] !== undefined
+      data.data?.totalItems === 1 &&
+      value !== undefined &&
+      value !== null
     ) {
-      if (data?.data?.data[0]) setDisplayValue(render(data?.data?.data[0]));
+      if (data?.data?.data[0]) {
+        console.log("e", typeof value);
+        setDisplayValue((prev) => render(data?.data?.data[0]!));
+      } else {
+        setDisplayValue("");
+      }
     }
   }, [data]);
+
+  useEffect(() => {
+    if (!value) {
+      setDisplayValue("");
+      if (props.onChange) {
+        props.onChange();
+      }
+    }
+  }, [value]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -163,17 +178,18 @@ function AutoCompleteWithoutControl<
           onFocus={() => setOpen(true)}
           placeholder={placeholder}
           value={displayValue}
+          disabled={disabled}
           ref={inputRef}
         />
         <span
           className="absolute top-3 right-2 cursor-pointer"
-          onClick={() => setOpen(!open)}
+          onClick={handleOpen}
         >
-          {currentValue === undefined && open ? (
+          {value === undefined && open ? (
             <ChevronUp size={20} className="text-gray-500" />
           ) : (
             <>
-              {currentValue === undefined ? (
+              {value === undefined ? (
                 <ChevronDown size={20} className="text-gray-500" />
               ) : (
                 <X size={15} className="text-gray-500" onClick={handleClear} />
@@ -194,18 +210,45 @@ function AutoCompleteWithoutControl<
                 <Loading />
               </div>
             ) : data && data.ok && data.data?.data.length ? (
-              data.data.data.map((item, index) => (
-                <AutoCompleteItem
-                  name={render(item)}
-                  value={item[fieldIdentifier] as number}
-                  onClick={handleChange}
-                  key={index}
-                />
-              ))
+              <>
+                {data.data.data.map((item, index) => (
+                  <AutoCompleteItem
+                    name={render(item)}
+                    value={item[fieldIdentifier] as number}
+                    onClick={handleChange}
+                    key={index}
+                  />
+                ))}
+                {onAdd && (
+                  <AutoCompleteItem
+                    name={addLabel!}
+                    value={0}
+                    onClick={() => {
+                      setOpen(false);
+                      onAdd();
+                    }}
+                  />
+                )}
+              </>
             ) : (
-              <div className="px-2 py-1 text-gray-500">
-                Aucun résultat trouvé
-              </div>
+              <>
+                <Button
+                  type="button"
+                  variant={"select"}
+                  className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                  disabled
+                  tabIndex={0}
+                >
+                  <span className="text-left">Aucun résultat trouvé</span>
+                </Button>
+                {onAdd && (
+                  <AutoCompleteItem
+                    name={addLabel!}
+                    value={0}
+                    onClick={onAdd}
+                  />
+                )}
+              </>
             )}
           </div>
         </div>
@@ -214,9 +257,9 @@ function AutoCompleteWithoutControl<
   );
 }
 
-export default function Autocomplete<
-  TData extends Record<string, string | number>,
->({ ...props }: AutoCompleteProps<TData>) {
+export default function Autocomplete<TData extends Record<string, unknown>>({
+  ...props
+}: AutoCompleteProps<TData>) {
   return (
     <FormField
       name={props.name ?? ""}
@@ -229,7 +272,9 @@ export default function Autocomplete<
                 {...field}
                 {...props}
                 error={fieldState.error?.message}
-                onChange={(value) => field.onChange(value)}
+                onChange={(value) => {
+                  field.onChange(value);
+                }}
               />
               <FormMessage />
             </div>

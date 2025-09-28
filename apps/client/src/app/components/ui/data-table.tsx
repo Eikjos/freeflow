@@ -15,13 +15,12 @@ import {
   TableHeader,
   TableRow,
 } from "components/ui/table";
-import { cn } from "../../../lib/utils";
 import { useTranslations } from "next-intl";
+import { cn } from "../../../lib/utils";
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
-  pageSize: number;
   className?: string;
   isLoading?: boolean;
 }

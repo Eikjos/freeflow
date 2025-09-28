@@ -206,15 +206,20 @@
   },
   "common": {
     "actions": "Actions",
+    "amount": "Montant",
+    "apply": "Appliquer",
     "add": "Ajouter",
     "create": "Créer",
     "cancel": "Annuler",
     "customer": "Client",
+    "date": "Date",
     "description": "Description",
     "edit": "Éditer",
     "emptyData": "Vous n'avez pas encore de données.",
     "enterDescription": "Entrez une description...",
+    "filters": "Filtres",
     "name": "Nom",
+    "number": "Numéro",
     "informations": "Informations",
     "fill": "Remplir",
     "localisation": "Localisation",
@@ -228,11 +233,24 @@
     "modify": "Modifier",
     "password": "Mot de passe",
     "remove": "Supprimer",
+    "submitAndSend": "Enregistrer et envoyer",
+    "title": "Titre",
     "phone": "Télephone",
     "preview": "Aperçu",
+    "print": "Imprimer",
     "dropFile": "Glisser vos fichiers ici.",
+    "status": "Statut",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
     "supportedFile": "Fichier(s) supporté(s) :",
-    "previsualizeImage": "Vous pouvez pre-visualiser l'image."
+    "previsualizeImage": "Vous pouvez pre-visualiser l'image.",
+    "quantity": "Quantité",
+    "unitPrice": "Prix Unit",
+    "priceTTC": "Prix TTC",
+    "totalHT": "Total HT",
+    "type": "Type",
+    "reinit": "Réinitialiser",
+    "resend": "Réenvoyer"
   },
   "column": {
     "addButton": "Ajouter une colonne",
@@ -253,10 +271,38 @@
       "edit": "Le client n'a pas pu être mis à jour. Veuillez réessayer plus tard.",
       "create": "Le client n'a pas pu être créer. Veuillez réessayer plus tard."
     },
+    "select": "Sélectionnez un client",
     "success": {
       "create": "Le client a bien été créer.",
       "edit": "Le client a bien été mis à jour."
     }
+  },
+  "credit": {
+    "amountExceed": "Le montant de l'avoir dépasse celui de la facture.",
+    "createButton": "Créer un avoir",
+    "notExceedAmount": "Le prix de l'avoir ne doit pas excéder {amount}.",
+    "exceedAmountInvoice": "Le montant de l'avoir est supérieur au montant de la facture. L'avoir ne doit pas dépasser {amoun}.",
+    "lines": {
+      "add": "Ajouter une nouvelle ligne"
+    },
+    "success": {
+      "create": "L'avoir a bien été créer."
+    },
+    "warning": {
+      "amount": "Attention l'avoir en doit pas dépasser le montant de la facture"
+    }
+  },
+  "devis": {
+    "title": "Titre du devis",
+    "create": "Création d'un devis.",
+    "createButton": "Créer un devis",
+    "notFound": "Le devis n'existe pas.",
+    "number": "Le numéro du devis",
+    "success": {
+      "create": "La devis a bien été créer."
+    },
+    "transformInvoice": "Transformer le devis en facture",
+    "theDevis": "le devis"
   },
   "enterprise": {
     "create": "Création de votre entreprise",
@@ -270,6 +316,34 @@
     "juridicShape": "Forme juridique",
     "tvaNumber": "Numéro de TVA",
     "infoNotFound": "Les informations sur l'entreprise n'a pas été trouvé"
+  },
+  "invoice": {
+    "amount": "Montant de la facture",
+    "create": "Création d'une facture",
+    "createButton": "Créer une facture",
+    "credits": {
+      "amount": "Montant des avoirs"
+    },
+    "notIncludeTva": "Ne pas inclure la TVA",
+    "maskName": "Masquer le nom",
+    "notFound": "La facture est introuvable.",
+    "number": "Le numéro de la facture",
+    "lines": {
+      "title": "Les lignes de facturation",
+      "add": "Ajouter une ligne de facturation"
+    },
+    "search": {
+      "number": "Rechercher sur le numéro",
+      "customer": "Filtrer par client",
+      "status": "Filtrer par statut",
+      "type": "Filtrer par type"
+    },
+    "success": {
+      "create": "La facture a bien été créer."
+    },
+    "theInvoice": "la facture",
+    "title": "Titre de la facture",
+    "titlePage": "Mes factures"
   },
   "signIn": "Connexion",
   "credentials": {
@@ -304,10 +378,13 @@
     "notFound": "Le projet n'a pas été trouvé."
   },
   "task": {
+    "add": "Ajouter une tâche",
     "createTitle": "Création d'un tâche",
     "detailTitle": "Détail d'une tâche",
     "estimation": "Estimation",
     "namePlaceholder": "Nom de la tâche",
-    "priority": "Priorité"
+    "name": "Tâches",
+    "priority": "Priorité",
+    "select": "Sélectionnez une tâche"
   }
 }

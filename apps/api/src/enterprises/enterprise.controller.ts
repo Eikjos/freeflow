@@ -74,4 +74,16 @@ export default class EnterprisesController {
     if (id !== enterpriseId) throw new ForbiddenException();
     return this.projectService.findAllByEnterpriseId(enterpriseId, filter);
   }
+
+  @UseGuards(AccessTokenGuard)
+  @Get(':id/get-information-for-invoice')
+  async getInformationForInvoice(@Param('id', ParseIntPipe) id: number) {
+    return this.enterpriseService.getInformationForInvoice(id);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get(':id/get-information-for-devis')
+  async getInformationForDevis(@Param('id', ParseIntPipe) id: number) {
+    return this.enterpriseService.getInformationForDevis(id);
+  }
 }

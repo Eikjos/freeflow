@@ -3,12 +3,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import AuthService from 'src/auth/auth.service';
 import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
+import InvoiceInformationDto from 'src/dtos/invoices/invoice-information.dto';
 import { MediaService } from 'src/media/media.service';
 import { PrismaService } from 'src/prisma.service';
-import {
-  EtablissementResponse,
-  SireneAuthentification,
-} from 'src/types/sirene-api';
+import { EtablissementResponse } from 'src/types/sirene-api';
 
 @Injectable()
 export default class EnterpriseService {
@@ -26,8 +24,6 @@ export default class EnterpriseService {
     logo: Express.Multer.File,
     userId: number,
   ) {
-    // save media
-    const mediaId = await this.mediaService.upload(logo);
     // save enterprise
     const enterprise = await this.prisma.enterprise.create({
       data: {
@@ -42,9 +38,11 @@ export default class EnterpriseService {
         users: {
           connect: [{ id: userId }],
         },
-        tvaNumber: model.TVANumber,
+        tvaNumber: model.tvaNumber,
+        prefixeInvoice: model.prefixeInvoice ?? '',
+        lastInvoiceNumber: model.lastInvoiceNumber ?? 0,
         countryId: parseInt(model.countryId),
-        mediaId: mediaId > 0 ? mediaId : null,
+        mediaId: null,
         sales: {
           create: {
             number: 0,
@@ -53,6 +51,18 @@ export default class EnterpriseService {
         },
       },
     });
+
+    // if enterprise save - save image
+    if (enterprise.id && logo) {
+      const mediaId = await this.mediaService.upload(
+        logo,
+        `${enterprise.id}/images`,
+      );
+      await this.prisma.enterprise.update({
+        where: { id: enterprise.id },
+        data: { mediaId },
+      });
+    }
     const user = await this.prisma.user.findFirst({ where: { id: userId } });
     return this.authService.generateToken(user, enterprise);
   }
@@ -86,31 +96,81 @@ export default class EnterpriseService {
         insee.etablissement.uniteLegale.categorieJuridiqueUniteLegale,
       socialCapital: insee.etablissement.uniteLegale.capitalSocialUniteLegale,
       countryId: '60',
-      TVANumber:
+      tvaNumber:
         'FR' +
         this.getCleControleTVANumber(insee.etablissement.siren) +
         insee.etablissement.siren,
     };
   }
 
+  async getInformationForInvoice(
+    enterpriseId: number,
+  ): Promise<InvoiceInformationDto> {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+      include: { juridicShape: true },
+    });
+    if (!enterprise) throw new NotFoundException();
+    const {
+      prefixeInvoice,
+      lastInvoiceNumber,
+      juridicShape,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      juridicShapeId,
+      ...rest
+    } = enterprise;
+    const invoiceInformation: InvoiceInformationDto = {
+      prefixe: prefixeInvoice ?? '',
+      lastNumber: lastInvoiceNumber + 1,
+      enterprise: {
+        ...rest,
+        juridicShape: juridicShape.designation,
+        countryId: rest.countryId.toString(),
+      },
+    };
+    return invoiceInformation;
+  }
+
+  async getInformationForDevis(
+    enterpriseId: number,
+  ): Promise<InvoiceInformationDto> {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+      include: { juridicShape: true },
+    });
+    if (!enterprise) throw new NotFoundException();
+    const {
+      prefixeInvoice,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      lastInvoiceNumber,
+      juridicShape,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      juridicShapeId,
+      ...rest
+    } = enterprise;
+    const devisCount = await this.prisma.invoice.count({
+      where: { enterpriseId, type: 'QUOTE' },
+    });
+    const invoiceInformation: InvoiceInformationDto = {
+      prefixe: prefixeInvoice ?? '',
+      lastNumber: devisCount + 1,
+      enterprise: {
+        ...rest,
+        juridicShape: juridicShape.designation,
+        countryId: rest.countryId.toString(),
+      },
+    };
+    return invoiceInformation;
+  }
+
   // -- Tools --
   private async getInseeInformation(siret: string) {
-    // Récupération du jeton d'authentification
-    const header = {
-      Authorization: 'Basic ' + process.env.INSEE_API_KEY,
-    };
-    const token = await this.httpService.axiosRef.post<SireneAuthentification>(
-      'https://api.insee.fr/token',
-      'grant_type=client_credentials',
-      { headers: header },
-    );
     // Récupération des informations de l'entreprise
     const url =
-      'https://api.insee.fr/entreprises/sirene/V3.11/siret/' +
-      siret.replace(/\s+/g, '');
+      'https://api.insee.fr/api-sirene/3.11/siret/' + siret.replace(/\s+/g, '');
     return await this.httpService.axiosRef
       .get<EtablissementResponse>(url, {
-        headers: { Authorization: 'Bearer ' + token.data.access_token },
+        headers: { 'X-INSEE-Api-Key-Integration': process.env.INSEE_API_KEY },
       })
       .then((res) => {
         return res.data;

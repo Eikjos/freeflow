@@ -4,6 +4,7 @@ import { Button } from "@components/ui/button";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { Select } from "@components/ui/select";
+import { Separator } from "@components/ui/separator";
 import {
   EnterpriseCreateModel,
   EnterpriseInformation,
@@ -12,9 +13,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import { getAllCountriesQueryOptions } from "../../../lib/api/countries";
+import { fetchEnterpriseInfo } from "../../../lib/api/enterprise";
 import { getAllJuridicShapesQueryOptions } from "../../../lib/api/juridic-shapes";
 import { Card, CardContent } from "../ui/card";
-import { fetchEnterpriseInfo } from "../../../lib/api/enterprise";
 
 const EnterpriseForm = () => {
   const t = useTranslations();
@@ -23,15 +24,17 @@ const EnterpriseForm = () => {
   const updateFormValues = async (
     data: EnterpriseInformation,
     email: string,
-    phone: string
+    phone: string,
+    prefixeInvoice?: string,
+    lastInvoiceNumber?: number
   ) => {
-    form.reset({ ...data, email, phone });
+    form.reset({ ...data, email, phone, prefixeInvoice, lastInvoiceNumber });
     form.trigger([
       "siret",
       "name",
       "address",
       "city",
-      "TVANumber",
+      "tvaNumber",
       "zipCode",
       "juridicShape",
       "countryId",
@@ -49,7 +52,9 @@ const EnterpriseForm = () => {
       updateFormValues(
         data.data,
         form.getValues().email,
-        form.getValues().phone
+        form.getValues().phone,
+        form.getValues().prefixeInvoice,
+        form.getValues().lastInvoiceNumber
       );
     }
   };
@@ -59,106 +64,147 @@ const EnterpriseForm = () => {
       <Card className="w-3/4 h-auto mx-auto">
         <CardContent className="py-5 px-8">
           <Form {...form}>
-            <form className="flex flew-row gap-2 items-start h-auto">
-              <div className="w-1/3 border-r-[3px] border-secondary pl-2 pr-5 py-3 flex flex-col items-center h-full">
-                <h4 className="text-xl font-bold w-full">
-                  {t("common.informations")}
-                </h4>
-                <Input
-                  type="text"
-                  label={t("enterprise.siret")}
-                  placeholder={t("enterprise.siret")}
-                  className="mt-4"
-                  description={t("enterprise.fillForm")}
-                  {...form.register("siret")}
+            <form>
+              <div className="flex flex-row gap-2 items-stretch h-auto">
+                <div className="w-1/3 px-2 py-3 flex flex-col items-center h-full">
+                  <h4 className="text-xl font-bold w-full">
+                    {t("common.informations")}
+                  </h4>
+                  <Input
+                    type="text"
+                    label={t("enterprise.siret")}
+                    placeholder={t("enterprise.siret")}
+                    className="mt-4"
+                    description={t("enterprise.fillForm")}
+                    {...form.register("siret")}
+                  />
+                  <Button
+                    className="mt-2"
+                    type="button"
+                    onClick={fillFormWithEnterpriseinfo}
+                  >
+                    {t("common.fill")}
+                  </Button>
+                  <Input
+                    type="text"
+                    label={t("enterprise.name")}
+                    placeholder={t("enterprise.name")}
+                    className="mt-[1.8rem]"
+                    {...form.register("name")}
+                  />
+                  <Select
+                    label={t("enterprise.juridicShape")}
+                    className="mt-3"
+                    placeholder={t("enterprise.juridicShape")}
+                    values={(juridicShapes?.data ?? []).map((item) => ({
+                      value: item.code,
+                      textValue: item.designation,
+                    }))}
+                    {...form.register("juridicShape")}
+                  />
+                  <Input
+                    type="text"
+                    label={t("enterprise.tvaNumber")}
+                    placeholder={t("enterprise.tvaNumber")}
+                    className="mt-3"
+                    {...form.register("tvaNumber")}
+                  />
+                </div>
+                <Separator
+                  className="h-auto bg-secondary"
+                  orientation="vertical"
                 />
-                <Button
-                  className="mt-2"
-                  type="button"
-                  onClick={fillFormWithEnterpriseinfo}
-                >
-                  {t("common.fill")}
-                </Button>
-                <Input
-                  type="text"
-                  label={t("enterprise.name")}
-                  placeholder={t("enterprise.name")}
-                  className="mt-[1.8rem]"
-                  {...form.register("name")}
+                <div className="w-1/3 px-2 py-3 flex flex-col items-center">
+                  <h4 className="text-xl font-bold w-full">
+                    {t("common.localisation")}
+                  </h4>
+                  <Input
+                    type="text"
+                    label={t("common.address")}
+                    placeholder={t("common.address")}
+                    className="mt-4"
+                    {...form.register("address")}
+                  />
+                  <Input
+                    type="text"
+                    label={t("common.zipCode")}
+                    placeholder={t("common.zipCode")}
+                    className="mt-4"
+                    {...form.register("zipCode")}
+                  />
+                  <Input
+                    type="text"
+                    label={t("common.city")}
+                    placeholder={t("common.city")}
+                    className="mt-4"
+                    {...form.register("city")}
+                  />
+                  <Select
+                    label={t("common.country")}
+                    placeholder={t("common.country")}
+                    values={(countries?.data ?? []).map((c) => ({
+                      value: c.id.toString(),
+                      textValue: t(c.name),
+                    }))}
+                    className="mt-3"
+                    {...form.register("countryId")}
+                  />
+                </div>
+                <Separator
+                  className="h-auto bg-secondary"
+                  orientation="vertical"
                 />
-                <Select
-                  label={t("enterprise.juridicShape")}
-                  className="mt-3"
-                  placeholder={t("enterprise.juridicShape")}
-                  values={(juridicShapes?.data ?? []).map((item) => ({
-                    value: item.code,
-                    textValue: item.designation,
-                  }))}
-                  {...form.register("juridicShape")}
-                />
-                <Input
-                  type="text"
-                  label={t("enterprise.tvaNumber")}
-                  placeholder={t("enterprise.tvaNumber")}
-                  className="mt-3"
-                  {...form.register("TVANumber")}
-                />
+                <div className="w-1/3 px-2 py-3 flex flex-col items-center">
+                  <h4 className="text-xl font-bold w-full">
+                    {t("common.contact")}
+                  </h4>
+                  <Input
+                    type="text"
+                    label={t("common.email")}
+                    placeholder={t("common.email")}
+                    className="mt-5"
+                    {...form.register("email")}
+                  />
+                  <Input
+                    type="text"
+                    label={t("common.phone")}
+                    placeholder={t("common.phone")}
+                    className="mt-5"
+                    {...form.register("phone")}
+                  />
+                </div>
               </div>
-              <div className="w-1/3 border-r-[3px] border-secondary pl-2 pr-5 py-3 flex flex-col items-center h-full">
-                <h4 className="text-xl font-bold w-full">
-                  {t("common.localisation")}
-                </h4>
-                <Input
-                  type="text"
-                  label={t("common.address")}
-                  placeholder={t("common.address")}
-                  className="mt-4"
-                  {...form.register("address")}
-                />
-                <Input
-                  type="text"
-                  label={t("common.zipCode")}
-                  placeholder={t("common.zipCode")}
-                  className="mt-4"
-                  {...form.register("zipCode")}
-                />
-                <Input
-                  type="text"
-                  label={t("common.city")}
-                  placeholder={t("common.city")}
-                  className="mt-4"
-                  {...form.register("city")}
-                />
-                <Select
-                  label={t("common.country")}
-                  placeholder={t("common.country")}
-                  values={(countries?.data ?? []).map((c) => ({
-                    value: c.id.toString(),
-                    textValue: t(c.name),
-                  }))}
-                  className="mt-3"
-                  {...form.register("countryId")}
-                />
+              <div>
+                <div className="flex flex-row items-center gap-4 justify-center mt-4">
+                  <Separator className="w-1/3 bg-secondary" />
+                  <h2>Informations pour la facturation</h2>
+                  <Separator className="w-1/3 bg-secondary" />
+                </div>
+                <div className="flex flex-row items-center justify-center gap-10 mt-3">
+                  <Input
+                    type="text"
+                    label="Préfixe pour les factures"
+                    {...form.register("prefixeInvoice")}
+                    description="Pour utiliser votre préfixe de facture."
+                  />
+                  <Input
+                    type="number"
+                    min="0"
+                    label="Votre dernière numéro de facture"
+                    {...form.register("lastInvoiceNumber")}
+                    description="Pour éviter des trous sur la numérotation de facture."
+                  />
+                </div>
               </div>
-              <div className="w-1/3 pl-2 pr-5 py-3 flex flex-col items-center h-full">
-                <h4 className="text-xl font-bold w-full">
-                  {t("common.contact")}
-                </h4>
-                <Input
-                  type="text"
-                  label={t("common.email")}
-                  placeholder={t("common.email")}
-                  className="mt-5"
-                  {...form.register("email")}
-                />
-                <Input
-                  type="text"
-                  label={t("common.phone")}
-                  placeholder={t("common.phone")}
-                  className="mt-5"
-                  {...form.register("phone")}
-                />
-              </div>
+              <ul>
+                {Object.entries(form.formState.errors).map(
+                  ([fieldName, error]) => (
+                    <li key={fieldName}>
+                      {fieldName} - {error?.message?.toString()}
+                    </li>
+                  )
+                )}
+              </ul>
             </form>
           </Form>
         </CardContent>

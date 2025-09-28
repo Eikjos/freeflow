@@ -11,7 +11,7 @@ import { EnterpriseInfo } from "../../../types/enterprise-info-type";
 
 type ProfileButtonProps = {
   className: string;
-  enterprise: EnterpriseInfo | null;
+  enterprise?: EnterpriseInfo;
 };
 
 export default async function ProfileButton({

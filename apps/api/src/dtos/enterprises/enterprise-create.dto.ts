@@ -32,7 +32,7 @@ export class CreateEnterpriseDto implements EnterpriseCreateModel {
   city: string;
   @ApiProperty({ description: 'Enterprise number tva' })
   @IsString()
-  TVANumber: string;
+  tvaNumber: string;
   @ApiProperty({ description: 'Enterprise social capital' })
   @IsInt()
   @IsOptional()
@@ -52,4 +52,16 @@ export class CreateEnterpriseDto implements EnterpriseCreateModel {
     format: 'binary',
   })
   logo: File;
+  @ApiProperty({
+    description: 'Enterprise last invoice number',
+    required: false,
+  })
+  @IsOptional()
+  lastInvoiceNumber?: number;
+  @ApiProperty({
+    description: 'Prefixe for invoice',
+    required: false,
+  })
+  @IsOptional()
+  prefixeInvoice?: string;
 }

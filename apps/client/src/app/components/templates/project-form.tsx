@@ -20,8 +20,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getAllCustomersQueryOptions } from "../../../lib/api/customers";
-import { cn, getMediaUrl } from "../../../lib/utils";
 import getQueryClient from "../../../lib/query-client";
+import { cn, getMediaUrl } from "../../../lib/utils";
 
 type ProjectFormProps = {
   className?: string;
@@ -100,7 +100,14 @@ export default function ProjectForm({
                     placeholder="Nom du projet"
                   />
                   <Autocomplete
-                    queryOptions={getAllCustomersQueryOptions}
+                    queryOptions={(filter) =>
+                      getAllCustomersQueryOptions({
+                        page: 0,
+                        pageSize: 10,
+                        asc: "name",
+                        filter: { name: filter.search, id: filter.id },
+                      })
+                    }
                     filterField="name"
                     render={(customer) => customer.name}
                     fieldIdentifier="id"

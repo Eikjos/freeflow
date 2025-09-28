@@ -2,24 +2,40 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   Param,
   ParseIntPipe,
-  Post,
   Put,
+  Query,
+  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import TaskService from './task.service';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { Request } from 'express';
 import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
+import { TaskPaginationFilterDto } from 'src/dtos/tasks/task-filter.dto';
+import { AccessTokenGuard } from 'src/guards/access-token.guard';
+import TaskService from './task.service';
 
 @Controller('/tasks')
 export default class TasksController {
   constructor(private readonly taskService: TaskService) {}
+
+  @UseGuards(AccessTokenGuard)
+  @Get()
+  async getAll(@Query() filter: TaskPaginationFilterDto) {
+    return this.taskService.getAll(filter);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get(':id')
+  async findById(@Param('id', ParseIntPipe) id: number) {
+    return this.taskService.findById(id);
+  }
 
   @UseGuards(AccessTokenGuard)
   @Delete(':id/medias/:mediaId')
@@ -44,8 +60,15 @@ export default class TasksController {
     @Body() model: CreateTaskDto,
     @UploadedFiles()
     files: Express.Multer.File[],
+    @Req() req: Request,
   ) {
-    return await this.taskService.update(id, model, files);
+    const enterpriseId = req.user['enterpriseId'];
+    return await this.taskService.update(
+      id,
+      model,
+      parseInt(enterpriseId),
+      files,
+    );
   }
 
   @UseGuards(AccessTokenGuard)

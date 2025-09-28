@@ -14,8 +14,9 @@ export type EnterpriseInformation = {
   siret: string;
   address: string;
   zipCode: string;
+  mediaId?: number;
   city: string;
-  TVANumber: string;
+  tvaNumber: string;
   juridicShape: string;
   socialCapital?: number;
   countryId: string;
@@ -24,6 +25,8 @@ export type EnterpriseInformation = {
 export type EnterpriseCreateModel = {
   email: string;
   phone: string;
+  prefixeInvoice?: string;
+  lastInvoiceNumber?: number;
   logo?: File;
   [key: string]: any;
 } & Omit<EnterpriseInformation, "id">;
@@ -42,7 +45,7 @@ export const EnterpriseCreateValidation = z.object({
   countryId: z
     .string({ required_error: "Le pays est requis." })
     .transform((val) => Number(val)),
-  TVANumber: z.string().min(1, "Le numero de TVA est requis."),
+  tvaNumver: z.string().optional(),
   juridicShape: z
     .string({ required_error: "La forme juridique est requis." })
     .min(1, "La forme juridique est requis."),
@@ -62,4 +65,6 @@ export const EnterpriseCreateValidation = z.object({
       (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file?.type),
       "Only .jpg, .jpeg, .png and .webp formats are supported."
     ),
+  prefixeInvoice: z.string().optional(),
+  lastNumberInvoice: z.coerce.number().optional(),
 });

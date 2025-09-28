@@ -1,3 +1,4 @@
+import { InvoiceStatus } from "@repo/shared-types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -65,3 +66,36 @@ export async function getImage(mediaId: number) {
   const blob = await file.blob();
   return new File([blob], filename, { type: blob.type });
 }
+
+export const formatPrice = (
+  value: number,
+  userLocale: string,
+  currency: string
+) =>
+  new Intl.NumberFormat(userLocale, {
+    style: "currency",
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+    .format(value)
+    .replace(/\u202F/g, " ");
+
+export const invoiceStatusToString = (invoiceStatus: InvoiceStatus) => {
+  switch (invoiceStatus) {
+    case "WAITING_VALIDATION":
+      return "En attente de validation";
+    case "VALIDATE":
+      return "Validé";
+    case "WAITING_PAYED":
+      return "En attente de paiement";
+    case "PAYED":
+      return "Payée";
+    case "CREDITED":
+      return "Crédité";
+    case "PARTIAL_CREDITED":
+      return "Partiellement crédité";
+    case "REJECTED":
+      return "Refusé";
+  }
+};

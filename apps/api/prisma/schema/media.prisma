@@ -1,10 +1,11 @@
 model Media {
   id         Int         @id @default(autoincrement())
   extension  String
-  filename   String
+  uploadedPath   String
   entreprise Enterprise?
   expense    Expense?
   invoice    Invoice?
   project    Project?
   tasks      TaskMedia[]
+  credits    Credit[]
 }

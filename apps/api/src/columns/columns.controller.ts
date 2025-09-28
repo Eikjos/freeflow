@@ -6,17 +6,19 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { Request } from 'express';
+import CreateColumnDto from 'src/dtos/columns/column-create.dto';
+import MoveTaskDto from 'src/dtos/tasks/move-task.dto';
 import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import ColumnService from './columns.service';
-import CreateColumnDto from 'src/dtos/columns/column-create.dto';
-import MoveTaskDto from 'src/dtos/tasks/move-task.dto';
 
 @Controller('columns')
 export default class ColumnsController {
@@ -36,8 +38,15 @@ export default class ColumnsController {
     @Body() model: CreateTaskDto,
     @UploadedFiles()
     files: Express.Multer.File[],
+    @Req() req: Request,
   ) {
-    return await this.columnService.createTask(id, model, files);
+    const enterpriseId = req.user['enterpriseId'];
+    return await this.columnService.createTask(
+      id,
+      model,
+      parseInt(enterpriseId),
+      files,
+    );
   }
 
   @HttpCode(200)

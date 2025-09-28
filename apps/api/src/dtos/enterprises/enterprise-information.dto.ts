@@ -17,9 +17,11 @@ export class EnterpriseInformationDto implements EnterpriseInformation {
   @ApiProperty({ description: 'Enterprise city' })
   city: string;
   @ApiProperty({ description: 'Enterprise number tva' })
-  TVANumber: string;
+  tvaNumber: string;
   @ApiProperty({ description: 'Enterprise social capital' })
   socialCapital?: number;
   @ApiProperty({ description: 'The country Id' })
   countryId: string;
+  @ApiProperty({ description: 'The logo id of this enterprise' })
+  mediaId?: number;
 }

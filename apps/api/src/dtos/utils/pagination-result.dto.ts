@@ -1,6 +1,5 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { PaginationFilter, PaginationResult } from '@repo/shared-types';
-import { Type } from 'class-transformer';
 import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class PaginationResultDto<T> implements PaginationResult<T> {
@@ -10,7 +9,7 @@ export class PaginationResultDto<T> implements PaginationResult<T> {
   totalItems: number;
 }
 
-export class PaginationFilterDto<T extends Record<string, string | number>>
+export class PaginationFilterDto<T extends Record<string, any>>
   implements PaginationFilter<T>
 {
   @ApiProperty({
