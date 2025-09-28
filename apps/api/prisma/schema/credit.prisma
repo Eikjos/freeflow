@@ -4,6 +4,8 @@ model Credit {
   number    String
   invoiceId    Int
   invoice   Invoice @relation(fields: [invoiceId], references: [id]) 
+  mediaId   Int
+  media      Media @relation(fields: [mediaId], references: [id])
   creditLines   CreditLine[]
 }
 

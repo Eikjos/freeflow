@@ -7,4 +7,5 @@ model Media {
   invoice    Invoice?
   project    Project?
   tasks      TaskMedia[]
+  credits    Credit[]
 }

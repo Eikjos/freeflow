@@ -92,6 +92,8 @@ export default function CreateCreditFormPage({
           <Progress value={ratio > 100 ? 100 : ratio} />
         </div>
         <CreateCreditForm
+          invoice={invoice}
+          information={data?.data}
           totalAmountInvoice={totalAmount}
           totalCreditInvoice={initialCreditAmount}
         />

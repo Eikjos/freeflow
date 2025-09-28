@@ -4,27 +4,39 @@ import { Checkbox } from "@components/ui/checkbox";
 import { Form } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { Separator } from "@components/ui/separator";
+import { pdf } from "@react-pdf/renderer";
 import {
   CreateCreditData,
   CreateCreditLineData,
   CreateCreditLineDataValidation,
+  InvoiceData,
+  InvoiceInformation,
 } from "@repo/shared-types";
+import { createCredit } from "actions/credit";
 import { Plus, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import { toast } from "sonner";
 import { formatPrice } from "../../../lib/utils";
+import CreditTemplate from "./credit-template";
 
 type CreateCreditFormProps = {
+  invoice: InvoiceData;
+  information: InvoiceInformation | undefined;
   totalAmountInvoice: number;
   totalCreditInvoice: number;
 };
 
 export default function CreateCreditForm({
+  invoice,
+  information,
   totalAmountInvoice = 0,
   totalCreditInvoice = 0,
 }: CreateCreditFormProps) {
   const form = useFormContext<
     CreateCreditData & { newLine: CreateCreditLineData; maskName: boolean }
   >();
+  const router = useRouter();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "creditLines",
@@ -77,9 +89,52 @@ export default function CreateCreditForm({
     form.setValue("maskName", !form.watch("maskName"));
   };
 
+  const onSubmit = async (values: CreateCreditData) => {
+    // checking if the credit amount not exceed the invoice amount
+    var totalCreditAmount = values.creditLines
+      .map((cl) => cl.price)
+      .reduce((i, prev) => prev + i, 0);
+    if (totalCreditAmount > totalAmountInvoice - totalCreditInvoice) {
+      toast.error(
+        `Le montant de l'avoir est supérieur au montant de la facture. L'avoir ne faut pas qu'il dépasse ${formatPrice(totalAmountInvoice - totalCreditInvoice, "FR-fr", "EUR")}`
+      );
+      return;
+    }
+    const creditBlob = await pdf(
+      <CreditTemplate
+        title={values.title}
+        number={values.number}
+        invoice={invoice}
+        excludeTva={invoice.excludeTva}
+        information={information}
+        maskName={form.getValues().maskName}
+        lines={values.creditLines}
+      />
+    ).toBlob();
+    createCredit(
+      {
+        ...values,
+        number: `AV-${String(values.number).padStart(5, "0")}`,
+        invoiceId: form.getValues().invoiceId,
+      },
+      new File([creditBlob], `credit-AV-${values.number}.pdf`)
+    )
+      .then((res) => {
+        if (res === null) {
+          toast.error("Il y a eu une erreur.");
+        } else {
+          toast.success("L'avoir a bien été créé.");
+          router.push("/invoices");
+        }
+      })
+      .catch((err: Error) => {
+        toast.error(err.message);
+      });
+  };
+
   return (
     <Form {...form}>
-      <form>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card>
           <CardContent className="py-2 px-4">
             <div className="flex flex-row justify-end mt-2">

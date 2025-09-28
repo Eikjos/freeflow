@@ -6,6 +6,7 @@ export type CreditForInvoiceData = {
 };
 
 export type CreateCreditData = {
+  [key: string]: any;
   title: string;
   number: string;
   invoiceId: number;

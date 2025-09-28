@@ -11,7 +11,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { FolderInput, Printer, ReceiptEuro, Send } from "lucide-react";
-import { getMediaUrl, invoiceStatusToString } from "../../../lib/utils";
+import {
+  formatPrice,
+  getMediaUrl,
+  invoiceStatusToString,
+} from "../../../lib/utils";
 
 export type InvoiceTableProps = {
   data: InvoiceData[];
@@ -64,9 +68,9 @@ const columnsDef: ColumnDef<InvoiceData>[] = [
   },
   {
     accessorKey: "invoiceLines",
-    header: "Montant",
+    header: "Montant de la facture",
     cell: ({ row }) => {
-      const invoiceLines: InvoiceLineData[] = row.getValue("invoiceLines");
+      const invoiceLines: InvoiceLineData[] = row.original.invoiceLines;
       const totalAmount =
         invoiceLines
           .map((e) => e.quantity * e.unitPrice)
@@ -74,7 +78,42 @@ const columnsDef: ColumnDef<InvoiceData>[] = [
         (row.original.excludeTva === true ? 1 : 1.2);
       return (
         <>
-          <span>{totalAmount} €</span>
+          <span>{formatPrice(totalAmount, "FR-fr", "EUR")}</span>
+        </>
+      );
+    },
+  },
+  {
+    accessorKey: "credits",
+    header: "Montant des avoirs",
+    cell: ({ row }) => {
+      const creditsAmount = row.original.credits
+        .map((c) => c.totalAmount)
+        .reduce((i, prev) => i + prev, 0);
+      return (
+        <>
+          <span>{formatPrice(creditsAmount, "FR-fr", "EUR")}</span>
+        </>
+      );
+    },
+  },
+  {
+    header: "Montant",
+    cell: ({ row }) => {
+      const invoiceLines: InvoiceLineData[] = row.original.invoiceLines;
+      const totalAmount =
+        invoiceLines
+          .map((e) => e.quantity * e.unitPrice)
+          .reduce((prev, a) => prev + a, 0) *
+        (row.original.excludeTva === true ? 1 : 1.2);
+      const creditsAmount = row.original.credits
+        .map((c) => c.totalAmount)
+        .reduce((i, prev) => i + prev, 0);
+      return (
+        <>
+          <span>
+            {formatPrice(totalAmount - creditsAmount, "FR-fr", "EUR")}
+          </span>
         </>
       );
     },

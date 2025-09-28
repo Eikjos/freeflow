@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import ColumnModule from './columns/columns.module';
 import CountryModule from './countries/country.module';
+import CreditModule from './credits/credit.module';
 import CustomerModule from './customers/customer.module';
 import { EnterpriseModule } from './enterprises/enterprise.module';
 import InvoiceModule from './invoices/invoice.module';
@@ -24,6 +25,7 @@ import { UserModule } from './users/user.module';
     ColumnModule,
     TaskModule,
     InvoiceModule,
+    CreditModule,
   ],
   providers: [],
 })
