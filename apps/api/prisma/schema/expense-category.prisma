@@ -1,0 +1,8 @@
+model ExpenseCategory {
+  id    Int   @id @default(autoincrement())
+  key   String  @unique
+  name  String
+  tva   Float
+  recoverablePercent  Float
+  expense   Expense[]
+}
