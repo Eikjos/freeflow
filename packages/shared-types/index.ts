@@ -4,6 +4,7 @@ export * from "./types/countries";
 export * from "./types/credits";
 export * from "./types/customers";
 export * from "./types/enterprises";
+export * from "./types/expenses";
 export * from "./types/invoices";
 export * from "./types/juridic-shapes";
 export * from "./types/projects";

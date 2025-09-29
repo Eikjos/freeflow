@@ -250,7 +250,9 @@
     "totalHT": "Total HT",
     "type": "Type",
     "reinit": "Réinitialiser",
-    "resend": "Réenvoyer"
+    "resend": "Réenvoyer",
+    "category": "Catégorie",
+    "save": "Enregistrer"
   },
   "column": {
     "addButton": "Ajouter une colonne",
@@ -316,6 +318,13 @@
     "juridicShape": "Forme juridique",
     "tvaNumber": "Numéro de TVA",
     "infoNotFound": "Les informations sur l'entreprise n'a pas été trouvé"
+  },
+  "expense": {
+    "add": "Ajout une note de frais",
+    "create": {
+      "titlePage": "Création d'une note frais"
+    },
+    "titlePage": "Mes frais"
   },
   "invoice": {
     "amount": "Montant de la facture",

@@ -1,4 +1,4 @@
-INSERT INTO ExpenseCategory (key, name, tva, recoverablePercent) VALUES
+INSERT INTO "ExpenseCategory" ("key", "name", "tva", "recoverablePercent") VALUES
 ('expense.restaurant', 'Restaurant', 20.0, 100.0),
 ('expense.hotel', 'Hôtel', 10.0, 100.0),
 ('expense.carburant.diesel', 'Carburant Diesel', 20.0, 100.0),
