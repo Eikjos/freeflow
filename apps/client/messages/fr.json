@@ -324,7 +324,39 @@
     "create": {
       "titlePage": "Création d'une note frais"
     },
-    "titlePage": "Mes frais"
+    "titlePage": "Mes frais",
+    "restaurant": "Restaurant",
+    "hotel": "Hôtel",
+    "carburant": {
+      "diesel": "Carburant Diesel",
+      "essence": "Carburant Essence"
+    },
+    "transport": {
+      "taxi": "Taxi / VTC",
+      "train": "Train / Avion"
+    },
+    "office": {
+      "supplies": "Fournitures de bureau"
+    },
+    "it": {
+      "hardware": "Matériel informatique",
+      "software": "Logiciels / SaaS"
+    },
+    "communication": "Téléphone / Internet",
+    "gift": "Cadeaux",
+    "fine": "Amendes",
+    "car": {
+      "tourism": "Voiture de tourisme"
+    },
+    "vehicle": {
+      "utility": "Véhicule utilitaire (location)"
+    },
+    "event": "Frais de réception / séminaires",
+    "kilometric": "Indemnités kilométriques",
+    "insurance": "Assurances",
+    "bank": "Frais bancaires",
+    "training": "Formation professionnelle",
+    "misc": "Autres frais divers"
   },
   "invoice": {
     "amount": "Montant de la facture",

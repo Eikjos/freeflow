@@ -5,7 +5,7 @@ export default function CreateExpensePage() {
   const t = useTranslations();
   return (
     <>
-      <h1>{t("expense.create.titlePage")}</h1>
+      <h1 className="text-4xl font-amica">{t("expense.create.titlePage")}</h1>
       <ExpenseForm className="mx-auto mt-10" />
     </>
   );
