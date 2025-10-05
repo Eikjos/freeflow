@@ -29,3 +29,13 @@ export const createExpense = async (expense: CreateExpenseData) => {
     throw new Error(res.error);
   });
 };
+
+export const deleteExpense = async (id: number) =>
+  await client<void>(`expenses/${id}`, { method: "DELETE" }).then(
+    async (res) => {
+      if (res.ok) {
+        return res.data;
+      }
+      throw new Error(res.error);
+    }
+  );

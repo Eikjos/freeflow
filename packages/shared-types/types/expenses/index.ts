@@ -8,6 +8,24 @@ export type ExpenseCategoryData = {
   recoverablePercent: number;
 };
 
+export type ExpenseData = {
+  id: number;
+  name: string;
+  description?: string;
+  date: Date;
+  amount: number;
+  category: ExpenseCategoryData;
+};
+
+export type ExpenseFilterData = {
+  search?: string;
+  startDate?: Date;
+  endDate?: Date;
+  category?: number;
+  amountMin?: number;
+  amountMax?: number;
+};
+
 export type CreateExpenseData = {
   name: string;
   description?: string;

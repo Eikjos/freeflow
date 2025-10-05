@@ -2,8 +2,13 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import CreateExpenseDto from 'src/dtos/expenses/create-expense.dto';
+import ExpenseFilterDto from 'src/dtos/expenses/expense-filter.dto';
+import { toExpenseDto } from 'src/dtos/expenses/expense.dto';
+import { PaginationFilterDto } from 'src/dtos/utils/pagination-result.dto';
 import { MediaService } from 'src/media/media.service';
 import { PrismaService } from 'src/prisma.service';
 
@@ -28,7 +33,7 @@ export default class ExpenseService {
     const category = await this.prisma.expenseCategory.findFirst({
       where: { id: model.categoryId },
     });
-    if (!category) throw new BadRequestException('expense.category.not.found');
+    if (!category) throw new BadRequestException('expense.category.notFound');
     // save expense
     const expense = await this.prisma.expense.create({
       data: {
@@ -53,5 +58,89 @@ export default class ExpenseService {
         });
       }
     }
+  }
+
+  async findAll(
+    enterpriseId: number,
+    filter: PaginationFilterDto<ExpenseFilterDto>,
+  ) {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+    });
+    if (!enterprise) throw new ForbiddenException();
+
+    let filterQuery: Prisma.ExpenseWhereInput = { enterpriseId };
+    if (filter.filter) {
+      if (filter.filter.search && filter.filter.search !== '') {
+        filterQuery = {
+          ...filterQuery,
+          name: { contains: filter.filter.search, mode: 'insensitive' },
+        };
+      }
+      if (filter.filter.startDate) {
+        filterQuery = {
+          ...filterQuery,
+          date: { gte: filter.filter.startDate },
+        };
+      }
+      if (filter.filter.endDate) {
+        filterQuery = { ...filterQuery, date: { lte: filter.filter.endDate } };
+      }
+      if (filter.filter.category) {
+        filterQuery = {
+          ...filterQuery,
+          categoryId: parseInt(`${filter.filter.category}`),
+        };
+      }
+      if (
+        filter.filter.amountMin &&
+        parseInt(`${filter.filter.amountMin}`) > 0
+      ) {
+        filterQuery = {
+          ...filterQuery,
+          price: { gte: parseInt(`${filter.filter.amountMin}`) },
+        };
+      }
+
+      if (
+        filter.filter.amountMax &&
+        parseInt(`${filter.filter.amountMax}`) > 0
+      ) {
+        filterQuery = {
+          ...filterQuery,
+          price: { lte: parseInt(`${filter.filter.amountMax}`) },
+        };
+      }
+    }
+
+    const expenses = await this.prisma.expense.findMany({
+      where: filterQuery,
+      include: { category: true },
+      take: filter.pageSize,
+      skip: filter.page * filter.pageSize,
+    });
+
+    const totalItems = await this.prisma.expense.count({
+      where: filterQuery,
+    });
+
+    return {
+      data: expenses.map((e) => toExpenseDto(e, e.category)),
+      totalItems: totalItems,
+      page: filter.page,
+      pageSize: filter.pageSize,
+    };
+  }
+
+  async delete(id: number, enterpriseId: number) {
+    // check enterprise and expense
+    const expense = await this.prisma.expense.findFirst({
+      where: { enterpriseId, id },
+    });
+    if (!expense) throw new NotFoundException('expense.notFound');
+    // remove media
+    this.mediaService.delete(expense.mediaId);
+    // remove expense
+    await this.prisma.expense.delete({ where: { id } });
   }
 }

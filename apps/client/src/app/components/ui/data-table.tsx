@@ -25,6 +25,12 @@ interface DataTableProps<TData> {
   isLoading?: boolean;
 }
 
+declare module "@tanstack/react-table" {
+  interface ColumnMeta<TData extends unknown, TValue> {
+    className?: string;
+  }
+}
+
 export function DataTable<TData>({
   columns,
   data,
@@ -47,7 +53,10 @@ export function DataTable<TData>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className={cn(header.column.columnDef.meta?.className)}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -70,7 +79,10 @@ export function DataTable<TData>({
                       data-state={row.getIsSelected() && "selected"}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
+                        <TableCell
+                          key={cell.id}
+                          className={cn(cell.column.columnDef.meta?.className)}
+                        >
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()

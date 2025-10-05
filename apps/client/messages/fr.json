@@ -324,6 +324,19 @@
     "create": {
       "titlePage": "Création d'une note frais"
     },
+    "category": {
+      "notFound": "La catégorie de dépense n'a pas été trouvée"
+    },
+    "costReal": "Coût réel",
+    "delete": {
+      "title": "Êtes-vous sûr de supprimer cette note de frais ?",
+      "description": "La note de frais sera définitivement supprimé. Êtes-vous sûr de vouloir supprimer ?"
+    },
+    "success": {
+      "delete": "La dépense a bien été supprimée",
+      "create": "La dépense a bien été créée"
+    },
+    "amountTvaRecoverable": "Montant TVA récupérable",
     "titlePage": "Mes frais",
     "restaurant": "Restaurant",
     "hotel": "Hôtel",
@@ -334,6 +347,14 @@
     "transport": {
       "taxi": "Taxi / VTC",
       "train": "Train / Avion"
+    },
+    "notFound": "La dépense n'a pas été trouvée",
+    "recapTVA": "TVA récupérable : {recoverable} - Coût réel : {cost}",
+    "amountMin": "Montant minium",
+    "amountMax": "Montant maximum",
+    "search": {
+      "label": "Recherche",
+      "placeholder": "Rechercher par nom de dépense"
     },
     "office": {
       "supplies": "Fournitures de bureau"

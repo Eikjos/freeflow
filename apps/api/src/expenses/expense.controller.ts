@@ -1,8 +1,13 @@
 import {
   Body,
   Controller,
+  Delete,
+  Get,
   HttpCode,
+  Param,
+  ParseIntPipe,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
@@ -12,6 +17,12 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes } from '@nestjs/swagger';
 import { Request } from 'express';
 import CreateExpenseDto from 'src/dtos/expenses/create-expense.dto';
+import ExpenseFilterDto from 'src/dtos/expenses/expense-filter.dto';
+import { ExpenseDto } from 'src/dtos/expenses/expense.dto';
+import {
+  PaginationFilterDto,
+  PaginationResultDto,
+} from 'src/dtos/utils/pagination-result.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import ExpenseService from './expense.service';
 
@@ -29,7 +40,24 @@ export default class ExpenseController {
     @UploadedFile() expense: Express.Multer.File,
     @Req() request: Request,
   ) {
-    const entrepriseId = parseInt(request.user['enterpriseId']);
-    return this.expenseService.create(model, expense, entrepriseId);
+    const enterpriseId = parseInt(request.user['enterpriseId']);
+    return this.expenseService.create(model, expense, enterpriseId);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get()
+  async findAll(
+    @Query() filter: PaginationFilterDto<ExpenseFilterDto>,
+    @Req() request: Request,
+  ): Promise<PaginationResultDto<ExpenseDto>> {
+    const enterpriseId = parseInt(request.user['enterpriseId']);
+    return this.expenseService.findAll(enterpriseId, filter);
+  }
+
+  @Delete(':id')
+  @UseGuards(AccessTokenGuard)
+  async delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    const enterpriseId = req.user['entrepriseId'];
+    return await this.expenseService.delete(id, enterpriseId);
   }
 }

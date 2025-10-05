@@ -121,18 +121,18 @@ export default function ExpenseForm({ className }: ExpenseFormProps) {
 
             {amount && categoryId ? (
               <p className="mt-1 text-sm">
-                TVA Récupérable :{" "}
-                {formatPrice(
-                  calculateTvaRecoverablePrice(categoryId),
-                  "fr-FR",
-                  "EUR"
-                )}{" "}
-                - Coût réel :{" "}
-                {formatPrice(
-                  amount - calculateTvaRecoverablePrice(categoryId),
-                  "fr-FR",
-                  "EUR"
-                )}
+                {t("expense.recapTVA", {
+                  recoverable: formatPrice(
+                    calculateTvaRecoverablePrice(categoryId),
+                    "fr-FR",
+                    "EUR"
+                  ),
+                  cost: formatPrice(
+                    amount - calculateTvaRecoverablePrice(categoryId),
+                    "fr-FR",
+                    "EUR"
+                  ),
+                })}
               </p>
             ) : null}
 
