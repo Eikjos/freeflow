@@ -131,7 +131,6 @@ export default function CustomerTable() {
       <DataTable
         columns={columnDefs}
         data={customers?.data?.data ?? []}
-        pageSize={20}
         isLoading={isLoading}
         className="w-full mx-auto"
       />

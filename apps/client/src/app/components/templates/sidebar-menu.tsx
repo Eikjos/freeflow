@@ -35,7 +35,7 @@ export default async function SidebarMenu({
     },
     {
       name: "Mes frais",
-      url: "#",
+      url: "/expenses",
     },
     {
       name: "Mon entreprise",

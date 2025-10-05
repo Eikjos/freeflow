@@ -3,8 +3,11 @@ model Expense {
   name         String
   description  String?
   price        Decimal
+  date         DateTime
   enterpriseId Int
   mediaId      Int?       @unique
   enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
   media        Media?     @relation(fields: [mediaId], references: [id])
+  categoryId   Int
+  category    ExpenseCategory @relation(fields: [categoryId], references: [id])
 }

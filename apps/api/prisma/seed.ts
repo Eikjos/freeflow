@@ -30,3 +30,11 @@ export async function seedCountry() {
     executeSqlFile('./scripts/juridic-shapes.sql');
   }
 }
+
+export async function seedExpenseCategory() {
+  const prisma = new PrismaClient();
+  const expenseCategory = await prisma.expenseCategory.count();
+  if (expenseCategory === 0) {
+    executeSqlFile('./scripts/expenseCategories.sql');
+  }
+}

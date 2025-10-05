@@ -2,10 +2,10 @@
 
 import { Card, CardContent } from "@components/ui/card";
 import InputFile from "@components/ui/input-file";
-import Image from "next/image";
-import { useTranslations } from "next-intl";
-import { useFormContext } from "react-hook-form";
 import { EnterpriseCreateModel } from "@repo/shared-types";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { useFormContext } from "react-hook-form";
 
 const EnterpriseLogoForm = () => {
   const t = useTranslations();

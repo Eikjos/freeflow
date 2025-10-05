@@ -5,6 +5,8 @@ import CountryModule from './countries/country.module';
 import CreditModule from './credits/credit.module';
 import CustomerModule from './customers/customer.module';
 import { EnterpriseModule } from './enterprises/enterprise.module';
+import ExpenseCategoryModule from './expense-category/expense-category.module';
+import ExpenseModule from './expenses/expense.module';
 import InvoiceModule from './invoices/invoice.module';
 import JuridicShapeModule from './juridic-shapes/juridic-shapes.module';
 import { MediaModule } from './media/media.module';
@@ -26,6 +28,8 @@ import { UserModule } from './users/user.module';
     TaskModule,
     InvoiceModule,
     CreditModule,
+    ExpenseCategoryModule,
+    ExpenseModule,
   ],
   providers: [],
 })
