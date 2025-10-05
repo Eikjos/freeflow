@@ -39,7 +39,7 @@ export default async function SidebarMenu({
     },
     {
       name: "Mon entreprise",
-      url: "#",
+      url: "/my-enterprise",
     },
     {
       name: "Mes activités",
