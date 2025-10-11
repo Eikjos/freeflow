@@ -125,6 +125,9 @@ const styles = StyleSheet.create({
   title: {
     marginTop: "20px",
   },
+  enterpriseName: {
+    maxWidth: "250px",
+  },
 });
 
 // Create Document Component
@@ -190,7 +193,7 @@ const CreditTemplate = ({
           </View>
           <View style={styles.informationContainer}>
             <View>
-              <Text style={styles.textImportant}>
+              <Text style={[styles.textImportant, styles.enterpriseName]}>
                 {information?.enterprise.name}
               </Text>
               <Text
@@ -210,7 +213,9 @@ const CreditTemplate = ({
               <View style={styles.informationCustomerContainer}>
                 <Text style={styles.text}>Facturé à</Text>
                 <View>
-                  <Text style={styles.textImportant}>{customer?.name}</Text>
+                  <Text style={[styles.textImportant, styles.enterpriseName]}>
+                    {customer?.name}
+                  </Text>
                   <Text style={styles.text}>
                     {customer.address} {"\n"}
                     {customer?.zipCode}, {customer?.city}
