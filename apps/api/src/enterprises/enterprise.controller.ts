@@ -64,6 +64,12 @@ export default class EnterprisesController {
   }
 
   @UseGuards(AccessTokenGuard)
+  @Get(':id')
+  async finfById(@Param('id', ParseIntPipe) id: number) {
+    return this.enterpriseService.findById(id);
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Get(':id/projects')
   async getProjectsByEnterpriseId(
     @Param('id', ParseIntPipe) id: number,

@@ -1,4 +1,8 @@
-import { EnterpriseInformation, InvoiceInformation } from "@repo/shared-types";
+import {
+  EnterpriseData,
+  EnterpriseInformation,
+  InvoiceInformation,
+} from "@repo/shared-types";
 import { client } from "../client";
 
 export const fetchEnterpriseInfo = async (siret: string) =>
@@ -20,8 +24,17 @@ export const getInformationForDevis = async (id: number) =>
     `enterprises/${id}/get-information-for-devis`
   );
 
+export const getEnteprise = async (id: number) =>
+  await client<EnterpriseData>(`enterprises/${id}`);
+
 export const getInformationForDevisQueryOptions = (id: number) => ({
   queryFn: () => getInformationForDevis(id),
   queryKey: ["enterprise", "devis", id],
+  retry: false,
+});
+
+export const getEntepriseQueryOptions = (id: number) => ({
+  queryFn: () => getEnteprise(id),
+  queryKey: ["enterprise", id],
   retry: false,
 });

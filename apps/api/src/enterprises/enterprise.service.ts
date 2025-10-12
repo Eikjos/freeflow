@@ -3,6 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import AuthService from 'src/auth/auth.service';
 import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
+import EnterpriseDto from 'src/dtos/enterprises/enterprise.dto';
 import InvoiceInformationDto from 'src/dtos/invoices/invoice-information.dto';
 import { MediaService } from 'src/media/media.service';
 import { PrismaService } from 'src/prisma.service';
@@ -67,12 +68,14 @@ export default class EnterpriseService {
     return this.authService.generateToken(user, enterprise);
   }
 
-  async findByid(id: number) {
-    return await this.prisma.enterprise.findFirst({
+  async findById(id: number) {
+    const enterprise = await this.prisma.enterprise.findFirst({
       where: {
         id,
       },
     });
+    if (!enterprise) throw new NotFoundException();
+    return new EnterpriseDto(enterprise);
   }
 
   async getInformationBySiret(
