@@ -1,16 +1,13 @@
 "use client";
 
 import EnterpriseSettingsForm from "@components/templates/enterprise-settings-form";
-import { Button } from "@components/ui/button";
 import Loading from "@components/ui/loading";
 import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
 import { useEnterprise } from "providers/enterprise-provider";
 import { getEntepriseQueryOptions } from "../../../lib/api/enterprise";
 
 export default function EnterpriseSettings() {
   const { enterprise } = useEnterprise();
-  const t = useTranslations();
   const { data, isLoading } = useQuery({
     ...getEntepriseQueryOptions(enterprise?.id!),
   });

@@ -314,10 +314,20 @@
     "logo": "Logo de votre entreprise",
     "siret": "Siret",
     "fillForm": "Peut pré-remplir tous les champs si possible",
+    "my": "Mon entrerprise",
     "name": "Nom de l'entreprise",
     "juridicShape": "Forme juridique",
+    "success": {
+      "update": "L'entreprise a bien été mise à jour."
+    },
+    "title": {
+      "information": "Information sur l'entreprise"
+    },
     "tvaNumber": "Numéro de TVA",
     "infoNotFound": "Les informations sur l'entreprise n'a pas été trouvé"
+  },
+  "drop": {
+    "logo": "Glissez votre logo"
   },
   "expense": {
     "add": "Ajout une note de frais",
@@ -394,6 +404,9 @@
       "title": "Les lignes de facturation",
       "add": "Ajouter une ligne de facturation"
     },
+    "lastNumber": "Votre dernière numéro de facture",
+    "numberDescription": "Pour éviter des trous sur la numérotation de facture.",
+    "prefixe": "Préfixe pour la facturation",
     "search": {
       "number": "Rechercher sur le numéro",
       "customer": "Filtrer par client",
@@ -405,6 +418,7 @@
     },
     "theInvoice": "la facture",
     "title": "Titre de la facture",
+    "informationTitle": "Information sur la facturation",
     "titlePage": "Mes factures"
   },
   "signIn": "Connexion",
@@ -438,6 +452,10 @@
       "removeDescription": "Êtes-vous sur de vouloir supprimer le project {project} ?"
     },
     "notFound": "Le projet n'a pas été trouvé."
+  },
+  "tabs": {
+    "enterprise": "Entreprise",
+    "objective": "Objectif"
   },
   "task": {
     "add": "Ajouter une tâche",

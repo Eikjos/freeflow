@@ -54,7 +54,7 @@ export default function MyEnterpriseForm({
     <Card className={className}>
       <CardContent className="py-5 px-5 flex flex-row  gap-2 min-h-20">
         <div className="w-3/4 flex flex-col gap-2">
-          <h3 className="font-semibold">Information sur l'entreprise</h3>
+          <h3 className="font-semibold">{t("enterprise.title.information")}</h3>
           <Input
             label={t("common.name")}
             placeholder="Nom de l'enterprise"
@@ -65,6 +65,7 @@ export default function MyEnterpriseForm({
             label={t("enterprise.tvaNumber")}
             placeholder={t("enterprise.tvaNumber")}
             {...form.register("tvaNumber")}
+            disabled={enterprise.tvaNumber !== undefined}
           />
           {juridicShapeData && (
             <Select
@@ -80,7 +81,7 @@ export default function MyEnterpriseForm({
             />
           )}
 
-          <h3 className="font-semibold">Localité</h3>
+          <h3 className="font-semibold">{t("common.localisation")}</h3>
           <Input
             label="Adresse"
             placeholder="Adresse"
@@ -88,15 +89,15 @@ export default function MyEnterpriseForm({
           />
           <div className="flex flex-row w-full gap-4">
             <Input
-              label="Code postale"
+              label={t("common.zipCode")}
               className="w-1/4"
-              placeholder="Code Postale"
+              placeholder={t("common.zipCode")}
               {...form.register("zipCode")}
             />
             <Input
-              label="Ville"
+              label={t("common.city")}
               className="w-3/4"
-              placeholder="Ville"
+              placeholder={t("common.city")}
               {...form.register("city")}
             />
           </div>
@@ -114,7 +115,7 @@ export default function MyEnterpriseForm({
             />
           )}
 
-          <h3 className="font-semibold">Contact</h3>
+          <h3 className="font-semibold">{t("common.contact")}</h3>
           <div className="flex flex-row w-full gap-4">
             <Input
               label={t("common.phone")}
@@ -134,7 +135,7 @@ export default function MyEnterpriseForm({
         <div className="w-1/4 flex-col flex justify-center">
           <InputFile
             onFilesSelected={handleFileChange}
-            label={"Glissez ici votre logo"}
+            label={t("drop.logo")}
             multiple={false}
             accept=".png, .jpeg, .jpg"
           />

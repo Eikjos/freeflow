@@ -99,6 +99,7 @@ export type EditEnterpriseData = {
   logo?: File;
   invoicePrefixe: string;
   invoiceNumber: number;
+  [key: string]: any;
 };
 
 export const EnterpriseEditValidation = z.object({

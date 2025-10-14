@@ -128,7 +128,6 @@ export function AutoCompleteWithoutControl<
       value !== null
     ) {
       if (data?.data?.data[0]) {
-        console.log("e", typeof value);
         setDisplayValue((prev) => render(data?.data?.data[0]!));
       } else {
         setDisplayValue("");

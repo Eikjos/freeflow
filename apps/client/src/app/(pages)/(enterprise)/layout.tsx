@@ -15,9 +15,9 @@ export default async function EnterpriseLayout({
     ? JSON.parse(headersEnterprise)
     : undefined;
   return (
-    <EnterpriseProvider enterprise={enterprise}>
+    <EnterpriseProvider initialEnterprise={enterprise}>
       <SidebarProvider>
-        <SidebarMenu enterprise={enterprise} />
+        <SidebarMenu />
         <div className="px-5 pb-2 pt-7 w-full overflow-auto">{children}</div>
       </SidebarProvider>
     </EnterpriseProvider>

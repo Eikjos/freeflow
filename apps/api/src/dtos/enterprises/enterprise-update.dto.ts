@@ -32,14 +32,17 @@ export default class EnterpriseUpdateDto implements EditEnterpriseData {
   @IsString()
   @ApiProperty({ description: 'Enterprise phone' })
   phone: string;
-  @IsString()
-  @ApiProperty({ description: 'The entreprise logo' })
+  @ApiProperty({
+    description: 'Enterprise logo',
+    type: 'string',
+    format: 'binary',
+  })
   logo?: File;
   @IsString()
   @ApiProperty({ description: 'Invoice prefixe for enterprise' })
   invoicePrefixe: string;
   @ApiProperty({ description: 'The last invoice number' })
   @IsNumber()
-  @Transform((val) => Number(val))
+  @Transform(({ value }) => Number(value))
   invoiceNumber: number;
 }

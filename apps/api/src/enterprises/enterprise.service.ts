@@ -112,7 +112,7 @@ export default class EnterpriseService {
     }
 
     const user = await this.prisma.user.findFirst({ where: { id: userId } });
-    return this.authService.generateToken(user, enterprise);
+    return this.authService.generateToken(user, enterpriseUpdate);
   }
 
   async findById(id: number) {
