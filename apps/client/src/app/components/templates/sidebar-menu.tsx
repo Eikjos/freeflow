@@ -1,3 +1,5 @@
+"use client";
+
 import SidebarNav from "@components/atoms/sidebar-nav";
 import Logo from "@components/molecules/logo";
 import ProfileButton from "@components/molecules/profileButton";
@@ -9,17 +11,14 @@ import {
   SidebarGroupContent,
   SidebarHeader,
 } from "@components/ui/sidebar";
-import { EnterpriseInfo } from "../../../types/enterprise-info-type";
+import { useEnterprise } from "providers/enterprise-provider";
 
 type SidebarMenuProps = {
   className?: string;
-  enterprise?: EnterpriseInfo;
 };
 
-export default async function SidebarMenu({
-  enterprise,
-  className,
-}: SidebarMenuProps) {
+export default function SidebarMenu({ className }: SidebarMenuProps) {
+  const { enterprise } = useEnterprise();
   const navLinks = [
     {
       name: "Mes chiffres",
@@ -39,7 +38,7 @@ export default async function SidebarMenu({
     },
     {
       name: "Mon entreprise",
-      url: "#",
+      url: "/my-enterprise",
     },
     {
       name: "Mes activités",
@@ -63,7 +62,7 @@ export default async function SidebarMenu({
         <SidebarGroup />
       </SidebarContent>
       <SidebarFooter>
-        <ProfileButton className="mx-3 mb-2" enterprise={enterprise} />
+        <ProfileButton className="mx-3 mb-2" />
         <p className="text-[10px] text-center my-2">CGU - FreeFlow - 2025</p>
       </SidebarFooter>
     </Sidebar>

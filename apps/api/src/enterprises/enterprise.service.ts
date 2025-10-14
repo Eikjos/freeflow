@@ -1,8 +1,14 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import AuthService from 'src/auth/auth.service';
 import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
+import EnterpriseUpdateDto from 'src/dtos/enterprises/enterprise-update.dto';
+import EnterpriseDto from 'src/dtos/enterprises/enterprise.dto';
 import InvoiceInformationDto from 'src/dtos/invoices/invoice-information.dto';
 import { MediaService } from 'src/media/media.service';
 import { PrismaService } from 'src/prisma.service';
@@ -67,12 +73,56 @@ export default class EnterpriseService {
     return this.authService.generateToken(user, enterprise);
   }
 
-  async findByid(id: number) {
-    return await this.prisma.enterprise.findFirst({
+  async update(
+    id: number,
+    model: EnterpriseUpdateDto,
+    enterpriseId: number,
+    userId: number,
+    logo?: Express.Multer.File,
+  ) {
+    if (enterpriseId !== id) throw new ForbiddenException();
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id },
+    });
+    if (!enterprise) throw new NotFoundException();
+    const enterpriseUpdate = await this.prisma.enterprise.update({
+      where: { id },
+      data: {
+        name: model.name,
+        tvaNumber: model.tvaNumber,
+        juridicShapeId: model.juridicShapeId,
+        countryId: parseInt(model.countryId),
+        address: model.address,
+        zipCode: model.zipCode,
+        city: model.city,
+        phone: model.phone,
+        email: model.email,
+        lastInvoiceNumber: model.invoiceNumber,
+        prefixeInvoice: model.invoicePrefixe,
+      },
+    });
+
+    if (enterpriseUpdate && logo) {
+      this.mediaService.delete(enterprise.mediaId);
+      const mediaId = await this.mediaService.upload(logo, `${id}/images`);
+      this.prisma.enterprise.update({
+        where: { id },
+        data: { mediaId: mediaId },
+      });
+    }
+
+    const user = await this.prisma.user.findFirst({ where: { id: userId } });
+    return this.authService.generateToken(user, enterpriseUpdate);
+  }
+
+  async findById(id: number) {
+    const enterprise = await this.prisma.enterprise.findFirst({
       where: {
         id,
       },
     });
+    if (!enterprise) throw new NotFoundException();
+    return new EnterpriseDto(enterprise);
   }
 
   async getInformationBySiret(

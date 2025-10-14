@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
   Query,
   Req,
   UploadedFile,
@@ -19,6 +20,7 @@ import { Project } from '@prisma/client';
 import { Request } from 'express';
 import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
+import EnterpriseUpdateDto from 'src/dtos/enterprises/enterprise-update.dto';
 import { PaginationFilterDto } from 'src/dtos/utils/pagination-result.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import ProjectService from 'src/projects/project.service';
@@ -64,6 +66,12 @@ export default class EnterprisesController {
   }
 
   @UseGuards(AccessTokenGuard)
+  @Get(':id')
+  async finfById(@Param('id', ParseIntPipe) id: number) {
+    return this.enterpriseService.findById(id);
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Get(':id/projects')
   async getProjectsByEnterpriseId(
     @Param('id', ParseIntPipe) id: number,
@@ -85,5 +93,26 @@ export default class EnterprisesController {
   @Get(':id/get-information-for-devis')
   async getInformationForDevis(@Param('id', ParseIntPipe) id: number) {
     return this.enterpriseService.getInformationForDevis(id);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Put(':id')
+  @ApiConsumes('multipart/form-data')
+  @HttpCode(200)
+  @ApiBody({
+    description: "Mettre à jour l'entreprise avec un fichier (logo)",
+    type: EnterpriseUpdateDto,
+  })
+  @UseInterceptors(FileInterceptor('logo'))
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request,
+    @Body() model: EnterpriseUpdateDto,
+    @UploadedFile()
+    logo?: Express.Multer.File,
+  ) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    const userId = parseInt(req.user['sub']);
+    return this.enterpriseService.update(id, model, enterpriseId, userId, logo);
   }
 }

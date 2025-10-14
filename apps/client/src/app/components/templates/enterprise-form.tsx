@@ -177,22 +177,22 @@ const EnterpriseForm = () => {
               <div>
                 <div className="flex flex-row items-center gap-4 justify-center mt-4">
                   <Separator className="w-1/3 bg-secondary" />
-                  <h2>Informations pour la facturation</h2>
+                  <h2>{t("invoice.informationTitle")}</h2>
                   <Separator className="w-1/3 bg-secondary" />
                 </div>
                 <div className="flex flex-row items-center justify-center gap-10 mt-3">
                   <Input
                     type="text"
-                    label="Préfixe pour les factures"
+                    label={t("invoice.prefixe")}
                     {...form.register("prefixeInvoice")}
                     description="Pour utiliser votre préfixe de facture."
                   />
                   <Input
                     type="number"
                     min="0"
-                    label="Votre dernière numéro de facture"
+                    label={t("invoice.lastNumber")}
                     {...form.register("lastInvoiceNumber")}
-                    description="Pour éviter des trous sur la numérotation de facture."
+                    description={t("invoice.numberDescription")}
                   />
                 </div>
               </div>

@@ -55,7 +55,7 @@ export default class TasksController {
     description: 'Mise à jour de la tâche',
     type: CreateTaskDto,
   })
-  async createTasks(
+  async updateTasks(
     @Param('id', ParseIntPipe) id,
     @Body() model: CreateTaskDto,
     @UploadedFiles()

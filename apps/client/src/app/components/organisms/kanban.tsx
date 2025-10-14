@@ -104,7 +104,6 @@ export function Board({ className, projectId, columns }: KanbanProps) {
             ...item,
             index,
           }));
-        console.log(updatedTasks);
         return { ...col, tasks: updatedTasks };
       }
       return col;
@@ -126,8 +125,6 @@ export function Board({ className, projectId, columns }: KanbanProps) {
       // Appel de l'api
       moveTask(columnId_dest, task.id, { toPosition: index_dest });
     }
-
-    console.log(columnsState);
   };
 
   const onSubmitCreateColumn = (values: CreateColumnData) => {

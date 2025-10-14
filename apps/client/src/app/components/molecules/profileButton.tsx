@@ -6,18 +6,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
+import { useEnterprise } from "providers/enterprise-provider";
 import { cn } from "../../../lib/utils";
-import { EnterpriseInfo } from "../../../types/enterprise-info-type";
 
 type ProfileButtonProps = {
   className: string;
-  enterprise?: EnterpriseInfo;
 };
 
-export default async function ProfileButton({
-  className,
-  enterprise,
-}: ProfileButtonProps) {
+export default function ProfileButton({ className }: ProfileButtonProps) {
+  const { enterprise } = useEnterprise();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

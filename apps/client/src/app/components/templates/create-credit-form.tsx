@@ -98,7 +98,7 @@ export default function CreateCreditForm({
       .reduce((i, prev) => prev + i, 0);
     if (totalCreditAmount > totalAmountInvoice - totalCreditInvoice) {
       toast.error(
-        t("credit.exceedAmountInvoice", {
+        t("credit.notExceedAmount", {
           amount: formatPrice(
             totalAmountInvoice - totalCreditInvoice,
             "FR-fr",

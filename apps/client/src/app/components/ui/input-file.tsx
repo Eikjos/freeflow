@@ -1,21 +1,23 @@
 "use client";
 
+import FileIcon from "@components/atoms/file-icon";
 import { CloudUpload } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ComponentProps, useRef, useState } from "react";
-import { Label } from "./label";
-import FileIcon from "@components/atoms/file-icon";
 import { toast } from "sonner";
+import { Label } from "./label";
 
 type InputFileProps = {
   onFilesSelected: (files: File[]) => void;
   showFiles?: boolean;
   errorMessage?: string;
+  label?: string;
 } & Omit<ComponentProps<"input">, "name" | "type">;
 
 const InputFile = ({
   onFilesSelected,
   errorMessage,
+  label,
   showFiles = false,
   ...props
 }: InputFileProps) => {
@@ -80,7 +82,7 @@ const InputFile = ({
       >
         <>
           <div className="border-dashed border-2 p-4 rounded-lg border-orange-500/50 bg-orange-50 text-sm text-center w-full">
-            <p>{t("common.dropFile")}</p>
+            <p>{label ? label : t("common.dropFile")}</p>
             <Label
               htmlFor="browse"
               className="flex flew-row justify-center mt-2"

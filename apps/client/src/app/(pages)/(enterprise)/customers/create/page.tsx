@@ -1,12 +1,12 @@
 import CustomerForm from "@components/templates/customer-form";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import { getAllCountriesQueryOptions } from "../../../../../lib/api/countries";
 import getQueryClient from "../../../../../lib/query-client";
 
 export default async function CreateCustomerPage() {
   const queryClient = getQueryClient();
-  const t = await getTranslations();
+  const t = useTranslations();
   void queryClient.prefetchQuery(getAllCountriesQueryOptions());
 
   return (
