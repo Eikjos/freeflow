@@ -434,6 +434,22 @@
     "login": "Se connecter",
     "manageYourLife": "Gérer votre vie d'entrepreneur facilement"
   },
+  "objective": {
+    "number": "Objecif visée",
+    "start": {
+      "description": "Si la date de début n'est pas renseigné. L'objectif commencera maintenant."
+    },
+    "title": {
+      "create": "Ajouter un nouvel objectif"
+    },
+    "success": {
+      "create": "L'objectif a bien été créer"
+    },
+    "validation": {
+      "endDate": "La date de fin doit être supérieur à aujourd'hui.",
+      "number": "L'objectif visée doit être supérieur à 0."
+    }
+  },
   "project": {
     "create": "Créer un projet",
     "edit": "Édition du projet {project}",
@@ -466,5 +482,6 @@
     "name": "Tâches",
     "priority": "Priorité",
     "select": "Sélectionnez une tâche"
-  }
+  },
+  "Required": "Le champ est requis."
 }

@@ -7,6 +7,7 @@ export * from "./types/enterprises";
 export * from "./types/expenses";
 export * from "./types/invoices";
 export * from "./types/juridic-shapes";
+export * from "./types/objectives";
 export * from "./types/projects";
 export * from "./types/tasks";
 export * from "./types/users";

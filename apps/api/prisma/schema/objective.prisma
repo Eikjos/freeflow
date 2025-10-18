@@ -1,0 +1,16 @@
+model Objective {
+  id  Int  @id() @default(autoincrement())
+  startDate   DateTime
+  endDate     DateTime
+  currentNumber     Float
+  objectiveNumber   Float
+  category     ObjectiveCategory
+  enterpriseId    Int
+  createdAt   DateTime @default(now())
+  enterprise  Enterprise @relation(fields: [enterpriseId], references: [id])
+}
+
+enum ObjectiveCategory {
+  CUSTOMER
+  SALES
+}
