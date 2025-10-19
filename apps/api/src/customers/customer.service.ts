@@ -15,11 +15,15 @@ import {
   PaginationFilterDto,
   PaginationResultDto,
 } from 'src/dtos/utils/pagination-result.dto';
+import ObjectiveService from 'src/objective/objective.service';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export default class CustomerService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly objectiveService: ObjectiveService,
+  ) {}
 
   // --
 
@@ -133,6 +137,11 @@ export default class CustomerService {
         },
       },
     });
+
+    if (customer) {
+      this.objectiveService.increaseObjective(1, enterpriseId, 'CUSTOMER');
+    }
+
     return mapCustomerToDto(customer, null);
   }
 

@@ -16,6 +16,7 @@ import {
   PaginationResultDto,
 } from 'src/dtos/utils/pagination-result.dto';
 import { MediaService } from 'src/media/media.service';
+import ObjectiveService from 'src/objective/objective.service';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -23,6 +24,7 @@ export default class InvoiceService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mediaService: MediaService,
+    private readonly objectiveService: ObjectiveService,
   ) {}
 
   async createInvoice(
@@ -87,6 +89,14 @@ export default class InvoiceService {
           lastInvoiceNumber: enterprise.lastInvoiceNumber + 1,
         },
       });
+      const invoiceAmount = invoice.invoiceLines
+        .map((e) => e.quantity * e.unitPrice)
+        .reduce((prev, curr) => prev + curr, 0);
+      await this.objectiveService.increaseObjective(
+        invoiceAmount * (invoice.excludeTva ? 1 : 1.2),
+        enterpriseId,
+        'SALES',
+      );
     }
 
     // TODO : envoyer le mail au client

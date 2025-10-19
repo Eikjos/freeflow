@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ObjectiveCategory } from '@prisma/client';
 import CreateObjectiveDto from 'src/dtos/objectives/create-objective.dto';
 import ObjectiveDto from 'src/dtos/objectives/objective.dto';
 import {
@@ -90,5 +91,31 @@ export default class ObjectiveService {
     if (!objective) throw new NotFoundException();
 
     await this.prisma.objective.delete({ where: { id, enterpriseId } });
+  }
+
+  async increaseObjective(
+    value: number,
+    enterpriseId: number,
+    category: ObjectiveCategory,
+  ) {
+    const objectives = await this.prisma.objective.findMany({
+      where: {
+        enterpriseId,
+        startDate: { lt: new Date() },
+        endDate: { gt: new Date() },
+        category: category,
+      },
+    });
+    await Promise.all(
+      objectives.map(async (o) => {
+        await this.prisma.objective.update({
+          where: { id: o.id },
+          data: {
+            currentNumber:
+              o.currentNumber + value < 0 ? 0 : o.currentNumber + value,
+          },
+        });
+      }),
+    );
   }
 }

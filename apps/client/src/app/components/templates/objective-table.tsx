@@ -72,7 +72,7 @@ export default function ObjectiveTable({
       header: t("common.status"),
       cell: ({ row }) => {
         if (row.original.currentNumber >= row.original.objectiveNumber) {
-          return <span className="text-green-500">{t("common.sucess")}</span>;
+          return <span className="text-green-500">{t("common.success")}</span>;
         } else if (row.original.endDate <= new Date()) {
           return <span className="text-red-500">{t("common.failed")}</span>;
         } else if (row.original.startDate > new Date()) {

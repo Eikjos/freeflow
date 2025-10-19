@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import CreateCreditDto from 'src/dtos/credits/create-credit.dto';
 import { MediaService } from 'src/media/media.service';
+import ObjectiveService from 'src/objective/objective.service';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -8,6 +9,7 @@ export default class CreditService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mediaService: MediaService,
+    private readonly objectiveService: ObjectiveService,
   ) {}
 
   async create(
@@ -62,5 +64,16 @@ export default class CreditService {
         },
       },
     });
+
+    if (creditEntity) {
+      const amount = model.creditLines
+        .map((e) => e.price)
+        .reduce((prev, curr) => prev - curr, 0);
+      await this.objectiveService.increaseObjective(
+        amount,
+        enterpriseId,
+        'SALES',
+      );
+    }
   }
 }

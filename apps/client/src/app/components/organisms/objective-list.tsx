@@ -45,6 +45,7 @@ export default function ObjectiveList() {
             </Button>
           }
           isUpdate={false}
+          callback={handleReload}
         />
       </div>
 

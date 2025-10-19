@@ -1,7 +1,7 @@
 model Objective {
   id  Int  @id() @default(autoincrement())
-  startDate   DateTime
-  endDate     DateTime
+  startDate   DateTime  @db.Date
+  endDate     DateTime   @db.Date
   currentNumber     Float
   objectiveNumber   Float
   category     ObjectiveCategory
