@@ -9,3 +9,22 @@ export const createObjective = (values: CreateObjectiveData) =>
       }
     }
   );
+
+export const updateObjective = (id: number, values: CreateObjectiveData) =>
+  client(`objectives/${id}`, {
+    body: JSON.stringify(values),
+    method: "PUT",
+  }).then((res) => {
+    if (res.error) {
+      throw new Error(res.error);
+    }
+  });
+
+export const deleteObjective = (id: number) =>
+  client(`objectives/${id}`, {
+    method: "DELETE",
+  }).then((res) => {
+    if (res.error) {
+      throw new Error(res.error);
+    }
+  });

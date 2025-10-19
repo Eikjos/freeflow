@@ -230,6 +230,7 @@
     "address": "Adresse",
     "contact": "Contact",
     "email": "Adresse mail",
+    "level": "Niveau",
     "modify": "Modifier",
     "password": "Mot de passe",
     "remove": "Supprimer",
@@ -241,7 +242,10 @@
     "dropFile": "Glisser vos fichiers ici.",
     "status": "Statut",
     "startDate": "Date de début",
+    "sales": "Chiffre d'affaire",
     "endDate": "Date de fin",
+    "success": "Réussi",
+    "failed": "Non accompli",
     "supportedFile": "Fichier(s) supporté(s) :",
     "previsualizeImage": "Vous pouvez pre-visualiser l'image.",
     "quantity": "Quantité",
@@ -436,6 +440,8 @@
   },
   "objective": {
     "number": "Objecif visée",
+    "inProgress": "En cours",
+    "noStart": "Pas commencé",
     "start": {
       "description": "Si la date de début n'est pas renseigné. L'objectif commencera maintenant."
     },
@@ -443,7 +449,13 @@
       "create": "Ajouter un nouvel objectif"
     },
     "success": {
-      "create": "L'objectif a bien été créer"
+      "create": "L'objectif a bien été créé.",
+      "delete": "L'objectif a bien été supprimé.",
+      "update": "L'objectif a bien été mis à jour."
+    },
+    "delete": {
+      "title": "Êtes-vous sûr de supprimer cet objectif ?",
+      "description": "L'objectif sera définitivement supprimé. Êtes-vous sûr de vouloir supprimer ?"
     },
     "validation": {
       "endDate": "La date de fin doit être supérieur à aujourd'hui.",

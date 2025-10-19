@@ -17,9 +17,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CreateObjectiveData,
   CreateObjectiveDataValidation,
+  ObjectiveData,
 } from "@repo/shared-types";
-import { createObjective } from "actions/objective";
-import { Plus } from "lucide-react";
+import { createObjective, updateObjective } from "actions/objective";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,41 +27,66 @@ import { toast } from "sonner";
 
 type CreateObjectiveDialogProps = {
   className?: string;
+  trigger: JSX.Element;
+  defaultValue?: ObjectiveData;
+  isUpdate: boolean;
+  callback?: () => void;
 };
 
 export default function CreateObjectiveDialog({
   className,
+  trigger,
+  defaultValue,
+  isUpdate,
+  callback,
 }: CreateObjectiveDialogProps) {
   const t = useTranslations();
   const [open, setOpen] = useState<boolean>(false);
   const form = useForm<CreateObjectiveData>({
     resolver: zodResolver(CreateObjectiveDataValidation),
-    defaultValues: {
-      startDate: undefined,
-      objectiveNumber: 0,
-    },
+    defaultValues: defaultValue
+      ? {
+          ...defaultValue,
+          startDate: new Date(defaultValue.startDate),
+          endDate: new Date(defaultValue.endDate),
+        }
+      : {
+          startDate: undefined,
+          objectiveNumber: 0,
+        },
   });
 
   const onSubmit = (values: CreateObjectiveData) => {
-    createObjective(values)
-      .then(() => {
-        toast.success(t("objective.success.create"));
-        setOpen(false);
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      });
+    if (!isUpdate) {
+      createObjective(values)
+        .then(() => {
+          toast.success(t("objective.success.create"));
+          if (callback) {
+            callback();
+          }
+          setOpen(false);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+    } else {
+      updateObjective(defaultValue?.id!, values)
+        .then(() => {
+          toast.success(t("objective.success.update"));
+          if (callback) {
+            callback();
+          }
+          setOpen(false);
+        })
+        .catch((err) => toast.error(err.message));
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <Form {...form}>
         <form>
-          <DialogTrigger asChild>
-            <Button className={className}>
-              {t("common.add")} <Plus size={25} />
-            </Button>
-          </DialogTrigger>
+          <DialogTrigger asChild>{trigger}</DialogTrigger>
           <DialogContent>
             <DialogTitle className="text-3xl">
               {t("objective.title.create")}
@@ -88,8 +113,8 @@ export default function CreateObjectiveDialog({
               label={t("common.category")}
               placeholder={t("common.category")}
               values={[
-                { textValue: "Client", value: "CUSTOMER" },
-                { textValue: "Chiffre d'affaire", value: "SALES" },
+                { textValue: t("common.customer"), value: "CUSTOMER" },
+                { textValue: t("common.sales"), value: "SALES" },
               ]}
             />
             <Input

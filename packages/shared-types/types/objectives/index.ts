@@ -20,8 +20,8 @@ export type CreateObjectiveData = {
 };
 
 export const CreateObjectiveDataValidation = z.object({
-  startDate: z.date().optional(),
-  endDate: z
+  startDate: z.coerce.date().optional(),
+  endDate: z.coerce
     .date({ required_error: "Required" })
     .min(new Date(), { message: "objective.validation.endDate" }),
   objectiveNumber: z.coerce
