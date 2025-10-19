@@ -1,4 +1,5 @@
 import EnterpriseSettings from "@components/organisms/enterprise-settings";
+import ObjectiveList from "@components/organisms/objective-list";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
 import { useTranslations } from "next-intl";
 
@@ -12,12 +13,15 @@ export default function MyEnterprisePage() {
           <TabsTrigger value="enterprise" className="w-1/2">
             {t("tabs.enterprise")}
           </TabsTrigger>
-          <TabsTrigger value="objectif" className="w-1/2">
+          <TabsTrigger value="objective" className="w-1/2">
             {t("tabs.objective")}
           </TabsTrigger>
         </TabsList>
         <TabsContent value="enterprise">
           <EnterpriseSettings />
+        </TabsContent>
+        <TabsContent value="objective">
+          <ObjectiveList />
         </TabsContent>
       </Tabs>
     </>

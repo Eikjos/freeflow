@@ -24,6 +24,7 @@ model Enterprise {
   projects       Project[]
   sales          Sales[]
   users          User[]
+  objectives     Objective[]
 }
 
 model EnterpriseCustomer {
