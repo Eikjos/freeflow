@@ -12,6 +12,7 @@ import JuridicShapeModule from './juridic-shapes/juridic-shapes.module';
 import { MediaModule } from './media/media.module';
 import ObjectiveModule from './objective/objective.module';
 import ProjectModule from './projects/project.module';
+import { SalesModule } from './sales/sales.module';
 import TaskModule from './tasks/task.module';
 import { UserModule } from './users/user.module';
 
@@ -20,6 +21,7 @@ import { UserModule } from './users/user.module';
     MediaModule,
     ConfigModule.forRoot(),
     UserModule,
+    SalesModule,
     EnterpriseModule,
     ObjectiveModule,
     CountryModule,
