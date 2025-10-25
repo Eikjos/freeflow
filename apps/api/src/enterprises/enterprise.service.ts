@@ -52,6 +52,7 @@ export default class EnterpriseService {
         sales: {
           create: {
             number: 0,
+            month: new Date().getMonth(),
             year: new Date().getFullYear(),
           },
         },
