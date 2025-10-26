@@ -115,4 +115,11 @@ export default class EnterprisesController {
     const userId = parseInt(req.user['sub']);
     return this.enterpriseService.update(id, model, enterpriseId, userId, logo);
   }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('inscription-year')
+  async getInscriptionYear(@Req() req: Request) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return this.enterpriseService.getInscriptionYear(enterpriseId);
+  }
 }

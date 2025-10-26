@@ -214,6 +214,14 @@ export default class EnterpriseService {
     return invoiceInformation;
   }
 
+  async getInscriptionYear(enterpriseId: number) {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+    });
+    if (!enterprise) throw new ForbiddenException();
+    return enterprise.createdAt.getFullYear();
+  }
+
   // -- Tools --
   private async getInseeInformation(siret: string) {
     // Récupération des informations de l'entreprise

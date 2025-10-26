@@ -8,6 +8,9 @@ import { client } from "../client";
 export const fetchEnterpriseInfo = async (siret: string) =>
   await client<EnterpriseInformation>(`enterprises/information?siret=${siret}`);
 
+export const getEnterpriseInscription = async () =>
+  await client<number>("enterprises/inscription-year");
+
 export const getInformationForInvoice = async (id: number) =>
   await client<InvoiceInformation>(
     `enterprises/${id}/get-information-for-invoice`
@@ -24,7 +27,7 @@ export const getInformationForDevis = async (id: number) =>
     `enterprises/${id}/get-information-for-devis`
   );
 
-export const getEnteprise = async (id: number) =>
+export const getEnterprise = async (id: number) =>
   await client<EnterpriseData>(`enterprises/${id}`);
 
 export const getInformationForDevisQueryOptions = (id: number) => ({
@@ -34,7 +37,7 @@ export const getInformationForDevisQueryOptions = (id: number) => ({
 });
 
 export const getEntepriseQueryOptions = (id: number) => ({
-  queryFn: () => getEnteprise(id),
+  queryFn: () => getEnterprise(id),
   queryKey: ["enterprise", id],
   retry: false,
 });
