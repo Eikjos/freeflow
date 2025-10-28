@@ -15,15 +15,26 @@ import {
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 import CustomerCreateDto from 'src/dtos/customers/customer-create.dto';
+import { CustomerFilterDto } from 'src/dtos/customers/customer-filter.dto';
 import { PaginationFilterDto } from 'src/dtos/utils/pagination-result.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import CustomerService from './customer.service';
-import { CustomerFilterDto } from 'src/dtos/customers/customer-filter.dto';
 
 @Controller('customers')
 @ApiBearerAuth()
 export default class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
+
+  @Get('stats')
+  @UseGuards(AccessTokenGuard)
+  async getStats(
+    @Query('months', ParseIntPipe) months: number,
+    @Req() req: Request,
+  ) {
+    console.log('🧩 months reçu =', months, typeof months);
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return await this.customerService.getStats(enterpriseId, months);
+  }
 
   @Get()
   @UseGuards(AccessTokenGuard)

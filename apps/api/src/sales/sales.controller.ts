@@ -6,18 +6,20 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import SalesService from './sales.service';
 
 @Controller('sales')
+@ApiBearerAuth()
 export default class SalesController {
   constructor(private readonly salesService: SalesService) {}
 
   @UseGuards(AccessTokenGuard)
   @Get()
   async findAll(
-    @Query('year', new ParseIntPipe()) year: number,
+    @Query('year', ParseIntPipe) year: number,
     @Req() req: Request,
   ) {
     const enterpriseId = parseInt(req.user['enterpriseId']);

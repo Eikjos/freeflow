@@ -9,6 +9,7 @@ model Customer {
   zipCode     String
   email       String
   phone       String
+  createdAt   DateTime             @default(now())
   country     Country              @relation(fields: [countryId], references: [id])
   enterprises EnterpriseCustomer[]
   invoices    Invoice[]

@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { ChartConfig } from "@components/ui/chart";
 import Loading from "@components/ui/loading";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
-import { useQueries } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { ChartAreaIcon, ChartBarIcon } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
+import { getStatsQueryOptions } from "../../../lib/api/customers";
 import { getSalesByYearQueryOptions } from "../../../lib/api/sales";
 import { numberToMonth } from "../../../lib/utils";
 import { SalesChart } from "./sales-chart";
@@ -35,6 +36,9 @@ export default function SalesCard({
   });
   const [dataCurrent, dataLast, dataTwoYearsAgo] = results.map((r) => r.data);
   const isLoading = results.some((r) => r.isLoading);
+
+  const { data } = useQuery(getStatsQueryOptions(6));
+
 
   useEffect(() => {
     if (!isLoading) {

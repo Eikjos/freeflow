@@ -1,3 +1,4 @@
+import CustomerStatCard from "@components/templates/customer-stat-card";
 import SalesCard from "@components/templates/sales-card";
 import Loading from "@components/ui/loading";
 import { Suspense } from "react";
@@ -20,6 +21,7 @@ export default async function StatsPage() {
           className="mt-5"
           yearInscription={inscriptionDate.data ?? new Date().getFullYear()}
         />
+        <CustomerStatCard className="mt-5" />
       </Suspense>
     </>
   );
