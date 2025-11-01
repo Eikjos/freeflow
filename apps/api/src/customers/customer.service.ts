@@ -201,4 +201,46 @@ export default class CustomerService {
       customers: Number(r.customers),
     }));
   }
+
+  async getStatsByYear(year: number, enterpriseId: number) {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+    });
+    if (!enterprise) {
+      throw new ForbiddenException();
+    }
+
+    const dateFrom = new Date(`${year}-01-01`);
+    const now = new Date();
+    const dateTo = year === now.getFullYear() ? now : new Date(`${year}-12-31`);
+
+    const result = await this.prisma.$queryRaw<CustomerStatDto[]>`
+    WITH months AS (
+      SELECT 
+        generate_series(
+          DATE_TRUNC('month', ${dateFrom}::timestamp),
+          DATE_TRUNC('month',  ${dateTo}::timestamp),
+          interval '1 month'
+        ) AS month
+    )
+    SELECT 
+      TO_CHAR(m.month, 'YYYY-MM') AS month,
+      COUNT(c.id) AS customers
+    FROM months m
+    LEFT JOIN "Customer" c
+      ON c."createdAt" <= (m.month + interval '1 month' - interval '1 day')
+      AND c.id IN (
+        SELECT ec."customerId"
+        FROM "EnterpriseCustomer" ec
+        WHERE ec."enterpriseId" = ${enterpriseId} AND ec."isDeleted" = false
+      )
+    GROUP BY m.month
+    ORDER BY m.month;
+  `;
+
+    return result.map((r) => ({
+      month: r.month,
+      customers: Number(r.customers),
+    }));
+  }
 }

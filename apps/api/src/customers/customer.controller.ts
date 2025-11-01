@@ -31,7 +31,6 @@ export default class CustomerController {
     @Query('months', ParseIntPipe) months: number,
     @Req() req: Request,
   ) {
-    console.log('🧩 months reçu =', months, typeof months);
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return await this.customerService.getStats(enterpriseId, months);
   }
@@ -79,5 +78,15 @@ export default class CustomerController {
   async delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
     return await this.customerService.delete(id, enterpriseId);
+  }
+
+  @Get(':year/stats')
+  @UseGuards(AccessTokenGuard)
+  async getStatsByYear(
+    @Param('year', ParseIntPipe) year: number,
+    @Req() req: Request,
+  ) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return await this.customerService.getStatsByYear(year, enterpriseId);
   }
 }

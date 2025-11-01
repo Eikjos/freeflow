@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import SaleDto from 'src/dtos/sales/sales.dto';
 import { PrismaService } from 'src/prisma.service';
 
@@ -24,10 +25,17 @@ export default class SalesService {
     return sales.map((s) => new SaleDto(s));
   }
 
-  async getAmountByYear(year: number, enterpriseId: number) {
+  async getAmountByYear(enterpriseId: number, year?: number) {
+    let filterQuery: Prisma.SalesWhereInput = { enterpriseId };
+    if (year !== undefined) {
+      filterQuery = {
+        ...filterQuery,
+        year: year,
+      };
+    }
     return (
       await this.prismaService.sales.aggregate({
-        where: { enterpriseId: enterpriseId, year: year },
+        where: filterQuery,
         _sum: { number: true },
       })
     )._sum.number;

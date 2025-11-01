@@ -22,6 +22,7 @@ import { UserModule } from './users/user.module';
     ConfigModule.forRoot(),
     UserModule,
     SalesModule,
+    ExpenseModule,
     EnterpriseModule,
     ObjectiveModule,
     CountryModule,
@@ -33,7 +34,6 @@ import { UserModule } from './users/user.module';
     InvoiceModule,
     CreditModule,
     ExpenseCategoryModule,
-    ExpenseModule,
   ],
   providers: [],
 })
