@@ -2,9 +2,11 @@ import CustomerStatCard from "@components/templates/customer-stat-card";
 import EnterpriseStatCard from "@components/templates/enterprise-stat-card";
 import SalesCard from "@components/templates/sales-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
+import { getTranslations } from "next-intl/server";
 import { getEnterpriseInscription } from "../../../../lib/api/enterprise";
 
 export default async function StatsPage() {
+  const t = await getTranslations();
   const inscriptionDate = await getEnterpriseInscription();
   const arrayYear = Array.from({
     length: new Date().getFullYear() - inscriptionDate.data! + 1,
@@ -12,10 +14,10 @@ export default async function StatsPage() {
 
   return (
     <>
-      <h1 className="font-amica text-4xl">Mes chiffres</h1>
+      <h1 className="font-amica text-4xl">{t("mynumbers.title")}</h1>
       <Tabs defaultValue="default">
         <TabsList>
-          <TabsTrigger value="default">Général</TabsTrigger>
+          <TabsTrigger value="default">{t("common.general")}</TabsTrigger>
           {arrayYear.map((_, index) => {
             const year = new Date().getFullYear() - index;
             return (
@@ -29,7 +31,7 @@ export default async function StatsPage() {
           <EnterpriseStatCard />
           <SalesCard
             className="mt-5"
-            title={"Chiffre d'affaires sur les 3 dernières années"}
+            title={t("mynumbers.sales.3years")}
             yearInscription={inscriptionDate.data ?? new Date().getFullYear()}
           />
           <CustomerStatCard className="mt-5" />
@@ -42,7 +44,7 @@ export default async function StatsPage() {
               <SalesCard
                 className="mt-5"
                 year={year}
-                title={`Chiffre d'affaires en ${year}`}
+                title={t("mynumbers.sales.year", { year })}
               />
             </TabsContent>
           );

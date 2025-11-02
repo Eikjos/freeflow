@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import Loading from "@components/ui/loading";
 import { Tabs, TabsList, TabsTrigger } from "@components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { getStatsQueryOptions } from "../../../lib/api/customers";
 import CustomerChart from "./customer-chart";
@@ -13,6 +14,7 @@ type CustomerStatProps = {
 };
 
 export default function CustomerStatCard({ className }: CustomerStatProps) {
+  const t = useTranslations();
   const [month, setMonth] = useState(6);
   const { data, isLoading } = useQuery(getStatsQueryOptions(month));
 
@@ -20,7 +22,7 @@ export default function CustomerStatCard({ className }: CustomerStatProps) {
     <Card className={className}>
       <CardContent className="py-4 px-4">
         <CardHeader className="flex flex-row w-full justify-between items-center">
-          <CardTitle>Evolution des clients</CardTitle>
+          <CardTitle>{t("mynumbers.customers")}</CardTitle>
           <Tabs defaultValue="6">
             <TabsList>
               <TabsTrigger onClick={() => setMonth(3)} value="3">
