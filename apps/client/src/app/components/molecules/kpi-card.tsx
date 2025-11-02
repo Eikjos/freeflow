@@ -1,5 +1,8 @@
+"use client";
+
 import { Card } from "@components/ui/card";
 import { TrendingDown, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
 import { cn, formatPrice } from "../../../lib/utils";
 
 interface KPICardProps {
@@ -17,6 +20,7 @@ export const KPICard = ({
   type = "sale",
   className,
 }: KPICardProps) => {
+  const [amount, setAmount] = useState<number>(0);
   const getTrendColor = () => {
     if (!trend) return "";
     if (type === "expense") {
@@ -24,6 +28,19 @@ export const KPICard = ({
     }
     return trend > 0 ? "text-success" : "text-destructive";
   };
+
+  useEffect(() => {
+    const duration = 700;
+    const start = performance.now();
+
+    function update(now: number) {
+      const progress = Math.min((now - start) / duration, 1);
+      setAmount(value * progress);
+      if (progress < 1) requestAnimationFrame(update);
+    }
+
+    requestAnimationFrame(update);
+  }, [value]);
 
   const getCardStyle = () => {
     switch (type) {
@@ -47,7 +64,7 @@ export const KPICard = ({
         <p className="text-sm font-medium text-muted-foreground">{title}</p>
         <div className="flex items-end justify-between">
           <h3 className="text-3xl font-bold tracking-tight">
-            {formatPrice(value, "FR-fr", "EUR")}
+            {formatPrice(amount, "FR-fr", "EUR")}
           </h3>
           {trend !== undefined && (
             <div

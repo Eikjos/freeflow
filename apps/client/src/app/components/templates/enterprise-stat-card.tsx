@@ -14,7 +14,7 @@ export default function EnterpriseStatCard({
   year,
   className,
 }: EnterpriseStatCardProps) {
-  const { data, isLoading } = useQuery(getEnterpriseStatQueryOptions(year));
+  const { data } = useQuery(getEnterpriseStatQueryOptions(year));
 
   return (
     <div className={cn("flex flex-row item-center w-full gap-4", className)}>

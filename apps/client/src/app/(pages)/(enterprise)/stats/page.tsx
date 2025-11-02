@@ -1,9 +1,7 @@
 import CustomerStatCard from "@components/templates/customer-stat-card";
 import EnterpriseStatCard from "@components/templates/enterprise-stat-card";
 import SalesCard from "@components/templates/sales-card";
-import Loading from "@components/ui/loading";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
-import { Suspense } from "react";
 import { getEnterpriseInscription } from "../../../../lib/api/enterprise";
 
 export default async function StatsPage() {
@@ -28,21 +26,27 @@ export default async function StatsPage() {
           })}
         </TabsList>
         <TabsContent value="default">
-          <Suspense
-            fallback={
-              <div className="h-full w-full flex flex-row justify-center items-center">
-                <Loading />
-              </div>
-            }
-          >
-            <EnterpriseStatCard />
-            <SalesCard
-              className="mt-5"
-              yearInscription={inscriptionDate.data ?? new Date().getFullYear()}
-            />
-            <CustomerStatCard className="mt-5" />
-          </Suspense>
+          <EnterpriseStatCard />
+          <SalesCard
+            className="mt-5"
+            title={"Chiffre d'affaires sur les 3 dernières années"}
+            yearInscription={inscriptionDate.data ?? new Date().getFullYear()}
+          />
+          <CustomerStatCard className="mt-5" />
         </TabsContent>
+        {arrayYear.map((_, index) => {
+          const year = new Date().getFullYear() - index;
+          return (
+            <TabsContent value={year.toString()} key={index}>
+              <EnterpriseStatCard year={year} />
+              <SalesCard
+                className="mt-5"
+                year={year}
+                title={`Chiffre d'affaires en ${year}`}
+              />
+            </TabsContent>
+          );
+        })}
       </Tabs>
     </>
   );

@@ -4,10 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { ChartConfig } from "@components/ui/chart";
 import Loading from "@components/ui/loading";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { ChartAreaIcon, ChartBarIcon } from "lucide-react";
-import { Suspense, useEffect, useState } from "react";
-import { getStatsQueryOptions } from "../../../lib/api/customers";
+import { useEffect, useState } from "react";
 import { getSalesByYearQueryOptions } from "../../../lib/api/sales";
 import { numberToMonth } from "../../../lib/utils";
 import { SalesChart } from "./sales-chart";
@@ -18,27 +17,35 @@ type YearData = {
 };
 
 type SalesCardProps = {
+  title: string;
   className?: string;
-  yearInscription: number;
+  yearInscription?: number;
+  year?: number;
 };
 
 export default function SalesCard({
+  title,
   className,
   yearInscription,
+  year,
 }: SalesCardProps) {
   const currentYear = new Date().getFullYear();
   const [chartData, setChartData] = useState<YearData[]>([]);
-  const years = Array.from({ length: 3 }, (_, i) => currentYear - i).filter(
-    (year) => year >= yearInscription
-  );
+  let years: number[] = [];
+
+  if (yearInscription) {
+    years = Array.from({ length: 3 }, (_, i) => currentYear - i).filter(
+      (year) => year >= yearInscription
+    );
+  } else if (year) {
+    years = [year];
+  }
+
   const results = useQueries({
     queries: years.map((year) => getSalesByYearQueryOptions(year)),
   });
   const [dataCurrent, dataLast, dataTwoYearsAgo] = results.map((r) => r.data);
   const isLoading = results.some((r) => r.isLoading);
-
-  const { data } = useQuery(getStatsQueryOptions(6));
-
 
   useEffect(() => {
     if (!isLoading) {
@@ -76,7 +83,7 @@ export default function SalesCard({
     <Card className={className}>
       <Tabs defaultValue="chart">
         <CardHeader className="flex flex-row justify-between items-center">
-          <CardTitle>Le chiffre d'affaire</CardTitle>
+          <CardTitle>{title}</CardTitle>
           <TabsList className="py-0">
             <TabsTrigger value="chart">
               <ChartAreaIcon size={20} />
@@ -90,30 +97,36 @@ export default function SalesCard({
           </TabsList>
         </CardHeader>
         <CardContent>
-          <Suspense
-            fallback={
-              <div className="w-full h-full flex flex-row items-center justify-center">
+          <TabsContent value="chart">
+            {isLoading && (
+              <div className="h-[300px] flex flex-row justify-center items-center">
                 <Loading />
               </div>
-            }
-          >
-            <TabsContent value="chart">
+            )}
+            {!isLoading && (
               <SalesChart
                 data={chartData}
                 config={chartConfig}
                 type="CHART"
                 className="max-h-[300px]  w-full"
               />
-            </TabsContent>
-            <TabsContent value="bar">
+            )}
+          </TabsContent>
+          <TabsContent value="bar">
+            {isLoading && (
+              <div className="h-[300px] flex flex-row justify-center items-center">
+                <Loading />
+              </div>
+            )}
+            {!isLoading && (
               <SalesChart
                 data={chartData}
                 config={chartConfig}
                 type="BAR"
                 className="max-h-[300px]  w-full"
               />
-            </TabsContent>
-          </Suspense>
+            )}
+          </TabsContent>
         </CardContent>
       </Tabs>
     </Card>
