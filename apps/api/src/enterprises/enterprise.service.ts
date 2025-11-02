@@ -249,7 +249,7 @@ export default class EnterpriseService {
       where: { id: enterpriseId },
     });
     if (!enterprise) throw new ForbiddenException();
-    const sales = await this.salesService.getAmountByYear(year, enterpriseId);
+    const sales = await this.salesService.getAmountByYear(enterpriseId, year);
     const expenses = await this.expenseService.getTotalExpenseByYear(
       enterpriseId,
       year,

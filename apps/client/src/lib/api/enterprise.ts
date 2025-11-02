@@ -1,8 +1,10 @@
 import {
   EnterpriseData,
   EnterpriseInformation,
+  EnterpriseStatData,
   InvoiceInformation,
 } from "@repo/shared-types";
+import { queryOptions } from "@tanstack/react-query";
 import { client } from "../client";
 
 export const fetchEnterpriseInfo = async (siret: string) =>
@@ -41,3 +43,15 @@ export const getEntepriseQueryOptions = (id: number) => ({
   queryKey: ["enterprise", id],
   retry: false,
 });
+
+export const getEnterpriseStat = async (year?: number) =>
+  await client<EnterpriseStatData>(
+    `enterprises/stats${year !== undefined ? `?year=${year}` : ""}`
+  );
+
+export const getEnterpriseStatQueryOptions = (year?: number) =>
+  queryOptions({
+    queryKey: ["enterprise", "stat", year],
+    retry: false,
+    queryFn: () => getEnterpriseStat(year),
+  });

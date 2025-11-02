@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  DefaultValuePipe,
   ForbiddenException,
   Get,
   HttpCode,
@@ -37,6 +36,18 @@ export default class EnterprisesController {
   ) {}
 
   @UseGuards(AccessTokenGuard)
+  @Get('stats')
+  async getStatsByYear(
+    @Req() request: Request,
+    @Query('year')
+    year?: number,
+  ) {
+    const yearNumber = year ? parseInt(year as any, 10) : undefined;
+    const enterpriseId = parseInt(request.user['enterpriseId']);
+    return this.enterpriseService.getStatsByYear(enterpriseId, yearNumber);
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Get('information')
   async getInformation(
     @Query('siret') siret: string,
@@ -49,16 +60,6 @@ export default class EnterprisesController {
   async getInscriptionYear(@Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.enterpriseService.getInscriptionYear(enterpriseId);
-  }
-
-  @UseGuards(AccessTokenGuard)
-  @Get('stats')
-  async getStatsByYear(
-    @Req() request: Request,
-    @Query('year', new DefaultValuePipe(undefined), ParseIntPipe) year?: number,
-  ) {
-    const enterpriseId = parseInt(request.user['enterpriseId']);
-    return this.enterpriseService.getStatsByYear(enterpriseId, year);
   }
 
   @UseGuards(AccessTokenGuard)
