@@ -13,6 +13,7 @@ model Enterprise {
   phone          String
   prefixeInvoice    String?
   lastInvoiceNumber Int               @default(0)
+  createdAt     DateTime              @default(now())
   contacts       Contact[]
   country        Country              @relation(fields: [countryId], references: [id])
   juridicShape   JuridicShape         @relation(fields: [juridicShapeId], references: [code])

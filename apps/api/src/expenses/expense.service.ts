@@ -143,4 +143,27 @@ export default class ExpenseService {
     // remove expense
     await this.prisma.expense.delete({ where: { id } });
   }
+
+  async getTotalExpenseByYear(
+    enterpriseId: number,
+    year?: number,
+  ): Promise<number> {
+    let filterQuery: Prisma.ExpenseWhereInput = { enterpriseId };
+    if (year !== undefined) {
+      filterQuery = {
+        ...filterQuery,
+        date: {
+          gte: new Date(`${year}-01-01`),
+          lte: new Date(`${year}-12-31`),
+        },
+      };
+    }
+    const expenses = await this.prisma.expense.aggregate({
+      where: filterQuery,
+      _sum: {
+        price: true,
+      },
+    });
+    return expenses._sum.price.toNumber();
+  }
 }

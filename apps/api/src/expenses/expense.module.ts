@@ -8,5 +8,6 @@ import ExpenseService from './expense.service';
   imports: [MediaModule],
   providers: [PrismaService, ExpenseService],
   controllers: [ExpenseController],
+  exports: [ExpenseService],
 })
 export default class ExpenseModule {}

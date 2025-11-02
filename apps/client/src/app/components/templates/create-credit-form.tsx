@@ -18,6 +18,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import getQueryClient from "../../../lib/query-client";
 import { formatPrice } from "../../../lib/utils";
 import CreditTemplate from "./credit-template";
 
@@ -38,6 +39,7 @@ export default function CreateCreditForm({
   const form = useFormContext<
     CreateCreditData & { newLine: CreateCreditLineData; maskName: boolean }
   >();
+  const queryClient = getQueryClient();
   const router = useRouter();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -129,6 +131,7 @@ export default function CreateCreditForm({
     )
       .then((res) => {
         toast.success(t("credit.success.create"));
+        queryClient.invalidateQueries({ queryKey: ["sales"] });
         router.push("/invoices");
       })
       .catch((err: Error) => {

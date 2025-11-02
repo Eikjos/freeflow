@@ -1,6 +1,7 @@
 import {
   CustomerDetailModel,
   CustomerModel,
+  CustomerStatData,
   PaginationFilter,
   PaginationResult,
 } from "@repo/shared-types";
@@ -31,5 +32,17 @@ export const getCustomerByIdOptions = (id: string) =>
   queryOptions({
     queryFn: () => getCustomerById(id),
     queryKey: ["customers", id],
+    retry: false,
+  });
+
+export const getStats = (months: number) =>
+  client<CustomerStatData[]>(`customers/stats?months=${months}`, {
+    method: "GET",
+  });
+
+export const getStatsQueryOptions = (months: number) =>
+  queryOptions({
+    queryFn: () => getStats(months),
+    queryKey: ["customer", "stats", months],
     retry: false,
   });

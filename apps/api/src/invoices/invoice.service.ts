@@ -18,6 +18,7 @@ import {
 import { MediaService } from 'src/media/media.service';
 import ObjectiveService from 'src/objective/objective.service';
 import { PrismaService } from 'src/prisma.service';
+import SalesService from 'src/sales/sales.service';
 
 @Injectable()
 export default class InvoiceService {
@@ -25,6 +26,7 @@ export default class InvoiceService {
     private readonly prisma: PrismaService,
     private readonly mediaService: MediaService,
     private readonly objectiveService: ObjectiveService,
+    private readonly salesService: SalesService,
   ) {}
 
   async createInvoice(
@@ -34,6 +36,7 @@ export default class InvoiceService {
   ) {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
+      include: { juridicShape: true },
     });
     if (!enterprise) throw new ForbiddenException();
     const customer = await this.prisma.customer.findFirst({
@@ -97,9 +100,30 @@ export default class InvoiceService {
         enterpriseId,
         'SALES',
       );
+      // Add in sales when enterprise is not AE or AE with sales > 77700 on precedent years
+      const juridicShapeCode = enterprise.juridicShape.code;
+      const currentSales = await this.salesService.getAmountByYear(
+        invoice.date.getFullYear() - 1,
+        enterprise.id,
+      );
+      if (juridicShapeCode != '10' && juridicShapeCode != '1000') {
+        await this.salesService.updateSalesAmount(
+          enterpriseId,
+          invoice.date,
+          invoiceAmount * (invoice.excludeTva ? 1 : 1.2),
+        );
+      } else if (
+        (juridicShapeCode === '1000' || juridicShapeCode === '10') &&
+        currentSales < 77700
+      ) {
+        await this.salesService.updateSalesAmount(
+          enterpriseId,
+          invoice.date,
+          invoiceAmount * (invoice.excludeTva ? 1 : 1.2),
+        );
+      }
+      // TODO : envoyer le mail au client
     }
-
-    // TODO : envoyer le mail au client
   }
 
   async findAll(

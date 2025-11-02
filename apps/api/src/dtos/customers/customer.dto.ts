@@ -40,7 +40,7 @@ export class CustomerDetailDto
 
 export function mapCustomerToDto(customer: Customer, country?: Country) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { countryId, ...c } = customer;
+  const { countryId, createdAt, ...c } = customer;
   return { ...c, country: country?.name } as CustomerDetailDto;
 }
 

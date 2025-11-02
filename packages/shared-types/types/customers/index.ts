@@ -50,3 +50,8 @@ export const CustomerCreateValidation = z.object({
 });
 
 export type CustomerCreateModel = z.infer<typeof CustomerCreateValidation>;
+
+export type CustomerStatData = {
+  month: string;
+  customers: number;
+};

@@ -9,6 +9,7 @@ export * from "./types/invoices";
 export * from "./types/juridic-shapes";
 export * from "./types/objectives";
 export * from "./types/projects";
+export * from "./types/sales";
 export * from "./types/tasks";
 export * from "./types/users";
 export * from "./types/utils/pagination";

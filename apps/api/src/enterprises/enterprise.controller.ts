@@ -36,11 +36,30 @@ export default class EnterprisesController {
   ) {}
 
   @UseGuards(AccessTokenGuard)
+  @Get('stats')
+  async getStatsByYear(
+    @Req() request: Request,
+    @Query('year')
+    year?: number,
+  ) {
+    const yearNumber = year ? parseInt(year as any, 10) : undefined;
+    const enterpriseId = parseInt(request.user['enterpriseId']);
+    return this.enterpriseService.getStatsByYear(enterpriseId, yearNumber);
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Get('information')
   async getInformation(
     @Query('siret') siret: string,
   ): Promise<Omit<EnterpriseInformationDto, 'id'>> {
     return await this.enterpriseService.getInformationBySiret(siret);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('inscription-year')
+  async getInscriptionYear(@Req() req: Request) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return this.enterpriseService.getInscriptionYear(enterpriseId);
   }
 
   @UseGuards(AccessTokenGuard)

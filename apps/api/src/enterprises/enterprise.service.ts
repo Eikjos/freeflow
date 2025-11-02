@@ -7,11 +7,14 @@ import {
 import AuthService from 'src/auth/auth.service';
 import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
+import EnterpriseStatDto from 'src/dtos/enterprises/enterprise-stat.dto';
 import EnterpriseUpdateDto from 'src/dtos/enterprises/enterprise-update.dto';
 import EnterpriseDto from 'src/dtos/enterprises/enterprise.dto';
 import InvoiceInformationDto from 'src/dtos/invoices/invoice-information.dto';
+import ExpenseService from 'src/expenses/expense.service';
 import { MediaService } from 'src/media/media.service';
 import { PrismaService } from 'src/prisma.service';
+import SalesService from 'src/sales/sales.service';
 import { EtablissementResponse } from 'src/types/sirene-api';
 
 @Injectable()
@@ -20,6 +23,8 @@ export default class EnterpriseService {
     private readonly mediaService: MediaService,
     private readonly prisma: PrismaService,
     private readonly authService: AuthService,
+    private readonly salesService: SalesService,
+    private readonly expenseService: ExpenseService,
     private readonly httpService: HttpService,
   ) {}
 
@@ -52,6 +57,7 @@ export default class EnterpriseService {
         sales: {
           create: {
             number: 0,
+            month: new Date().getMonth(),
             year: new Date().getFullYear(),
           },
         },
@@ -213,6 +219,14 @@ export default class EnterpriseService {
     return invoiceInformation;
   }
 
+  async getInscriptionYear(enterpriseId: number) {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+    });
+    if (!enterprise) throw new ForbiddenException();
+    return enterprise.createdAt.getFullYear();
+  }
+
   // -- Tools --
   private async getInseeInformation(siret: string) {
     // Récupération des informations de l'entreprise
@@ -228,6 +242,19 @@ export default class EnterpriseService {
       .catch(() => {
         throw new NotFoundException('enterprise.infoNotFound');
       });
+  }
+
+  async getStatsByYear(enterpriseId: number, year: number) {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+    });
+    if (!enterprise) throw new ForbiddenException();
+    const sales = await this.salesService.getAmountByYear(enterpriseId, year);
+    const expenses = await this.expenseService.getTotalExpenseByYear(
+      enterpriseId,
+      year,
+    );
+    return new EnterpriseStatDto(sales, expenses);
   }
 
   private getCleControleTVANumber(siren: string) {

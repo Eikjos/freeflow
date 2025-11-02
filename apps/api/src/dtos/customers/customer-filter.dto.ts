@@ -1,8 +1,10 @@
 import { Customer } from '@prisma/client';
 import { Transform } from 'class-transformer';
-import { IsInt, IsString } from 'class-validator';
+import { IsDate, IsInt, IsString } from 'class-validator';
 
 export class CustomerFilterDto implements Customer {
+  @IsDate()
+  createdAt: Date;
   @IsInt()
   @Transform(({ value }) => parseInt(value))
   id: number;
@@ -25,5 +27,5 @@ export class CustomerFilterDto implements Customer {
   @IsInt()
   @Transform(({ value }) => parseInt(value))
   countryId: number;
-  [key: string]: string | number;
+  [key: string]: string | number | Date;
 }

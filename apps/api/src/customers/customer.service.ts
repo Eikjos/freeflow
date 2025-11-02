@@ -6,6 +6,7 @@ import {
 import { plainToInstance } from 'class-transformer';
 import CustomerCreateDto from 'src/dtos/customers/customer-create.dto';
 import { CustomerFilterDto } from 'src/dtos/customers/customer-filter.dto';
+import CustomerStatDto from 'src/dtos/customers/customer-stat.dto';
 import {
   CustomerDto,
   mapCustomerToDetailDto,
@@ -159,5 +160,87 @@ export default class CustomerService {
       },
     });
     if (!customerRelation) throw new NotFoundException('customer.notFound');
+  }
+
+  async getStats(enterpriseId: number, months: number) {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+    });
+    if (!enterprise) {
+      throw new ForbiddenException();
+    }
+    const dateFrom = new Date();
+    dateFrom.setMonth(dateFrom.getMonth() - months + 1);
+
+    const result = await this.prisma.$queryRaw<CustomerStatDto[]>`
+    WITH months AS (
+      SELECT 
+        generate_series(
+          DATE_TRUNC('month', ${dateFrom}::timestamp),
+          DATE_TRUNC('month', NOW()),
+          interval '1 month'
+        ) AS month
+    )
+    SELECT 
+      TO_CHAR(m.month, 'YYYY-MM') AS month,
+      COUNT(c.id) AS customers
+    FROM months m
+    LEFT JOIN "Customer" c
+      ON c."createdAt" <= (m.month + interval '1 month' - interval '1 day')
+      AND c.id IN (
+        SELECT ec."customerId"
+        FROM "EnterpriseCustomer" ec
+        WHERE ec."enterpriseId" = ${enterpriseId} AND ec."isDeleted" = false
+      )
+    GROUP BY m.month
+    ORDER BY m.month;
+  `;
+
+    return result.map((r) => ({
+      month: r.month,
+      customers: Number(r.customers),
+    }));
+  }
+
+  async getStatsByYear(year: number, enterpriseId: number) {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+    });
+    if (!enterprise) {
+      throw new ForbiddenException();
+    }
+
+    const dateFrom = new Date(`${year}-01-01`);
+    const now = new Date();
+    const dateTo = year === now.getFullYear() ? now : new Date(`${year}-12-31`);
+
+    const result = await this.prisma.$queryRaw<CustomerStatDto[]>`
+    WITH months AS (
+      SELECT 
+        generate_series(
+          DATE_TRUNC('month', ${dateFrom}::timestamp),
+          DATE_TRUNC('month',  ${dateTo}::timestamp),
+          interval '1 month'
+        ) AS month
+    )
+    SELECT 
+      TO_CHAR(m.month, 'YYYY-MM') AS month,
+      COUNT(c.id) AS customers
+    FROM months m
+    LEFT JOIN "Customer" c
+      ON c."createdAt" <= (m.month + interval '1 month' - interval '1 day')
+      AND c.id IN (
+        SELECT ec."customerId"
+        FROM "EnterpriseCustomer" ec
+        WHERE ec."enterpriseId" = ${enterpriseId} AND ec."isDeleted" = false
+      )
+    GROUP BY m.month
+    ORDER BY m.month;
+  `;
+
+    return result.map((r) => ({
+      month: r.month,
+      customers: Number(r.customers),
+    }));
   }
 }

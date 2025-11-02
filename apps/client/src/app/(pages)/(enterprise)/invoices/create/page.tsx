@@ -37,8 +37,10 @@ import {
   getAllTasksQueryOptions,
   getTasksById,
 } from "../../../../../lib/api/tasks";
+import getQueryClient from "../../../../../lib/query-client";
 
 export default function CreateInvoicesPage() {
+  const queryClient = getQueryClient();
   const t = useTranslations();
   const searchParams = useSearchParams();
   const devisId = searchParams.get("devisId");
@@ -178,6 +180,7 @@ export default function CreateInvoicesPage() {
           toast.error("Il y a eu une erreur.");
         } else {
           toast.success(t("invoice.success.create"));
+          queryClient.invalidateQueries({ queryKey: ["sales"] });
           router.push("/invoices");
         }
       })

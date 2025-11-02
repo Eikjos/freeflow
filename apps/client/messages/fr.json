@@ -230,15 +230,18 @@
     "address": "Adresse",
     "contact": "Contact",
     "email": "Adresse mail",
+    "expenses": "Dépenses",
     "level": "Niveau",
     "modify": "Modifier",
     "password": "Mot de passe",
     "remove": "Supprimer",
     "submitAndSend": "Enregistrer et envoyer",
+    "general": "Général",
     "title": "Titre",
     "phone": "Télephone",
     "preview": "Aperçu",
     "print": "Imprimer",
+    "profits": "Bénéfices",
     "dropFile": "Glisser vos fichiers ici.",
     "status": "Statut",
     "startDate": "Date de début",
@@ -437,6 +440,14 @@
     "createAccount": "Inscrivez-vous",
     "login": "Se connecter",
     "manageYourLife": "Gérer votre vie d'entrepreneur facilement"
+  },
+  "mynumbers": {
+    "title": "Mes chiffres",
+    "sales": {
+      "3years": "Les chiffres d'affaires sur les 3 dernières années",
+      "year": "Chiffre d'affaire sur l'année {year}"
+    },
+    "customers": "Evolution des clients"
   },
   "objective": {
     "number": "Objecif visée",

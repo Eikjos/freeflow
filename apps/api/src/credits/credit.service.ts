@@ -1,8 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import CreateCreditDto from 'src/dtos/credits/create-credit.dto';
 import { MediaService } from 'src/media/media.service';
 import ObjectiveService from 'src/objective/objective.service';
 import { PrismaService } from 'src/prisma.service';
+import SalesService from 'src/sales/sales.service';
 
 @Injectable()
 export default class CreditService {
@@ -10,6 +15,7 @@ export default class CreditService {
     private readonly prisma: PrismaService,
     private readonly mediaService: MediaService,
     private readonly objectiveService: ObjectiveService,
+    private readonly saleService: SalesService,
   ) {}
 
   async create(
@@ -17,6 +23,11 @@ export default class CreditService {
     enterpriseId: number,
     credit: Express.Multer.File,
   ) {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+      include: { juridicShape: true },
+    });
+    if (!enterprise) throw new ForbiddenException();
     // checking if the invoice id exist for this enterpriseId
     const invoice = await this.prisma.invoice.findFirst({
       where: { id: model.invoiceId, enterpriseId },
@@ -74,6 +85,34 @@ export default class CreditService {
         enterpriseId,
         'SALES',
       );
+      // remove amount in sales
+      const juridicShapeCode = enterprise.juridicShape.code;
+      const currentSales = await this.saleService.getAmountByYear(
+        invoice.date.getFullYear() - 1,
+        enterprise.id,
+      );
+      if (juridicShapeCode != '10' && juridicShapeCode != '1000') {
+        await this.saleService.updateSalesAmount(
+          enterpriseId,
+          invoice.date,
+          amount,
+        );
+      } else if (
+        (juridicShapeCode === '1000' || juridicShapeCode === '10') &&
+        currentSales < 77700
+      ) {
+        await this.saleService.updateSalesAmount(
+          enterpriseId,
+          invoice.date,
+          amount,
+        );
+      } else {
+        await this.saleService.updateSalesAmount(
+          enterpriseId,
+          new Date(),
+          amount,
+        );
+      }
     }
   }
 }

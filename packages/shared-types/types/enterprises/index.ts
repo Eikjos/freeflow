@@ -133,3 +133,9 @@ export const EnterpriseEditValidation = z.object({
   prefixeInvoice: z.string().optional(),
   lastNumberInvoice: z.coerce.number().optional(),
 });
+
+export type EnterpriseStatData = {
+  sales: number;
+  expenses: number;
+  profit: number;
+};

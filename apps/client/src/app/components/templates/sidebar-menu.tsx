@@ -11,18 +11,16 @@ import {
   SidebarGroupContent,
   SidebarHeader,
 } from "@components/ui/sidebar";
-import { useEnterprise } from "providers/enterprise-provider";
 
 type SidebarMenuProps = {
   className?: string;
 };
 
 export default function SidebarMenu({ className }: SidebarMenuProps) {
-  const { enterprise } = useEnterprise();
   const navLinks = [
     {
       name: "Mes chiffres",
-      url: "/enterprises",
+      url: "/stats",
     },
     {
       name: "Mes factures",
