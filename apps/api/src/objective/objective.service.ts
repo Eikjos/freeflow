@@ -34,6 +34,22 @@ export default class ObjectiveService {
     });
   }
 
+  async findInProgress(enterpriseId: number) {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+    });
+    if (!enterprise) throw new ForbiddenException();
+
+    const objectives = await this.prisma.objective.findMany({
+      where: {
+        enterpriseId,
+        startDate: { lte: new Date() },
+        endDate: { gt: new Date() },
+      },
+    });
+    return objectives.map((o) => new ObjectiveDto(o));
+  }
+
   async update(id: number, model: CreateObjectiveDto, enterpriseId: number) {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },

@@ -23,6 +23,13 @@ export default class ObjectiveController {
   constructor(private readonly objectiveService: ObjectiveService) {}
 
   @UseGuards(AccessTokenGuard)
+  @Get('in-progress')
+  async getInProgress(@Req() req: Request) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return this.objectiveService.findInProgress(enterpriseId);
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Post()
   @HttpCode(200)
   async create(@Body() model: CreateObjectiveDto, @Req() request: Request) {

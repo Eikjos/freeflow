@@ -1,10 +1,11 @@
-import { Button } from "../../components/ui/button";
+import ObjectiveCard from "@components/templates/objective-card";
 
 export default function Home() {
   return (
-    <div>
-      <h1>Hello world !!</h1>
-      <Button>TEST DU BUTTON</Button>
+    <div className="px-4 py-2">
+      <h1 className="font-amica text-4xl">Tableau de bord</h1>
+      <ObjectiveCard className="w-1/4 h-[400px]" />
+      {/* <PrevisionCAChart /> */}
     </div>
   );
 }
