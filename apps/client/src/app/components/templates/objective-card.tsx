@@ -23,13 +23,14 @@ export default function ObjectiveCard({ className }: ObjectiveCardProps) {
             <Loading />
           </div>
         )}
-        {(data?.data === undefined || data?.data.length === 0) && (
-          <div className="w-full h-3/4 flex flex-row justify-center items-center">
-            <span className="text-sm text-gray-500">
-              Aucun objectifs en cours
-            </span>
-          </div>
-        )}
+        {!isLoading &&
+          (data?.data === undefined || data?.data.length === 0) && (
+            <div className="w-full h-3/4 flex flex-row justify-center items-center">
+              <span className="text-sm text-gray-500">
+                Aucun objectifs en cours
+              </span>
+            </div>
+          )}
         {data?.data && data.data.length > 0 && (
           <Slider autoSlide={false} autoSlideInterval={4000}>
             {data?.data?.map((o, i) => (

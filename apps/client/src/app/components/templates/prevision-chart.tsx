@@ -1,5 +1,7 @@
 "use client";
 
+import Loading from "@components/ui/loading";
+import { useQuery } from "@tanstack/react-query";
 import {
   CartesianGrid,
   Legend,
@@ -10,55 +12,71 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { getPrevisionsQueryOptions } from "../../../lib/api/sales";
+import { cn, stringToDateYear } from "../../../lib/utils";
 
-// Données : toute l'année, mais réel seulement jusqu'à Avril
-const data = [
-  { mois: "Janv", reel: 42000 },
-  { mois: "Févr", reel: 47000 },
-  { mois: "Mars", reel: 51000 },
-  { mois: "Avr", reel: 49500, prevision: 49500 },
-  { mois: "Mai", prevision: 52000 },
-  { mois: "Juin" },
-  { mois: "Juil" },
-  { mois: "Août" },
-  { mois: "Sept" },
-  { mois: "Oct" },
-  { mois: "Nov" },
-  { mois: "Déc" },
-];
+type PrevisionCAChartProps = {
+  className?: string;
+};
 
-export default function PrevisionCAChart() {
+export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
+  const { data, isLoading } = useQuery(getPrevisionsQueryOptions());
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-[300px] flex justify-center items-center">
+        <Loading />
+      </div>
+    );
+  }
+
   return (
-    <div className="w-[500px] h-[300px]">
+    <div className={cn("h-[300px]", className)}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
-          data={data}
+          data={data?.data}
           margin={{ top: 10, right: 30, left: 10, bottom: 0 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="mois" />
+          <XAxis
+            dataKey="month"
+            tickFormatter={(v) => stringToDateYear(v)}
+            tickLine={false}
+            tick={false}
+            tickMargin={8}
+          />
           <YAxis tickFormatter={(v) => `${v / 1000}k €`} />
           <Tooltip
             content={({ active, payload, label }) => {
               if (active && payload && payload.length) {
-                // Cherche la première valeur non null
-                const point = payload.find((p) => p.value !== null);
-                if (point) {
-                  return (
-                    <div
-                      style={{
-                        background: "white",
-                        border: "1px solid #ccc",
-                        padding: 8,
-                      }}
-                    >
-                      <strong>{label}</strong>
+                const salePoint = payload.find((p) => p.dataKey === "sale");
+                const previsionPoint = payload.find(
+                  (p) => p.dataKey === "prevision"
+                );
+
+                return (
+                  <div
+                    style={{
+                      background: "white",
+                      border: "1px solid #ccc",
+                      padding: 8,
+                    }}
+                  >
+                    <strong>{stringToDateYear(label)}</strong>
+                    {salePoint && (
                       <div>
-                        {point.name}: {point?.value?.toLocaleString()} €
+                        {salePoint.name}: {salePoint.value?.toLocaleString()} €
                       </div>
-                    </div>
-                  );
-                }
+                    )}
+                    {previsionPoint &&
+                      salePoint?.value != previsionPoint.value && (
+                        <div>
+                          {previsionPoint.name}:{" "}
+                          {previsionPoint.value?.toLocaleString()} €
+                        </div>
+                      )}
+                  </div>
+                );
               }
               return null;
             }}
@@ -66,20 +84,26 @@ export default function PrevisionCAChart() {
           <Legend />
 
           {/* Ligne CA réel */}
-
           {/* Ligne Prévision (pointillée) */}
           <Line
+            key={"previsions"}
             type="monotone"
             dataKey="prevision"
             stroke="#00C49F"
             strokeWidth={3}
             strokeDasharray="6 4"
+            name={"Prévision du CA"}
             dot={(props) => {
               const { cx, cy, payload } = props;
               // n’affiche le dot que si c’est un point de prévision
-              if (payload.prevision && !payload.reel) {
+              if (
+                payload &&
+                payload.prevision !== payload.sale &&
+                payload.prevision
+              ) {
                 return (
                   <circle
+                    key={Math.random()}
                     cx={cx}
                     cy={cy}
                     r={4}
@@ -88,15 +112,15 @@ export default function PrevisionCAChart() {
                   />
                 );
               }
-              return <g />; // sinon aucun point
+              return <g key={Math.random()} />; // sinon aucun point
             }}
             activeDot={false}
-            connectNulls={true}
+            connectNulls={false}
           />
-
           <Line
+            key={"sales"}
             type="monotone"
-            dataKey="reel"
+            dataKey="sale"
             stroke="#0011AA"
             strokeWidth={3}
             dot={{ r: 5, fill: "#0011AA" }}

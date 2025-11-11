@@ -9,7 +9,7 @@ interface KPICardProps {
   title: string;
   value: number;
   trend?: number;
-  type?: "sale" | "expense" | "profit";
+  type?: "sale" | "expense" | "profit" | "default";
   className?: string;
 }
 
@@ -64,7 +64,7 @@ export const KPICard = ({
         <p className="text-sm font-medium text-muted-foreground">{title}</p>
         <div className="flex items-end justify-between">
           <h3 className="text-3xl font-bold tracking-tight">
-            {formatPrice(amount, "FR-fr", "EUR")}
+            {type === "default" ? value : formatPrice(amount, "FR-fr", "EUR")}
           </h3>
           {trend !== undefined && (
             <div

@@ -25,4 +25,11 @@ export default class SalesController {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.salesService.findAllByYear(year, enterpriseId);
   }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('previsions')
+  async getPrevisions(@Req() request: Request) {
+    const enterpriseId = parseInt(request.user['enterpriseId']);
+    return this.salesService.getPrevisions(enterpriseId);
+  }
 }
