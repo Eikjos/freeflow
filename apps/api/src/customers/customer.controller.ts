@@ -54,6 +54,13 @@ export default class CustomerController {
     return await this.customerService.create(enterpriseId, model);
   }
 
+  @UseGuards(AccessTokenGuard)
+  @Get('count')
+  async count(@Req() req: Request) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return await this.customerService.count(enterpriseId);
+  }
+
   @Put(':id')
   @UseGuards(AccessTokenGuard)
   async update(

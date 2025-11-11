@@ -48,6 +48,18 @@ export default class SalesService {
     )._sum.number;
   }
 
+  async total(enterpriseId: number) {
+    const enterprise = await this.prismaService.enterprise.findFirst({
+      where: { id: enterpriseId },
+    });
+    if (!enterprise) throw new ForbiddenException();
+    const aggregate = await this.prismaService.sales.aggregate({
+      where: { enterpriseId },
+      _sum: { number: true },
+    });
+    return aggregate._sum.number;
+  }
+
   async getPrevisions(enterpriseId: number) {
     const enterprise = await this.prismaService.enterprise.findFirst({
       where: { id: enterpriseId },

@@ -1,17 +1,20 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { cn } from "../../../lib/utils";
 
 type SliderProps = {
   children: React.ReactNode;
   autoSlide: boolean;
   autoSlideInterval: number;
+  className?: string;
 };
 
 export default function Slider({
   children,
   autoSlide = true,
   autoSlideInterval = 3000,
+  className,
 }: SliderProps) {
   const [current, setCurrent] = useState(0);
   const length = React.Children.count(children);
@@ -30,7 +33,7 @@ export default function Slider({
   }, [current, autoSlide, autoSlideInterval]);
 
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className={cn("relative w-full h-full overflow-hidden", className)}>
       <div
         className="flex transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${current * 100}%)` }}

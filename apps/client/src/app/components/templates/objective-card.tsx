@@ -16,7 +16,7 @@ export default function ObjectiveCard({ className }: ObjectiveCardProps) {
 
   return (
     <Card className={cn("p-0", className)}>
-      <CardContent className="py-0 px-5 w-full h-full">
+      <CardContent className="py-0 px-5 w-full">
         <CardHeader className="px-0">Mes objectifs</CardHeader>
         {isLoading && (
           <div className="w-full h-3/4 flex flex-row justify-center items-center">
@@ -32,7 +32,11 @@ export default function ObjectiveCard({ className }: ObjectiveCardProps) {
             </div>
           )}
         {data?.data && data.data.length > 0 && (
-          <Slider autoSlide={false} autoSlideInterval={4000}>
+          <Slider
+            autoSlide={false}
+            autoSlideInterval={4000}
+            className="h-[320px]"
+          >
             {data?.data?.map((o, i) => (
               <ObjectiveChart objective={o} key={i} />
             ))}
