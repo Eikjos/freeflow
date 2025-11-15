@@ -2,6 +2,7 @@ import { KPICard } from "@components/molecules/kpi-card";
 import ObjectiveCard from "@components/templates/objective-card";
 import PrevisionsCard from "@components/templates/previsions-card";
 import { client } from "../../../lib/client";
+import { Card, CardContent, CardHeader } from "@components/ui/card";
 
 export default async function Home() {
   const customer = await client<number>("customers/count");
@@ -27,6 +28,23 @@ export default async function Home() {
         </div>
         <ObjectiveCard className="w-1/4 h-[400px]" />
         <PrevisionsCard className="w-2/4 h-[400px]" />
+      </div>
+      <div className="w-full flex-row flex items-center gap-5 mt-5">
+        <Card className="w-1/4">
+          <CardContent>
+            <CardHeader className="px-0">Notifications</CardHeader>
+          </CardContent>
+        </Card>
+        <Card className="w-1/4">
+          <CardContent>
+            <CardHeader className="px-0">Les taches urgentes</CardHeader>
+          </CardContent>
+        </Card>
+        <Card className="w-1/2">
+          <CardContent>
+            <CardHeader className="px-0">Les derniers avis</CardHeader>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -62,6 +63,24 @@ export default class TaskService {
       page: filter.page,
       pageSize: filter.pageSize,
     };
+  }
+
+  async getUrgentsTask(enterpriseId: number) {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+    });
+    if (!enterprise) throw new ForbiddenException();
+    const tasks = await this.prisma.task.findMany({
+      where: {
+        priority: 'HIGH',
+        column: {
+          index: { gte: 0, lte: 2 },
+          project: { enterpriseId: enterpriseId },
+        },
+      },
+      include: { column: { include: { project: true } } },
+    });
+    return tasks;
   }
 
   async findById(taskId: number) {
