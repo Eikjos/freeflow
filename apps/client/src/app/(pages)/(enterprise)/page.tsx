@@ -30,22 +30,22 @@ export default async function Home() {
         <PrevisionsCard className="w-2/4 h-[400px]" />
       </div>
       <div className="w-full flex-row flex items-center gap-5 mt-5">
-        <Card className="w-1/4">
+        <Card className="w-1/2">
           <CardContent>
             <CardHeader className="px-0">Notifications</CardHeader>
           </CardContent>
         </Card>
-        <Card className="w-1/4">
+        <Card className="w-1/2">
           <CardContent>
             <CardHeader className="px-0">Les taches urgentes</CardHeader>
           </CardContent>
         </Card>
-        <Card className="w-1/2">
-          <CardContent>
-            <CardHeader className="px-0">Les derniers avis</CardHeader>
-          </CardContent>
-        </Card>
       </div>
+      <Card className="w-full mt-5">
+        <CardContent>
+          <CardHeader className="px-0">Les derniers avis</CardHeader>
+        </CardContent>
+      </Card>
     </div>
   );
 }

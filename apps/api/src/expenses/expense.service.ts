@@ -164,6 +164,6 @@ export default class ExpenseService {
         price: true,
       },
     });
-    return expenses._sum.price.toNumber();
+    return expenses._sum.price ? expenses._sum.price.toNumber() : 0.00;
   }
 }

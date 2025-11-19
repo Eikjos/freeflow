@@ -19,13 +19,13 @@ export default function ObjectiveCard({ className }: ObjectiveCardProps) {
       <CardContent className="py-0 px-5 w-full">
         <CardHeader className="px-0">Mes objectifs</CardHeader>
         {isLoading && (
-          <div className="w-full h-3/4 flex flex-row justify-center items-center">
+          <div className="w-full h-[300px] flex flex-row justify-center items-center">
             <Loading />
           </div>
         )}
         {!isLoading &&
           (data?.data === undefined || data?.data.length === 0) && (
-            <div className="w-full h-3/4 flex flex-row justify-center items-center">
+            <div className="w-full h-[300px] flex flex-row justify-center items-center">
               <span className="text-sm text-gray-500">
                 Aucun objectifs en cours
               </span>
