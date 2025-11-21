@@ -3,6 +3,8 @@ import ObjectiveCard from "@components/templates/objective-card";
 import PrevisionsCard from "@components/templates/previsions-card";
 import { client } from "../../../lib/client";
 import { Card, CardContent, CardHeader } from "@components/ui/card";
+import UrgentTaskCard from "@components/templates/urgent-task-card";
+import NotificationCard from "@components/templates/notifications-card";
 
 export default async function Home() {
   const customer = await client<number>("customers/count");
@@ -30,16 +32,8 @@ export default async function Home() {
         <PrevisionsCard className="w-2/4 h-[400px]" />
       </div>
       <div className="w-full flex-row flex items-center gap-5 mt-5">
-        <Card className="w-1/2">
-          <CardContent>
-            <CardHeader className="px-0">Notifications</CardHeader>
-          </CardContent>
-        </Card>
-        <Card className="w-1/2">
-          <CardContent>
-            <CardHeader className="px-0">Les taches urgentes</CardHeader>
-          </CardContent>
-        </Card>
+        <NotificationCard  className="w-1/2"/>
+        <UrgentTaskCard  className="w-1/2"/>
       </div>
       <Card className="w-full mt-5">
         <CardContent>

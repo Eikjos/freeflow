@@ -78,9 +78,9 @@ export default class TaskService {
           project: { enterpriseId: enterpriseId },
         },
       },
-      include: { column: { include: { project: true } } },
+      include: { column: { include: { project: true } }, medias: true},
     });
-    return tasks;
+    return tasks.map(t => mapToTask(t, t.medias.map(t => t.mediaId)));
   }
 
   async findById(taskId: number) {
