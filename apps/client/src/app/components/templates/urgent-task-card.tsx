@@ -15,7 +15,7 @@ export default function UrgentTaskCard({ className } : UrgentTaskCardProps) {
     const { data, isLoading } = useQuery(getUrgentTasksQueryOptions());
 
     return (
-        <Card className="w-1/2">
+        <Card className={className}>
           <CardContent>
             <CardHeader className="px-0">Les taches urgentes</CardHeader>
                 {isLoading && (
