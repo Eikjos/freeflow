@@ -28,7 +28,7 @@ export default function TaskItemCard({task, className} : TaskItemCardProps) {
                     "h-20 py-1 px-2 flex flex-col justify-between",
                 )}
                 >
-                <CardHeader className="p-0">
+                <CardHeader className="p-1">
                     <span className={`font-light text-sm`}>{task.name}</span>
                 </CardHeader>
                 <div className="w-full flex flex-row justify-end mb-1 items-center gap-2">
