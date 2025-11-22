@@ -5,6 +5,9 @@ import { client } from "../../../lib/client";
 import { Card, CardContent, CardHeader } from "@components/ui/card";
 import UrgentTaskCard from "@components/templates/urgent-task-card";
 import NotificationCard from "@components/templates/notifications-card";
+import { Separator } from "@components/ui/separator";
+import NotificationItemCard from "@components/templates/notification-item-card";
+import StarRating from "@components/molecules/start-rating";
 
 export default async function Home() {
   const customer = await client<number>("customers/count");
@@ -38,6 +41,15 @@ export default async function Home() {
       <Card className="w-full mt-5">
         <CardContent>
           <CardHeader className="px-0">Les derniers avis</CardHeader>
+          <div className="h-[300px] flex flex-row items-center gap-4">
+            <div className="w-1/3 h-full">
+                <StarRating readOnly value={4.5} className="w-full mt-24" />
+            </div>
+            <Separator orientation="vertical" className=" h-5/6 rounded-md bg-secondary" />
+            <div className="h-[300px] bg-gray-300/10 w-full rounded-md p-2">
+                <NotificationItemCard />
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -24,7 +24,7 @@ export default function UrgentTaskCard({ className } : UrgentTaskCardProps) {
                     </div>
                 )}
                 {!isLoading && data && data.data && data.data.length > 0 ? (
-                    <div className="flex flex-col w-full items-center h-[300px] overflow-y-scroll bg-gray-300/15 p-2 rounded-md">
+                    <div className="flex flex-col w-full items-center h-[300px] overflow-y-scroll bg-gray-300/10 p-2 rounded-md">
                         {data.data.map((task, index) => (
                             <TaskItemCard task={task} key={index} className="w-full"></TaskItemCard>
                         ))}
