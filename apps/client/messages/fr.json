@@ -212,7 +212,9 @@
     "create": "Créer",
     "cancel": "Annuler",
     "customer": "Client",
+    "customers": "Clients",
     "date": "Date",
+    "dashboard": "Tableau de bord",
     "description": "Description",
     "edit": "Éditer",
     "emptyData": "Vous n'avez pas encore de données.",
@@ -242,7 +244,10 @@
     "preview": "Aperçu",
     "print": "Imprimer",
     "profits": "Bénéfices",
+    "projects": "Projects",
     "dropFile": "Glisser vos fichiers ici.",
+    "notifications": "Notifications",
+    "remaining": "Restant",
     "status": "Statut",
     "startDate": "Date de début",
     "sales": "Chiffre d'affaire",
@@ -450,12 +455,14 @@
     "customers": "Evolution des clients"
   },
   "objective": {
+    "any": "Aucun objective en cours",
     "number": "Objecif visée",
     "inProgress": "En cours",
     "noStart": "Pas commencé",
     "start": {
       "description": "Si la date de début n'est pas renseigné. L'objectif commencera maintenant."
     },
+    "my-objective": "Mes objectives",
     "title": {
       "create": "Ajouter un nouvel objectif"
     },
@@ -471,6 +478,11 @@
     "validation": {
       "endDate": "La date de fin doit être supérieur à aujourd'hui.",
       "number": "L'objectif visée doit être supérieur à 0."
+    } 
+  },
+  "opinion": {
+    "last" : { 
+      "title": "Les derniers avis"
     }
   },
   "project": {
@@ -492,6 +504,11 @@
     },
     "notFound": "Le projet n'a pas été trouvé."
   },
+  "sales": { 
+    "previsionTitle": "La prévision du chiffre d'affaire",
+    "real": "CA réél",
+    "prevision": "Prévision du CA"
+  },
   "tabs": {
     "enterprise": "Entreprise",
     "objective": "Objectif"
@@ -504,7 +521,11 @@
     "namePlaceholder": "Nom de la tâche",
     "name": "Tâches",
     "priority": "Priorité",
-    "select": "Sélectionnez une tâche"
+    "select": "Sélectionnez une tâche", 
+    "urgents": {
+      "title": "Les tâches urgentes",
+      "any": "Aucune tâche urgente"
+    }
   },
   "Required": "Le champ est requis."
 }

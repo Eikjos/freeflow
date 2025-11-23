@@ -1,10 +1,10 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query";
-import { getUrgentTasksQueryOptions } from "../../../lib/api/tasks";
 import { Card, CardContent, CardHeader } from "@components/ui/card";
-import TaskCard from "./task-card";
 import Loading from "@components/ui/loading";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { getUrgentTasksQueryOptions } from "../../../lib/api/tasks";
 import TaskItemCard from "./task-item-card";
 
 type UrgentTaskCardProps = {
@@ -13,11 +13,11 @@ type UrgentTaskCardProps = {
 
 export default function UrgentTaskCard({ className } : UrgentTaskCardProps) {
     const { data, isLoading } = useQuery(getUrgentTasksQueryOptions());
-
+    const t = useTranslations();
     return (
         <Card className={className}>
           <CardContent>
-            <CardHeader className="px-0">Les taches urgentes</CardHeader>
+                <CardHeader className="px-0">{t("task.urgents.title")}</CardHeader>
                 {isLoading && (
                     <div className="w-full h-[300px] flex justify-center items-center">
                         <Loading />
@@ -31,7 +31,7 @@ export default function UrgentTaskCard({ className } : UrgentTaskCardProps) {
                     </div>
                 ) : (
                     <div className="w-full h-[300px] flex justify-center items-center">
-                        <span className="text-gray-400 text-sm">Aucune tâches urgentes</span>
+                            <span className="text-gray-400 text-sm">{t("task.urgents.any")}</span>
                     </div>)}
 
           </CardContent>

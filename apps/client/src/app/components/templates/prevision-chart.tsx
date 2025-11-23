@@ -2,6 +2,7 @@
 
 import Loading from "@components/ui/loading";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import {
   CartesianGrid,
   Legend,
@@ -21,6 +22,7 @@ type PrevisionCAChartProps = {
 
 export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
   const { data, isLoading } = useQuery(getPrevisionsQueryOptions());
+  const t = useTranslations();
 
   if (isLoading) {
     return (
@@ -92,7 +94,7 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
             stroke="#00C49F"
             strokeWidth={3}
             strokeDasharray="6 4"
-            name={"Prévision du CA"}
+            name={t("sales.prevision")}
             dot={(props) => {
               const { cx, cy, payload } = props;
               // n’affiche le dot que si c’est un point de prévision
@@ -124,7 +126,7 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
             stroke="#0011AA"
             strokeWidth={3}
             dot={{ r: 5, fill: "#0011AA" }}
-            name="CA Réel"
+            name={t("sales.real")}
             connectNulls={false}
             activeDot={false}
           />

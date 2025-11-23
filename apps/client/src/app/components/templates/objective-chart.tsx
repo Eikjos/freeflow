@@ -1,5 +1,6 @@
 import { ObjectiveData } from "@repo/shared-types";
 import dayjs from "dayjs";
+import { useTranslations } from "next-intl";
 import PieChart from "./pie-chart";
 
 type ObjectiveChartProps = {
@@ -7,13 +8,15 @@ type ObjectiveChartProps = {
 };
 
 export default function ObjectiveChart({ objective }: ObjectiveChartProps) {
+  const t = useTranslations();
+
   return (
     <div>
       <div className="flex flex-row justify-between items-baseline">
         <span className="text-black">
           {objective.objectiveCategory == "SALES"
-            ? "Chiffre d'affaire"
-            : "Client"}
+            ? t("common.sales")
+            : t("common.customer")}
         </span>
         <span className="text-sm text-gray-500">
           {dayjs(objective.startDate).format("DD/MM/YYYY")} -{" "}
@@ -24,13 +27,13 @@ export default function ObjectiveChart({ objective }: ObjectiveChartProps) {
         data={[
           {
             name:
-              objective.objectiveCategory === "SALES"
-                ? "Chiffre d'affaire"
-                : "Client",
+              objective.objectiveCategory == "SALES"
+                ? t("common.sales")
+                : t("common.customer"),
             value: objective.currentNumber,
           },
           {
-            name: "Restant",
+            name: t("common.remaining"),
             value: objective.objectiveNumber - objective.currentNumber,
           },
         ]}
