@@ -130,3 +130,14 @@ export function numberToMonth(m: number): string {
       return "Mois invalide";
   }
 }
+
+export function stringToDateYear(date: string) {
+  const regex = /(\d+)-(\d+)/;
+  const match = date.match(regex);
+  if (match) {
+    const year = match[1];
+    const month = parseInt(match[2]!) - 1;
+    return numberToMonth(month) + " " + year;
+  }
+  return date;
+}

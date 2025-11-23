@@ -18,10 +18,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { Request } from 'express';
 import CreateColumnDto from 'src/dtos/columns/column-create.dto';
+import ReorderColumnsDto from 'src/dtos/customers/reorder-colums.dto';
 import ProjectCreateDto from 'src/dtos/projects/project-create.dto';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import ProjectService from './project.service';
-import ReorderColumnsDto from 'src/dtos/customers/reorder-colums.dto';
 
 @Controller('projects')
 @ApiBearerAuth()
@@ -48,6 +48,13 @@ export default class ProjectController {
       parseInt(req.user['enterpriseId']),
       media,
     );
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('count')
+  async count(@Req() req: Request) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return await this.projectService.count(enterpriseId);
   }
 
   @UseGuards(AccessTokenGuard)

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { cn } from "../../../lib/utils";
 
 type LogoProps = {
@@ -7,7 +8,8 @@ type LogoProps = {
 
 export default function Logo({ className }: LogoProps) {
   return (
-    <div
+    <Link
+      href={"/"}
       className={cn(
         "flex flew-row gap-4 justify-center items-center",
         className
@@ -20,6 +22,6 @@ export default function Logo({ className }: LogoProps) {
         alt="freeflow logo"
       />
       <span className="font-amica text-5xl">Freeflow</span>
-    </div>
+    </Link>
   );
 }

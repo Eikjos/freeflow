@@ -6,7 +6,7 @@ import {
 } from "@components/ui/chart";
 import { CustomerStatData } from "@repo/shared-types";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { numberToMonth } from "../../../lib/utils";
+import { stringToDateYear } from "../../../lib/utils";
 
 type CustomerChartProps = {
   data: CustomerStatData[];
@@ -19,17 +19,6 @@ const config = {
     label: "Nombre de client",
   },
 } as ChartConfig;
-
-function stringToDateYear(date: string) {
-  const regex = /(\d+)-(\d+)/;
-  const match = date.match(regex);
-  if (match) {
-    const year = match[1];
-    const month = parseInt(match[2]!) - 1;
-    return numberToMonth(month) + " " + year;
-  }
-  return date;
-}
 
 export default function CustomerChart({ data, className }: CustomerChartProps) {
   return (

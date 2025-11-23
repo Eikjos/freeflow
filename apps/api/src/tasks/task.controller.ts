@@ -32,6 +32,13 @@ export default class TasksController {
   }
 
   @UseGuards(AccessTokenGuard)
+  @Get('urgents')
+  async getUrgentsTasks(@Req() request: Request) {
+    const enterpriseId = parseInt(request.user['enterpriseId']);
+    return this.taskService.getUrgentsTask(enterpriseId);
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number) {
     return this.taskService.findById(id);

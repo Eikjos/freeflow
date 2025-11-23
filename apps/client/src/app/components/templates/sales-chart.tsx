@@ -35,9 +35,9 @@ export const SalesChart = <TConfig extends ChartConfig>({
   return (
     <>
       {type == "CHART" && (
-        <ChartContainer config={config} className={className}>
-          <AreaChart accessibilityLayer data={data}>
-            <CartesianGrid vertical={false} />
+        <ChartContainer config={config} className={className} >
+          <AreaChart  data={data}>
+            <CartesianGrid vertical={false}/>
             <XAxis
               dataKey="label"
               tickLine={false}
@@ -66,7 +66,7 @@ export const SalesChart = <TConfig extends ChartConfig>({
       )}
       {type == "BAR" && (
         <ChartContainer config={config} className={className}>
-          <BarChart accessibilityLayer data={data}>
+          <BarChart data={data}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="label"

@@ -73,9 +73,12 @@ export default function ObjectiveTable({
       cell: ({ row }) => {
         if (row.original.currentNumber >= row.original.objectiveNumber) {
           return <span className="text-green-500">{t("common.success")}</span>;
-        } else if (row.original.endDate <= new Date()) {
+        } else if (
+          dayjs(row.original.endDate).isBefore(new Date()) &&
+          dayjs(row.original.startDate).isBefore(new Date())
+        ) {
           return <span className="text-red-500">{t("common.failed")}</span>;
-        } else if (row.original.startDate > new Date()) {
+        } else if (dayjs(row.original.startDate).isAfter(new Date())) {
           return <span className="text-muted">{t("objective.noStart")}</span>;
         } else {
           return <span>{t("objective.inProgress")}</span>;

@@ -31,8 +31,8 @@ type TaskDetailSheetProps = {
   task: TaskData;
   open: boolean;
   onClose: () => void;
-  onEdit: (task: TaskData) => void;
-  onDelete: (task: TaskData) => void;
+  onEdit?: (task: TaskData) => void;
+  onDelete?: (task: TaskData) => void;
 };
 
 type FetchedFilesType = {
@@ -115,7 +115,9 @@ export default function TaskDetailSheet({
       updateTask(task.id, values, form.getValues("files") ?? [])
         .then((res) => {
           if (res) {
-            onEdit(res);
+            if (onEdit) {
+                onEdit(res);
+            }
           }
         })
         .then(() => onClose())
@@ -129,7 +131,11 @@ export default function TaskDetailSheet({
 
   const handleDelete = () => {
     deleteTask(task.id)
-      .then(() => onDelete(task))
+      .then(() => {
+        if (onDelete) {
+          onDelete(task)
+        }
+      })
       .catch((e) => toast.error(e.message))
       .finally(() => onClose());
   };
@@ -225,17 +231,22 @@ export default function TaskDetailSheet({
               onFilesSelected={handleUploadFile}
             />
             <div className="flex flex-row mt-10 w-full gap-2">
-              <Button type="submit" className="w-3/4">
-                {t("common.edit")}
-              </Button>
-              <Button
-                type="button"
-                variant="destructive"
-                className="w-1/4"
-                onClick={handleDelete}
-              >
-                <TrashIcon />
-              </Button>
+              {onEdit && (
+                <Button type="submit" className="w-3/4">
+                  {t("common.edit")}
+                </Button>
+              )}
+              {onDelete && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  className="w-1/4"
+                  onClick={handleDelete}
+                >
+                  <TrashIcon />
+                </Button>
+              )}
+             
             </div>
           </form>
         </Form>

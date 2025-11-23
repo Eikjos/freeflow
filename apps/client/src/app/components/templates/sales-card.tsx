@@ -97,7 +97,7 @@ export default function SalesCard({
           </TabsList>
         </CardHeader>
         <CardContent>
-          <TabsContent value="chart">
+          <TabsContent value="chart" className="max-h-[350px]">
             {isLoading && (
               <div className="h-[300px] flex flex-row justify-center items-center">
                 <Loading />
@@ -112,7 +112,7 @@ export default function SalesCard({
               />
             )}
           </TabsContent>
-          <TabsContent value="bar">
+          <TabsContent value="bar" className="max-h-[350px]">
             {isLoading && (
               <div className="h-[300px] flex flex-row justify-center items-center">
                 <Loading />

@@ -18,3 +18,13 @@ export const getAllObjectiveQueryOptions = (filter: PaginationFilter<any>) =>
     queryKey: ["objectives", filter],
     retry: false,
   });
+
+export const getInProgressObjective = async () =>
+  await client<ObjectiveData[]>("objectives/in-progress");
+
+export const getInProgressObjectiveQueryOptions = () =>
+  queryOptions({
+    queryFn: getInProgressObjective,
+    queryKey: ["objectives", "in-progress"],
+    retry: false,
+  });

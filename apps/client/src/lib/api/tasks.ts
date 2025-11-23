@@ -4,7 +4,7 @@ import {
   TaskData,
   TaskFilter,
 } from "@repo/shared-types";
-import { UseQueryOptions } from "@tanstack/react-query";
+import { queryOptions, UseQueryOptions } from "@tanstack/react-query";
 import { HttpResponse } from "../../types/http-response";
 import { client } from "../client";
 import { generateQueryString } from "../utils";
@@ -25,3 +25,14 @@ export const getAllTasksQueryOptions = (
   queryFn: () => getAllTasks(pagination),
   retry: false,
 });
+
+export const getUrgentTasks = async () => {
+  return await client<TaskData[]>(`tasks/urgents`);
+}
+
+export const getUrgentTasksQueryOptions = () =>  queryOptions({
+  queryFn: getUrgentTasks,
+  queryKey: ['tasks', "urgents"],
+  retry: false,
+})
+
