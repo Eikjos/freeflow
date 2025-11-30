@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { seedCountry, seedExpenseCategory } from 'prisma/seed';
+import { seedCountry, seedExpenseCategory } from '../prisma/seed';
 import { AppModule } from './app.module';
 
 async function bootstrap() {

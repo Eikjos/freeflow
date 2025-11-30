@@ -16,9 +16,9 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { Request } from 'express';
-import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
-import { TaskPaginationFilterDto } from 'src/dtos/tasks/task-filter.dto';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
+import CreateTaskDto from '../dtos/tasks/task-create.dto';
+import { TaskPaginationFilterDto } from '../dtos/tasks/task-filter.dto';
+import { AccessTokenGuard } from '../guards/access-token.guard';
 import TaskService from './task.service';
 
 @Controller('/tasks')

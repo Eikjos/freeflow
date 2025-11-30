@@ -4,13 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ObjectiveCategory } from '@prisma/client';
-import CreateObjectiveDto from 'src/dtos/objectives/create-objective.dto';
-import ObjectiveDto from 'src/dtos/objectives/objective.dto';
+import CreateObjectiveDto from 'dtos/objectives/create-objective.dto';
+import ObjectiveDto from 'dtos/objectives/objective.dto';
 import {
   PaginationFilterDto,
   PaginationResultDto,
-} from 'src/dtos/utils/pagination-result.dto';
-import { PrismaService } from 'src/prisma.service';
+} from 'dtos/utils/pagination-result.dto';
+import { PrismaService } from 'prisma.service';
 
 @Injectable()
 export default class ObjectiveService {

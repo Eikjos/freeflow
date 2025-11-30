@@ -7,12 +7,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
-import { TaskPaginationFilterDto } from 'src/dtos/tasks/task-filter.dto';
-import { mapToTask, TaskDto } from 'src/dtos/tasks/task.dto';
-import { PaginationResultDto } from 'src/dtos/utils/pagination-result.dto';
-import { MediaService } from 'src/media/media.service';
-import { PrismaService } from 'src/prisma.service';
+import CreateTaskDto from 'dtos/tasks/task-create.dto';
+import { TaskPaginationFilterDto } from 'dtos/tasks/task-filter.dto';
+import { TaskDto, mapToTask } from 'dtos/tasks/task.dto';
+import { PaginationResultDto } from 'dtos/utils/pagination-result.dto';
+import { MediaService } from 'media/media.service';
+import { PrismaService } from 'prisma.service';
 
 @Injectable()
 export default class TaskService {
@@ -78,9 +78,14 @@ export default class TaskService {
           project: { enterpriseId: enterpriseId },
         },
       },
-      include: { column: { include: { project: true } }, medias: true},
+      include: { column: { include: { project: true } }, medias: true },
     });
-    return tasks.map(t => mapToTask(t, t.medias.map(t => t.mediaId)));
+    return tasks.map((t) =>
+      mapToTask(
+        t,
+        t.medias.map((t) => t.mediaId),
+      ),
+    );
   }
 
   async findById(taskId: number) {

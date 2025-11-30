@@ -4,26 +4,28 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import CustomerCreateDto from 'src/dtos/customers/customer-create.dto';
-import { CustomerFilterDto } from 'src/dtos/customers/customer-filter.dto';
-import CustomerStatDto from 'src/dtos/customers/customer-stat.dto';
+import CustomerCreateDto from 'dtos/customers/customer-create.dto';
+import { CustomerFilterDto } from 'dtos/customers/customer-filter.dto';
+import CustomerStatDto from 'dtos/customers/customer-stat.dto';
 import {
   CustomerDto,
   mapCustomerToDetailDto,
   mapCustomerToDto,
-} from 'src/dtos/customers/customer.dto';
+} from 'dtos/customers/customer.dto';
 import {
   PaginationFilterDto,
   PaginationResultDto,
-} from 'src/dtos/utils/pagination-result.dto';
-import ObjectiveService from 'src/objective/objective.service';
-import { PrismaService } from 'src/prisma.service';
+} from 'dtos/utils/pagination-result.dto';
+import MailingService from 'mailing/mailing.service';
+import ObjectiveService from 'objective/objective.service';
+import { PrismaService } from 'prisma.service';
 
 @Injectable()
 export default class CustomerService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly objectiveService: ObjectiveService,
+    private readonly mailingService: MailingService,
   ) {}
 
   // --
@@ -141,6 +143,7 @@ export default class CustomerService {
 
     if (customer) {
       this.objectiveService.increaseObjective(1, enterpriseId, 'CUSTOMER');
+      this.mailingService.sendCustomerInvite(customer.id, customer.email);
     }
 
     return mapCustomerToDto(customer, null);

@@ -8,9 +8,6 @@ export default function TailwindConfig({ children }: TailwindConfigProps) {
   return (
     <Html>
         <Head>
-          <style>
-            @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
-          </style>
         </Head>
         <Tailwind
           config={{
@@ -28,7 +25,6 @@ export default function TailwindConfig({ children }: TailwindConfigProps) {
               fontFamily: {
                 display: ["Montserrat Medium", "sans-serif"],
                 body: ["Montserrat", "sans-serif"],
-                amica: ["Amatic SC", "cursive"],
               },
               extend: {
                 borderRadius: {

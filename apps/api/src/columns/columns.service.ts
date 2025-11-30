@@ -3,11 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import CreateColumnDto from 'src/dtos/columns/column-create.dto';
-import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
-import { mapToTask } from 'src/dtos/tasks/task.dto';
-import { MediaService } from 'src/media/media.service';
-import { PrismaService } from 'src/prisma.service';
+import CreateColumnDto from 'dtos/columns/column-create.dto';
+import CreateTaskDto from 'dtos/tasks/task-create.dto';
+import { mapToTask } from 'dtos/tasks/task.dto';
+import { MediaService } from 'media/media.service';
+import { PrismaService } from 'prisma.service';
 
 @Injectable()
 export default class ColumnService {

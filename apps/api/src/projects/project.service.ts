@@ -6,20 +6,19 @@ import {
 } from '@nestjs/common';
 import { Project } from '@prisma/client';
 import { PaginationFilter } from '@repo/shared-types';
-import ColumnService from 'src/columns/columns.service';
-import CreateColumnDto from 'src/dtos/columns/column-create.dto';
-import { mapToColumn } from 'src/dtos/columns/column.dto';
-import ProjectCreateDto from 'src/dtos/projects/project-create.dto';
-import { mapProjectWithTasksAndColumns } from 'src/dtos/projects/project-detail.dto';
+import ColumnService from 'columns/columns.service';
+import CreateColumnDto from 'dtos/columns/column-create.dto';
+import { mapToColumn } from 'dtos/columns/column.dto';
+import ProjectCreateDto from 'dtos/projects/project-create.dto';
+import { mapProjectWithTasksAndColumns } from 'dtos/projects/project-detail.dto';
 import {
+  ProjectDto,
   mapProjectToDetailDto,
   mapProjectToDto,
-  ProjectDto,
-} from 'src/dtos/projects/project.dto';
-import { PaginationResultDto } from 'src/dtos/utils/pagination-result.dto';
-import { MediaService } from 'src/media/media.service';
-import { PrismaService } from 'src/prisma.service';
-
+} from 'dtos/projects/project.dto';
+import { PaginationResultDto } from 'dtos/utils/pagination-result.dto';
+import { MediaService } from 'media/media.service';
+import { PrismaService } from 'prisma.service';
 @Injectable()
 export default class ProjectService {
   constructor(

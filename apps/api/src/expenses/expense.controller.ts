@@ -15,15 +15,15 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes } from '@nestjs/swagger';
-import { Request } from 'express';
-import CreateExpenseDto from 'src/dtos/expenses/create-expense.dto';
-import ExpenseFilterDto from 'src/dtos/expenses/expense-filter.dto';
-import { ExpenseDto } from 'src/dtos/expenses/expense.dto';
+import CreateExpenseDto from 'dtos/expenses/create-expense.dto';
+import ExpenseFilterDto from 'dtos/expenses/expense-filter.dto';
+import { ExpenseDto } from 'dtos/expenses/expense.dto';
 import {
   PaginationFilterDto,
   PaginationResultDto,
-} from 'src/dtos/utils/pagination-result.dto';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
+} from 'dtos/utils/pagination-result.dto';
+import { Request } from 'express';
+import { AccessTokenGuard } from 'guards/access-token.guard';
 import ExpenseService from './expense.service';
 
 @Controller('expenses')

@@ -9,8 +9,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Enterprise, User } from '@prisma/client';
 import { AuthResponseData } from '@repo/shared-types';
 import * as bcrypt from 'bcrypt';
-import SalesService from 'src/sales/sales.service';
-import UserService from 'src/users/user.service';
+import SalesService from 'sales/sales.service';
+import UserService from 'users/user.service';
 
 @Injectable()
 export default class AuthService {

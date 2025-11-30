@@ -18,12 +18,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Project } from '@prisma/client';
 import { Request } from 'express';
-import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
-import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
-import EnterpriseUpdateDto from 'src/dtos/enterprises/enterprise-update.dto';
-import { PaginationFilterDto } from 'src/dtos/utils/pagination-result.dto';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
-import ProjectService from 'src/projects/project.service';
+import { CreateEnterpriseDto } from '../dtos/enterprises/enterprise-create.dto';
+import { EnterpriseInformationDto } from '../dtos/enterprises/enterprise-information.dto';
+import EnterpriseUpdateDto from '../dtos/enterprises/enterprise-update.dto';
+import { PaginationFilterDto } from '../dtos/utils/pagination-result.dto';
+import { AccessTokenGuard } from '../guards/access-token.guard';
+import MailingService from '../mailing/mailing.service';
+import ProjectService from '../projects/project.service';
 import EnterpriseService from './enterprise.service';
 
 @Controller('enterprises')
@@ -33,6 +34,7 @@ export default class EnterprisesController {
   constructor(
     private readonly enterpriseService: EnterpriseService,
     private readonly projectService: ProjectService,
+    private readonly mailingService: MailingService,
   ) {}
 
   @UseGuards(AccessTokenGuard)

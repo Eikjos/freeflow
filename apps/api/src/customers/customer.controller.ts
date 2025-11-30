@@ -13,11 +13,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import CustomerCreateDto from 'dtos/customers/customer-create.dto';
+import { CustomerFilterDto } from 'dtos/customers/customer-filter.dto';
+import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
 import { Request } from 'express';
-import CustomerCreateDto from 'src/dtos/customers/customer-create.dto';
-import { CustomerFilterDto } from 'src/dtos/customers/customer-filter.dto';
-import { PaginationFilterDto } from 'src/dtos/utils/pagination-result.dto';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
+import { AccessTokenGuard } from 'guards/access-token.guard';
 import CustomerService from './customer.service';
 
 @Controller('customers')

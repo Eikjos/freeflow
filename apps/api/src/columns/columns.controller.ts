@@ -13,11 +13,11 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import CreateColumnDto from 'dtos/columns/column-create.dto';
+import MoveTaskDto from 'dtos/tasks/move-task.dto';
+import CreateTaskDto from 'dtos/tasks/task-create.dto';
 import { Request } from 'express';
-import CreateColumnDto from 'src/dtos/columns/column-create.dto';
-import MoveTaskDto from 'src/dtos/tasks/move-task.dto';
-import CreateTaskDto from 'src/dtos/tasks/task-create.dto';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
+import { AccessTokenGuard } from 'guards/access-token.guard';
 import ColumnService from './columns.service';
 
 @Controller('columns')

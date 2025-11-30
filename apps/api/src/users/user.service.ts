@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { CreateUserData } from '@repo/shared-types';
 import * as bcrypt from 'bcrypt';
-import AuthService from 'src/auth/auth.service';
-import { PrismaService } from 'src/prisma.service';
+import AuthService from '../auth/auth.service';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export default class UserService {

@@ -1,9 +1,12 @@
 {
   "name": "@repo/email-templates",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "email dev -p 3001",
+    "build": "tsc",
     "export": "email export"
   },
   "dependencies": {

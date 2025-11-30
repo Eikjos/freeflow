@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { MediaModule } from 'src/media/media.module';
-import { PrismaService } from 'src/prisma.service';
+import { MediaModule } from 'media/media.module';
+import { PrismaService } from 'prisma.service';
 import ExpenseController from './expense.controller';
 import ExpenseService from './expense.service';
 
