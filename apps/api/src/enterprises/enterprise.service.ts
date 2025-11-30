@@ -4,18 +4,19 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import AuthService from 'src/auth/auth.service';
-import { CreateEnterpriseDto } from 'src/dtos/enterprises/enterprise-create.dto';
-import { EnterpriseInformationDto } from 'src/dtos/enterprises/enterprise-information.dto';
-import EnterpriseStatDto from 'src/dtos/enterprises/enterprise-stat.dto';
-import EnterpriseUpdateDto from 'src/dtos/enterprises/enterprise-update.dto';
-import EnterpriseDto from 'src/dtos/enterprises/enterprise.dto';
-import InvoiceInformationDto from 'src/dtos/invoices/invoice-information.dto';
-import ExpenseService from 'src/expenses/expense.service';
-import { MediaService } from 'src/media/media.service';
-import { PrismaService } from 'src/prisma.service';
-import SalesService from 'src/sales/sales.service';
-import { EtablissementResponse } from 'src/types/sirene-api';
+import AuthService from 'auth/auth.service';
+import { CreateEnterpriseDto } from 'dtos/enterprises/enterprise-create.dto';
+import { EnterpriseInformationDto } from 'dtos/enterprises/enterprise-information.dto';
+import EnterpriseStatDto from 'dtos/enterprises/enterprise-stat.dto';
+import EnterpriseUpdateDto from 'dtos/enterprises/enterprise-update.dto';
+import EnterpriseDto from 'dtos/enterprises/enterprise.dto';
+import InvoiceInformationDto from 'dtos/invoices/invoice-information.dto';
+import ExpenseService from 'expenses/expense.service';
+import MailingService from 'mailing/mailing.service';
+import { MediaService } from 'media/media.service';
+import { PrismaService } from 'prisma.service';
+import SalesService from 'sales/sales.service';
+import { EtablissementResponse } from 'types/sirene-api';
 
 @Injectable()
 export default class EnterpriseService {
@@ -26,6 +27,7 @@ export default class EnterpriseService {
     private readonly salesService: SalesService,
     private readonly expenseService: ExpenseService,
     private readonly httpService: HttpService,
+    private readonly mailingService: MailingService,
   ) {}
 
   // -- Methods --
@@ -76,6 +78,7 @@ export default class EnterpriseService {
       });
     }
     const user = await this.prisma.user.findFirst({ where: { id: userId } });
+    this.mailingService.sendInscriptionMail(user.email);
     return this.authService.generateToken(user, enterprise);
   }
 

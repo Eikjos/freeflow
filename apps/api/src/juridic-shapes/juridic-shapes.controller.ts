@@ -1,6 +1,6 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
+import { AccessTokenGuard } from 'guards/access-token.guard';
 import JuridicShapeService from './juridic-shapes.service';
 
 @Controller('juridic-shapes')

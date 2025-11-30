@@ -1,8 +1,8 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { SalesModule } from 'src/sales/sales.module';
-import { UserModule } from 'src/users/user.module';
+import { SalesModule } from 'sales/sales.module';
+import { UserModule } from 'users/user.module';
 import AuthController from './auth.controller';
 import AuthService from './auth.service';
 import { AccessTokenStrategy } from './strategies/access-token.strategy';

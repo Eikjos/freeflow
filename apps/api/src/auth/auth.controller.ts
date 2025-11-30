@@ -7,10 +7,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { LoginDto } from 'dtos/auth/login.dto';
 import { Request } from 'express';
-import { LoginDto } from 'src/dtos/auth/login.dto';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
-import { RefreshTokenGuard } from 'src/guards/refresh-token.guard';
+import { AccessTokenGuard } from 'guards/access-token.guard';
+import { RefreshTokenGuard } from 'guards/refresh-token.guard';
 import AuthService from './auth.service';
 
 @Controller('auth')

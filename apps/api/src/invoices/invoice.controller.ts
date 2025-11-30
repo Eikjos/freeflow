@@ -14,11 +14,11 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { CreateInvoiceDto } from 'dtos/invoices/invoice-create.dto';
+import { InvoiceFilterDataDto } from 'dtos/invoices/invoice-filter.dto';
+import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
 import { Request } from 'express';
-import { CreateInvoiceDto } from 'src/dtos/invoices/invoice-create.dto';
-import { InvoiceFilterDataDto } from 'src/dtos/invoices/invoice-filter.dto';
-import { PaginationFilterDto } from 'src/dtos/utils/pagination-result.dto';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
+import { AccessTokenGuard } from 'guards/access-token.guard';
 import InvoiceService from './invoice.service';
 
 @Controller('invoices')

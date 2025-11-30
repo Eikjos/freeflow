@@ -5,20 +5,18 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { CreateInvoiceDto } from 'src/dtos/invoices/invoice-create.dto';
-import { InvoiceFilterDataDto } from 'src/dtos/invoices/invoice-filter.dto';
-import {
-  InvoiceDto,
-  mapToDto as mapInvoiceToDto,
-} from 'src/dtos/invoices/invoice.dto';
+import { CreateInvoiceDto } from 'dtos/invoices/invoice-create.dto';
+import { InvoiceFilterDataDto } from 'dtos/invoices/invoice-filter.dto';
+import { InvoiceDto } from 'dtos/invoices/invoice.dto';
 import {
   PaginationFilterDto,
   PaginationResultDto,
-} from 'src/dtos/utils/pagination-result.dto';
-import { MediaService } from 'src/media/media.service';
-import ObjectiveService from 'src/objective/objective.service';
-import { PrismaService } from 'src/prisma.service';
-import SalesService from 'src/sales/sales.service';
+} from 'dtos/utils/pagination-result.dto';
+import MailingService from 'mailing/mailing.service';
+import { MediaService } from 'media/media.service';
+import ObjectiveService from 'objective/objective.service';
+import { PrismaService } from 'prisma.service';
+import SalesService from 'sales/sales.service';
 
 @Injectable()
 export default class InvoiceService {
@@ -27,6 +25,7 @@ export default class InvoiceService {
     private readonly mediaService: MediaService,
     private readonly objectiveService: ObjectiveService,
     private readonly salesService: SalesService,
+    private readonly mailingService: MailingService,
   ) {}
 
   async createInvoice(
@@ -122,7 +121,11 @@ export default class InvoiceService {
           invoiceAmount * (invoice.excludeTva ? 1 : 1.2),
         );
       }
-      // TODO : envoyer le mail au client
+    }
+    if (invoiceEntity.type === 'INVOICE') {
+      this.mailingService.sendInvoice(invoiceEntity.id, customer.email);
+    } else {
+      this.mailingService.sendQuote(invoiceEntity.id, customer.email);
     }
   }
 
@@ -178,8 +181,8 @@ export default class InvoiceService {
     });
 
     return {
-      data: invoices.map((i) =>
-        mapInvoiceToDto(i, i.invoiceLines, i.customer, i.credits),
+      data: invoices.map(
+        (i) => new InvoiceDto(i, i.invoiceLines, i.customer, i.credits),
       ),
       totalItems: totalItems,
       page: filter.page,
@@ -198,7 +201,7 @@ export default class InvoiceService {
     });
     if (!invoice) throw new NotFoundException();
 
-    return mapInvoiceToDto(
+    return new InvoiceDto(
       invoice,
       invoice.invoiceLines,
       invoice.customer,

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
-import TaskService from './task.service';
+import { MediaModule } from '../media/media.module';
+import { PrismaService } from '../prisma.service';
 import TasksController from './task.controller';
-import { MediaModule } from 'src/media/media.module';
+import TaskService from './task.service';
 
 @Module({
   imports: [MediaModule],

@@ -16,11 +16,11 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import CreateColumnDto from 'dtos/columns/column-create.dto';
+import ReorderColumnsDto from 'dtos/customers/reorder-colums.dto';
+import ProjectCreateDto from 'dtos/projects/project-create.dto';
 import { Request } from 'express';
-import CreateColumnDto from 'src/dtos/columns/column-create.dto';
-import ReorderColumnsDto from 'src/dtos/customers/reorder-colums.dto';
-import ProjectCreateDto from 'src/dtos/projects/project-create.dto';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
+import { AccessTokenGuard } from 'guards/access-token.guard';
 import ProjectService from './project.service';
 
 @Controller('projects')

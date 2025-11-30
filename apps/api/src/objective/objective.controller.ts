@@ -12,10 +12,10 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import CreateObjectiveDto from 'dtos/objectives/create-objective.dto';
+import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
 import { Request } from 'express';
-import CreateObjectiveDto from 'src/dtos/objectives/create-objective.dto';
-import { PaginationFilterDto } from 'src/dtos/utils/pagination-result.dto';
-import { AccessTokenGuard } from 'src/guards/access-token.guard';
+import { AccessTokenGuard } from 'guards/access-token.guard';
 import ObjectiveService from './objective.service';
 
 @Controller('objectives')

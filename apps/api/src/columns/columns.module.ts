@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { MediaModule } from 'media/media.module';
+import { PrismaService } from 'prisma.service';
 import ColumnsController from './columns.controller';
 import ColumnService from './columns.service';
-import { MediaModule } from 'src/media/media.module';
 
 @Module({
   imports: [MediaModule],

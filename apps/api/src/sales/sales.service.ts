@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import dayjs from 'dayjs';
-import PrevisionDto from 'src/dtos/sales/prevision.dto';
-import SaleDto from 'src/dtos/sales/sales.dto';
-import { PrismaService } from 'src/prisma.service';
+import PrevisionDto from '../dtos/sales/prevision.dto';
+import SaleDto from '../dtos/sales/sales.dto';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export default class SalesService {

@@ -1,12 +1,13 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
-import AuthModule from 'src/auth/auth.module';
-import ExpenseModule from 'src/expenses/expense.module';
-import { MediaModule } from 'src/media/media.module';
-import { PrismaService } from 'src/prisma.service';
-import ProjectModule from 'src/projects/project.module';
-import { SalesModule } from 'src/sales/sales.module';
+import AuthModule from '../auth/auth.module';
+import ExpenseModule from '../expenses/expense.module';
+import MailingModule from '../mailing/mailing.module';
+import { MediaModule } from '../media/media.module';
+import { PrismaService } from '../prisma.service';
+import ProjectModule from '../projects/project.module';
+import { SalesModule } from '../sales/sales.module';
 import EnterprisesController from './enterprise.controller';
 import EnterpriseService from './enterprise.service';
 
@@ -19,6 +20,7 @@ import EnterpriseService from './enterprise.service';
     ProjectModule,
     ExpenseModule,
     SalesModule,
+    MailingModule,
   ],
   providers: [PrismaService, EnterpriseService],
   controllers: [EnterprisesController],

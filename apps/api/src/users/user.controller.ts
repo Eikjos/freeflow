@@ -7,8 +7,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
-import AuthDto from 'src/dtos/auth/auth.dto';
-import CreateUserDto from 'src/dtos/users/create-user.dto';
+import AuthDto from 'dtos/auth/auth.dto';
+import CreateUserDto from 'dtos/users/create-user.dto';
 import UserService from './user.service';
 
 @Controller('users')

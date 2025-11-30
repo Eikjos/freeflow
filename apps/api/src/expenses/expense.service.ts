@@ -5,12 +5,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import CreateExpenseDto from 'src/dtos/expenses/create-expense.dto';
-import ExpenseFilterDto from 'src/dtos/expenses/expense-filter.dto';
-import { toExpenseDto } from 'src/dtos/expenses/expense.dto';
-import { PaginationFilterDto } from 'src/dtos/utils/pagination-result.dto';
-import { MediaService } from 'src/media/media.service';
-import { PrismaService } from 'src/prisma.service';
+import CreateExpenseDto from 'dtos/expenses/create-expense.dto';
+import ExpenseFilterDto from 'dtos/expenses/expense-filter.dto';
+import { toExpenseDto } from 'dtos/expenses/expense.dto';
+import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
+import { MediaService } from 'media/media.service';
+import { PrismaService } from 'prisma.service';
 
 @Injectable()
 export default class ExpenseService {
@@ -164,6 +164,6 @@ export default class ExpenseService {
         price: true,
       },
     });
-    return expenses._sum.price ? expenses._sum.price.toNumber() : 0.00;
+    return expenses._sum.price ? expenses._sum.price.toNumber() : 0.0;
   }
 }

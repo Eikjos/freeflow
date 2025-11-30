@@ -1,0 +1,14 @@
+{
+  "include": ["index.ts", "emails/**/*", "components/**/*"],
+  "exclude": ["dist", "build", "node_modules"],
+  "compilerOptions": {
+    "outDir": "dist",
+    "jsx": "react-jsx",
+    "declaration": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ES2017",
+    "module": "commonjs",
+    "types": ["react/experimental", "react"]
+  }
+}

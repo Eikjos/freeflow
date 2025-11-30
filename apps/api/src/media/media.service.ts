@@ -4,10 +4,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { MediaDto } from 'dtos/media/media-dto';
 import * as fs from 'fs';
 import * as path from 'path';
-import { MediaDto } from 'src/dtos/media/media-dto';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from 'prisma.service';
 
 @Injectable()
 export class MediaService {
