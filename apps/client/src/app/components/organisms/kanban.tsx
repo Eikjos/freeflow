@@ -17,7 +17,7 @@ import {
   ColumnsData,
   CreateColumnData,
   CreateColumnValidation,
-  TaskData,
+  TaskData
 } from "@repo/shared-types";
 import { createColumn, moveTask } from "actions/column";
 import { reorderColumns } from "actions/project";
@@ -73,57 +73,42 @@ export function Board({ className, projectId, columns }: KanbanProps) {
   };
 
   const orderTask = (
+    columns: ColumnsData[],
     task: TaskData,
-    columnId_src: number,
     columnId_dest: number,
     index_dest: number
   ) => {
-    return columnsState.map((col) => {
+    const c = columns.map((col) => {
+      let tasks = [...col.tasks];
+      const t = col.tasks.find(t => t.id);
+      if (t) {
+        tasks = tasks.filter(t => t.id !== task.id);
+      }
       if (col.id === columnId_dest) {
-        const isSameColumn = columnId_src === columnId_dest;
-
-        let updatedTasks = col.tasks.filter((t) => t.id !== task.id);
-        if (!isSameColumn) {
-          updatedTasks = updatedTasks.filter((t) => t.id !== task.id);
-        }
-
-        updatedTasks.splice(index_dest, 0, task);
-
-        const reindexedTasks = updatedTasks.map((t, index) => ({
-          ...t,
-          index,
-        }));
-
-        return { ...col, tasks: reindexedTasks };
+        tasks.splice(index_dest, 0, task);
       }
-
-      if (col.id === columnId_src && columnId_src !== columnId_dest) {
-        const updatedTasks = col.tasks
-          .filter((t) => t.id !== task.id)
-          .map((item, index) => ({
-            ...item,
-            index,
-          }));
-        return { ...col, tasks: updatedTasks };
-      }
-      return col;
+      return {...col, tasks}
     });
+    return c;
   };
 
   const handleDropTask = (
-    task: TaskData,
-    columnId_src: number,
+    task: { id : number},
     columnId_dest: number,
-    index_dest: number,
     isCreation: boolean = false
   ) => {
-    setColumnsState((prev) =>
-      orderTask(task, columnId_src, columnId_dest, index_dest)
+    const columnId = columnsState.find(c => c.id == columnId_dest);
+    const currentTask = columnsState.flatMap(c => c.tasks).find(t => t.id == task.id);
+    if (columnId && currentTask) {
+      setColumnsState((prev) =>
+        [...orderTask(prev, currentTask, columnId_dest, columnId.tasks.length)]
     );
+    }
+
     // Si ce n'est pas une creation ou update de tache
     if (!isCreation) {
       // Appel de l'api
-      moveTask(columnId_dest, task.id, { toPosition: index_dest });
+      moveTask(columnId_dest, task.id, { toPosition: columnId?.tasks.length ?? 0 });
     }
   };
 

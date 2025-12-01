@@ -2,17 +2,17 @@
 "use client";
 
 import { Card, CardContent, CardHeader } from "@components/ui/card";
+import { Input } from "@components/ui/input";
 import { ColumnsData, TaskData } from "@repo/shared-types";
+import { updateColumn } from "actions/column";
 import { Plus, Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import React, { useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import { toast } from "sonner";
 import { cn } from "../../../lib/utils";
 import TaskCard from "./task-card";
 import TaksCreateSheet from "./task-create-sheet";
-import { Input } from "@components/ui/input";
-import { updateColumn } from "actions/column";
-import { toast } from "sonner";
 
 type ColumnTaksProps = {
   id: number;
@@ -20,10 +20,8 @@ type ColumnTaksProps = {
   index: number;
   tasks: TaskData[];
   onDropTask: (
-    task: TaskData,
-    columnId_src: number,
+    task: {id : number},
     columnId_dest: number,
-    index_dest: number,
     isCreation?: boolean
   ) => void;
   onDropColumn: (col: ColumnsData, index_dest: number) => void;
@@ -72,10 +70,11 @@ export default function ColumnTask({
   const [, drop] = useDrop(
     () => ({
       accept: "TaskCard",
-      drop: (item: TaskData, monitor) => {
-        const didDrop = monitor.didDrop();
-        if (item.columnId !== id && !didDrop) {
-          onDropTask(item, item.columnId, id, tasks.length);
+      drop: (item: { id : number}, monitor) => {
+        const isOver = monitor.isOver();
+        if (isOver) {
+          console.log("dropped");
+          onDropTask(item, id);
         }
       },
     }),
@@ -89,15 +88,15 @@ export default function ColumnTask({
   };
 
   const addTask = (task: TaskData) => {
-    onDropTask(task, 0, id, tasks.length, true);
+    onDropTask({id : task.id}, 0, true);
   };
 
   const updateTask = (task: TaskData) => {
-    onDropTask(task, id, id, task.index, true);
+    onDropTask({id : task.id}, id, true);
   };
 
   const onDeleteTask = (task: TaskData) => {
-    onDropTask(task, id, 0, 0, true);
+    onDropTask({id : task.id}, 0, true);
   };
 
   const handleUpdateColumn = (event: React.FocusEvent<HTMLInputElement>) => {
