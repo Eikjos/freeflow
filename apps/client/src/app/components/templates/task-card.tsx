@@ -10,19 +10,19 @@ import TaskDetailSheet from "./task-detail-sheet";
 
 type TaskCardProps = {
   task: TaskData;
-  onDrop: (
-    task: TaskData,
-    columnId_src: number,
-    columnId_dest: number,
-    index_dest: number
-  ) => void;
+  // onDrop: (
+  //   task: TaskData,
+  //   columnId_src: number,
+  //   columnId_dest: number,
+  //   index_dest: number
+  // ) => void;
   onEdit: (task: TaskData) => void;
   onDelete: (task: TaskData) => void;
 };
 
 export default function TaskCard({
   task,
-  onDrop,
+  // onDrop,
   onEdit,
   onDelete,
 }: TaskCardProps) {

@@ -155,7 +155,7 @@ export default function ColumnTask({
                 <TaskCard
                   task={item}
                   key={index}
-                  onDrop={onDropTask}
+                  // onDrop={onDropTask}
                   onEdit={updateTask}
                   onDelete={onDeleteTask}
                 />

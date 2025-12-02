@@ -100,9 +100,9 @@ export function Board({ className, projectId, columns }: KanbanProps) {
     const columnId = columnsState.find(c => c.id == columnId_dest);
     const currentTask = columnsState.flatMap(c => c.tasks).find(t => t.id == task.id);
     if (columnId && currentTask) {
-      setColumnsState((prev) =>
-        [...orderTask(prev, currentTask, columnId_dest, columnId.tasks.length)]
-    );
+        setColumnsState((prev) =>
+          orderTask(prev, currentTask, columnId_dest, columnId.tasks.length)
+      );
     }
 
     // Si ce n'est pas une creation ou update de tache
