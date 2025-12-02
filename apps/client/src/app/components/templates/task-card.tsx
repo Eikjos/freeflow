@@ -2,28 +2,27 @@
 
 import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { TaskData } from "@repo/shared-types";
-import type { Identifier } from "dnd-core";
 import { ChevronsDown, ChevronsUp, Equal } from "lucide-react";
 import { useRef, useState } from "react";
-import { useDrag, useDrop } from "react-dnd";
+import { useDrag } from "react-dnd";
 import { cn } from "../../../lib/utils";
 import TaskDetailSheet from "./task-detail-sheet";
 
 type TaskCardProps = {
   task: TaskData;
-  onDrop: (
-    task: TaskData,
-    columnId_src: number,
-    columnId_dest: number,
-    index_dest: number
-  ) => void;
+  // onDrop: (
+  //   task: TaskData,
+  //   columnId_src: number,
+  //   columnId_dest: number,
+  //   index_dest: number
+  // ) => void;
   onEdit: (task: TaskData) => void;
   onDelete: (task: TaskData) => void;
 };
 
 export default function TaskCard({
   task,
-  onDrop,
+  // onDrop,
   onEdit,
   onDelete,
 }: TaskCardProps) {
@@ -32,37 +31,15 @@ export default function TaskCard({
   const [{ opacity }, dragRef] = useDrag(
     () => ({
       type: "TaskCard",
-      item: task,
+      item: { id: task.id },
       collect: (monitor) => ({
         opacity: monitor.isDragging() ? 50 : 100,
       }),
     }),
-    [task.id, task.columnId, task.index]
-  );
-  const [{ handlerId, isOver }, dropRef] = useDrop<
-    TaskData,
-    void,
-    { handlerId: Identifier | null; isOver: boolean }
-  >(
-    () => ({
-      accept: "TaskCard",
-      collect(monitor) {
-        const item = monitor.getItem<TaskData>();
-        return {
-          handlerId: monitor.getHandlerId(),
-          isOver: monitor.isOver() && item.id !== task.id,
-        };
-      },
-      drop(item: TaskData) {
-        if (item.index !== task.index || item.columnId !== task.columnId) {
-          onDrop(item, item.columnId, task.columnId, task.index);
-        }
-      },
-    }),
-    [task.id, task.columnId, task.index]
+    [task.id]
   );
 
-  dragRef(dropRef(ref));
+  dragRef(ref);
 
   const handleClose = () => {
     setOpen(false);
@@ -74,10 +51,10 @@ export default function TaskCard({
 
   return (
     <div>
-      {isOver && <div className="h-2 bg-gray-100 my-1 rounded-lg"></div>}
+      {/* {isOver && <div className="h-2 bg-gray-100 my-1 rounded-lg"></div>} */}
       <Card
         ref={ref}
-        data-handler-id={handlerId}
+        // data-handler-id={handlerId}
         onClick={handleOpen}
         className="hover:cursor-pointer"
       >
