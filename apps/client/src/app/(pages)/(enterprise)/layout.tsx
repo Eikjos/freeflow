@@ -3,7 +3,6 @@ import { SidebarProvider } from "@components/ui/sidebar";
 import { headers } from "next/headers";
 import { EnterpriseProvider } from "providers/enterprise-provider";
 import { EnterpriseInfo } from "../../../types/enterprise-info-type";
-import "../../globals.css";
 
 export default async function EnterpriseLayout({
   children,

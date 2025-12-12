@@ -47,7 +47,7 @@ export default function SidebarMenu({ className }: SidebarMenuProps) {
   return (
     <Sidebar className={className}>
       <SidebarHeader className="mb-20">
-        <Logo />
+        <Logo href="/dashboard" />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

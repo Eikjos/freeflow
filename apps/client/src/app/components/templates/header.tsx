@@ -1,11 +1,43 @@
 import Logo from "@components/molecules/logo";
+import { Button } from "@components/ui/button";
+import Link from "next/link";
 
-export default function Header() {
+type HeaderProps = {
+  displayMenu: boolean;
+}
+
+export default function Header({ displayMenu = false } : HeaderProps) {
   return (
-    <div className="pl-3 bg-card border-b-2 border-secondary">
+    <div className="pl-3 bg-card container rounded-full border border-secondary mt-10 mx-auto flex flew-row justify-between sticky">
       <div className="w-52">
         <Logo />
       </div>
+      <div className="flex flex-row items-center pr-10 gap-10">
+        {displayMenu && (
+          <ul className="flex flex-row items-center gap-4">
+             <li>
+              <Link href={"#"}>
+                Produit
+              </Link>
+            </li>
+            <li>
+              <Link href={"#"}>
+                Fonctionnalités
+              </Link>
+            </li>
+            <li>
+              <Link href={"#"}>
+                Tarifs
+              </Link>
+            </li>
+          </ul>
+        )}
+        {/* Gérer le cas de la connexion */}
+        <Button className="rounded-full">
+          S'inscrire
+        </Button>
+      </div>
+
     </div>
   );
 }

@@ -5,7 +5,7 @@ import OpinionCard from "@components/templates/opinion-card";
 import PrevisionsCard from "@components/templates/previsions-card";
 import UrgentTaskCard from "@components/templates/urgent-task-card";
 import { getTranslations } from "next-intl/server";
-import { client } from "../../../lib/client";
+import { client } from "../../../../lib/client";
 
 export default async function Home() {
   const customer = await client<number>("customers/count");
