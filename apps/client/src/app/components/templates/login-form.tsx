@@ -67,7 +67,7 @@ export const LoginForm = ({ className }: LoginFormProps) => {
         />
         <p className="text-sm">
           {t("login.noAccount")}{" "}
-          <a href="#" className="text-secondary">
+          <a href="/tarifs" className="text-secondary">
             {t("login.createAccount")}
           </a>
         </p>

@@ -12,7 +12,7 @@ export default function Footer({ className }: FooterProps) {
         className
       )}
     >
-      <p className="text-sm">@Freeflow - 2025</p>
+      <p className="text-sm">@Freeflow - CGU - 2025</p>
     </div>
   );
 }

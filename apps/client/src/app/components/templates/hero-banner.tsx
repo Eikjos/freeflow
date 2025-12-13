@@ -1,5 +1,6 @@
 import { Button } from "@components/ui/button";
 import { ArrowRight, PlayIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function HeroBanner() {
   return (
@@ -18,8 +19,11 @@ export default function HeroBanner() {
       </p>
       <div className="w-1/2 mx-auto flex flex-row items-center gap-6 mt-10 justify-center">
         <Button className="w-1/3">
-          Commencer <ArrowRight />
+          <Link href="/tarifs" className="flex flex-row items-center gap-2">
+            Commencer <ArrowRight />
+          </Link>
         </Button>
+       
         <Button className="w-1/3"  variant="outline">
           Voir la démo <PlayIcon />
         </Button>

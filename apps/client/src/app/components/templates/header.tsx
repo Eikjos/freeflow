@@ -15,26 +15,23 @@ export default function Header({ displayMenu = false } : HeaderProps) {
       <div className="flex flex-row items-center pr-10 gap-10">
         {displayMenu && (
           <ul className="flex flex-row items-center gap-4">
-             <li>
-              <Link href={"#"}>
-                Produit
-              </Link>
-            </li>
             <li>
-              <Link href={"#"}>
+              <Link href={"/#features"}>
                 Fonctionnalités
               </Link>
             </li>
             <li>
-              <Link href={"#"}>
+              <Link href={"/#tarifs"}>
                 Tarifs
               </Link>
             </li>
           </ul>
         )}
         {/* Gérer le cas de la connexion */}
-        <Button className="rounded-full">
-          S'inscrire
+        <Button className="rounded-full" asChild>
+          <Link href="/login">
+            Se connecter
+          </Link>
         </Button>
       </div>
 
