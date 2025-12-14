@@ -7,9 +7,10 @@ import Link from "next/link";
 
 type HeaderProps = {
   displayMenu: boolean;
+  hideLogin?: boolean;
 }
 
-export default function Header({ displayMenu = false }: HeaderProps) {
+export default function Header({ displayMenu = false, hideLogin = false }: HeaderProps) {
   const t =  useTranslations();
   return (
     <div className="pl-3 bg-card container rounded-full border border-secondary mt-10 mx-auto flex flew-row justify-between sticky">
@@ -32,11 +33,14 @@ export default function Header({ displayMenu = false }: HeaderProps) {
           </ul>
         )}
         {/* Gérer le cas de la connexion */}
-        <Button className="rounded-full" asChild>
-          <Link href="/login">
-            {t("login.login")}
-          </Link>
-        </Button>
+        {!hideLogin && (
+          <Button className="rounded-full" asChild>
+            <Link href="/login">
+              {t("login.login")}
+            </Link>
+          </Button>
+        )}
+       
       </div>
 
     </div>
