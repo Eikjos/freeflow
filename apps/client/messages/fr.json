@@ -499,6 +499,8 @@
   "login": {
     "noAccount": "Pas encore de compte ?",
     "createAccount": "Inscrivez-vous",
+    "alreadySubscribe": "Déjà inscrit ?",
+    "loginYou": "Connectez-vous",
     "login": "Se connecter",
     "manageYourLife": "Gérer votre vie d'entrepreneur facilement"
   },
