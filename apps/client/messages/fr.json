@@ -219,6 +219,7 @@
     "edit": "Éditer",
     "emptyData": "Vous n'avez pas encore de données.",
     "enterDescription": "Entrez une description...",
+    "features": "Fonctionnalités",
     "filters": "Filtres",
     "name": "Nom",
     "number": "Numéro",
@@ -247,12 +248,14 @@
     "projects": "Projects",
     "dropFile": "Glisser vos fichiers ici.",
     "notifications": "Notifications",
+    "tarifs": "Tarifs",
     "remaining": "Restant",
     "status": "Statut",
     "startDate": "Date de début",
     "sales": "Chiffre d'affaire",
     "endDate": "Date de fin",
     "success": "Réussi",
+    "months": "mois",
     "failed": "Non accompli",
     "supportedFile": "Fichier(s) supporté(s) :",
     "previsualizeImage": "Vous pouvez pre-visualiser l'image.",
@@ -264,7 +267,9 @@
     "reinit": "Réinitialiser",
     "resend": "Réenvoyer",
     "category": "Catégorie",
-    "save": "Enregistrer"
+    "save": "Enregistrer",
+    "start": "Commencer",
+    "subscribe": "Souscrire"
   },
   "column": {
     "addButton": "Ajouter une colonne",
@@ -439,6 +444,57 @@
   },
   "juridicShape": {
     "notFound": "La forme juridique n'a pas été trouvé"
+  },
+  "landing": {
+    "title": {
+      "manageEnterprise": "Gérer votre entreprise",
+      "simple": "simplement",
+      "andEfficiently": "et efficacement"
+    },
+    "content": {
+      "description": "Facturation, dépenses, clients et projets réunis dans une seule application. Concentrez-vous sur votre métier, on s'occupe du reste."
+    },
+    "features": {
+      "title": "Fonctionnalités",
+      "description1": "Tout ce dont vous avez besoin",
+      "description2": "Une suite complète d'outils de A à Z",
+      "cards": {
+        "invoice": {
+          "title": "Facturation",
+          "content": "Créez et envoyez des factures professionnelles en quelques clics. Suivez les paiements et relancez automatiquement."
+        },
+        "expense": {
+          "title": "Suivi des dépenses",
+          "content": "Catégorisez vos dépenses, scannez vos reçus et gardez une vue claire sur votre trésorerie en temps réel."
+        },
+        "customer": {
+          "title": "Gestion des clients",
+          "content": "Centralisez toutes les informations de vos clients. Historique, documents et communications au même endroit."
+        },
+        "task": {
+          "title": "Projets & Tâches",
+          "content": "Organisez vos projets avec des tableaux Kanban. Assignez des tâches, fixez des échéances et suivez l'avancement."
+        } 
+      }
+    },
+    "prices": {
+      "title": "Tarifications",
+      "description1": "Des prix simples et transparent",
+      "description2": "Choissisez le plan qui vous correspond",
+      "cards": {
+        "basic": {
+          "title": "Basique",
+          "description": "Pour les entrerpreneurs débutants"
+        },
+        "customerMax": "jusqu'à {nbCutomers} clients",
+        "customerInfinite": "Clients illimités",
+        "projectInfinite": "Projets illimités",
+        "manageCallback": "Gestion des rappels fiscaux",
+        "opinionFeature": "Fontionnalité des avis",
+        "mcp": "Accès MCP et API Rest"
+      }
+    },
+    "seeDemo": "Voir la démo"
   },
   "login": {
     "noAccount": "Pas encore de compte ?",
