@@ -1,14 +1,16 @@
+"use client";
+
 import Logo from "@components/molecules/logo";
 import { Button } from "@components/ui/button";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 type HeaderProps = {
   displayMenu: boolean;
 }
 
-export default async  function Header({ displayMenu = false }: HeaderProps) {
-  const t = await getTranslations();
+export default function Header({ displayMenu = false }: HeaderProps) {
+  const t =  useTranslations();
   return (
     <div className="pl-3 bg-card container rounded-full border border-secondary mt-10 mx-auto flex flew-row justify-between sticky">
       <div className="w-52">

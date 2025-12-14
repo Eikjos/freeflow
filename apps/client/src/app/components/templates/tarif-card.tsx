@@ -2,6 +2,7 @@ import { Button } from "@components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader } from "@components/ui/card";
 import { ArrowRight, Check } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import Link from "next/link";
 import { formatPrice } from "../../../lib/utils";
 
 type TarifCardProps = {
@@ -36,9 +37,11 @@ export default async function TarifCard({ price, title, description, maxUser }: 
           </ul>
         </div>
         <div className="text-center">
-          <Button className="w-3/4 mt-10 mb-5 mx-auto rounded-3xl flex flex-row">
-            {t("common.subscribe")}
-            <ArrowRight />
+          <Button className="w-3/4 mt-10 mb-5 mx-auto rounded-3xl flex flex-row" asChild>
+            <Link href="inscription/enterprise">
+              {t("common.subscribe")}
+              <ArrowRight />
+            </Link>
           </Button>
         </div>
       </CardContent>
