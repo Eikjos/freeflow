@@ -237,6 +237,7 @@
     "level": "Niveau",
     "modify": "Modifier",
     "password": "Mot de passe",
+    "confirmPassword": "Confirmation du mot de passe",
     "remove": "Supprimer",
     "submitAndSend": "Enregistrer et envoyer",
     "general": "Général",
@@ -405,6 +406,22 @@
     "bank": "Frais bancaires",
     "training": "Formation professionnelle",
     "misc": "Autres frais divers"
+  },
+  "inscription": {
+    "createAccount": "Créer mon compte",
+    "createEnterprise": "Créer mon entreprise",
+    "form": {
+      "title": "Formulaire d'inscription",
+      "label": {
+        "firstName": "Prénom",
+        "lastName": "Nom"
+      }
+    },
+
+    "success": {
+      "title": "Votre compte a été créer avec succès.",
+      "subtitle": "Prochaine étape créer votre entreprise !"
+    }
   },
   "invoice": {
     "amount": "Montant de la facture",
