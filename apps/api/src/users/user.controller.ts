@@ -29,7 +29,8 @@ export default class UsersController {
   public async create(
     @Body() model: CreateUserDto,
     @Query('isEnterprise', ParseBoolPipe) isEnterprise: boolean,
+    @Query('token') token?: string,
   ): Promise<AuthDto> {
-    return this.userService.create(model, isEnterprise);
+    return this.userService.create(model, isEnterprise, token);
   }
 }

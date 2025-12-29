@@ -9,5 +9,6 @@ import CustomerService from './customer.service';
   imports: [MailingModule],
   providers: [PrismaService, ObjectiveService, CustomerService],
   controllers: [CustomerController],
+  exports: [CustomerService],
 })
 export default class CustomerModule {}

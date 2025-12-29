@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+import { randomBytes } from 'crypto';
 import CustomerCreateDto from 'dtos/customers/customer-create.dto';
 import { CustomerFilterDto } from 'dtos/customers/customer-filter.dto';
 import CustomerStatDto from 'dtos/customers/customer-stat.dto';
@@ -131,6 +132,9 @@ export default class CustomerService {
     if (!enterprise) {
       throw new ForbiddenException('access.denied');
     }
+    const tokenDate = new Date();
+    tokenDate.setDate(tokenDate.getDate() + 7);
+    const token = randomBytes(32).toString('hex');
     const customer = await this.prisma.customer.create({
       data: {
         ...model,
@@ -138,12 +142,19 @@ export default class CustomerService {
         enterprises: {
           create: { enterpriseId: enterpriseId, isDeleted: false },
         },
+        token,
+        tokenDate,
       },
     });
 
     if (customer) {
       this.objectiveService.increaseObjective(1, enterpriseId, 'CUSTOMER');
-      this.mailingService.sendCustomerInvite(customer.id, customer.email);
+      this.mailingService.sendCustomerInvite(
+        customer.id,
+        customer.email,
+        token,
+        enterprise.name,
+      );
     }
 
     return mapCustomerToDto(customer, null);
@@ -163,6 +174,11 @@ export default class CustomerService {
       },
     });
     if (!customerRelation) throw new NotFoundException('customer.notFound');
+  }
+
+  async findById(id: number) {
+    const customer = await this.prisma.customer.findFirst({ where: { id } });
+    return mapCustomerToDto(customer, null);
   }
 
   async getStats(enterpriseId: number, months: number) {

@@ -3,4 +3,5 @@ export type UserInfoType = {
   lastName: string;
   id: number;
   enterpriseId: number;
+  customerId: number;
 };

@@ -1,5 +1,5 @@
 import { HttpModule } from '@nestjs/axios';
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import AuthModule from '../auth/auth.module';
 import ExpenseModule from '../expenses/expense.module';
@@ -16,11 +16,11 @@ import EnterpriseService from './enterprise.service';
     MulterModule.register({}),
     HttpModule,
     MediaModule,
-    AuthModule,
     ProjectModule,
     ExpenseModule,
     SalesModule,
     MailingModule,
+    forwardRef(() => AuthModule),
   ],
   providers: [PrismaService, EnterpriseService],
   controllers: [EnterprisesController],

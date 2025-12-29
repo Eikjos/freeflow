@@ -1,6 +1,8 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import CustomerModule from 'customers/customer.module';
+import { EnterpriseModule } from 'enterprises/enterprise.module';
 import { SalesModule } from 'sales/sales.module';
 import { UserModule } from 'users/user.module';
 import AuthController from './auth.controller';
@@ -19,6 +21,8 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     }),
     PassportModule,
     SalesModule,
+    CustomerModule,
+    forwardRef(() => EnterpriseModule),
     forwardRef(() => UserModule),
   ],
   exports: [AuthService],
