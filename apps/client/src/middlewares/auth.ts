@@ -31,6 +31,7 @@ export async function AuthMiddleware(req: NextRequest) {
             firstName: data.data?.firstName,
             lastName: data.data?.lastName,
             id: data.data?.userId,
+            role: data.data?.role,
             enterpriseId: data.data?.enterpriseId ?? undefined,
             customerId: data.data?.customerId ?? undefined
           } as UserInfo)

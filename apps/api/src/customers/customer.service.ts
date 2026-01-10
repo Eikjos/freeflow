@@ -31,6 +31,40 @@ export default class CustomerService {
 
   // --
 
+  async invite(customerId: number, enterpriseId: number) {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+    });
+    if (!enterprise) {
+      throw new ForbiddenException();
+    }
+    const customer = await this.prisma.customer.findFirst({
+      where: { id: customerId },
+      include: { enterprises: true },
+    });
+    if (!customer) {
+      throw new NotFoundException();
+    }
+
+    const tokenDate = new Date();
+    tokenDate.setDate(tokenDate.getDate() + 7);
+    const token = randomBytes(32).toString('hex');
+    await this.prisma.customer.update({
+      where: { id: customerId },
+      data: {
+        token: token,
+        tokenDate,
+      },
+    });
+
+    this.mailingService.sendCustomerInvite(
+      customer.id,
+      customer.email,
+      token,
+      enterprise.name,
+    );
+  }
+
   async findAll(
     enterpriseId: number,
     filter: PaginationFilterDto<CustomerFilterDto>,
@@ -103,16 +137,25 @@ export default class CustomerService {
 
   async update(
     customerId: number,
-    enterpriseId: number,
     model: CustomerCreateDto,
+    enterpriseId?: number,
   ) {
-    const relation = await this.prisma.enterpriseCustomer.findFirst({
-      where: { customerId, enterpriseId, isDeleted: false },
-      include: {
-        customer: true,
-      },
-    });
-    if (!relation) throw new NotFoundException('customer.notFound');
+    if (enterpriseId) {
+      const relation = await this.prisma.enterpriseCustomer.findFirst({
+        where: { customerId, enterpriseId, isDeleted: false },
+        include: {
+          customer: true,
+        },
+      });
+      if (!relation) throw new NotFoundException('customer.notFound');
+    } else {
+      const c = await this.prisma.customer.findFirst({
+        where: { id: customerId },
+      });
+      if (!c) {
+        throw new NotFoundException('customer.notFound');
+      }
+    }
 
     const customer = await this.prisma.customer.update({
       where: { id: customerId },
@@ -177,8 +220,11 @@ export default class CustomerService {
   }
 
   async findById(id: number) {
-    const customer = await this.prisma.customer.findFirst({ where: { id } });
-    return mapCustomerToDto(customer, null);
+    const customer = await this.prisma.customer.findFirst({
+      where: { id },
+      include: { country: true },
+    });
+    return mapCustomerToDto(customer, customer.country);
   }
 
   async getStats(enterpriseId: number, months: number) {

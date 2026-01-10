@@ -8,7 +8,7 @@ import { SecretInput } from "@components/ui/secret-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateUserData, CreateUserDataValidation } from "@repo/shared-types";
 import { createUser } from "actions/users";
-import { CircleCheckBig } from "lucide-react";
+import { CircleCheckBig, ShieldX } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
@@ -52,7 +52,7 @@ export default function CustomerInscriptionForm({ className, token }: CustomerIn
     return (
       <Card className={cn(className)}>
         <CardContent className="p-4">
-          <CircleCheckBig color="green" size={50} className="mx-auto mt-10" />
+          <ShieldX color="red" size={50} className="mx-auto mt-10" />
           <p className="text-center my-5 text-muted-foreground">
             La session pour créer un compte a expiré ou est inconnu
             <br />
@@ -75,9 +75,9 @@ export default function CustomerInscriptionForm({ className, token }: CustomerIn
             {t("inscription.success.subtitle")}
           </p>
           <div className="text-center mb-10">
-            <Button asChild className="inline-block">
-              <Link href="/enterprises/create">
-                {t("inscription.createEnterprise")}
+            <Button asChild className="inline-block text-wrap text-center h-[50px] ">
+              <Link href="/customers/recapitulatif">
+                {t("inscription.recapCustomer")}
               </Link>
             </Button>
           </div>

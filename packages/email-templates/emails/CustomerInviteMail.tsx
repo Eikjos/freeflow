@@ -1,4 +1,4 @@
-import { Button, Link, Text } from "@react-email/components";
+import { Button, Text } from "@react-email/components";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import TailwindConfig from "../components/TailwindConfig";
@@ -22,9 +22,9 @@ export function CustomerInviteMail({ clientUrl, enterpriseName, token } : Custom
           Afin d’accéder à votre espace client, consulter vos documents, suivre vos demandes et faciliter vos échanges avec l’entreprise, nous vous invitons à activer votre compte en cliquant sur le lien ci-dessous :
         </Text>
         <div className="mt-10 text-center">
-          <Link href={`${clientUrl}/inscription/customer?token=${encodeURIComponent(token)}`}>
-              <Button className="bg-primary px-6 py-2 rounded-full text-sm text-white w-44 text-center inline-block">Activer mon compte</Button>
-          </Link>
+          <Button href={`${clientUrl}/inscription/customer?token=${encodeURIComponent(token)}`} className="bg-primary px-6 py-2 rounded-full text-sm text-white w-44 text-center inline-block">
+            Activer mon compte
+          </Button>
         </div>
         <Text className="mt-10">
           Lors de votre première connexion, il vous sera demandé de définir votre mot de passe et de vérifier vos informations.

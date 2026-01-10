@@ -417,7 +417,7 @@
         "lastName": "Nom"
       }
     },
-
+    "recapCustomer": "Voir les informations sur mon entreprise",
     "success": {
       "title": "Votre compte a été créer avec succès.",
       "subtitle": "Prochaine étape créer votre entreprise !"

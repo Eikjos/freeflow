@@ -4,4 +4,5 @@ export type UserInfoType = {
   id: number;
   enterpriseId: number;
   customerId: number;
+  role: 'customer' | 'enterprise';
 };

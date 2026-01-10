@@ -67,6 +67,8 @@ export default class AuthService {
     const payload = {
       sub: user.id,
       enterpriseId: user.enterpriseId,
+      isEnterprise: user.isEnterprise,
+      isCustomer: user.isCustomer,
       customerId: user.customerId,
     };
 

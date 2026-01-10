@@ -12,7 +12,7 @@ export default function InscriptionCustomerPage({ searchParams } : InscriptionCu
   return (
     <div>
       <Header displayMenu={false} />
-      <div className="min-h-[56vh]">
+      <div className="min-h-[70vh]">
         <CustomerInscriptionForm className="w-1/2 mx-auto mt-20 mb-10" token={searchParams.token} />
       </div>
       <Footer />

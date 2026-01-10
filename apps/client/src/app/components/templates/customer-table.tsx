@@ -12,14 +12,15 @@ import {
   DialogTrigger,
 } from "@components/ui/dialog";
 import { Pagination } from "@components/ui/pagination";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@components/ui/tooltip";
 import {
   CustomerModel,
   Pagination as PaginationType,
 } from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { DeleteCutomer } from "actions/customer";
-import { PenBoxIcon, Trash } from "lucide-react";
+import { DeleteCutomer, inviteCustomer } from "actions/customer";
+import { Mails, PenBoxIcon, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
@@ -40,6 +41,18 @@ export default function CustomerTable() {
   const handleChangePage = (page: number) => {
     setPage((prev) => ({ ...prev, page }));
   };
+
+  const sendInviteMail = (customerId : number ) => {
+    inviteCustomer(customerId).then((res) => {
+      if (res.ok) {
+        toast.success("Invitation envoyée");
+      } else {
+        toast.error("Une erreur est survenue. Veuillez réessayer plus tard.");
+      }
+    }).catch(() => {
+      toast.error("Une erreur est survenue. Veuillez réessayer plus tard.");
+    });
+  }
 
   const OnDeleteCustomer = (customer: CustomerModel) => {
     DeleteCutomer(customer.id).then((res) => {
@@ -86,12 +99,34 @@ export default function CustomerTable() {
       header: t("common.actions"),
       cell: ({ row }) => (
         <div className="flex flew-row gap-4">
-          <Link href={`/customers/${row.original.id}/edit`}>
-            <PenBoxIcon size={18} />
-          </Link>
+          <Tooltip>
+            <TooltipTrigger>
+              <Mails size={18} onClick={() => sendInviteMail(row.original.id)} className="hover:cursor-pointer" />
+            </TooltipTrigger>
+            <TooltipContent>
+              Ré-envoyer l'invitation
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link href={`/customers/${row.original.id}/edit`}>
+                <PenBoxIcon size={18} />
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>
+              Editer
+            </TooltipContent>
+          </Tooltip>
           <Dialog>
             <DialogTrigger asChild>
-              <Trash color="red" size={18} />
+              <Tooltip>
+                <TooltipContent>
+                  Supprimer
+                </TooltipContent>
+                <TooltipTrigger asChild>
+                  <Trash color="red" size={18} className="hover:cursor-pointer"/>
+                </TooltipTrigger>
+              </Tooltip>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>

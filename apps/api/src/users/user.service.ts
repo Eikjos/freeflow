@@ -29,16 +29,16 @@ export default class UserService {
     let customerId: number;
     if (!isEnterprise) {
       const customer = await this.prisma.customer.findFirst({
-        where: { token, tokenDate: { lt: new Date() } },
-      });
-      this.prisma.customer.update({
-        where: { id: customer.id },
-        data: { token: null, tokenDate: null },
+        where: { token, tokenDate: { gte: new Date() } },
       });
       if (!customer) {
         throw new ForbiddenException('customer.token.invalid');
       }
       customerId = customer.id;
+      await this.prisma.customer.update({
+        where: { id: customer.id },
+        data: { token: null, tokenDate: null },
+      });
     }
     // verify if user already exist
     const user = await this.prisma.user.findFirst({

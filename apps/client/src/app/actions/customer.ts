@@ -37,3 +37,6 @@ export const UpdateCustomer = async (
 export const DeleteCutomer = async (id: number) => {
   return client<any>(`customers/${id}`, { method: "DELETE" });
 };
+
+export const inviteCustomer = async (id: number) => 
+  client(`customers/${id}/invite`, { method : "POST"})
