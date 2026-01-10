@@ -38,7 +38,9 @@ export const LoginForm = ({ className }: LoginFormProps) => {
         } else {
           redirect("/dashboard", RedirectType.replace);
         }
-      } 
+      } else if (data.data?.role == "customer") {
+        redirect("/customers/dashboard");
+      }
       redirect("/", RedirectType.replace);
     });
   };

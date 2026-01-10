@@ -16,38 +16,22 @@ type SidebarMenuProps = {
   className?: string;
 };
 
-export default function SidebarMenu({ className }: SidebarMenuProps) {
+export default function SidebarMenuCustomer({ className }: SidebarMenuProps) {
   const navLinks = [
     {
-      name: "Mes chiffres",
-      url: "/stats",
+      name: "Mes projects",
+      url: "/customers/projects",
     },
     {
       name: "Mes factures",
-      url: "/invoices",
-    },
-    {
-      name: "Mes clients",
-      url: "/customers",
-    },
-    {
-      name: "Mes frais",
-      url: "/expenses",
-    },
-    {
-      name: "Mon entreprise",
-      url: "/my-enterprise",
-    },
-    {
-      name: "Mes activités",
-      url: "/activities",
+      url: "/customers/invoices",
     },
   ];
 
   return (
     <Sidebar className={className}>
       <SidebarHeader className="mb-20">
-        <Logo href="/dashboard" />
+        <Logo href="/customers/dashboard" />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -60,7 +44,7 @@ export default function SidebarMenu({ className }: SidebarMenuProps) {
         <SidebarGroup />
       </SidebarContent>
       <SidebarFooter>
-        <ProfileButton className="mx-3 mb-2" type="enterprise" />
+        <ProfileButton className="mx-3 mb-2" type="customer" />
         <p className="text-[10px] text-center my-2">CGU - FreeFlow - 2025</p>
       </SidebarFooter>
     </Sidebar>
