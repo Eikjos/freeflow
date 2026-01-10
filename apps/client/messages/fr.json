@@ -235,6 +235,7 @@
     "email": "Adresse mail",
     "expenses": "Dépenses",
     "level": "Niveau",
+    "logout": "Se déconnecter",
     "modify": "Modifier",
     "password": "Mot de passe",
     "confirmPassword": "Confirmation du mot de passe",

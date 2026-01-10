@@ -6,6 +6,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
+import { logout } from "actions/login";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useEnterprise } from "providers/enterprise-provider";
 import { cn } from "../../../lib/utils";
 
@@ -15,6 +18,13 @@ type ProfileButtonProps = {
 
 export default function ProfileButton({ className }: ProfileButtonProps) {
   const { enterprise } = useEnterprise();
+  const t = useTranslations();
+  const router = useRouter();
+
+  const onLogout = async () => {
+    await logout();
+    router.replace("/");
+  }
 
   return (
     <DropdownMenu>
@@ -32,7 +42,7 @@ export default function ProfileButton({ className }: ProfileButtonProps) {
       <DropdownMenuContent className="w-[250px]">
         <DropdownMenuLabel>{enterprise?.name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Se déconnecter</DropdownMenuItem>
+        <DropdownMenuItem onClick={onLogout} className="hover:cursor-pointer">{t("common.logout")}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

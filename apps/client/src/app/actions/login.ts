@@ -37,3 +37,9 @@ export const login = async (
       };
     });
 };
+
+export const logout = async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete("access_token");
+  cookieStore.delete("refreshToken");
+}
