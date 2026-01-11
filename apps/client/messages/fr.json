@@ -221,6 +221,7 @@
     "enterDescription": "Entrez une description...",
     "features": "Fonctionnalités",
     "filters": "Filtres",
+    "fillWithSiret": " Permet de pré-remplir les informations avec les informations de l'API Sirène en se basant sur le numéro de siret.",
     "name": "Nom",
     "number": "Numéro",
     "informations": "Informations",
@@ -229,7 +230,7 @@
     "city": "Ville",
     "zipCode": "Code postale",
     "country": "Pays",
-    "siret": "Siret",
+    "siret": "Numéro de siret",
     "address": "Adresse",
     "contact": "Contact",
     "email": "Adresse mail",
@@ -271,7 +272,8 @@
     "category": "Catégorie",
     "save": "Enregistrer",
     "start": "Commencer",
-    "subscribe": "Souscrire"
+    "subscribe": "Souscrire",
+    "validate": "Valider"
   },
   "column": {
     "addButton": "Ajouter une colonne",
@@ -287,6 +289,9 @@
     "dialog": {
       "removeTitle": "Suppression du client {customer}",
       "removeDescription": "Êtes-vous sur de vouloir supprimer le client {customer} ?"
+    },
+    "verif": {
+      "title": "Vérification des informations"
     },
     "error": {
       "edit": "Le client n'a pas pu être mis à jour. Veuillez réessayer plus tard.",
@@ -411,6 +416,12 @@
   "inscription": {
     "createAccount": "Créer mon compte",
     "createEnterprise": "Créer mon entreprise",
+    "customer": {
+      "error": {
+        "title": "La session pour créer un compte a expiré ou est inconnu.",
+        "content": " Il faut demander un nouveau lien à l'entreprise pour pouvoir se créer un compte."
+      }
+    },
     "form": {
       "title": "Formulaire d'inscription",
       "label": {

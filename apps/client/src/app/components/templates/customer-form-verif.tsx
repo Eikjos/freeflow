@@ -7,7 +7,12 @@ import { Input } from "@components/ui/input";
 import { Select } from "@components/ui/select";
 import { Separator } from "@components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CustomerCreateModel, CustomerCreateValidation, CustomerDetailModel, EnterpriseInformation } from "@repo/shared-types";
+import {
+  CustomerCreateModel,
+  CustomerCreateValidation,
+  CustomerDetailModel,
+  EnterpriseInformation,
+} from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
 import { UpdateCustomer } from "actions/customer";
 import { useTranslations } from "next-intl";
@@ -20,9 +25,11 @@ import getQueryClient from "../../../lib/query-client";
 
 type CustomerFormVerifProps = {
   customer: CustomerDetailModel;
-}
+};
 
-export default function CustomerFormVerif({ customer }: CustomerFormVerifProps) {
+export default function CustomerFormVerif({
+  customer,
+}: CustomerFormVerifProps) {
   const router = useRouter();
   const t = useTranslations();
   const queryClient = getQueryClient();
@@ -38,13 +45,13 @@ export default function CustomerFormVerif({ customer }: CustomerFormVerifProps) 
       zipCode: customer.zipCode,
       countryId: customer.countryId.toString(),
       phone: customer.phone,
-      email: customer.email
-    }
+      email: customer.email,
+    },
   });
 
   const onSubmit = (values: CustomerCreateModel) => {
     if (form.formState.isDirty) {
-       UpdateCustomer(customer.id, values).then((res) => {
+      UpdateCustomer(customer.id, values).then((res) => {
         if (res === null) {
           toast.error(t("customer.error.edit"));
         } else {
@@ -58,8 +65,7 @@ export default function CustomerFormVerif({ customer }: CustomerFormVerifProps) 
     } else {
       router.push("/customers/dashboard");
     }
-    
-  }
+  };
 
   const updateFormValues = async (
     email: string,
@@ -87,43 +93,73 @@ export default function CustomerFormVerif({ customer }: CustomerFormVerifProps) 
     ]);
   };
 
-    const fillFormWithEnterpriseinfo = async () => {
-      const data = await fetchEnterpriseInfo(form.getValues().siret?.replace(/\s+/g, "") ?? "");
-      if (data && data.ok && data.data) {
-        updateFormValues(
-          form.getValues().email,
-          form.getValues().phone,
-          data.data
-        );
-      }
-    };
+  const fillFormWithEnterpriseinfo = async () => {
+    const data = await fetchEnterpriseInfo(
+      form.getValues().siret?.replace(/\s+/g, "") ?? ""
+    );
+    if (data && data.ok && data.data) {
+      updateFormValues(
+        form.getValues().email,
+        form.getValues().phone,
+        data.data
+      );
+    }
+  };
 
   return (
     <Card className="w-1/2 mx-auto mt-10 mb-28">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-        <CardContent>
+          <CardContent>
             <CardHeader className="font-semibold p-0 my-5 text-xl">
-              <h1>Vérification des informations</h1>
+              <h1>{t("customer.verif.title")}</h1>
             </CardHeader>
             <div className="flex flex-col gap-3">
-              <Input type="text" label="Nom de l'entreprise" {...form.register("name")} />
-              <Input type="text" label="Numéro de Siret" {...form.register("tvaNumber")} />
-              <Input type="text" label="Numéro de Siret" {...form.register("siret")} />
-              <Button className="mx-auto px-10" onClick={fillFormWithEnterpriseinfo} type="button">
-                Remplir
+              <Input
+                type="text"
+                label={t("enterprise.name")}
+                {...form.register("name")}
+              />
+              <Input
+                type="text"
+                label={t("enterprise.tvaNumber")}
+                {...form.register("tvaNumber")}
+              />
+              <Input
+                type="text"
+                label={t("common.siret")}
+                {...form.register("siret")}
+              />
+              <Button
+                className="mx-auto px-10"
+                onClick={fillFormWithEnterpriseinfo}
+                type="button"
+              >
+                {t("common.fill")}
               </Button>
               <p className="text-sm text-muted-foreground text-center w-[500px] mx-auto">
-                Permet de pré-remplir les informations avec les informations de l'API Sirène en se basant sur le numéro de siret.
+                {t("common.fillWithSiret")}
               </p>
               <Separator className="bg-secondary" />
-              <h2 className="font-semibold">Localité</h2>
-              <Input type="text" label="Adresse" {...form.register("address")} />
-              <Input type="text" label="Code postale" {...form.register("zipCode")}/>
-              <Input type="text" label="Ville" {...form.register("city")} />
+              <h2 className="font-semibold">{t("common.localisation")}</h2>
+              <Input
+                type="text"
+                label={t("common.address")}
+                {...form.register("address")}
+              />
+              <Input
+                type="text"
+                label={t("common.zipCode")}
+                {...form.register("zipCode")}
+              />
+              <Input
+                type="text"
+                label={t("common.city")}
+                {...form.register("city")}
+              />
               <Select
-                label={"Pays"}
-                placeholder={"Pays"}
+                label={t("common.country")}
+                placeholder={t("common.country")}
                 values={(countries?.data ?? []).map((c) => ({
                   value: c.id.toString(),
                   textValue: t(c.name),
@@ -132,16 +168,24 @@ export default function CustomerFormVerif({ customer }: CustomerFormVerifProps) 
                 {...form.register("countryId")}
               />
               <Separator className="bg-secondary" />
-              <h2 className="font-semibold">Contact</h2>
-              <Input type="text" label="Adresse mail" {...form.register("email")} />
-              <Input type="text"  label="Numéro de téléphone" {...form.register("phone")} />
+              <h2 className="font-semibold">{t("common.contact")}</h2>
+              <Input
+                type="text"
+                label={t("common.email")}
+                {...form.register("email")}
+              />
+              <Input
+                type="text"
+                label={t("common.phone")}
+                {...form.register("phone")}
+              />
               <Button className="mx-auto px-10 mt-5" type="submit">
-                Valider
+                {t("common.validate")}
               </Button>
             </div>
           </CardContent>
         </form>
       </Form>
     </Card>
-  )
+  );
 }
