@@ -2,6 +2,7 @@ import { AuthResponseData } from "@repo/shared-types";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { client } from "../lib/client";
+import { CustomerInfo } from "../types/customer-info-type";
 import { EnterpriseInfo } from "../types/enterprise-info-type";
 import { UserInfoType as UserInfo } from "../types/user-info-types";
 
@@ -30,7 +31,9 @@ export async function AuthMiddleware(req: NextRequest) {
             firstName: data.data?.firstName,
             lastName: data.data?.lastName,
             id: data.data?.userId,
+            role: data.data?.role,
             enterpriseId: data.data?.enterpriseId ?? undefined,
+            customerId: data.data?.customerId ?? undefined
           } as UserInfo)
         );
         if (data.data?.enterpriseId) {
@@ -42,6 +45,16 @@ export async function AuthMiddleware(req: NextRequest) {
               sales: data.data?.sales ?? 0,
             } as EnterpriseInfo)
           );
+        }
+
+        if (data.data?.customerId) {
+          responseOK.headers.set(
+            "x-customer", 
+            JSON.stringify({
+              id: data.data?.customerId,
+              name: data.data?.customerName
+            } as CustomerInfo)
+          )
         }
 
         // redirect if user is an enterprise and he's not in enterprise

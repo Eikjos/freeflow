@@ -2,7 +2,9 @@ import { Customer } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import { IsDate, IsInt, IsString } from 'class-validator';
 
-export class CustomerFilterDto implements Customer {
+export class CustomerFilterDto
+  implements Omit<Customer, 'token' | 'tokenDate'>
+{
   @IsDate()
   createdAt: Date;
   @IsInt()

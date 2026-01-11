@@ -57,14 +57,23 @@ export default class MailingService {
     });
   }
 
-  async sendCustomerInvite(customerId: number, to: string) {
+  async sendCustomerInvite(
+    customerId: number,
+    to: string,
+    token: string,
+    enterprise: string,
+  ) {
     const emailHtml = await render(
-      <CustomerInviteMail clientUrl={this.clientUrl} />,
+      <CustomerInviteMail
+        clientUrl={this.clientUrl}
+        token={token}
+        enterpriseName={enterprise}
+      />,
     );
     this.transporter.sendMail({
       from: 'ne-pas-repondre@freeflow.fr',
       to,
-      subject: 'Une nouvelle facture est disponible',
+      subject: 'Création du compte Client sur la plateforme Freeflow',
       html: emailHtml,
     });
   }

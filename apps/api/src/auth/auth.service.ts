@@ -6,9 +6,13 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Enterprise, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { AuthResponseData } from '@repo/shared-types';
 import * as bcrypt from 'bcrypt';
+import CustomerService from 'customers/customer.service';
+import { CustomerDto } from 'dtos/customers/customer.dto';
+import EnterpriseDto from 'dtos/enterprises/enterprise.dto';
+import EnterpriseService from 'enterprises/enterprise.service';
 import SalesService from 'sales/sales.service';
 import UserService from 'users/user.service';
 
@@ -17,6 +21,9 @@ export default class AuthService {
   constructor(
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
+    @Inject(forwardRef(() => EnterpriseService))
+    private readonly enterpriseService: EnterpriseService,
+    private readonly customerService: CustomerService,
     private readonly jwtService: JwtService,
     private readonly salesService: SalesService,
   ) {}
@@ -36,7 +43,7 @@ export default class AuthService {
         description: 'credentials.invalid',
       });
     }
-    return this.generateToken(user, user.enterprise);
+    return this.generateToken(user);
   }
 
   public async logout(userId: number) {
@@ -52,14 +59,18 @@ export default class AuthService {
       user.refreshToken,
     );
     if (!refreshTokenMatches) throw new ForbiddenException('access.denied');
-    return this.generateToken(user, user.enterprise);
+
+    return this.generateToken(user);
   }
 
-  public async generateToken(
-    user: User,
-    enterprise?: Enterprise,
-  ): Promise<AuthResponseData> {
-    const payload = { sub: user.id, enterpriseId: enterprise?.id ?? undefined };
+  public async generateToken(user: User): Promise<AuthResponseData> {
+    const payload = {
+      sub: user.id,
+      enterpriseId: user.enterpriseId,
+      isEnterprise: user.isEnterprise,
+      isCustomer: user.isCustomer,
+      customerId: user.customerId,
+    };
 
     const access_token = await this.jwtService.signAsync(payload);
     const refreshToken = await this.jwtService.signAsync(payload, {
@@ -69,9 +80,15 @@ export default class AuthService {
 
     this.userService.udpateRefreshToken(user.id, refreshToken);
 
-    let sales: number = null;
-    if (user.isEnterprise && enterprise) {
-      sales = (await this.salesService.getCurrentSales(enterprise.id)) ?? 0;
+    let sales: number;
+    let enterprise: EnterpriseDto;
+    let customer: CustomerDto;
+
+    if (user.isEnterprise) {
+      enterprise = await this.enterpriseService.findById(user.enterpriseId);
+      sales = (await this.salesService.getCurrentSales(user.enterpriseId)) ?? 0;
+    } else if (user.isCustomer) {
+      customer = await this.customerService.findById(user.customerId);
     }
 
     return {
@@ -81,6 +98,8 @@ export default class AuthService {
       role: user.isEnterprise ? 'enterprise' : 'customer',
       enterpriseId: enterprise?.id,
       enterpriseName: enterprise?.name,
+      customerId: customer?.id,
+      customerName: customer?.name,
       sales: sales,
       access_token,
       refreshToken,

@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+import { randomBytes } from 'crypto';
 import CustomerCreateDto from 'dtos/customers/customer-create.dto';
 import { CustomerFilterDto } from 'dtos/customers/customer-filter.dto';
 import CustomerStatDto from 'dtos/customers/customer-stat.dto';
@@ -29,6 +30,40 @@ export default class CustomerService {
   ) {}
 
   // --
+
+  async invite(customerId: number, enterpriseId: number) {
+    const enterprise = await this.prisma.enterprise.findFirst({
+      where: { id: enterpriseId },
+    });
+    if (!enterprise) {
+      throw new ForbiddenException();
+    }
+    const customer = await this.prisma.customer.findFirst({
+      where: { id: customerId },
+      include: { enterprises: true },
+    });
+    if (!customer) {
+      throw new NotFoundException();
+    }
+
+    const tokenDate = new Date();
+    tokenDate.setDate(tokenDate.getDate() + 7);
+    const token = randomBytes(32).toString('hex');
+    await this.prisma.customer.update({
+      where: { id: customerId },
+      data: {
+        token: token,
+        tokenDate,
+      },
+    });
+
+    this.mailingService.sendCustomerInvite(
+      customer.id,
+      customer.email,
+      token,
+      enterprise.name,
+    );
+  }
 
   async findAll(
     enterpriseId: number,
@@ -102,16 +137,25 @@ export default class CustomerService {
 
   async update(
     customerId: number,
-    enterpriseId: number,
     model: CustomerCreateDto,
+    enterpriseId?: number,
   ) {
-    const relation = await this.prisma.enterpriseCustomer.findFirst({
-      where: { customerId, enterpriseId, isDeleted: false },
-      include: {
-        customer: true,
-      },
-    });
-    if (!relation) throw new NotFoundException('customer.notFound');
+    if (enterpriseId) {
+      const relation = await this.prisma.enterpriseCustomer.findFirst({
+        where: { customerId, enterpriseId, isDeleted: false },
+        include: {
+          customer: true,
+        },
+      });
+      if (!relation) throw new NotFoundException('customer.notFound');
+    } else {
+      const c = await this.prisma.customer.findFirst({
+        where: { id: customerId },
+      });
+      if (!c) {
+        throw new NotFoundException('customer.notFound');
+      }
+    }
 
     const customer = await this.prisma.customer.update({
       where: { id: customerId },
@@ -131,6 +175,9 @@ export default class CustomerService {
     if (!enterprise) {
       throw new ForbiddenException('access.denied');
     }
+    const tokenDate = new Date();
+    tokenDate.setDate(tokenDate.getDate() + 7);
+    const token = randomBytes(32).toString('hex');
     const customer = await this.prisma.customer.create({
       data: {
         ...model,
@@ -138,12 +185,19 @@ export default class CustomerService {
         enterprises: {
           create: { enterpriseId: enterpriseId, isDeleted: false },
         },
+        token,
+        tokenDate,
       },
     });
 
     if (customer) {
       this.objectiveService.increaseObjective(1, enterpriseId, 'CUSTOMER');
-      this.mailingService.sendCustomerInvite(customer.id, customer.email);
+      this.mailingService.sendCustomerInvite(
+        customer.id,
+        customer.email,
+        token,
+        enterprise.name,
+      );
     }
 
     return mapCustomerToDto(customer, null);
@@ -163,6 +217,14 @@ export default class CustomerService {
       },
     });
     if (!customerRelation) throw new NotFoundException('customer.notFound');
+  }
+
+  async findById(id: number) {
+    const customer = await this.prisma.customer.findFirst({
+      where: { id },
+      include: { country: true },
+    });
+    return mapCustomerToDto(customer, customer.country);
   }
 
   async getStats(enterpriseId: number, months: number) {

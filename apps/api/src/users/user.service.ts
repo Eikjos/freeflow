@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
@@ -19,7 +20,26 @@ export default class UserService {
 
   // -
 
-  public async create(model: CreateUserData, isEnterprise: boolean) {
+  public async create(
+    model: CreateUserData,
+    isEnterprise: boolean,
+    token: string | undefined,
+  ) {
+    // if create for a client account
+    let customerId: number;
+    if (!isEnterprise) {
+      const customer = await this.prisma.customer.findFirst({
+        where: { token, tokenDate: { gte: new Date() } },
+      });
+      if (!customer) {
+        throw new ForbiddenException('customer.token.invalid');
+      }
+      customerId = customer.id;
+      await this.prisma.customer.update({
+        where: { id: customer.id },
+        data: { token: null, tokenDate: null },
+      });
+    }
     // verify if user already exist
     const user = await this.prisma.user.findFirst({
       where: { email: model.email },
@@ -36,6 +56,7 @@ export default class UserService {
         lastName: model.lastName,
         isEnterprise: isEnterprise,
         isCustomer: !isEnterprise,
+        customerId: customerId,
         email: model.email,
         password: hashPassword,
         passwordSalt: passwordSalt,
@@ -55,7 +76,6 @@ export default class UserService {
   public async findUserById(id: number) {
     return await this.prisma.user.findFirst({
       where: { id },
-      include: { enterprise: true },
     });
   }
 

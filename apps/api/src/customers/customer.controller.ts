@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpCode,
   Param,
@@ -18,6 +19,8 @@ import { CustomerFilterDto } from 'dtos/customers/customer-filter.dto';
 import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
 import { Request } from 'express';
 import { AccessTokenGuard } from 'guards/access-token.guard';
+import { CustomerGuard } from 'guards/customer.guard';
+import { EnterpriseGuard } from 'guards/enterprise.guard';
 import CustomerService from './customer.service';
 
 @Controller('customers')
@@ -69,14 +72,28 @@ export default class CustomerController {
     @Req() req: Request,
   ) {
     const enterpriseId = req.user['enterpriseId'];
-    return await this.customerService.update(id, enterpriseId, model);
+    return await this.customerService.update(
+      id,
+      model,
+      enterpriseId ? parseInt(enterpriseId) : null,
+    );
   }
 
   @Get(':id')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard, CustomerGuard)
   async findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
-    return await this.customerService.findByIdAndEnterpriseId(id, enterpriseId);
+    const customerId = req.user['customerId'];
+    if (enterpriseId) {
+      return await this.customerService.findByIdAndEnterpriseId(
+        id,
+        enterpriseId,
+      );
+    }
+    if (customerId == id) {
+      return await this.customerService.findById(parseInt(customerId));
+    }
+    throw new ForbiddenException();
   }
 
   @Delete(':id')
@@ -85,6 +102,20 @@ export default class CustomerController {
   async delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
     return await this.customerService.delete(id, enterpriseId);
+  }
+
+  @Post(':customerId/invite')
+  @HttpCode(204)
+  @UseGuards(AccessTokenGuard)
+  async inviteCustomer(
+    @Param('customerId', ParseIntPipe) customerId: number,
+    @Req() req: Request,
+  ) {
+    const enterpriseId = req.user['enterpriseId'];
+    return await this.customerService.invite(
+      customerId,
+      parseInt(enterpriseId),
+    );
   }
 
   @Get(':year/stats')

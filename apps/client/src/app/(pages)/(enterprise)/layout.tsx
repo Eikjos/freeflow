@@ -3,6 +3,7 @@ import { SidebarProvider } from "@components/ui/sidebar";
 import { headers } from "next/headers";
 import { EnterpriseProvider } from "providers/enterprise-provider";
 import { EnterpriseInfo } from "../../../types/enterprise-info-type";
+import NotFoundEnterprise from "./not-found";
 
 export default async function EnterpriseLayout({
   children,
@@ -10,6 +11,11 @@ export default async function EnterpriseLayout({
   children: React.ReactNode;
 }>) {
   const headersEnterprise = (await headers()).get("x-enterprise");
+
+  if (!headersEnterprise) {
+    return <NotFoundEnterprise />
+  }
+
   const enterprise: EnterpriseInfo | undefined = headersEnterprise
     ? JSON.parse(headersEnterprise)
     : undefined;

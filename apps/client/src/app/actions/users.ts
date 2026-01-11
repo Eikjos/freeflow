@@ -4,12 +4,16 @@ import { AuthResponseData, CreateUserData } from "@repo/shared-types";
 import { cookies } from "next/headers";
 import { client } from "../../lib/client";
 
-export const createUser = async (user: CreateUserData, isEnterprise: boolean) => {
+export const createUser = async (user: CreateUserData, isEnterprise: boolean, token: string = '') => {
   const cookieStore = await cookies();
-  const { confirmPassword, ...data } = user;
-  return await client<AuthResponseData>(`users?isEnterprise=${isEnterprise}`, {
+  return await client<AuthResponseData>(`users?isEnterprise=${isEnterprise}${token != '' ? `&token=${encodeURIComponent(token)}` : ''}`, {
     method: "POST",
-    body: JSON.stringify(data)
+    body: JSON.stringify({
+      password: user.password,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName  
+    } as CreateUserData)
   })
     .then(async (data) => {
       if (data.ok) {

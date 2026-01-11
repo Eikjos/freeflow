@@ -1,6 +1,8 @@
 import { HttpService } from '@nestjs/axios';
 import {
   ForbiddenException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -23,6 +25,7 @@ export default class EnterpriseService {
   constructor(
     private readonly mediaService: MediaService,
     private readonly prisma: PrismaService,
+    @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
     private readonly salesService: SalesService,
     private readonly expenseService: ExpenseService,
@@ -79,7 +82,7 @@ export default class EnterpriseService {
     }
     const user = await this.prisma.user.findFirst({ where: { id: userId } });
     this.mailingService.sendInscriptionMail(user.email);
-    return this.authService.generateToken(user, enterprise);
+    return this.authService.generateToken(user);
   }
 
   async update(
@@ -121,7 +124,7 @@ export default class EnterpriseService {
     }
 
     const user = await this.prisma.user.findFirst({ where: { id: userId } });
-    return this.authService.generateToken(user, enterpriseUpdate);
+    return this.authService.generateToken(user);
   }
 
   async findById(id: number) {
