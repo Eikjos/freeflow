@@ -13,9 +13,11 @@ import {
   ProjectDetailData,
 } from "@repo/shared-types";
 import { CreateProject, UpdateProject } from "actions/project";
+import clsx from "clsx";
 import { Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -28,6 +30,7 @@ type ProjectFormProps = {
   data?: ProjectDetailData;
   edit?: boolean;
   projectId?: number;
+  isCustomer?: boolean;
 };
 
 export default function ProjectForm({
@@ -35,6 +38,7 @@ export default function ProjectForm({
   data,
   projectId,
   edit = false,
+  isCustomer = false,
 }: ProjectFormProps) {
   const t = useTranslations();
   const router = useRouter();
@@ -77,7 +81,7 @@ export default function ProjectForm({
         } else if (!res.ok && res.error) {
           toast.error(res.error);
         } else {
-          toast.success("Projet créé avec succès");
+          toast.success("project.success.create");
           queryClient.invalidateQueries({ queryKey: ["project", projectId] });
           router.push("/activities");
         }
@@ -97,7 +101,7 @@ export default function ProjectForm({
                     type="text"
                     {...form.register("name")}
                     label={t("common.name")}
-                    placeholder="Nom du projet"
+                    placeholder={t("common.name")}
                   />
                   <Autocomplete
                     queryOptions={(filter) =>
@@ -113,7 +117,7 @@ export default function ProjectForm({
                     fieldIdentifier="id"
                     {...form.register("customerId")}
                     label="Client"
-                    className="mt-3"
+                    className={clsx("mt-3", { hidden: isCustomer })}
                     placeholder="Sélectionner un client"
                   />
                 </div>
@@ -154,7 +158,15 @@ export default function ProjectForm({
                 </div>
               </div>
 
-              <div className="w-full flex flex-row justify-end mt-5">
+              <div className="w-full flex flex-row justify-end gap-5 mt-5">
+                <Button asChild variant={"outline"}>
+                  <Link
+                    href={!isCustomer ? `/activities` : `/customers/projects`}
+                  >
+                    {t("common.back")}
+                  </Link>
+                </Button>
+
                 <Button type="submit">
                   {edit ? t("common.modify") : t("common.create")}
                 </Button>

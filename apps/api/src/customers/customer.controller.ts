@@ -14,6 +14,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { Project } from '@prisma/client';
 import CustomerCreateDto from 'dtos/customers/customer-create.dto';
 import { CustomerFilterDto } from 'dtos/customers/customer-filter.dto';
 import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
@@ -21,12 +22,16 @@ import { Request } from 'express';
 import { AccessTokenGuard } from 'guards/access-token.guard';
 import { CustomerGuard } from 'guards/customer.guard';
 import { EnterpriseGuard } from 'guards/enterprise.guard';
+import ProjectService from 'projects/project.service';
 import CustomerService from './customer.service';
 
 @Controller('customers')
 @ApiBearerAuth()
 export default class CustomerController {
-  constructor(private readonly customerService: CustomerService) {}
+  constructor(
+    private readonly customerService: CustomerService,
+    private readonly projectService: ProjectService,
+  ) {}
 
   @Get('stats')
   @UseGuards(AccessTokenGuard)
@@ -116,6 +121,18 @@ export default class CustomerController {
       customerId,
       parseInt(enterpriseId),
     );
+  }
+
+  @Get(':customerId/projects')
+  @UseGuards(CustomerGuard)
+  async getProjectsByCustomerId(
+    @Param('customerId', ParseIntPipe) id: number,
+    @Query() filter: PaginationFilterDto<Project>,
+    @Req() req: Request,
+  ) {
+    const customerId = req.user['customerId'] as number;
+    if (id !== customerId) throw new ForbiddenException();
+    return this.projectService.findAllByCustomerId(customerId, filter);
   }
 
   @Get(':year/stats')

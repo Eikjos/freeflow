@@ -21,6 +21,8 @@ import ReorderColumnsDto from 'dtos/customers/reorder-colums.dto';
 import ProjectCreateDto from 'dtos/projects/project-create.dto';
 import { Request } from 'express';
 import { AccessTokenGuard } from 'guards/access-token.guard';
+import { CustomerGuard } from 'guards/customer.guard';
+import { EnterpriseGuard } from 'guards/enterprise.guard';
 import ProjectService from './project.service';
 
 @Controller('projects')
@@ -28,7 +30,7 @@ import ProjectService from './project.service';
 export default class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Post()
   @ApiConsumes('multipart/form-data')
   @HttpCode(200)
@@ -37,7 +39,7 @@ export default class ProjectController {
     type: ProjectCreateDto,
   })
   @UseInterceptors(FileInterceptor('media'))
-  async createEnterprise(
+  async create(
     @Body() body: ProjectCreateDto,
     @Req() req: Request,
     @UploadedFile()
@@ -57,7 +59,7 @@ export default class ProjectController {
     return await this.projectService.count(enterpriseId);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(CustomerGuard, EnterpriseGuard)
   @Post(':id/columns')
   @HttpCode(200)
   async createColumn(
@@ -67,13 +69,14 @@ export default class ProjectController {
   ) {
     return this.projectService.createColumn(
       id,
-      parseInt(req.user['enterpriseId']),
       model,
+      parseInt(req.user['enterpriseId']) || undefined,
+      parseInt(req.user['customerId']) || undefined,
     );
   }
 
   @HttpCode(200)
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard, CustomerGuard)
   @Patch(':id/columns/reorder')
   async reorderColums(
     @Param('id', ParseIntPipe) id: number,
@@ -82,13 +85,15 @@ export default class ProjectController {
     return this.projectService.reorderColumns(id, model.orderedColumnIds);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard, CustomerGuard)
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
-    return this.projectService.findById(id, req.user['enterpriseId']);
+    const enterpriseId = req.user['enterpriseId'];
+    const customerId = req.user['customerId'];
+    return this.projectService.findById(id, enterpriseId, customerId);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard, CustomerGuard)
   @Get(':id/details')
   async findAllTasksByProjectId(
     @Param('id', ParseIntPipe) id: number,
@@ -97,10 +102,11 @@ export default class ProjectController {
     return this.projectService.findByIdWithTasksAndColumns(
       id,
       req.user['enterpriseId'],
+      req.user['customerId'],
     );
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard, CustomerGuard)
   @UseInterceptors(FileInterceptor('media'))
   @ApiBody({
     description: 'Mettre à un projet avec un fichier (logo)',
@@ -114,15 +120,18 @@ export default class ProjectController {
     @UploadedFile()
     media?: Express.Multer.File,
   ) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    const customerId = parseInt(req.user['customerId']);
     return this.projectService.update(
       id,
       model,
-      parseInt(req.user['enterpriseId']),
+      enterpriseId,
+      customerId,
       media,
     );
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     return this.projectService.delete(id, parseInt(req.user['enterpriseId']));

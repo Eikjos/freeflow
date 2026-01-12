@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@components/ui/button";
 import {
   Card,
@@ -26,18 +28,24 @@ import { getMediaUrl } from "../../../lib/utils";
 type ProjectCardProps = {
   project: ProjectData;
   isLoading: boolean;
+  isCustomer: boolean;
   onDelete: (project: ProjectData) => void;
 };
 
 export default function ProjectCard({
   project,
   isLoading,
+  isCustomer,
   onDelete,
 }: ProjectCardProps) {
   const t = useTranslations();
   const router = useRouter();
   const goToDetails = () => {
-    router.push(`/activities/projects/${project.id}/tasks`);
+    if (isCustomer) {
+      router.push(`/customers/projects/${project.id}`);
+    } else {
+      router.push(`/activities/projects/${project.id}/tasks`);
+    }
   };
 
   if (isLoading) {
@@ -83,7 +91,16 @@ export default function ProjectCard({
                 {project.name}
               </CardTitle>
               <CardDescription className="text-sm w-60 text-ellipsis text-nowrap overflow-hidden">
-                {t("common.customer")} : {project.customer}
+                {isCustomer && (
+                  <>
+                    {t("common.serviceProvider")} : {project.enterprise}
+                  </>
+                )}
+                {!isCustomer && (
+                  <>
+                    {t("common.customer")} : {project.customer}
+                  </>
+                )}
               </CardDescription>
             </div>
           </div>
@@ -91,49 +108,58 @@ export default function ProjectCard({
         <CardFooter className="p-0 flex flex-row justify-end">
           <div className="flex flex-row items-center gap-5">
             <Button variant={"outline"} asChild>
-              <Link href={`/activities/projects/${project.id}/edit`}>
+              <Link
+                href={
+                  isCustomer
+                    ? `/customers/projects/${project.id}/edit`
+                    : `/activities/projects/${project.id}/edit`
+                }
+              >
                 <Pen size={18} className="text-primary hover:cursor-pointer" />
                 {t("common.modify")}
               </Link>
             </Button>
-
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant={"outline"}>
-                  <Trash
-                    size={18}
-                    className="text-primary hover:cursor-pointer"
-                  />
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle className="text-3xl">
-                    {t("project.dialog.removeTitle", {
-                      project: project.name,
-                    })}
-                  </DialogTitle>
-                  <p>
-                    {t("project.dialog.removeDescription", {
-                      project: project.name,
-                    })}
-                  </p>
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button variant={"outline"}>{t("common.cancel")}</Button>
-                    </DialogClose>
-                    <DialogClose asChild>
-                      <Button
-                        variant={"destructive"}
-                        onClick={() => onDelete(project)}
-                      >
-                        {t("common.remove")}
-                      </Button>
-                    </DialogClose>
-                  </DialogFooter>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
+            {!isCustomer && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant={"outline"}>
+                    <Trash
+                      size={18}
+                      className="text-primary hover:cursor-pointer"
+                    />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="text-3xl">
+                      {t("project.dialog.removeTitle", {
+                        project: project.name,
+                      })}
+                    </DialogTitle>
+                    <p>
+                      {t("project.dialog.removeDescription", {
+                        project: project.name,
+                      })}
+                    </p>
+                    <DialogFooter>
+                      <DialogClose asChild>
+                        <Button variant={"outline"}>
+                          {t("common.cancel")}
+                        </Button>
+                      </DialogClose>
+                      <DialogClose asChild>
+                        <Button
+                          variant={"destructive"}
+                          onClick={() => onDelete(project)}
+                        >
+                          {t("common.remove")}
+                        </Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
         </CardFooter>
       </CardContent>
