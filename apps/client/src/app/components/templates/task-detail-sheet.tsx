@@ -116,7 +116,8 @@ export default function TaskDetailSheet({
         .then((res) => {
           if (res) {
             if (onEdit) {
-                onEdit(res);
+              console.log("api", res);
+              onEdit(res);
             }
           }
         })

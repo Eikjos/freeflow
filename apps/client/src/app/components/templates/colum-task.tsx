@@ -20,7 +20,7 @@ type ColumnTaksProps = {
   index: number;
   tasks: TaskData[];
   onDropTask: (
-    task: {id : number},
+    task: TaskData,
     columnId_dest: number,
     isCreation?: boolean
   ) => void;
@@ -70,10 +70,9 @@ export default function ColumnTask({
   const [, drop] = useDrop(
     () => ({
       accept: "TaskCard",
-      drop: (item: { id : number}, monitor) => {
+      drop: (item: TaskData, monitor) => {
         const isOver = monitor.isOver();
         if (isOver) {
-          console.log("dropped");
           onDropTask(item, id);
         }
       },
@@ -88,15 +87,16 @@ export default function ColumnTask({
   };
 
   const addTask = (task: TaskData) => {
-    onDropTask({id : task.id}, 0, true);
+    onDropTask(task, id, true);
   };
 
   const updateTask = (task: TaskData) => {
-    onDropTask({id : task.id}, id, true);
+    console.log("update", task);
+    onDropTask(task, id, true);
   };
 
   const onDeleteTask = (task: TaskData) => {
-    onDropTask({id : task.id}, 0, true);
+    onDropTask(task, 0, true);
   };
 
   const handleUpdateColumn = (event: React.FocusEvent<HTMLInputElement>) => {
@@ -154,7 +154,7 @@ export default function ColumnTask({
               .map((item, index) => (
                 <TaskCard
                   task={item}
-                  key={index}
+                  key={item.id}
                   // onDrop={onDropTask}
                   onEdit={updateTask}
                   onDelete={onDeleteTask}
