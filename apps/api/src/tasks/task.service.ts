@@ -128,8 +128,9 @@ export default class TaskService {
   async update(
     taskId: number,
     model: CreateTaskDto,
-    enterpriseId: number,
     files: Express.Multer.File[],
+    enterpriseId?: number,
+    customerId?: number,
   ) {
     const task = await this.prisma.task.findFirst({
       where: { id: taskId },

@@ -43,7 +43,7 @@ export default class ProjectService {
   ): Promise<PaginationResultDto<ProjectDto>> {
     const projects = await this.prisma.project.findMany({
       where: { ...filter.filter, enterpriseId },
-      include: { customer: true },
+      include: { customer: true, enterprise: true },
       take: filter.pageSize,
       skip: filter.page * filter.pageSize,
     });
@@ -54,24 +54,64 @@ export default class ProjectService {
       },
     });
     return {
-      data: projects.map((p) => mapProjectToDto(p, p.customer)),
+      data: projects.map((p) => mapProjectToDto(p, p.customer, p.enterprise)),
       totalItems: totalItems,
       page: filter.page,
       pageSize: filter.pageSize,
     };
   }
 
-  async findById(id: number, enterpriseId: number) {
-    const project = await this.prisma.project.findFirst({
-      where: { id, enterpriseId },
+  async findAllByCustomerId(
+    customerId: number,
+    filter: PaginationFilter<Project>,
+  ): Promise<PaginationResultDto<ProjectDto>> {
+    const projects = await this.prisma.project.findMany({
+      where: { ...filter.filter, customerId },
+      include: { customer: true, enterprise: true },
+      take: filter.pageSize,
+      skip: filter.page * filter.pageSize,
     });
+    const totalItems = await this.prisma.project.count({
+      where: {
+        ...filter.filter,
+        customerId,
+      },
+    });
+    return {
+      data: projects.map((p) => mapProjectToDto(p, p.customer, p.enterprise)),
+      totalItems: totalItems,
+      page: filter.page,
+      pageSize: filter.pageSize,
+    };
+  }
+
+  async findById(id: number, enterpriseId?: number, customerId?: number) {
+    let project;
+    if (enterpriseId) {
+      project = await this.prisma.project.findFirst({
+        where: { id, enterpriseId },
+      });
+    } else if (customerId) {
+      project = await this.prisma.project.findFirst({
+        where: { id, customerId },
+      });
+    }
+
     if (!project) throw new NotFoundException();
     return mapProjectToDetailDto(project);
   }
 
-  async findByIdWithTasksAndColumns(id: number, enterpriseId: number) {
+  async findByIdWithTasksAndColumns(
+    id: number,
+    enterpriseId?: number,
+    customerId?: number,
+  ) {
     const project = await this.prisma.project.findFirst({
-      where: { id, enterpriseId },
+      where: {
+        id,
+        ...(customerId != undefined && { customerId }),
+        ...(enterpriseId != undefined && { enterpriseId }),
+      },
       include: {
         columns: {
           include: { tasks: { include: { medias: true } } },
@@ -115,11 +155,16 @@ export default class ProjectService {
 
   async createColumn(
     projectId: number,
-    enterpriseId: number,
     column: CreateColumnDto,
+    enterpriseId?: number,
+    customerId?: number,
   ) {
     const project = await this.prisma.project.findFirst({
-      where: { id: projectId, enterpriseId },
+      where: {
+        id: projectId,
+        ...(customerId !== undefined && { customerId }),
+        ...(enterpriseId !== undefined && { enterpriseId }),
+      },
       include: { columns: true },
     });
     if (!project) throw new NotFoundException();
@@ -168,18 +213,29 @@ export default class ProjectService {
   async update(
     projectId: number,
     model: ProjectCreateDto,
-    enterpriseId: number,
+    enterpriseId?: number,
+    customerId?: number,
     media?: Express.Multer.File,
   ) {
-    if (enterpriseId == null) throw new ForbiddenException();
-    let project = await this.prisma.project.findFirst({
-      where: { id: projectId, enterpriseId },
-    });
+    if (enterpriseId == null && customerId == null)
+      throw new ForbiddenException();
+    let project;
+    if (enterpriseId) {
+      project = await this.prisma.project.findFirst({
+        where: { id: projectId, enterpriseId },
+      });
+    } else if (customerId) {
+      project = await this.prisma.project.findFirst({
+        where: { id: projectId, customerId },
+      });
+    }
     if (!project) throw new NotFoundException('project.notFound');
-    const customer = await this.prisma.enterpriseCustomer.findFirst({
-      where: { enterpriseId, customerId: model.customerId, isDeleted: false },
-    });
-    if (!customer) throw new BadRequestException('project.customer.notValid');
+    if (enterpriseId) {
+      const customer = await this.prisma.enterpriseCustomer.findFirst({
+        where: { enterpriseId, customerId: model.customerId, isDeleted: false },
+      });
+      if (!customer) throw new BadRequestException('project.customer.notValid');
+    }
     const mediaId = media
       ? await this.mediaService.upload(media, `${enterpriseId}/images`)
       : undefined;

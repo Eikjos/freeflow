@@ -1,20 +1,26 @@
+"use client";
+
 import CardList from "@components/organisms/card-list";
 import { Pagination } from "@components/ui/pagination";
 import { Pagination as PaginationType, ProjectData } from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { getAllProjectsQueryOptions } from "../../../lib/api/projects";
-import ProjectCard from "./project-card";
 import { deleteProject } from "actions/project";
-import { toast } from "sonner";
-import getQueryClient from "../../../lib/query-client";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { toast } from "sonner";
+import { getAllProjectsQueryOptions } from "../../../lib/api/projects";
+import getQueryClient from "../../../lib/query-client";
+import ProjectCard from "./project-card";
 
 type ProjectListProps = {
-  enterpriseId: number;
+  enterpriseId?: number;
+  customerId?: number;
 };
 
-export default function ProjectList({ enterpriseId }: ProjectListProps) {
+export default function ProjectList({
+  enterpriseId,
+  customerId,
+}: ProjectListProps) {
   const [pagination, setPagination] = useState<PaginationType>({
     page: 0,
     pageSize: 6,
@@ -24,7 +30,9 @@ export default function ProjectList({ enterpriseId }: ProjectListProps) {
     data: projects,
     refetch,
     isLoading,
-  } = useQuery(getAllProjectsQueryOptions(pagination, enterpriseId));
+  } = useQuery({
+    ...getAllProjectsQueryOptions(pagination, enterpriseId, customerId),
+  });
   const t = useTranslations();
   const handleChangePage = (page: number) => {
     setPagination((prev) => ({ ...prev, page }));
@@ -59,6 +67,7 @@ export default function ProjectList({ enterpriseId }: ProjectListProps) {
             project={p}
             key={key}
             isLoading={loading}
+            isCustomer={customerId !== undefined}
             onDelete={OnDeleteProject}
           />
         )}

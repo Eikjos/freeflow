@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Customer, Project } from '@prisma/client';
+import { Customer, Enterprise, Project } from '@prisma/client';
 import { ProjectData } from '@repo/shared-types';
 
 export class ProjectDto implements ProjectData {
@@ -9,6 +9,8 @@ export class ProjectDto implements ProjectData {
   name: string;
   @ApiProperty({ description: 'Project customer name' })
   customer: string;
+  @ApiProperty({ description: 'Service provider name' })
+  enterprise: string;
   @ApiProperty({ description: 'Project media' })
   media?: number;
 }
@@ -24,11 +26,16 @@ export class ProjectDetailDto implements ProjectDetailDto {
   mediaId?: number;
 }
 
-export const mapProjectToDto = (project: Project, customer: Customer) => {
+export const mapProjectToDto = (
+  project: Project,
+  customer: Customer,
+  enterprise: Enterprise,
+) => {
   return {
     id: project.id,
     name: project.name,
     customer: customer.name,
+    enterprise: enterprise.name,
     media: project.mediaId,
   } as ProjectDto;
 };

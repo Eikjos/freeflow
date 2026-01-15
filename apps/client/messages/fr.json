@@ -209,6 +209,7 @@
     "amount": "Montant",
     "apply": "Appliquer",
     "add": "Ajouter",
+    "back": "Retour",
     "create": "Créer",
     "cancel": "Annuler",
     "customer": "Client",
@@ -272,6 +273,7 @@
     "category": "Catégorie",
     "save": "Enregistrer",
     "start": "Commencer",
+    "serviceProvider": "Prestataire",
     "subscribe": "Souscrire",
     "validate": "Valider"
   },

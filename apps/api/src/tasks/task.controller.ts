@@ -16,6 +16,8 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { Request } from 'express';
+import { CustomerGuard } from 'guards/customer.guard';
+import { EnterpriseGuard } from 'guards/enterprise.guard';
 import CreateTaskDto from '../dtos/tasks/task-create.dto';
 import { TaskPaginationFilterDto } from '../dtos/tasks/task-filter.dto';
 import { AccessTokenGuard } from '../guards/access-token.guard';
@@ -25,26 +27,26 @@ import TaskService from './task.service';
 export default class TasksController {
   constructor(private readonly taskService: TaskService) {}
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard, CustomerGuard)
   @Get()
   async getAll(@Query() filter: TaskPaginationFilterDto) {
     return this.taskService.getAll(filter);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get('urgents')
   async getUrgentsTasks(@Req() request: Request) {
     const enterpriseId = parseInt(request.user['enterpriseId']);
     return this.taskService.getUrgentsTask(enterpriseId);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard, CustomerGuard)
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number) {
     return this.taskService.findById(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard, CustomerGuard)
   @Delete(':id/medias/:mediaId')
   async deleteMedia(
     @Param('id', ParseIntPipe) id: number,
@@ -70,15 +72,17 @@ export default class TasksController {
     @Req() req: Request,
   ) {
     const enterpriseId = req.user['enterpriseId'];
+    const customerId = req.user['customerId'];
     return await this.taskService.update(
       id,
       model,
-      parseInt(enterpriseId),
       files,
+      parseInt(enterpriseId) || undefined,
+      parseInt(customerId) || undefined,
     );
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard, CustomerGuard)
   @Delete(':id')
   @HttpCode(200)
   async deleteTask(@Param('id', ParseIntPipe) id: number) {

@@ -43,12 +43,11 @@ export default class ColumnService {
   async createTask(
     columnId: number,
     model: CreateTaskDto,
-    enterpriseId: number,
     files?: Express.Multer.File[],
   ) {
     const column = await this.prisma.column.findFirst({
       where: { id: columnId },
-      include: { tasks: true },
+      include: { tasks: true, project: true },
     });
     if (!column) throw new NotFoundException();
 
@@ -78,7 +77,10 @@ export default class ColumnService {
           ? [
               ...(await Promise.all(
                 files.map((f) =>
-                  this.mediaService.upload(f, `${enterpriseId}/tasks/files`),
+                  this.mediaService.upload(
+                    f,
+                    `${column.project.enterpriseId}/tasks/files`,
+                  ),
                 ),
               )),
             ]

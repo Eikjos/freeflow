@@ -1,5 +1,6 @@
-import { ColumnsData } from "types/columns";
+
 import { z } from "zod";
+import { ColumnsData } from "../columns";
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -13,6 +14,7 @@ export type ProjectData = {
   id: number;
   name: string;
   customer: string;
+  enterprise: string;
   media?: number;
 };
 

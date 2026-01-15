@@ -82,33 +82,34 @@ export function Board({ className, projectId, columns }: KanbanProps) {
       let tasks = [...col.tasks];
       const t = col.tasks.find(t => t.id);
       if (t) {
+        console.log("trouvé");
         tasks = tasks.filter(t => t.id !== task.id);
       }
       if (col.id === columnId_dest) {
-        tasks.splice(index_dest, 0, task);
+        console.log(task);
+         tasks.splice(index_dest, 0, task);
       }
-      return {...col, tasks}
+      return {...col, tasks: [...tasks]}
     });
     return c;
   };
 
   const handleDropTask = (
-    task: { id : number},
+    task: TaskData,
     columnId_dest: number,
     isCreation: boolean = false
   ) => {
     const columnId = columnsState.find(c => c.id == columnId_dest);
-    const currentTask = columnsState.flatMap(c => c.tasks).find(t => t.id == task.id);
-    if (columnId && currentTask) {
-        setColumnsState((prev) =>
-          orderTask(prev, currentTask, columnId_dest, columnId.tasks.length)
-      );
-    }
-
-    // Si ce n'est pas une creation ou update de tache
+    // Si ce n'est pas une creation ou une mise à jour de tache
     if (!isCreation) {
       // Appel de l'api
       moveTask(columnId_dest, task.id, { toPosition: columnId?.tasks.length ?? 0 });
+    } 
+
+    const currentTask = columnsState.flatMap(c => c.tasks).find(t => t.id == task.id);
+    if (columnId) {
+        setColumnsState((prev) =>
+          orderTask(prev, isCreation ? task :(currentTask ?? task), columnId_dest, columnId.tasks.length));
     }
   };
 

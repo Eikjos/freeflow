@@ -9,22 +9,28 @@ import { client } from "../client";
 import { generateQueryString } from "../utils";
 
 export const getAllProjects = (
-  enterpriseId: number,
-  pagination: Pagination
+  pagination: Pagination,
+  customerId?: number,
+  enterpriseId?: number,
 ) => {
   const query = generateQueryString(pagination);
-  return client<PaginationResult<ProjectData>>(
-    `enterprises/${enterpriseId}/projects?${query}`
-  );
+  if (enterpriseId && !customerId) {
+    return client<PaginationResult<ProjectData>>(
+      `enterprises/${enterpriseId}/projects?${query}`
+    );
+  } else {
+    return client<PaginationResult<ProjectData>>(`customers/${customerId}/projects?${query}`);
+  }
 };
 
 export const getAllProjectsQueryOptions = (
   pagination: Pagination,
-  enterpriseId: number
+  enterpriseId?: number,
+  customerId?: number
 ) =>
   queryOptions({
-    queryFn: () => getAllProjects(enterpriseId, pagination),
-    queryKey: ["projects", pagination, enterpriseId],
+    queryFn: () => getAllProjects(pagination, customerId, enterpriseId),
+    queryKey: ["projects", pagination, enterpriseId, customerId],
     retry: false,
   });
 
