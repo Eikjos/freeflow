@@ -22,12 +22,14 @@ export type InvoiceTableProps = {
   data: InvoiceData[];
   isLoading: boolean;
   className?: string;
+  isCustomer?: boolean;
 };
 
 export default function InvoiceTable({
   data,
   isLoading,
   className,
+  isCustomer = false
 }: InvoiceTableProps) {
   const t = useTranslations();
   const columnsDef: ColumnDef<InvoiceData>[] = [
@@ -36,8 +38,8 @@ export default function InvoiceTable({
       header: t("common.number"),
     },
     {
-      accessorKey: "customer.name",
-      header: t("common.customer"),
+      accessorKey: isCustomer ? "enterprise.name" : "customer.name",
+      header: t(isCustomer ? "common.enterprise" : "common.customer"),
     },
     {
       accessorKey: "type",

@@ -220,6 +220,7 @@
     "edit": "Éditer",
     "emptyData": "Vous n'avez pas encore de données.",
     "enterDescription": "Entrez une description...",
+    "enterprise": "Entreprise",
     "features": "Fonctionnalités",
     "filters": "Filtres",
     "fillWithSiret": " Permet de pré-remplir les informations avec les informations de l'API Sirène en se basant sur le numéro de siret.",

@@ -131,9 +131,13 @@ export default class InvoiceService {
 
   async findAll(
     filter: PaginationFilterDto<InvoiceFilterDataDto>,
-    enterpriseId: number,
+    enterpriseId?: number,
+    customerId?: number,
   ): Promise<PaginationResultDto<InvoiceDto>> {
-    let filterQuery: Prisma.InvoiceWhereInput = { enterpriseId };
+    let filterQuery: Prisma.InvoiceWhereInput = {
+      ...(enterpriseId ? { enterpriseId } : {}),
+      ...(customerId ? { customerId } : {}),
+    };
 
     if (filter.filter) {
       if (filter.filter.number && filter.filter.number !== '') {
@@ -170,6 +174,7 @@ export default class InvoiceService {
       include: {
         invoiceLines: true,
         customer: true,
+        enterprise: true,
         credits: { include: { creditLines: true } },
       },
       take: filter.pageSize,
@@ -182,7 +187,14 @@ export default class InvoiceService {
 
     return {
       data: invoices.map(
-        (i) => new InvoiceDto(i, i.invoiceLines, i.customer, i.credits),
+        (i) =>
+          new InvoiceDto(
+            i,
+            i.invoiceLines,
+            i.customer,
+            i.enterprise,
+            i.credits,
+          ),
       ),
       totalItems: totalItems,
       page: filter.page,
@@ -196,6 +208,7 @@ export default class InvoiceService {
       include: {
         invoiceLines: true,
         customer: true,
+        enterprise: true,
         credits: { include: { creditLines: true } },
       },
     });
@@ -205,6 +218,7 @@ export default class InvoiceService {
       invoice,
       invoice.invoiceLines,
       invoice.customer,
+      invoice.enterprise,
       invoice.credits,
     );
   }

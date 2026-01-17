@@ -1,7 +1,8 @@
-import { CreditForInvoiceData } from "types/credits";
-import { CustomerDetailModel } from "types/customers";
-import { EnterpriseInformation } from "types/enterprises";
+
 import { z } from "zod";
+import { CreditForInvoiceData } from "../credits";
+import { CustomerDetailModel } from "../customers";
+import { EnterpriseInformation } from "../enterprises";
 
 export type InvoiceStatus =
   | "WAITING_VALIDATION"
@@ -24,9 +25,15 @@ export type InvoiceData = {
   type: InvoiceType;
   excludeTva: boolean;
   mediaId: number;
+  enterprise: EnterpriseInvoiceModel;
   customer: CustomerDetailModel;
   credits: CreditForInvoiceData[];
 };
+
+export type EnterpriseInvoiceModel = {
+  id: number;
+  name: string;
+}
 
 export type InvoiceLineData = {
   id: number;

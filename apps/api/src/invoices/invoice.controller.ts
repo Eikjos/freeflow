@@ -19,6 +19,8 @@ import { InvoiceFilterDataDto } from 'dtos/invoices/invoice-filter.dto';
 import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
 import { Request } from 'express';
 import { AccessTokenGuard } from 'guards/access-token.guard';
+import { CustomerGuard } from 'guards/customer.guard';
+import { EnterpriseGuard } from 'guards/enterprise.guard';
 import InvoiceService from './invoice.service';
 
 @Controller('invoices')
@@ -28,7 +30,7 @@ export default class InvoiceController {
   constructor(private readonly invoiceService: InvoiceService) {}
 
   @Post()
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('invoice'))
   @HttpCode(200)
@@ -43,13 +45,14 @@ export default class InvoiceController {
   }
 
   @Get()
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard, CustomerGuard)
   async findAll(
     @Query() filter: PaginationFilterDto<InvoiceFilterDataDto>,
     @Req() req: Request,
   ) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
-    return this.invoiceService.findAll(filter, enterpriseId);
+    const customerId = parseInt(req.user['customerId']);
+    return this.invoiceService.findAll(filter, enterpriseId, customerId);
   }
 
   @Get(':id')
