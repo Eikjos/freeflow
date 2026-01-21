@@ -90,7 +90,7 @@ export default function CreateDevisPage() {
       const invoiceLine = await getTasksById(value);
       const invoiceLinesOld = form.getValues().invoiceLines;
       if (
-        invoiceLine.ok &&
+        invoiceLine.ok && 
         !invoiceLinesOld.some((e) => e.name === invoiceLine.data?.name)
       ) {
         form.setValue("invoiceLines", [
@@ -230,7 +230,7 @@ export default function CreateDevisPage() {
                 placeholder={t("task.select")}
                 onAdd={() => setModalTaskOpen(true)}
                 addLabel={t("task.add")}
-                {...form.register("invoiceLines", {
+                {...form.register("invoiceLine", {
                   onBlur: forceUpdate,
                   value: undefined,
                   onChange: (event) => handleChangeTask(event.target.value),

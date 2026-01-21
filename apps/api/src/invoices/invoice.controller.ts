@@ -18,7 +18,6 @@ import { CreateInvoiceDto } from 'dtos/invoices/invoice-create.dto';
 import { InvoiceFilterDataDto } from 'dtos/invoices/invoice-filter.dto';
 import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
 import { Request } from 'express';
-import { AccessTokenGuard } from 'guards/access-token.guard';
 import { CustomerGuard } from 'guards/customer.guard';
 import { EnterpriseGuard } from 'guards/enterprise.guard';
 import InvoiceService from './invoice.service';
@@ -56,12 +55,31 @@ export default class InvoiceController {
   }
 
   @Get(':id')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard, CustomerGuard)
   async findById(
     @Param('id', ParseIntPipe) id: number,
     @Req() request: Request,
   ) {
     const enterpriseId = parseInt(request.user['enterpriseId']);
     return this.invoiceService.findById(id, enterpriseId);
+  }
+
+  @Post(':id/validate')
+  @UseGuards(CustomerGuard)
+  @HttpCode(200)
+  async validteQuote(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request,
+  ) {
+    const customerId = parseInt(req.user['customerId']);
+    return this.invoiceService.validate(id, customerId);
+  }
+
+  @Post(':id/pay')
+  @UseGuards(CustomerGuard)
+  @HttpCode(200)
+  async payInvoice(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    const customerId = parseInt(req.user['customerId']);
+    return this.invoiceService.pay(id, customerId);
   }
 }

@@ -17,7 +17,7 @@ export default function CustomerInvoicePage() {
     pageSize: 10,
     filter: filter,
   };
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     getAllInvoiceQueryOptions(paginationFilter)
   );
 
@@ -35,6 +35,7 @@ export default function CustomerInvoicePage() {
         data={data?.data?.data ?? []}
         isLoading={isLoading}
         isCustomer
+        onRefetch={refetch}
         className="mt-10"
       />
       <Pagination

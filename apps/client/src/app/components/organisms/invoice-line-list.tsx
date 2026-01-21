@@ -10,7 +10,7 @@ type InvoiceLineListProps = {
 export default function InvoiceLineList({
   invoices,
   handleChange,
-  canDelete = false,
+  canDelete = true,
 }: InvoiceLineListProps) {
   const handleChangeLine = (value: InvoiceLineCreateData) => {
     const index = invoices.findIndex((e) => e.name === value.name);

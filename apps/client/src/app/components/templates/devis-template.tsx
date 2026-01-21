@@ -287,7 +287,7 @@ const DevisTemplate = ({
             >
               <Text style={styles.text}>
                 {formatPrice(
-                  sum(lines.map((e) => e.quantity * e.unitPrice)),
+                  lines.length > 0 ? sum(lines.map((e) => e.quantity * e.unitPrice)) : 0, 
                   "FR-fr",
                   "EUR"
                 )}
@@ -309,7 +309,7 @@ const DevisTemplate = ({
             <View style={{ ...styles.tableCol, width: "50%" }}>
               <Text style={styles.text}>
                 {formatPrice(
-                  sum(lines.map((e) => e.quantity * e.unitPrice)) *
+                  sum(lines.length > 0 ? lines.map((e) => e.quantity * e.unitPrice) : [0]) *
                     (excludeTva ? 1 : 1.2),
                   "FR-fr",
                   "EUR"

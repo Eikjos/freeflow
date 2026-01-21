@@ -31,3 +31,23 @@ export const createInvoice = async (
     throw new Error(res.error);
   });
 };
+
+export const validateQuote = async (id: number) => {
+  return client<void>(`invoices/${id}/validate`, { method : 'POST'}).then(res => {
+    if (res.ok) return res.data
+    throw new Error(res.error);
+  }).catch((e) => {
+    throw new Error(e);
+  })
+}
+
+export const payInvoice = async (id: number) => {
+  return client<void>(`invoices/${id}/pay`, { method: 'POST'}).then((res) => {
+    if (res.ok) {
+      return res.data;
+    }
+    throw new Error(res.error);
+  }).catch((e) => {
+    throw new Error(e);
+  })
+}

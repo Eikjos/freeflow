@@ -222,4 +222,26 @@ export default class InvoiceService {
       invoice.credits,
     );
   }
+
+  async validate(id: number, customerId: number) {
+    const quote = await this.prisma.invoice.findFirst({
+      where: { id, customerId, type: 'QUOTE' },
+    });
+    if (!quote) throw new NotFoundException('quote.notFound');
+    await this.prisma.invoice.update({
+      where: { id, customerId, type: 'QUOTE' },
+      data: { status: 'VALIDATE' },
+    });
+  }
+
+  async pay(id: number, customerId: number) {
+    const invoice = await this.prisma.invoice.findFirst({
+      where: { id, customerId, type: 'INVOICE' },
+    });
+    if (!invoice) throw new NotFoundException();
+    await this.prisma.invoice.update({
+      where: { id, customerId, type: 'INVOICE' },
+      data: { status: 'PAYED' },
+    });
+  }
 }

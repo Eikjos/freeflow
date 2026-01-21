@@ -8,10 +8,13 @@ import {
 } from "@components/ui/tooltip";
 import { InvoiceData, InvoiceLineData } from "@repo/shared-types";
 import { ColumnDef } from "@tanstack/react-table";
+import { payInvoice, validateQuote } from "actions/invoice";
 import clsx from "clsx";
 import dayjs from "dayjs";
-import { FolderInput, Printer, ReceiptEuro, Send } from "lucide-react";
+import { Banknote, ClipboardCheck, FolderInput, Printer, ReceiptEuro, Send } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
+import getQueryClient from "../../../lib/query-client";
 import {
   formatPrice,
   getMediaUrl,
@@ -23,15 +26,43 @@ export type InvoiceTableProps = {
   isLoading: boolean;
   className?: string;
   isCustomer?: boolean;
+  onRefetch?: () => void;
 };
 
 export default function InvoiceTable({
   data,
   isLoading,
   className,
-  isCustomer = false
+  isCustomer = false, 
+  onRefetch = () => { }
 }: InvoiceTableProps) {
   const t = useTranslations();
+  const queryClient = getQueryClient();
+
+  const handleValidateQuote = (id : number) => {
+    validateQuote(id).then(() => {
+      queryClient.invalidateQueries({
+        queryKey: ["invoices"]
+      });
+      onRefetch();
+      toast.success("Le devis a bien été validé.")
+    }).catch(e => {
+      toast.error(e.message);
+    });
+  }
+
+  const handlePayInvoice = (id: number) => {
+    payInvoice(id).then(() => {
+      queryClient.invalidateQueries({
+        queryKey: ["invoices"]
+      });
+      onRefetch();
+      toast.success("La facture a bien été payé.")
+    }).catch((e) => {
+      toast.error(e.message);
+    })
+  }
+ 
   const columnsDef: ColumnDef<InvoiceData>[] = [
     {
       accessorKey: "number",
@@ -133,54 +164,93 @@ export default function InvoiceTable({
       id: "actions",
       accessorKey: "",
       cell: ({ row }) => {
-        return (
-          <div className="flex flex-row justify-end gap-5 mr-10 ml-auto">
-            {row.original.type === "QUOTE" &&
-              row.original.status === "VALIDATE" && (
+        if (!isCustomer) {
+          return (
+            <div className="flex flex-row justify-end gap-5 mr-10 ml-auto">
+              {row.original.type === "QUOTE" &&
+                row.original.status === "VALIDATE" && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <a href={`/invoices/create?devisId=${row.original.id}`}>
+                        <FolderInput size={15}></FolderInput>
+                      </a>
+                    </TooltipTrigger>
+                    <TooltipContent>{t("devis.transformInvoice")}</TooltipContent>
+                  </Tooltip>
+                )}
+              {row.original.type === "INVOICE" && (
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <a href={`/invoices/create?devisId=${row.original.id}`}>
-                      <FolderInput size={15}></FolderInput>
+                    <a href={`/credits/create?invoiceId=${row.original.id}`}>
+                      <ReceiptEuro size={15}></ReceiptEuro>
                     </a>
                   </TooltipTrigger>
-                  <TooltipContent>{t("devis.transformInvoice")}</TooltipContent>
+                  <TooltipContent>{t("credit.createButton")}</TooltipContent>
                 </Tooltip>
               )}
-            {row.original.type === "INVOICE" && (
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <a href={`/credits/create?invoiceId=${row.original.id}`}>
-                    <ReceiptEuro size={15}></ReceiptEuro>
+                <TooltipTrigger>
+                  <a href={getMediaUrl(row.original.mediaId)}>
+                    <Printer size={15}></Printer>
                   </a>
                 </TooltipTrigger>
-                <TooltipContent>{t("credit.createButton")}</TooltipContent>
+                <TooltipContent>
+                  {t("common.print")}{" "}
+                  {row.original.type === "INVOICE"
+                    ? t("invoice.theInvoice")
+                    : t("devis.theDevis")}
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger>
+                  <Send size={15}></Send>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {t("common.resend")}{" "}
+                  {row.original.type === "INVOICE"
+                    ? t("invoice.theInvoice")
+                    : t("devis.theDevis")}
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          );
+        }
+        return (
+          <div className="flex flex-row justify-end gap-5">
+             <Tooltip>
+                <TooltipTrigger>
+                  <a href={getMediaUrl(row.original.mediaId)}>
+                    <Printer size={15}></Printer>
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {t("common.print")}{" "}
+                  {row.original.type === "INVOICE"
+                    ? t("invoice.theInvoice")
+                    : t("devis.theDevis")}
+                </TooltipContent>
+            </Tooltip>
+            {row.original.type == "QUOTE" && (
+              <Tooltip>
+                <TooltipContent>
+                  Valider le devis
+                </TooltipContent>
+                <TooltipTrigger>
+                  <ClipboardCheck size={15} onClick={() => handleValidateQuote(row.original.id)}/>
+                </TooltipTrigger>
               </Tooltip>
             )}
-            <Tooltip>
-              <TooltipTrigger>
-                <a href={getMediaUrl(row.original.mediaId)}>
-                  <Printer size={15}></Printer>
-                </a>
-              </TooltipTrigger>
-              <TooltipContent>
-                {t("common.print")}{" "}
-                {row.original.type === "INVOICE"
-                  ? t("invoice.theInvoice")
-                  : t("devis.theDevis")}
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger>
-                <Send size={15}></Send>
-              </TooltipTrigger>
-              <TooltipContent>
-                {t("common.resend")}{" "}
-                {row.original.type === "INVOICE"
-                  ? t("invoice.theInvoice")
-                  : t("devis.theDevis")}
-              </TooltipContent>
-            </Tooltip>
+            {row.original.type == "INVOICE" && (
+              <Tooltip>
+                <TooltipContent>
+                  Indiquer que la facture a été payé
+                </TooltipContent>
+                <TooltipTrigger>
+                  <Banknote size={15} onClick={() => handlePayInvoice(row.original.id)} />
+                </TooltipTrigger>
+              </Tooltip>
+            )}
           </div>
         );
       },
