@@ -1,4 +1,4 @@
-import { InvoiceCreateData } from "@repo/shared-types";
+import { InvoiceCreateData, QuoteValidateData } from "@repo/shared-types";
 import { client } from "../../lib/client";
 
 export const createInvoice = async (
@@ -32,8 +32,19 @@ export const createInvoice = async (
   });
 };
 
-export const validateQuote = async (id: number) => {
-  return client<void>(`invoices/${id}/validate`, { method : 'POST'}).then(res => {
+export const sendValidationQuote = async (id: number) => {
+  return client<void>(`invoices/${id}/send-validation`, { method : 'POST'});
+}
+
+export const validateQuote = async (id: number, value: boolean, code?: string) => {
+  return client<void>(`invoices/${id}/validate`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        value: value,
+        code
+      } as QuoteValidateData)
+    }).then(res => {
     if (res.ok) return res.data
     throw new Error(res.error);
   }).catch((e) => {

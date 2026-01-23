@@ -12,7 +12,8 @@ import {
   InvoiceLineCreateData,
 } from "@repo/shared-types";
 import dayjs from "dayjs";
-import { formatPrice, getMediaUrl } from "../../../lib/utils";
+import type { ReactElement } from "react";
+import { formatPrice, getMediaUrl } from "../utils/utils";
 
 const styles = StyleSheet.create({
   page: {
@@ -129,8 +130,7 @@ const styles = StyleSheet.create({
   },
 });
 
-// Create Document Component
-const DevisTemplate = ({
+export function InvoiceTemplate({
   title,
   number,
   customer,
@@ -139,6 +139,9 @@ const DevisTemplate = ({
   information,
   maskName,
   excludeTva,
+  devisNumber,
+  devisDate,
+  apiUrl
 }: {
   title?: string;
   number?: string;
@@ -148,7 +151,10 @@ const DevisTemplate = ({
   information?: InvoiceInformation;
   maskName?: boolean;
   excludeTva?: boolean;
-}) => {
+  devisNumber?: string;
+  devisDate?: Date;
+  apiUrl: string;
+}) : ReactElement {
   const sum = (values: number[]) => {
     let result = 0;
     values.map((v) => {
@@ -164,7 +170,7 @@ const DevisTemplate = ({
           <View style={styles.containerLogo}>
             {information?.enterprise.mediaId && (
               <Image
-                src={getMediaUrl(information?.enterprise.mediaId)}
+                src={getMediaUrl(apiUrl, information?.enterprise.mediaId)}
                 style={styles.logo}
               />
             )}
@@ -176,13 +182,13 @@ const DevisTemplate = ({
         <View style={styles.containerHeader}>
           <View style={styles.containerInfo}>
             <Text style={styles.textImportant}>
-              Devis n°DEV-{String(number).padStart(5, "0")}
+              Facture n°{information?.prefixe}-{String(number).padStart(5, "0")}
             </Text>
             <View>
               <Text style={[styles.text]}>
                 Date : {date ? dayjs(date).format("DD/MM/YYYY") : ""}
               </Text>
-              <Text style={styles.text}>Devis valable pendant 30 jours</Text>
+              <Text style={styles.text}>Paiement à la réception</Text>
             </View>
           </View>
           <View style={styles.informationContainer}>
@@ -225,6 +231,13 @@ const DevisTemplate = ({
             )}
           </View>
         </View>
+
+        {devisNumber && (
+          <Text style={styles.text}>
+            D'après le devis {devisNumber} du{" "}
+            {dayjs(devisDate).format("DD/MM/YYYY")}.
+          </Text>
+        )}
 
         <Text style={styles.title}>{title}</Text>
         <View style={styles.table}>
@@ -287,7 +300,7 @@ const DevisTemplate = ({
             >
               <Text style={styles.text}>
                 {formatPrice(
-                  lines.length > 0 ? sum(lines.map((e) => e.quantity * e.unitPrice)) : 0, 
+                  sum(lines.map((e) => e.quantity * e.unitPrice)),
                   "FR-fr",
                   "EUR"
                 )}
@@ -309,7 +322,7 @@ const DevisTemplate = ({
             <View style={{ ...styles.tableCol, width: "50%" }}>
               <Text style={styles.text}>
                 {formatPrice(
-                  sum(lines.length > 0 ? lines.map((e) => e.quantity * e.unitPrice) : [0]) *
+                  sum(lines.map((e) => e.quantity * e.unitPrice)) *
                     (excludeTva ? 1 : 1.2),
                   "FR-fr",
                   "EUR"
@@ -322,52 +335,21 @@ const DevisTemplate = ({
           {excludeTva ? (
             <Text style={styles.textTVA}>
               TVA non applicable, article 293 B du CGI. Paiement sous 30 jours à
-              compter de la date de facture.
+              compter de la date de facture. Tout retard de paiement entraînera
+              des pénalités au taux de 10% annuel, ainsi qu'une indemnité
+              forfaitaire de 40 € pour frais de recouvrement (article L441-10 du
+              Code de commerce).
             </Text>
           ) : (
-            <Text style={styles.textTVA}></Text>
+            <Text style={styles.textTVA}>
+              Paiement sous 30 jours à compter de la date de facture. Tout
+              retard de paiement entraînera des pénalités au taux de 10% annuel,
+              ainsi qu'une indemnité forfaitaire de 40 € pour frais de
+              recouvrement (article L441-10 du Code de commerce).
+            </Text>
           )}
-        </View>
-        <View
-          style={{
-            marginTop: "20px",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <View>
-            <Text style={{ fontSize: "12px", fontWeight: "bold" }}>
-              Moyens de paiement
-            </Text>
-            <Text style={{ fontSize: "10px" }}>Virement bancaire</Text>
-          </View>
-          <View
-            style={{
-              borderWidth: "1px",
-              borderColor: "#3e6450",
-              borderRadius: "10px",
-              marginRight: "50px",
-              padding: "10px",
-              paddingBottom: "75px",
-              width: "50%",
-            }}
-          >
-            <Text style={{ fontSize: "12px", fontWeight: "bold" }}>Date:</Text>
-            <Text
-              style={{
-                fontSize: "12px",
-                fontWeight: "bold",
-                marginTop: "20px",
-              }}
-            >
-              Signature:
-            </Text>
-          </View>
         </View>
       </Page>
     </Document>
   );
 };
-
-export default DevisTemplate;

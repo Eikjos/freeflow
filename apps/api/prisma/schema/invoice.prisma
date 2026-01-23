@@ -1,24 +1,29 @@
 model Invoice {
-  id           Int        @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
   number       String
   name         String
   date         DateTime
   customerId   Int
   enterpriseId Int
-  createdAt    DateTime @default(now())
+  createdAt    DateTime      @default(now())
   updatedAt    DateTime
-  mediaId      Int?       @unique
-  devisId      Int?       @unique
+  mediaId      Int?          @unique
+  devisId      Int?          @unique
+  code         String?
+  codeDate     DateTime?
+  signedBy     Int?
+  signedDate   DateTime?
   type         InvoiceType
   status       StatusInvoice
-  customer     Customer   @relation(fields: [customerId], references: [id])
-  enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
-  media        Media?     @relation(fields: [mediaId], references: [id])
-  invoiceLines  InvoiceLine[]
-  excludeTva   Boolean  @default(false)
-  devis        Invoice? @relation("devisInvoice", fields: [devisId], references: [id])
-  invoice     Invoice? @relation("devisInvoice")
-  credits     Credit[]
+  customer     Customer      @relation(fields: [customerId], references: [id])
+  enterprise   Enterprise    @relation(fields: [enterpriseId], references: [id])
+  media        Media?        @relation(fields: [mediaId], references: [id])
+  invoiceLines InvoiceLine[]
+  excludeTva   Boolean       @default(false)
+  devis        Invoice?      @relation("devisInvoice", fields: [devisId], references: [id])
+  invoice      Invoice?      @relation("devisInvoice")
+  credits      Credit[]
+  signatory    User?         @relation(fields: [signedBy], references: [id])
 }
 
 enum StatusInvoice {

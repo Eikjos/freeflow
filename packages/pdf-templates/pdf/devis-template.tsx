@@ -12,7 +12,8 @@ import {
   InvoiceLineCreateData,
 } from "@repo/shared-types";
 import dayjs from "dayjs";
-import { formatPrice, getMediaUrl } from "../../../lib/utils";
+import type { ReactElement } from 'react';
+import { formatPrice, getMediaUrl } from "../utils/utils";
 
 const styles = StyleSheet.create({
   page: {
@@ -129,8 +130,8 @@ const styles = StyleSheet.create({
   },
 });
 
-// Create Document Component
-const InvoiceTemplate = ({
+
+export function DevisTemplate({
   title,
   number,
   customer,
@@ -139,20 +140,24 @@ const InvoiceTemplate = ({
   information,
   maskName,
   excludeTva,
-  devisNumber,
-  devisDate,
+  isSigned,
+  signedDate,
+  user,
+  apiUrl
 }: {
-  title?: string;
-  number?: string;
-  date?: Date;
-  customer?: CustomerDetailModel;
-  lines: InvoiceLineCreateData[];
-  information?: InvoiceInformation;
-  maskName?: boolean;
-  excludeTva?: boolean;
-  devisNumber?: string;
-  devisDate?: Date;
-}) => {
+    title?: string;
+    number?: string;
+    date?: Date;
+    customer?: CustomerDetailModel;
+    lines: InvoiceLineCreateData[];
+    information?: InvoiceInformation;
+    maskName?: boolean;
+    excludeTva?: boolean;
+    isSigned?: boolean;
+    signedDate?: Date;
+    user: string;
+    apiUrl: string;
+}) : ReactElement {
   const sum = (values: number[]) => {
     let result = 0;
     values.map((v) => {
@@ -168,7 +173,7 @@ const InvoiceTemplate = ({
           <View style={styles.containerLogo}>
             {information?.enterprise.mediaId && (
               <Image
-                src={getMediaUrl(information?.enterprise.mediaId)}
+                src={getMediaUrl(apiUrl, information?.enterprise.mediaId)}
                 style={styles.logo}
               />
             )}
@@ -180,13 +185,13 @@ const InvoiceTemplate = ({
         <View style={styles.containerHeader}>
           <View style={styles.containerInfo}>
             <Text style={styles.textImportant}>
-              Facture n°{information?.prefixe}-{String(number).padStart(5, "0")}
+              Devis n°DEV-{String(number).padStart(5, "0")}
             </Text>
             <View>
               <Text style={[styles.text]}>
                 Date : {date ? dayjs(date).format("DD/MM/YYYY") : ""}
               </Text>
-              <Text style={styles.text}>Paiement à la réception</Text>
+              <Text style={styles.text}>Devis valable pendant 30 jours</Text>
             </View>
           </View>
           <View style={styles.informationContainer}>
@@ -229,13 +234,6 @@ const InvoiceTemplate = ({
             )}
           </View>
         </View>
-
-        {devisNumber && (
-          <Text style={styles.text}>
-            D'après le devis {devisNumber} du{" "}
-            {dayjs(devisDate).format("DD/MM/YYYY")}.
-          </Text>
-        )}
 
         <Text style={styles.title}>{title}</Text>
         <View style={styles.table}>
@@ -298,7 +296,7 @@ const InvoiceTemplate = ({
             >
               <Text style={styles.text}>
                 {formatPrice(
-                  sum(lines.map((e) => e.quantity * e.unitPrice)),
+                  lines.length > 0 ? sum(lines.map((e) => e.quantity * e.unitPrice)) : 0, 
                   "FR-fr",
                   "EUR"
                 )}
@@ -320,7 +318,7 @@ const InvoiceTemplate = ({
             <View style={{ ...styles.tableCol, width: "50%" }}>
               <Text style={styles.text}>
                 {formatPrice(
-                  sum(lines.map((e) => e.quantity * e.unitPrice)) *
+                  sum(lines.length > 0 ? lines.map((e) => e.quantity * e.unitPrice) : [0]) *
                     (excludeTva ? 1 : 1.2),
                   "FR-fr",
                   "EUR"
@@ -333,23 +331,55 @@ const InvoiceTemplate = ({
           {excludeTva ? (
             <Text style={styles.textTVA}>
               TVA non applicable, article 293 B du CGI. Paiement sous 30 jours à
-              compter de la date de facture. Tout retard de paiement entraînera
-              des pénalités au taux de 10% annuel, ainsi qu'une indemnité
-              forfaitaire de 40 € pour frais de recouvrement (article L441-10 du
-              Code de commerce).
+              compter de la date de facture.
             </Text>
           ) : (
-            <Text style={styles.textTVA}>
-              Paiement sous 30 jours à compter de la date de facture. Tout
-              retard de paiement entraînera des pénalités au taux de 10% annuel,
-              ainsi qu'une indemnité forfaitaire de 40 € pour frais de
-              recouvrement (article L441-10 du Code de commerce).
-            </Text>
+            <Text style={styles.textTVA}></Text>
           )}
+        </View>
+        <View
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <View>
+            <Text style={{ fontSize: "12px", fontWeight: "bold" }}>
+              Moyens de paiement
+            </Text>
+            <Text style={{ fontSize: "10px" }}>Virement bancaire</Text>
+          </View>
+          <View
+            style={{
+              borderWidth: "1px",
+              borderColor: "#3e6450",
+              borderRadius: "10px",
+              marginRight: "50px",
+              padding: "10px",
+              paddingBottom: "75px",
+              width: "50%",
+            }}
+          >
+            <Text style={{ fontSize: "12px", fontWeight: "bold" }}>Date: {isSigned ? dayjs(signedDate).format("DD/MM/YYYY") : ''}</Text>
+            <Text
+              style={{
+                fontSize: "12px",
+                fontWeight: "bold",
+                marginTop: "20px",
+              }}
+            >
+              Signature:
+              <br />
+              {isSigned && <Text style={{ fontSize: "10px", fontWeight: 'normal'}}>
+                Document signé électroniquement par {user}, représentant habilité de la société {customer?.name},
+                le {dayjs(signedDate).format("DD/MM/YYYY")}, conformément à l’article 1367 du Code civil et au règlement eIDAS (UE n°910/2014).
+              </Text>}
+            </Text>
+          </View>
         </View>
       </Page>
     </Document>
   );
 };
-
-export default InvoiceTemplate;

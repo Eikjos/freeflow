@@ -97,3 +97,12 @@ export type InvoiceFilterData = {
   endDate: Date;
   [key: string]: string | number | Date;
 };
+
+export const ValidateQuoteValidation = z.object({
+  code: z.string().min(5, { message: "Le code de validation est requis." })
+});
+
+export type QuoteValidateData = {
+  value: boolean;
+  code?: string;
+}

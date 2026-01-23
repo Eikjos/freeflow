@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { Invoice } from '@prisma/client';
 import { render } from '@react-email/render';
 import {
   CustomerInviteMail,
   InscriptionMail,
   InvoiceMail,
   QuoteMail,
+  ValidateQuoteMail,
 } from '@repo/email-templates';
 import { createTransport, Transporter } from 'nodemailer';
 
@@ -53,6 +55,22 @@ export default class MailingService {
       from: 'ne-pas-repondre@freeflow.fr',
       to,
       subject: 'Une nouvelle facture est disponible',
+      html: emailHtml,
+    });
+  }
+
+  async sendQuoteValidationMail(to: string, code: string, devis: Invoice) {
+    const emailHtml = await render(
+      <ValidateQuoteMail
+        clientUrl={this.clientUrl}
+        code={code}
+        devis={devis.number}
+      />,
+    );
+    this.transporter.sendMail({
+      from: 'ne-pas-repondre@freeflow.fr',
+      to,
+      subject: `Code de validation pour le devis ${devis.number}`,
       html: emailHtml,
     });
   }

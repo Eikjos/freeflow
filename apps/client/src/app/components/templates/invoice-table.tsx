@@ -11,8 +11,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { payInvoice, validateQuote } from "actions/invoice";
 import clsx from "clsx";
 import dayjs from "dayjs";
-import { Banknote, ClipboardCheck, FolderInput, Printer, ReceiptEuro, Send } from "lucide-react";
+import { Banknote, ClipboardCheck, FolderInput, Printer, ReceiptEuro, Send, TicketX } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { toast } from "sonner";
 import getQueryClient from "../../../lib/query-client";
 import {
@@ -20,6 +21,7 @@ import {
   getMediaUrl,
   invoiceStatusToString,
 } from "../../../lib/utils";
+import ValidateQuoteDialog from "./validate-quote-dialog";
 
 export type InvoiceTableProps = {
   data: InvoiceData[];
@@ -38,9 +40,10 @@ export default function InvoiceTable({
 }: InvoiceTableProps) {
   const t = useTranslations();
   const queryClient = getQueryClient();
+  const [number, setNumber] = useState<string | undefined>();
 
-  const handleValidateQuote = (id : number) => {
-    validateQuote(id).then(() => {
+  const handleValidateQuote = (id: number, value: boolean, code?: string) => {
+    validateQuote(id, value, code).then(() => {
       queryClient.invalidateQueries({
         queryKey: ["invoices"]
       });
@@ -231,23 +234,38 @@ export default function InvoiceTable({
                     : t("devis.theDevis")}
                 </TooltipContent>
             </Tooltip>
-            {row.original.type == "QUOTE" && (
+            {row.original.type === "QUOTE" && row.original.status === "WAITING_VALIDATION" && (
               <Tooltip>
                 <TooltipContent>
                   Valider le devis
                 </TooltipContent>
-                <TooltipTrigger>
-                  <ClipboardCheck size={15} onClick={() => handleValidateQuote(row.original.id)}/>
-                </TooltipTrigger>
+                  <ValidateQuoteDialog
+                    trigger={
+                      <TooltipTrigger>
+                        <ClipboardCheck size={15} />
+                      </TooltipTrigger>}
+                    devis={row.original}
+                    onValidate={onRefetch}
+                  />
               </Tooltip>
             )}
-            {row.original.type == "INVOICE" && (
+            {row.original.type === "INVOICE" && row.original.status === "WAITING_PAYED" && (
               <Tooltip>
                 <TooltipContent>
                   Indiquer que la facture a été payé
                 </TooltipContent>
                 <TooltipTrigger>
                   <Banknote size={15} onClick={() => handlePayInvoice(row.original.id)} />
+                </TooltipTrigger>
+              </Tooltip>
+            )}
+            {row.original.type === "QUOTE" && row.original.status === "WAITING_VALIDATION" && (
+              <Tooltip>
+                <TooltipContent>
+                  Refuser le devis
+                </TooltipContent>
+                <TooltipTrigger>
+                  <TicketX size={15} onClick={() => handleValidateQuote(row.original.id, false)}/>
                 </TooltipTrigger>
               </Tooltip>
             )}
@@ -258,11 +276,14 @@ export default function InvoiceTable({
   ];
 
   return (
-    <DataTable
-      columns={columnsDef}
-      data={data ?? []}
-      isLoading={isLoading}
-      className={className}
-    />
+    <>
+      <DataTable
+        columns={columnsDef}
+        data={data ?? []}
+        isLoading={isLoading}
+        className={className}
+      />
+    </>
+  
   );
 }
