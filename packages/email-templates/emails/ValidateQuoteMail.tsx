@@ -20,13 +20,15 @@ export function ValidateQuoteMail({ clientUrl, code, devis } : InvoiceMailProps)
         <Text>
           Bonjour,
           <br />
-          Voici votre code de validation pour le devis { devis }. Le code est valable pendant 5 minutes.
+          Voici votre code de validation Freeflow :
           <br />
         </Text>
       </div>
       <Text className="font-bold text-center text-2xl">{ code }</Text>
       <div className="px-8">
         <Text>
+          Ce code est valable pendant cinq minutes.
+          <br />
           Si vous n'êtes pas à l'origine de cette demande. Veuillez contacter le support.
           <br />
           Cordialement,

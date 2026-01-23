@@ -237,7 +237,7 @@ export default function InvoiceTable({
             {row.original.type === "QUOTE" && row.original.status === "WAITING_VALIDATION" && (
               <Tooltip>
                 <TooltipContent>
-                  Valider le devis
+                  {t("devis.accept")}
                 </TooltipContent>
                   <ValidateQuoteDialog
                     trigger={
@@ -252,7 +252,7 @@ export default function InvoiceTable({
             {row.original.type === "INVOICE" && row.original.status === "WAITING_PAYED" && (
               <Tooltip>
                 <TooltipContent>
-                  Indiquer que la facture a été payé
+                  {t("invoice.indicatePay")}
                 </TooltipContent>
                 <TooltipTrigger>
                   <Banknote size={15} onClick={() => handlePayInvoice(row.original.id)} />
@@ -262,7 +262,7 @@ export default function InvoiceTable({
             {row.original.type === "QUOTE" && row.original.status === "WAITING_VALIDATION" && (
               <Tooltip>
                 <TooltipContent>
-                  Refuser le devis
+                  {t("devis.refuse")}
                 </TooltipContent>
                 <TooltipTrigger>
                   <TicketX size={15} onClick={() => handleValidateQuote(row.original.id, false)}/>

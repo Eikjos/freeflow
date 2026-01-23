@@ -5,6 +5,7 @@ import { InputOTPWithController } from "@components/ui/input-otp";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InvoiceData, QuoteValidateData, ValidateQuoteValidation } from "@repo/shared-types";
 import { sendValidationQuote, validateQuote } from "actions/invoice";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -18,6 +19,7 @@ type ValidateQuoteDialogProps = {
 
 export default function ValidateQuoteDialog({ devis, onValidate, trigger }: ValidateQuoteDialogProps) {
   const [open, setOpen] = useState(false);
+  const t = useTranslations();
   const form = useForm<QuoteValidateData>({
     defaultValues: {
       code: "",
@@ -40,7 +42,7 @@ export default function ValidateQuoteDialog({ devis, onValidate, trigger }: Vali
   const onSubmit = (value : QuoteValidateData) => {
     validateQuote(devis.id, true, value.code).then(() => {
       onValidate();
-      toast.success("Le devis a bien été validé.");
+      toast.success(t("devis.success.validate"));
     }).catch(e => {
       toast.error(e.message)
     }).finally(() => {
@@ -56,15 +58,15 @@ export default function ValidateQuoteDialog({ devis, onValidate, trigger }: Vali
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-3xl">
-            Validation du devis : {devis.number}
+            {t("devis.validateTitle", { number: devis.number })}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Form {...form}>
             <div className="flex flex-col items-center">
-              <p className="text-sm my-5">Un email a été envoyé sur l'adresse mail de votre entreprise. Le code expire dans 5 minutes.</p>
+              <p className="text-sm my-5">{t("devis.validateContent")}</p>
               <InputOTPWithController length={5} name="code" control={form.control}  className="mb-5"/>
-              <Button type="submit">Valider</Button>
+              <Button type="submit">{t("common.validate")}</Button>
             </div>
           </Form>
          
