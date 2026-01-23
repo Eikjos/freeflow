@@ -40,7 +40,7 @@ export default class CustomerController {
     @Req() req: Request,
   ) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
-    return await this.customerService.getStats(enterpriseId, months);
+    return this.customerService.getStats(enterpriseId, months);
   }
 
   @Get()
@@ -51,7 +51,7 @@ export default class CustomerController {
     @Req() req: Request,
   ) {
     const enterpriseId = req.user['enterpriseId'];
-    return await this.customerService.findAll(enterpriseId, filter);
+    return this.customerService.findAll(enterpriseId, filter);
   }
 
   @Post()
@@ -59,14 +59,14 @@ export default class CustomerController {
   @HttpCode(200)
   async create(@Body() model: CustomerCreateDto, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
-    return await this.customerService.create(enterpriseId, model);
+    return this.customerService.create(enterpriseId, model);
   }
 
   @UseGuards(AccessTokenGuard)
   @Get('count')
   async count(@Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
-    return await this.customerService.count(enterpriseId);
+    return this.customerService.count(enterpriseId);
   }
 
   @Put(':id')
@@ -77,7 +77,7 @@ export default class CustomerController {
     @Req() req: Request,
   ) {
     const enterpriseId = req.user['enterpriseId'];
-    return await this.customerService.update(
+    return this.customerService.update(
       id,
       model,
       enterpriseId ? parseInt(enterpriseId) : null,
@@ -90,13 +90,10 @@ export default class CustomerController {
     const enterpriseId = req.user['enterpriseId'];
     const customerId = req.user['customerId'];
     if (enterpriseId) {
-      return await this.customerService.findByIdAndEnterpriseId(
-        id,
-        enterpriseId,
-      );
+      return this.customerService.findByIdAndEnterpriseId(id, enterpriseId);
     }
     if (customerId == id) {
-      return await this.customerService.findById(parseInt(customerId));
+      return this.customerService.findById(parseInt(customerId));
     }
     throw new ForbiddenException();
   }
@@ -106,7 +103,7 @@ export default class CustomerController {
   @UseGuards(AccessTokenGuard)
   async delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
-    return await this.customerService.delete(id, enterpriseId);
+    return this.customerService.delete(id, enterpriseId);
   }
 
   @Post(':customerId/invite')
@@ -117,10 +114,7 @@ export default class CustomerController {
     @Req() req: Request,
   ) {
     const enterpriseId = req.user['enterpriseId'];
-    return await this.customerService.invite(
-      customerId,
-      parseInt(enterpriseId),
-    );
+    return this.customerService.invite(customerId, parseInt(enterpriseId));
   }
 
   @Get(':customerId/projects')
@@ -142,6 +136,6 @@ export default class CustomerController {
     @Req() req: Request,
   ) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
-    return await this.customerService.getStatsByYear(year, enterpriseId);
+    return this.customerService.getStatsByYear(year, enterpriseId);
   }
 }

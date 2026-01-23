@@ -58,6 +58,6 @@ export default class ExpenseController {
   @UseGuards(AccessTokenGuard)
   async delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = req.user['entrepriseId'];
-    return await this.expenseService.delete(id, enterpriseId);
+    return this.expenseService.delete(id, enterpriseId);
   }
 }

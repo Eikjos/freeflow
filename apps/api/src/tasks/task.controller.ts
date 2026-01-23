@@ -73,7 +73,7 @@ export default class TasksController {
   ) {
     const enterpriseId = req.user['enterpriseId'];
     const customerId = req.user['customerId'];
-    return await this.taskService.update(
+    return this.taskService.update(
       id,
       model,
       files,
@@ -86,6 +86,6 @@ export default class TasksController {
   @Delete(':id')
   @HttpCode(200)
   async deleteTask(@Param('id', ParseIntPipe) id: number) {
-    return await this.taskService.delete(id);
+    return this.taskService.delete(id);
   }
 }

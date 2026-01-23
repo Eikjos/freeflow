@@ -12,12 +12,12 @@ export default class JuridicShapesController {
   @Get()
   @UseGuards(AccessTokenGuard)
   async findAll() {
-    return await this.juridicShapeService.findAll();
+    return this.juridicShapeService.findAll();
   }
 
   @Get(':code')
   @UseGuards(AccessTokenGuard)
   async findByCode(@Param('code') code: string) {
-    return await this.juridicShapeService.findByCode(code);
+    return this.juridicShapeService.findByCode(code);
   }
 }

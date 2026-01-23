@@ -56,7 +56,7 @@ export default class ProjectController {
   @Get('count')
   async count(@Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
-    return await this.projectService.count(enterpriseId);
+    return this.projectService.count(enterpriseId);
   }
 
   @UseGuards(CustomerGuard, EnterpriseGuard)

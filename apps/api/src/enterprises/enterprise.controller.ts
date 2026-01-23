@@ -54,7 +54,7 @@ export default class EnterprisesController {
   async getInformation(
     @Query('siret') siret: string,
   ): Promise<Omit<EnterpriseInformationDto, 'id'>> {
-    return await this.enterpriseService.getInformationBySiret(siret);
+    return this.enterpriseService.getInformationBySiret(siret);
   }
 
   @UseGuards(AccessTokenGuard)

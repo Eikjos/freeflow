@@ -12,6 +12,6 @@ export default class ExpenseCategoryController {
   @UseGuards(AccessTokenGuard)
   @Get()
   async findAll(): Promise<ExpenseCategoryDto[]> {
-    return await this.expenseCategoryService.findAll();
+    return this.expenseCategoryService.findAll();
   }
 }

@@ -10,12 +10,11 @@ export default class CountryController {
 
   @Get()
   async findAll() {
-    return await this.countryService.findAll();
+    return this.countryService.findAll();
   }
 
   @Get(':id')
   async findById(@Param('id', new ParseIntPipe()) id: number) {
-    const country = await this.countryService.findById(id);
-    return country;
+    return this.countryService.findById(id);
   }
 }
