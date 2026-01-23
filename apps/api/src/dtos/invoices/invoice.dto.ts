@@ -2,6 +2,7 @@ import {
   Credit,
   CreditLine,
   Customer,
+  Enterprise,
   Invoice,
   InvoiceLine,
 } from '@prisma/client';
@@ -11,6 +12,7 @@ import {
   InvoiceStatus,
   InvoiceType,
 } from '@repo/shared-types';
+import EnterpriseInvoiceDto from 'dtos/enterprises/enterprise-invoice.dto';
 import {
   CreditForInvoiceDto,
   mapToCreditForInvoiceDto,
@@ -28,6 +30,7 @@ export class InvoiceDto implements InvoiceData {
   type: InvoiceType;
   mediaId: number;
   excludeTva: boolean;
+  enterprise: EnterpriseInvoiceDto;
   customer: CustomerDetailDto;
   credits: CreditForInvoiceDto[];
 
@@ -35,6 +38,7 @@ export class InvoiceDto implements InvoiceData {
     invoice: Invoice,
     invoiceLines: InvoiceLine[],
     customer: Customer,
+    enterprise: Enterprise,
     credits: (Credit & { creditLines: CreditLine[] })[],
   ) {
     const totalAmount =
@@ -52,6 +56,10 @@ export class InvoiceDto implements InvoiceData {
       totalAmount: totalAmount,
       excludeTva: invoice.excludeTva,
       customer: mapCustomerToDto(customer),
+      enterprise: {
+        id: enterprise.id,
+        name: enterprise.name,
+      },
       mediaId: invoice.mediaId,
       credits: credits.map((e) => mapToCreditForInvoiceDto(e)),
     };

@@ -13,7 +13,7 @@
       "dependsOn": ["^check-types"]
     },
     "dev": {
-      "dependsOn": ["@repo/shared-types#build", "@repo/email-templates#build"],
+      "dependsOn": ["@repo/shared-types#build", "@repo/pdf-templates#build", "@repo/email-templates#build"],
       "cache": false,
       "persistent": false
     }

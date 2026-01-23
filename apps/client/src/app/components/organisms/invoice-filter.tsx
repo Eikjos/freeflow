@@ -16,11 +16,13 @@ import { invoiceStatusToString } from "../../../lib/utils";
 type InvoiceFilterProps = {
   className?: string;
   onChangeFilter: (filter: InvoiceFilterData | undefined) => void;
+  isCustomer?: boolean;
 };
 
 export default function InvoiceFilter({
   className,
   onChangeFilter,
+  isCustomer = false
 }: InvoiceFilterProps) {
   const t = useTranslations();
   const form = useForm<InvoiceFilterData>({
@@ -83,26 +85,28 @@ export default function InvoiceFilter({
                 className="w-1/4"
                 {...form.register("number")}
               />
-              <Autocomplete
-                label={t("common.customer")}
-                placeholder={t("invoice.search.customer")}
-                queryOptions={(filter) =>
-                  getAllCustomersQueryOptions({
-                    page: 0,
-                    pageSize: 20,
-                    asc: "name",
-                    filter: {
-                      name: filter.search,
-                      id: filter.id,
-                    },
-                  })
-                }
-                render={(item) => item.name}
-                filterField="name"
-                fieldIdentifier="id"
-                className="w-1/4"
-                {...form.register("customerId")}
-              />
+              {!isCustomer && (
+                <Autocomplete
+                  label={t("common.customer")}
+                  placeholder={t("invoice.search.customer")}
+                  queryOptions={(filter) =>
+                    getAllCustomersQueryOptions({
+                      page: 0,
+                      pageSize: 20,
+                      asc: "name",
+                      filter: {
+                        name: filter.search,
+                        id: filter.id,
+                      },
+                    })
+                  }
+                  render={(item) => item.name}
+                  filterField="name"
+                  fieldIdentifier="id"
+                  className="w-1/4"
+                  {...form.register("customerId")}
+                />
+              )}
               <Select
                 label={t("common.status")}
                 className="w-1/4"

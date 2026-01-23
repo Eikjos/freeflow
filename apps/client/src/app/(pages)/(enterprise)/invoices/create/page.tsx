@@ -3,7 +3,6 @@
 import Autocomplete from "@components/molecules/autocomplete";
 import CreateInvoiceLineModal from "@components/organisms/create-invoice-line-dialog";
 import InvoiceLineList from "@components/organisms/invoice-line-list";
-import InvoiceTemplate from "@components/templates/invoice-template";
 import { Button } from "@components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Checkbox } from "@components/ui/checkbox";
@@ -14,6 +13,7 @@ import Loading from "@components/ui/loading";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { PDFViewer, pdf } from "@react-pdf/renderer";
+import { InvoiceTemplate } from "@repo/pdf-templates";
 import {
   InvoiceCreateData,
   InvoiceCreateValidation,
@@ -156,6 +156,7 @@ export default function CreateInvoicesPage() {
         lines={values.invoiceLines}
         devisNumber={DevisData?.data?.number}
         devisDate={DevisData?.data?.date}
+        apiUrl={(process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL) ?? ''}
       />
     ).toBlob();
 
@@ -325,6 +326,7 @@ export default function CreateInvoicesPage() {
           maskName={maskNameOnInvoice}
           excludeTva={form.getValues().excludeTva}
           lines={form.getValues().invoiceLines}
+          apiUrl={(process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL) ?? ''}
         />
       </PDFViewer>
     </div>

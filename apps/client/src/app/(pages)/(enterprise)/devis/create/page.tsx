@@ -3,7 +3,6 @@
 import Autocomplete from "@components/molecules/autocomplete";
 import CreateInvoiceLineModal from "@components/organisms/create-invoice-line-dialog";
 import InvoiceLineList from "@components/organisms/invoice-line-list";
-import DevisTemplate from "@components/templates/devis-template";
 import { Button } from "@components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Checkbox } from "@components/ui/checkbox";
@@ -14,6 +13,7 @@ import Loading from "@components/ui/loading";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { PDFViewer, pdf } from "@react-pdf/renderer";
+import { DevisTemplate } from "@repo/pdf-templates";
 import {
   InvoiceCreateData,
   InvoiceCreateValidation,
@@ -90,7 +90,7 @@ export default function CreateDevisPage() {
       const invoiceLine = await getTasksById(value);
       const invoiceLinesOld = form.getValues().invoiceLines;
       if (
-        invoiceLine.ok &&
+        invoiceLine.ok && 
         !invoiceLinesOld.some((e) => e.name === invoiceLine.data?.name)
       ) {
         form.setValue("invoiceLines", [
@@ -123,6 +123,7 @@ export default function CreateDevisPage() {
         maskName={maskNameOnInvoice}
         excludeTva={values.excludeTva}
         lines={values.invoiceLines}
+        apiUrl={(process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL) ?? ''}
       />
     ).toBlob();
 
@@ -230,7 +231,7 @@ export default function CreateDevisPage() {
                 placeholder={t("task.select")}
                 onAdd={() => setModalTaskOpen(true)}
                 addLabel={t("task.add")}
-                {...form.register("invoiceLines", {
+                {...form.register("invoiceLine", {
                   onBlur: forceUpdate,
                   value: undefined,
                   onChange: (event) => handleChangeTask(event.target.value),
@@ -273,6 +274,7 @@ export default function CreateDevisPage() {
           maskName={maskNameOnInvoice}
           excludeTva={form.getValues().excludeTva}
           lines={form.getValues().invoiceLines}
+          apiUrl={(process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL) ?? ''}
         />
       </PDFViewer>
     </div>

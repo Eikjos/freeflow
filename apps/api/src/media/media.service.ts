@@ -14,6 +14,29 @@ export class MediaService {
   constructor(private readonly prisma: PrismaService) {}
 
   // - Methods
+  async uploadBuffer(
+    buffer: Buffer<ArrayBufferLike>,
+    pathname: string,
+    extension: string,
+  ) {
+    try {
+      // Sauvegarder le fichier sur le serveur
+      fs.writeFileSync(pathname, buffer);
+
+      // Save in bdd
+      const media = await this.prisma.media.create({
+        data: {
+          uploadedPath: pathname,
+          extension: extension,
+        },
+      });
+
+      return media.id;
+    } catch (e) {
+      return -1;
+    }
+  }
+
   async upload(file: Express.Multer.File, pathname: string) {
     try {
       const extension = path.extname(file.originalname);

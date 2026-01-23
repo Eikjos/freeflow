@@ -220,6 +220,7 @@
     "edit": "Éditer",
     "emptyData": "Vous n'avez pas encore de données.",
     "enterDescription": "Entrez une description...",
+    "enterprise": "Entreprise",
     "features": "Fonctionnalités",
     "filters": "Filtres",
     "fillWithSiret": " Permet de pré-remplir les informations avec les informations de l'API Sirène en se basant sur le numéro de siret.",
@@ -321,16 +322,21 @@
     }
   },
   "devis": {
+    "accept": "Accepter le devis",
     "title": "Titre du devis",
     "create": "Création d'un devis.",
     "createButton": "Créer un devis",
+    "refuse": "Refuser le devis",
     "notFound": "Le devis n'existe pas.",
     "number": "Le numéro du devis",
     "success": {
-      "create": "La devis a bien été créer."
+      "create": "Le devis a bien été créé.",
+      "validate": "Le devis a bien été validé."
     },
     "transformInvoice": "Transformer le devis en facture",
-    "theDevis": "le devis"
+    "theDevis": "le devis",
+    "validateTitle": "Validation du devis : {number}",
+    "validateContent": "Un email a été envoyé sur l'adresse mail de votre entreprise. Le code expire dans 5 minutes."
   },
   "enterprise": {
     "create": "Création de votre entreprise",
@@ -444,6 +450,7 @@
     "credits": {
       "amount": "Montant des avoirs"
     },
+    "indicatePay": "Indiquer que la facture a été réglé",
     "notIncludeTva": "Ne pas inclure la TVA",
     "maskName": "Masquer le nom",
     "notFound": "La facture est introuvable.",
