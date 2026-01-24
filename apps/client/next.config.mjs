@@ -1,11 +1,7 @@
 /** @type {import('next').NextConfig} */
 import createNextIntlPlugin from "next-intl/plugin";
-import { hostname } from "os";
 
-const withNextIntl = createNextIntlPlugin(
-  // Specify a custom path here
-  "./i18n/request.ts"
-);
+const withNextIntl = createNextIntlPlugin();
 
 const nextConfig = {
   images: {
