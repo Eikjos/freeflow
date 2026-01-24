@@ -206,6 +206,7 @@
   },
   "common": {
     "actions": "Actions",
+    "accessDashboard": "Accèder à l'application",
     "amount": "Montant",
     "apply": "Appliquer",
     "add": "Ajouter",

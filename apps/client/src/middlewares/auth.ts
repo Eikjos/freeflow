@@ -1,7 +1,6 @@
-import { AuthResponseData } from "@repo/shared-types";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { client } from "../lib/client";
+import { refresh } from "../lib/api/auth";
 import { CustomerInfo } from "../types/customer-info-type";
 import { EnterpriseInfo } from "../types/enterprise-info-type";
 import { UserInfoType as UserInfo } from "../types/user-info-types";
@@ -14,11 +13,7 @@ export async function AuthMiddleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  return client<AuthResponseData>(`auth/refresh`, {
-    method: "post",
-    credentials: "include",
-    token: authToken.value,
-  })
+  return refresh(authToken.value)
     .then((data) => {
       const responseOK = NextResponse.next();
       if (data.ok) {
@@ -71,7 +66,7 @@ export async function AuthMiddleware(req: NextRequest) {
       cookieStore.delete("refreshToken");
       return NextResponse.redirect(new URL("/login", req.url));
     })
-    .catch((e) => {
+    .catch(() => {
       cookieStore.delete("access_token");
       cookieStore.delete("refreshToken");
       return NextResponse.redirect(new URL("/login", req.url));
