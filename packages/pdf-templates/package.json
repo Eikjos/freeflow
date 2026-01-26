@@ -4,15 +4,20 @@
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsup ./index.ts --dts --format esm,cjs --clean",
-    "dev": "tsup ./index.ts --dts --format esm,cjs --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist *.tsbuildinfo"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/react": "19",
+    "@types/react-dom": "19",
     "rollup": "^4.34.7",
     "tsup": "^7.3.0",
     "typescript": "^5.7.2",
@@ -22,6 +27,6 @@
     "@react-pdf/renderer": "^4.3.0",
     "@repo/shared-types": "workspace:*",
     "dayjs": "^1.11.19",
-    "react": "19.1.0"
+    "react": "19.2.0"
   }
 }

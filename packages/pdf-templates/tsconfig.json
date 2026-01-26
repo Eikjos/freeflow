@@ -1,22 +1,25 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
+    "outDir": "dist",
+    "rootDir": ".",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "target": "ES2021",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "incremental": false,
-    "skipLibCheck": true,
-    "strictNullChecks": true,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "declaration": true,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "strict": true,
+    "skipLibCheck": true
   },
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "index.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
 }

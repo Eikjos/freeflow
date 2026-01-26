@@ -1,2 +1,3 @@
-export * from "./pdf/devis-template";
-export * from "./pdf/invoice-template";
+export * from "./pdf/devis-template.js";
+export * from "./pdf/invoice-template.js";
+

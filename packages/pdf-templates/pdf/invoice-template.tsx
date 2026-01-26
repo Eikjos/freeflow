@@ -12,8 +12,7 @@ import {
   InvoiceLineCreateData,
 } from "@repo/shared-types";
 import dayjs from "dayjs";
-import type { ReactElement } from "react";
-import { formatPrice, getMediaUrl } from "../utils/utils";
+import { formatPrice, getMediaUrl } from "../utils/utils.js";
 
 const styles = StyleSheet.create({
   page: {
@@ -154,7 +153,7 @@ export function InvoiceTemplate({
   devisNumber?: string;
   devisDate?: Date;
   apiUrl: string;
-}) : ReactElement {
+}) {
   const sum = (values: number[]) => {
     let result = 0;
     values.map((v) => {
