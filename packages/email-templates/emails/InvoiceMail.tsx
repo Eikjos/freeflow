@@ -1,13 +1,20 @@
 import { Button, Text } from "@react-email/components";
+import dayjs from "dayjs";
+import { formatPrice } from '../utils';
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import TailwindConfig from "./components/TailwindConfig";
 
 type InvoiceMailProps = {
   clientUrl: string;
+  mediaId: number;
+  invoiceNumber: string;
+  date: Date;
+  amount: number;
+  name: string;
 }
 
-export function InvoiceMail({ clientUrl } : InvoiceMailProps) {
+export function InvoiceMail({ clientUrl, mediaId, invoiceNumber, date, amount, name } : InvoiceMailProps) {
   return (
     <TailwindConfig>
       <Header clientUrl={clientUrl} />
@@ -18,7 +25,7 @@ export function InvoiceMail({ clientUrl } : InvoiceMailProps) {
         <Text>
           Bonjour,
           <br />
-          Veuillez trouver ci-joint votre facture n°[Numéro de facture], émise le [Date d’émission] et relative à [Description du service / période / produit]. Le montant de celle-ci s'élève à 1000,00 €.
+          Veuillez trouver ci-joint votre facture n°{invoiceNumber}, émise le  {dayjs(date).format("DD/MM/YYYY")} et relative à {name}. Le montant de celle-ci s'élève à {formatPrice(amount, "FR-fr", "EUR")}.
           <br />
         </Text>
         <Text className="text-2xl text-center mt-5 mb-5">

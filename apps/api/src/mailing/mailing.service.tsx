@@ -39,8 +39,24 @@ export default class MailingService {
     });
   }
 
-  async sendInvoice(invoiceId: number, to: string) {
-    const emailHtml = await render(<InvoiceMail clientUrl={this.clientUrl} />);
+  async sendInvoice(
+    mediaId: number,
+    invoiceNumber: string,
+    date: Date,
+    amount: number,
+    name: string,
+    to: string,
+  ) {
+    const emailHtml = await render(
+      <InvoiceMail
+        clientUrl={this.clientUrl}
+        mediaId={mediaId}
+        invoiceNumber={invoiceNumber}
+        date={date}
+        name={name}
+        amount={amount}
+      />,
+    );
     this.transporter.sendMail({
       from: 'ne-pas-repondre@freeflow.fr',
       to,
@@ -49,12 +65,28 @@ export default class MailingService {
     });
   }
 
-  async sendQuote(quoteI: number, to: string) {
-    const emailHtml = await render(<QuoteMail clientUrl={this.clientUrl} />);
+  async sendQuote(
+    mediaId: number,
+    invoiceNumber: string,
+    date: Date,
+    amount: number,
+    name: string,
+    to: string,
+  ) {
+    const emailHtml = await render(
+      <QuoteMail
+        clientUrl={this.clientUrl}
+        mediaId={mediaId}
+        amount={amount}
+        invoiceNumber={invoiceNumber}
+        date={date}
+        name={name}
+      />,
+    );
     this.transporter.sendMail({
       from: 'ne-pas-repondre@freeflow.fr',
       to,
-      subject: 'Une nouvelle facture est disponible',
+      subject: 'Un nouveau devis est disponible',
       html: emailHtml,
     });
   }

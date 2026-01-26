@@ -129,10 +129,28 @@ export default class InvoiceService {
         );
       }
     }
+    const amount =
+      invoice.invoiceLines
+        .map((a) => a.quantity * a.unitPrice)
+        .reduce((prev, cur) => prev + cur, 0) * (invoice.excludeTva ? 1 : 1.2);
     if (invoiceEntity.type === 'INVOICE') {
-      this.mailingService.sendInvoice(invoiceEntity.id, customer.email);
+      this.mailingService.sendInvoice(
+        invoiceEntity.mediaId,
+        invoice.number,
+        invoice.date,
+        amount,
+        invoice.title,
+        customer.email,
+      );
     } else {
-      this.mailingService.sendQuote(invoiceEntity.id, customer.email);
+      this.mailingService.sendQuote(
+        invoiceEntity.mediaId,
+        invoice.number,
+        invoice.date,
+        amount,
+        invoice.title,
+        customer.email,
+      );
     }
   }
 

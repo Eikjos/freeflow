@@ -367,15 +367,15 @@ export function DevisTemplate({
                 fontSize: "12px",
                 fontWeight: "bold",
                 marginTop: "20px",
+                marginBottom: "10px"
               }}
             >
               Signature:
-              <br />
-              {isSigned && <Text style={{ fontSize: "10px", fontWeight: 'normal'}}>
+            </Text>
+             {isSigned && <Text style={{ fontSize: "10px", fontWeight: 'normal'}}>
                 Document signé électroniquement par {user}, représentant habilité de la société {customer?.name},
                 le {dayjs(signedDate).format("DD/MM/YYYY")}, conformément à l’article 1367 du Code civil et au règlement eIDAS (UE n°910/2014).
               </Text>}
-            </Text>
           </View>
         </View>
       </Page>

@@ -1,13 +1,20 @@
 import { Button, Text } from "@react-email/components";
+import dayjs from "dayjs";
+import { formatPrice } from "../utils";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import TailwindConfig from "./components/TailwindConfig";
 
 type QuoteMailProps = {
   clientUrl: string;
+  mediaId: number;
+  invoiceNumber: string;
+  date: Date;
+  amount: number;
+  name: string;
 }
 
-export function QuoteMail({ clientUrl } : QuoteMailProps ) {
+export function QuoteMail({ clientUrl, mediaId, invoiceNumber, date, name, amount} : QuoteMailProps ) {
   return (
     <TailwindConfig>
       <Header clientUrl={clientUrl} />
@@ -18,7 +25,7 @@ export function QuoteMail({ clientUrl } : QuoteMailProps ) {
         <Text>
           Bonjour,
           <br />
-          Veuillez trouver ci-joint votre devis n°[Numéro de devis], émise le [Date d’émission] et relative à [Description du service / période / produit]. Le montant de celui-ci s'élève à 1000,00 €.
+          Veuillez trouver ci-joint votre devis n°{invoiceNumber}, émise le {dayjs(date).format("DD/MM/YYYY")} et relative à {name}. Le montant de celui-ci s'élève à {formatPrice(amount, "FR-fr", "EUR")}.
           <br />
         </Text>
         <Text className="text-2xl text-center mt-5 mb-5">
