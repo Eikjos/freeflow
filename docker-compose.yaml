@@ -26,7 +26,10 @@ services:
       SECRET_JWT: ${SECRET_JWT}
       JWT_REFRESH_SECRET: ${REFRESH_JWT_SECRET}
       INSEE_API_KEY: ${INSEE_API_KEY}
-      RESEND_KEY: ${RESEND_KEY}
+      SMTP_URL: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_USER: thomashamelin3@gmail.com
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
       CLIENT_URL: ${CLIENT_URL} # utiliser pour l'envoie des mails 
     depends_on: 
       - bdd
