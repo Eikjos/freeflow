@@ -12,7 +12,7 @@ export default async function ActivitiesPage() {
   return (
     <div>
       <h1 className="font-amica text-4xl">
-        {t("activities.enterprise", { enterprise: enterprise?.name })}
+        {t("activities.enterprise", { enterprise: enterprise?.name ?? "" })}
       </h1>
       <ProjectTab enterpriseId={enterprise?.id ?? 0} />
     </div>

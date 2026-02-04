@@ -30,7 +30,7 @@ export default async function EditCustomerPage({
       {customer && customer?.ok && (
         <>
           <h1 className="font-amica text-4xl mb-20">
-            {t("customer.edit", { customer: customer.data?.name })}
+            {t("customer.edit", { customer: customer.data?.name ?? "" })}
           </h1>
           <CustomerForm edit customerId={parseInt(id)} data={customer.data} />
         </>

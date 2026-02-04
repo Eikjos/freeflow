@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+  bdd: 
+    container_name: freeflow-bdd
+    image: postgres
+    ports: 
+      - "5432:5432"
+    volumes:
+      - db:/data/postgres
+    environment: 
+      POSTGRES_USER: freeflow
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGDATA: /data/postgres
+      POSTGRES_DB: freeflow
+  api:
+    container_name: freeflow-api
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+      target: api
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://freeflow:${DB_PASSWORD}@bdd:5432/freeflow
+      SECRET_JWT: ${SECRET_JWT}
+      JWT_REFRESH_SECRET: ${REFRESH_JWT_SECRET}
+      INSEE_API_KEY: ${INSEE_API_KEY}
+      RESEND_KEY: ${RESEND_KEY}
+      CLIENT_URL: ${CLIENT_URL} # utiliser pour l'envoie des mails 
+    depends_on: 
+      - bdd
+
+  web:
+    container_name: freeflow-web
+    build:
+      context: .
+      dockerfile: ./apps/client/Dockerfile
+      target: web
+      args:
+        API_URL: ${API_URL}
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      API_URL: ${API_URL}
+      NEXT_PUBLIC_API_URL: /api
+
+volumes:
+  db:

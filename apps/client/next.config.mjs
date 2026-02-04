@@ -2,14 +2,15 @@
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin();
+const apiUrl = process.env.API_URL;
+console.log("API_URL at build:", process.env.API_URL);
 
 const nextConfig = {
+  output: "standalone",
   images: {
-    remotePatterns: [
-      {
-        hostname: new URL(process.env.API_URL).hostname,
-      },
-    ],
+   remotePatterns: apiUrl
+  ? [{ hostname: new URL(apiUrl).hostname }]
+  : [],
   },
   experimental: {
     serverActions: {
@@ -17,14 +18,18 @@ const nextConfig = {
     },
   },
   async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        // eslint-disable-next-line turbo/no-undeclared-env-vars
-        destination: `${process.env.API_URL}/:path*`,
-        basePath: false,
-      },
-    ];
+    if (apiUrl) {
+      return [
+        {
+          source: "/api/:path*",
+          // eslint-disable-next-line turbo/no-undeclared-env-vars
+          destination: `${apiUrl}/:path*`,
+          basePath: false,
+        },
+      ];
+    }
+    return []
+   
   },
 };
 

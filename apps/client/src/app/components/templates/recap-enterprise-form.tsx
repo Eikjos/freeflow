@@ -24,7 +24,7 @@ export default function RecapEnterpriseForm() {
     createEnterprise(enterprise, logo)
       .then((res) => {
         if (res) {
-          router.replace("/");
+          router.replace("/dashboard");
         }
       })
       .catch((e: Error) => {

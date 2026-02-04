@@ -84,7 +84,7 @@ export default class AuthService {
     let enterprise: EnterpriseDto;
     let customer: CustomerDto;
 
-    if (user.isEnterprise) {
+    if (user.isEnterprise && user.enterpriseId) {
       enterprise = await this.enterpriseService.findById(user.enterpriseId);
       sales = (await this.salesService.getCurrentSales(user.enterpriseId)) ?? 0;
     } else if (user.isCustomer) {

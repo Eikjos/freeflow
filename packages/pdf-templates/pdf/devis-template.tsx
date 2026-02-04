@@ -154,7 +154,7 @@ export function DevisTemplate({
     excludeTva?: boolean;
     isSigned?: boolean;
     signedDate?: Date;
-    user: string;
+    user?: string;
     apiUrl: string;
 }) {
   const sum = (values: number[]) => {

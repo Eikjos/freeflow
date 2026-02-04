@@ -26,7 +26,7 @@ export default async function CustomerPage() {
     <div className="w-full">
       <div className="flex flex-row justify-between items-center mb-4">
         <h1 className="font-amica text-4xl">
-          {t("customer.title", { enterprise: enterprise?.name })}
+          {t("customer.title", { enterprise: enterprise?.name ?? "" })}
         </h1>
         <Button asChild>
           <Link href={"/customers/create"}>

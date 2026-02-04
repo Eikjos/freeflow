@@ -32,7 +32,7 @@ export function InscriptionMail({ clientUrl } : InscriptionMailProps) {
           Pour commencer, cliquez sur le bouton ci-dessous pour accéder à votre tableau de bord
         </Text>
         <div className="mt-10 text-center">
-          <Button className="bg-primary px-6 py-2 rounded-full text-sm text-white w-44 inline-block" href={`${clientUrl}`}>
+          <Button className="bg-primary px-6 py-2 rounded-full text-sm text-white w-44 inline-block" href={`${clientUrl}/dashboard`}>
             Accéder à mon tableau de bord
           </Button>
         </div>

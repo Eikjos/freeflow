@@ -1,0 +1,69 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:18.1
+    environment:
+      POSTGRES_USER: freeflow
+      POSTGRES_DB: freeflow
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - backend
+  api:
+    image: ghcr.io/ton-org/api:latest
+    deploy:
+      replicas: 2
+      update_config:
+        order: start-first
+        parallelism: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: freeflow
+      DB_NAME: freeflow
+    secrets:
+      - source: db_password
+        target: DB_PASSWORD
+    depends_on:
+      - db
+    networks:
+      - backend
+      - frontend
+    ports:
+      - "8080:8080"
+  web:
+    image: ghcr.io/ton-org/web:latest
+    deploy:
+      replicas: 2
+      update_config:
+        order: start-first
+        parallelism: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      NEXT_PUBLIC_API_URL: http://api:3000
+    ports:
+      - "80:3000"
+    networks:
+      - frontend
+
+volumes:
+  db_data:
+secrets:
+  db_password:
+    external: true
+networks:
+  backend:
+    driver: overlay
+  frontend:
+    driver: overlay

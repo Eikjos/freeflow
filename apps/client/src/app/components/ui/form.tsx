@@ -150,7 +150,7 @@ const FormMessage = React.forwardRef<
 >(({ className, children, ...props }, ref) => {
   const t = useTranslations();
   const { error, formMessageId } = useFormField();
-  const body = error ? String(t(error?.message)) : children;
+  const body = error && error.message ? String(t(error.message)) : children;
 
   if (!body) {
     return null;
@@ -177,5 +177,6 @@ export {
   FormItem,
   FormLabel,
   FormMessage,
-  useFormField,
+  useFormField
 };
+
