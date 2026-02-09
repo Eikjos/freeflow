@@ -62,6 +62,7 @@ export default function ProjectList({
     <>
       <CardList
         data={projects?.data?.data ?? []}
+        emptyMessage="project.emptyData"
         render={(p, loading, key) => (
           <ProjectCard
             project={p}

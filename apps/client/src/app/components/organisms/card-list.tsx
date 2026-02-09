@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 type CardListProps<TData> = {
   data: TData[];
   isLoading?: boolean;
+  emptyMessage: string;
   render: (value: TData, isLoading: boolean, key: number) => JSX.Element;
 };
 
@@ -10,6 +11,7 @@ export default function CardList<TData>({
   data,
   render,
   isLoading,
+  emptyMessage
 }: CardListProps<TData>) {
   const t = useTranslations();
   if (isLoading) {
@@ -31,7 +33,7 @@ export default function CardList<TData>({
       )}
       {data.length === 0 && (
         <div className="w-full pt-64">
-          <p className="w-56 text-center mx-auto">{t("common.emptyData")}</p>
+          <p className="w-56 text-center mx-auto">{t(emptyMessage)}</p>
         </div>
       )}
     </>

@@ -591,6 +591,7 @@
       "edit": "Le projet n'a pas pu être mis à jour. Veuillez réessayer plus tard.",
       "create": "Le projet n'a pas pu être créer. Veuillez réessayer plus tard."
     },
+    "emptyData": "Vous n'avez pas encore de projet.",
     "success": {
       "create": "Le projet a bien été créer.",
       "edit": "Le projet a bien été mis à jour."
