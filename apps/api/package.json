@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build && pnpm run copy-scripts",
+    "build": "npx prisma generate && nest build && pnpm run copy-scripts",
     "copy-scripts": "mkdir -p dist/prisma && cp -r prisma/scripts dist/prisma",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "pnpm run copy-scripts && nest start",
