@@ -40,7 +40,7 @@ function generateQueryStringOfSubObject<T extends object>(
       }
 
       if (value !== undefined && value !== null) {
-        return `${encodeURIComponent(key as string)}[${encodeURIComponent(keySub as string)}]=${encodeURIComponent(String(value))}`;
+        return `${encodeURIComponent(key)}[${encodeURIComponent(keySub as string)}]=${encodeURIComponent(String(value))}`;
       }
 
       return "";

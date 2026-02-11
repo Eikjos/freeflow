@@ -1,4 +1,5 @@
 import { Button } from "@components/ui/button";
+import Link from "next/link";
 
 export default function NotFoundEnterprise() {
   return (
@@ -9,7 +10,7 @@ export default function NotFoundEnterprise() {
         unavailable.
       </p>
       <Button asChild>
-        <a href="/">Retour à l'accueil</a>
+        <Link href="/">Retour à l'accueil</Link>
       </Button>
     </div>
   );

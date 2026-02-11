@@ -26,7 +26,7 @@ export default function StarRating({
   const max = 5
 
   useEffect(() => {
-    if (isControlled) setValue(controlledValue!)
+    if (isControlled) setValue(controlledValue)
   }, [controlledValue])
 
   const handleSet = (newVal: number) => {

@@ -49,7 +49,7 @@ export default function ExpenseForm({ className }: ExpenseFormProps) {
   });
 
   const onChangeInput = (files: File[]) => {
-    var file = files[files.length - 1];
+    const file = files[files.length - 1];
     if (file) {
       form.setValue("expense", file, { shouldValidate: true });
     } else {
@@ -63,7 +63,7 @@ export default function ExpenseForm({ className }: ExpenseFormProps) {
         toast.success(t("expence.success.create"));
         router.push("/expenses");
       })
-      .catch((e) => {
+      .catch((e : Error) => {
         toast.error(e.message);
       });
   };
@@ -77,6 +77,10 @@ export default function ExpenseForm({ className }: ExpenseFormProps) {
     return 0;
   };
 
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit);
+  }
+
   if (isLoading)
     return (
       <div className="w-full h-full flex items-center justify-center">
@@ -86,7 +90,7 @@ export default function ExpenseForm({ className }: ExpenseFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit}>
         <Card className={className}>
           <CardContent className="px-8 py-6">
             <Input

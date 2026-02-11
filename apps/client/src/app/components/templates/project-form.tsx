@@ -54,7 +54,7 @@ export default function ProjectForm({
   const { media } = form.watch();
 
   const onChangeInput = (files: File[]) => {
-    var file = files[files.length - 1];
+    const file = files[files.length - 1];
     if (file) {
       form.setValue("media", file, { shouldValidate: true });
     } else {
@@ -62,9 +62,9 @@ export default function ProjectForm({
     }
   };
 
-  const onSubmit = (values: ProjectCreateData) => {
+  const onSubmit = async (values: ProjectCreateData) => {
     if (edit && projectId) {
-      UpdateProject(projectId, values).then((res) => {
+      await UpdateProject(projectId, values).then((res) => {
         if (res === null) {
           toast.error(t("customer.error.create"));
         } else if (!res.ok && res.error) {
@@ -75,24 +75,28 @@ export default function ProjectForm({
         }
       });
     } else {
-      CreateProject(values).then((res) => {
+      await CreateProject(values).then(async (res) => {
         if (res === null) {
           toast.error(t("customer.error.create"));
         } else if (!res.ok && res.error) {
           toast.error(res.error);
         } else {
           toast.success("project.success.create");
-          queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+          await queryClient.invalidateQueries({ queryKey: ["project", projectId] });
           router.push("/activities");
         }
       });
     }
   };
 
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit)
+  }
+
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit}>
           <Card className={cn("p-5", className)}>
             <CardContent>
               <div className="flex flex-row items-center">

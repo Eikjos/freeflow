@@ -6,6 +6,8 @@ const project = resolve(process.cwd(), "tsconfig.json");
 module.exports = {
   extends: [
     "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "prettier",
     require.resolve("@vercel/style-guide/eslint/next"),
     "turbo",

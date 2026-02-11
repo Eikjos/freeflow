@@ -39,15 +39,15 @@ export default function ProjectList({
   };
 
   const OnDeleteProject = (project: ProjectData) => {
-    deleteProject(project.id).then((res) => {
+    void deleteProject(project.id).then(async (res) => {
       if (res.ok) {
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
           queryKey: ["projects", pagination],
         });
         toast.success(t("project.removeSuccess", { project: project.name }));
         // si il y a encore un projet après suppression
         if ((projects?.data?.data.length ?? 0) > 1 || pagination.page === 0) {
-          refetch();
+          await refetch();
           // sinon aller sur la page précédente si elle permet
         } else {
           setPagination((prev) => ({ ...prev, page: prev.page - 1 }));

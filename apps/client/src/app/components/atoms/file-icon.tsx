@@ -15,7 +15,7 @@ import { cn } from "../../../lib/utils";
 
 type FileIconProps = {
   file: File;
-  onDelete: (file: File) => void;
+  onDelete: (_: File) => void;
   className?: string;
   canDownload?: boolean;
 };

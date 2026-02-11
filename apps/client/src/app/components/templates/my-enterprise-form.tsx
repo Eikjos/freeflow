@@ -28,7 +28,7 @@ export default function MyEnterpriseForm({
   const { logo } = form.watch();
 
   const handleFileChange = (files: File[]) => {
-    var file = files[files.length - 1];
+    const file = files[files.length - 1];
     if (file) {
       form.setValue("logo", file, { shouldValidate: true });
     } else {

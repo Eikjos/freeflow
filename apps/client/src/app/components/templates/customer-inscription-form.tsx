@@ -40,7 +40,7 @@ export default function CustomerInscriptionForm({
   });
 
   const onSubmit = (values: CreateUserData) => {
-    createUser(values, false, token).then((res) => {
+    void createUser(values, false, token).then((res) => {
       if (res.success) {
         setIsOk(true);
       } else if (res.message == "customer.token.invalid") {
@@ -92,13 +92,17 @@ export default function CustomerInscriptionForm({
     );
   }
 
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit);
+  }
+
   return (
     <Card className={cn(className)}>
       <CardContent>
         <CardHeader className="pl-0 text-xl font-semibold">
           {t("inscription.form.title")}
         </CardHeader>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit}>
           <Form {...form}>
             <Input
               type="text"

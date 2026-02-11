@@ -14,7 +14,7 @@ import { getAllObjectiveQueryOptions } from "../../../lib/api/objectives";
 export default function ObjectiveList() {
   const t = useTranslations();
   const queryClient = useQueryClient();
-  const [filter, setFilter] = useState<PaginationFilter<any>>({
+  const [filter, setFilter] = useState<PaginationFilter<never>>({
     page: 0,
     pageSize: 15,
   });
@@ -26,13 +26,13 @@ export default function ObjectiveList() {
   };
 
   const handleReload = () => {
-    queryClient.invalidateQueries({
+    void queryClient.invalidateQueries({
       queryKey: ["objectives"],
     });
-    if (data?.data?.totalItems! % filter.pageSize === 1 && filter.page > 0) {
+    if (data && data.data && data.data.totalItems % filter.pageSize === 1 && filter.page > 0) {
       setFilter((prev) => ({ ...prev, page: prev.page - 1 }));
     }
-    refetch();
+    void refetch();
   };
 
   return (

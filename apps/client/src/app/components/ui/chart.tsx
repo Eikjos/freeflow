@@ -143,7 +143,7 @@ const ChartTooltipContent = React.forwardRef<
       const itemConfig = getPayloadConfigFromPayload(config, item, key);
       const value =
         !labelKey && typeof label === "string"
-          ? config[label as keyof typeof config]?.label || label
+          ? config[label]?.label || label
           : itemConfig?.label;
 
       if (labelFormatter) {
@@ -190,7 +190,7 @@ const ChartTooltipContent = React.forwardRef<
             .map((item, index) => {
               const key = `${nameKey || item.name || item.dataKey || "value"}`;
               const itemConfig = getPayloadConfigFromPayload(config, item, key);
-              const indicatorColor = color || item.payload.fill || item.color;
+              const indicatorColor : string = color || item.fill as string || item.color as string;
 
               return (
                 <div
@@ -201,7 +201,7 @@ const ChartTooltipContent = React.forwardRef<
                   )}
                 >
                   {formatter && item?.value !== undefined && item.name ? (
-                    formatter(item.value, item.name, item, index, item.payload)
+                    formatter(item.value, item.name, item, index, payload)
                   ) : (
                     <>
                       {itemConfig?.icon ? (
@@ -290,12 +290,12 @@ const ChartLegendContent = React.forwardRef<
         {payload
           .filter((item) => item.type !== "none")
           .map((item) => {
-            const key = `${nameKey || item.dataKey || "value"}`;
+            const key = `${nameKey || item.dataKey as string || "value"}`;
             const itemConfig = getPayloadConfigFromPayload(config, item, key);
 
             return (
               <div
-                key={item.value}
+                key={item.value as string}
                 className={cn(
                   "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground"
                 )}
@@ -356,7 +356,7 @@ function getPayloadConfigFromPayload(
 
   return configLabelKey in config
     ? config[configLabelKey]
-    : config[key as keyof typeof config];
+    : config[key];
 }
 
 export {
@@ -365,5 +365,6 @@ export {
   ChartLegendContent,
   ChartStyle,
   ChartTooltip,
-  ChartTooltipContent,
+  ChartTooltipContent
 };
+

@@ -55,15 +55,15 @@ export default function CustomerTable() {
   }
 
   const OnDeleteCustomer = (customer: CustomerModel) => {
-    DeleteCutomer(customer.id).then((res) => {
-      queryClient.invalidateQueries({
+    void DeleteCutomer(customer.id).then(async (res) => {
+      await queryClient.invalidateQueries({
         queryKey: ["customers", page],
       });
       if (res.ok) {
         toast.success(t("customer.removeSuccess", { customer: customer.name }));
         // si il y a encore un client après suppression
         if ((customers?.data?.data.length ?? 0) > 1 || page.page === 0) {
-          refetch();
+          await refetch();
           // sinon aller sur la page précédente si elle permet
         } else {
           setPage((prev) => ({ ...prev, page: prev.page - 1 }));

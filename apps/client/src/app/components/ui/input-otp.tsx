@@ -71,7 +71,7 @@ InputOTPSeparator.displayName = "InputOTPSeparator"
 
 type InputOtpWithControllerProps = {
   name: string;
-  control: Control<any>;
+  control: Control;
   length: number;
   className?: string;
 }
@@ -85,6 +85,7 @@ function InputOTPWithController({name, control, length, className} : InputOtpWit
         <InputOTP
           maxLength={length}
           pattern={REGEXP_ONLY_DIGITS}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={field.value ?? ""}
           onChange={field.onChange}
           containerClassName={className}

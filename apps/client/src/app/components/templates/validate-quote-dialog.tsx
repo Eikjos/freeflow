@@ -43,11 +43,15 @@ export default function ValidateQuoteDialog({ devis, onValidate, trigger }: Vali
     validateQuote(devis.id, true, value.code).then(() => {
       onValidate();
       toast.success(t("devis.success.validate"));
-    }).catch(e => {
+    }).catch((e : Error) => {
       toast.error(e.message)
     }).finally(() => {
       setOpen(false);
     })
+  }
+
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit);
   }
 
   return (
@@ -61,7 +65,7 @@ export default function ValidateQuoteDialog({ devis, onValidate, trigger }: Vali
             {t("devis.validateTitle", { number: devis.number })}
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit}>
           <Form {...form}>
             <div className="flex flex-col items-center">
               <p className="text-sm my-5">{t("devis.validateContent")}</p>

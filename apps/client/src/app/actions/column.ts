@@ -6,7 +6,6 @@ import {
   MoveTaskData,
 } from "@repo/shared-types";
 import { client } from "../../lib/client";
-import { log } from "console";
 
 export async function createColumn(projectId: number, col: CreateColumnData) {
   return await client<ColumnsData>(`projects/${projectId}/columns`, {

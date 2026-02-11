@@ -130,7 +130,6 @@ export default class TaskService {
     model: CreateTaskDto,
     files: Express.Multer.File[],
     enterpriseId?: number,
-    customerId?: number,
   ) {
     const task = await this.prisma.task.findFirst({
       where: { id: taskId },

@@ -6,7 +6,6 @@ import { Input } from "@components/ui/input";
 import { ColumnsData, TaskData } from "@repo/shared-types";
 import { updateColumn } from "actions/column";
 import { Plus, Trash2Icon } from "lucide-react";
-import { useTranslations } from "next-intl";
 import React, { useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { toast } from "sonner";
@@ -37,8 +36,6 @@ export default function ColumnTask({
 }: ColumnTaksProps) {
   const [open, setOpen] = useState(false);
   const [currentName, setCurrentName] = useState(name);
-  const [error, setError] = useState<string>("");
-  const t = useTranslations();
   const ref = useRef<HTMLDivElement>(null);
   const columRef = useRef<HTMLDivElement>(null);
   const [{ opacity }, dragRef] = useDrag(
@@ -106,7 +103,7 @@ export default function ColumnTask({
           setCurrentName(res.name);
         }
       })
-      .catch((e) => {
+      .catch((e : Error) => {
         toast.error(e.message);
         setCurrentName(name);
       });
@@ -133,7 +130,6 @@ export default function ColumnTask({
               value={currentName}
               onChange={handleChange}
               variant="ghost"
-              error={error}
               onBlur={handleUpdateColumn}
             />
             <div className="flex flex-row justify-end items-center gap-2">
@@ -151,7 +147,7 @@ export default function ColumnTask({
           >
             {tasks
               .sort((a, b) => a.index - b.index)
-              .map((item, index) => (
+              .map((item) => (
                 <TaskCard
                   task={item}
                   key={item.id}

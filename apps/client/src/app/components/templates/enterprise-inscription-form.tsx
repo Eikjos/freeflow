@@ -34,8 +34,8 @@ export default function EnterpriseInscriptionForm({ className }: EnterpriseInscr
     }
   });
 
-  const onSubmit = (values: CreateUserData) => {
-    createUser(values, true).then((res) => {
+  const onSubmit = async (values: CreateUserData) => {
+    await createUser(values, true).then((res) => {
       if (res.success) {
         setIsOk(true);
       } else {
@@ -66,12 +66,16 @@ export default function EnterpriseInscriptionForm({ className }: EnterpriseInscr
     )
   }
 
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit);
+  }
+
 
   return (
     <Card className={cn(className)}>
       <CardContent>
         <CardHeader className="pl-0 text-xl font-semibold">{t("inscription.form.title")}</CardHeader>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit}>
           <Form {...form}>
             <Input type="text" label={t("inscription.form.label.firstName")} {...form.register("firstName")} placeholder={t("inscription.form.label.firstName")}/>
             <Input type="text" label={t("inscription.form.label.lastName")} {...form.register("lastName")} placeholder={t("inscription.form.label.lastName")} />

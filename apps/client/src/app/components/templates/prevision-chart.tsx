@@ -5,13 +5,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import {
   CartesianGrid,
+  DotProps,
   Legend,
   Line,
   LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
+  YAxis
 } from "recharts";
 import { getPrevisionsQueryOptions } from "../../../lib/api/sales";
 import { cn, stringToDateYear } from "../../../lib/utils";
@@ -42,7 +43,7 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="month"
-            tickFormatter={(v) => stringToDateYear(v)}
+            tickFormatter={(v : string) => stringToDateYear(v)}
             tickLine={false}
             tick={false}
             tickMargin={8}
@@ -50,6 +51,8 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
           <YAxis tickFormatter={(v) => `${v / 1000}k €`} />
           <Tooltip
             content={({ active, payload, label }) => {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              const lab : string = label;
               if (active && payload && payload.length) {
                 const salePoint = payload.find((p) => p.dataKey === "sale");
                 const previsionPoint = payload.find(
@@ -64,7 +67,7 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
                       padding: 8,
                     }}
                   >
-                    <strong>{stringToDateYear(label)}</strong>
+                    <strong>{stringToDateYear(lab)}</strong>
                     {salePoint && (
                       <div>
                         {salePoint.name}: {salePoint.value?.toLocaleString()} €
@@ -95,7 +98,7 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
             strokeWidth={3}
             strokeDasharray="6 4"
             name={t("sales.prevision")}
-            dot={(props) => {
+            dot={(props : DotProps & { payload: { sale : number, prevision : number } }) => {
               const { cx, cy, payload } = props;
               // n’affiche le dot que si c’est un point de prévision
               if (

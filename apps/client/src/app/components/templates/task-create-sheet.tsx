@@ -66,13 +66,17 @@ export default function TaksCreateSheet({
         }
       })
       .then(() => form.reset())
-      .catch((e) => toast.error(e.message))
+      .catch((e : Error) => toast.error(e.message))
       .finally(() => onClose());
   };
 
   const handleUploadFile = (files: File[]) => {
     form.setValue("files", files, { shouldDirty: true, shouldValidate: true });
   };
+
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit);
+  }
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
@@ -85,7 +89,7 @@ export default function TaksCreateSheet({
         <Form {...form}>
           <form
             className="flex flex-col items-center mt-5"
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={handleSubmit}
           >
             <Input
               type="text"

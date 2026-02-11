@@ -7,14 +7,13 @@ type StarButtonProps = {
   readOnly: boolean;
   displayValue: number;
   index: number;
-  max: number;
   size: number;
   setHoverValue: (value: number) => void;
   handleSet: (value: number) => void;
 }
 
 
-export default function StarButton({readOnly, displayValue, index, max, size, setHoverValue, handleSet } : StarButtonProps) { 
+export default function StarButton({readOnly, displayValue, index, size, setHoverValue, handleSet } : StarButtonProps) { 
   // how much of this star is filled (0 to 100)
   const rawFill = Math.max(0, Math.min(1, (displayValue - index)))
   const fillPercent = Math.round(rawFill * 100)

@@ -13,7 +13,7 @@ import {
 } from "./form";
 import { InputProps } from "./input";
 
-type SecretInputProps = {} & Omit<InputProps, "type">;
+type SecretInputProps = Omit<InputProps, "type">;
 
 const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>(
   ({ className, ...props }, ref) => {

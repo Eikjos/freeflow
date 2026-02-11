@@ -22,9 +22,11 @@ export default function ProfileButton({ className, type }: ProfileButtonProps) {
   const t = useTranslations();
   const router = useRouter();
 
-  const onLogout = async () => {
-    await logout();
-    router.replace("/");
+  const onLogout = () => {
+    void logout().then(() => {
+      router.replace("/");
+    })
+
   };
 
   if (type == "enterprise") {

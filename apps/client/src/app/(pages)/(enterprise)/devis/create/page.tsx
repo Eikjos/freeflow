@@ -1,5 +1,6 @@
 "use client";
 
+import NotFoundEnterprise from "(pages)/(enterprise)/not-found";
 import Autocomplete from "@components/molecules/autocomplete";
 import CreateInvoiceLineModal from "@components/organisms/create-invoice-line-dialog";
 import InvoiceLineList from "@components/organisms/invoice-line-list";
@@ -24,7 +25,7 @@ import { createInvoice } from "actions/invoice";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEnterprise } from "providers/enterprise-provider";
-import { useEffect, useReducer, useState } from "react";
+import { ChangeEvent, useEffect, useReducer, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
@@ -40,14 +41,19 @@ import {
 export default function CreateDevisPage() {
   const t = useTranslations();
   const { enterprise } = useEnterprise();
+
+  if (!enterprise) {
+    return <NotFoundEnterprise />
+  }
+
   const router = useRouter();
   const [maskNameOnInvoice, setMaskNameOnInvoice] = useState<boolean>(true);
-  const [update, forceUpdate] = useReducer((x) => x + 1, 0);
-  const [autocompleteKey, setAutocompleteKey] = useReducer((x) => x + 1, 0);
+  const [update, forceUpdate] = useReducer((x : number) => x + 1, 0);
+  const [autocompleteKey, setAutocompleteKey] = useReducer((x: number) => x + 1, 0);
   const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
   const { data, isSuccess, isLoading } = useQuery({
-    ...getInformationForDevisQueryOptions(enterprise?.id!),
-    enabled: enterprise?.id !== undefined,
+    ...getInformationForDevisQueryOptions(enterprise.id),
+    enabled: !!enterprise
   });
   const form = useForm<InvoiceCreateData>({
     resolver: zodResolver(InvoiceCreateValidation),
@@ -92,10 +98,11 @@ export default function CreateDevisPage() {
       if (
         invoiceLine.ok && 
         !invoiceLinesOld.some((e) => e.name === invoiceLine.data?.name)
+        && invoiceLine.data
       ) {
         form.setValue("invoiceLines", [
           ...invoiceLinesOld,
-          { name: invoiceLine.data?.name!, quantity: 1, unitPrice: 0.0 },
+          { name: invoiceLine.data.name, quantity: 1, unitPrice: 0.0 },
         ]);
       }
       setAutocompleteKey();
@@ -144,6 +151,10 @@ export default function CreateDevisPage() {
         toast.error(err.message);
       });
   };
+
+  const handleSubmit = () => {
+    void form.handleSubmit(onSubmit)
+  }
 
   if (isLoading) {
     return (
@@ -234,7 +245,7 @@ export default function CreateDevisPage() {
                 {...form.register("invoiceLine", {
                   onBlur: forceUpdate,
                   value: undefined,
-                  onChange: (event) => handleChangeTask(event.target.value),
+                  onChange: (event : ChangeEvent<HTMLInputElement>) => { void handleChangeTask(parseInt(event.target.value)) },
                 })}
               />
             </form>
@@ -249,7 +260,7 @@ export default function CreateDevisPage() {
             </div>
           )}
           <div className="flex flex-row justify-end mt-4">
-            <Button onClick={form.handleSubmit(onSubmit)}>
+            <Button onClick={handleSubmit}>
               {t("common.submitAndSend")}
             </Button>
           </div>

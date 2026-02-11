@@ -88,7 +88,7 @@ export default function RecapEnterpriseForm() {
             label={t("enterprise.tvaNumber")}
             placeholder={t("enterprise.tvaNumber")}
             className="mt-4"
-            value={data.TVANumber}
+            value={data.TVANumber as string}
             disabled
           />
         </div>

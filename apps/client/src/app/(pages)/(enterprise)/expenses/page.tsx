@@ -30,12 +30,12 @@ function ExpensesPage() {
 
   const handleDeleteExpense = (id: number) => {
     deleteExpense(id)
-      .then(() => {
-        refetch();
-        queryClient.invalidateQueries({ queryKey: ["expenses"], exact: false });
+      .then(async () => {
+        await refetch();
+        await queryClient.invalidateQueries({ queryKey: ["expenses"], exact: false });
         toast.success(t("expense.success.delete"));
       })
-      .catch((e) => {
+      .catch((e : Error) => {
         toast.error(t(e.message));
       });
   };

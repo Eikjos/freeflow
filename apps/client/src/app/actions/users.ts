@@ -15,7 +15,7 @@ export const createUser = async (user: CreateUserData, isEnterprise: boolean, to
       lastName: user.lastName  
     } as CreateUserData)
   })
-    .then(async (data) => {
+    .then((data) => {
       if (data.ok) {
         cookieStore.set("access_token", data.data?.access_token ?? "");
         cookieStore.set("refreshToken", data.data?.refreshToken ?? "");

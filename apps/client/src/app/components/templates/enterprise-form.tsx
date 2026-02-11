@@ -29,7 +29,7 @@ const EnterpriseForm = () => {
     lastInvoiceNumber?: number
   ) => {
     form.reset({ ...data, email, phone, prefixeInvoice, lastInvoiceNumber });
-    form.trigger([
+    await form.trigger([
       "siret",
       "name",
       "address",
@@ -44,19 +44,20 @@ const EnterpriseForm = () => {
   const { data: countries } = useQuery(getAllCountriesQueryOptions());
   const { data: juridicShapes } = useQuery(getAllJuridicShapesQueryOptions());
 
-  const fillFormWithEnterpriseinfo = async () => {
-    const data = await fetchEnterpriseInfo(
+  const fillFormWithEnterpriseinfo = () => {
+    void fetchEnterpriseInfo(
       form.getValues().siret.replace(/\s+/g, "")
-    );
-    if (data && data.ok && data.data) {
-      updateFormValues(
-        data.data,
-        form.getValues().email,
-        form.getValues().phone,
-        form.getValues().prefixeInvoice,
-        form.getValues().lastInvoiceNumber
-      );
-    }
+    ).then(async (res) => {
+      if (res.data && res.ok) {
+        await updateFormValues(
+          res.data,
+          form.getValues().email,
+          form.getValues().phone,
+          form.getValues().prefixeInvoice,
+          form.getValues().lastInvoiceNumber
+        );
+      }
+    });
   };
 
   return (

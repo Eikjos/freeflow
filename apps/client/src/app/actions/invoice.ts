@@ -11,7 +11,7 @@ export const createInvoice = async (
     if (value instanceof Date) {
       formData.append(key, value.toISOString());
     } else {
-      formData.append(key, value);
+      formData.append(key, value as string);
     }
   });
   formData.append(`invoiceLines`, JSON.stringify(invoiceLines));
@@ -24,7 +24,7 @@ export const createInvoice = async (
       body: formData,
     },
     "other"
-  ).then(async (res) => {
+  ).then((res) => {
     if (res.ok) {
       return res.data;
     }
@@ -47,8 +47,8 @@ export const validateQuote = async (id: number, value: boolean, code?: string) =
     }).then(res => {
     if (res.ok) return res.data
     throw new Error(res.error);
-  }).catch((e) => {
-    throw new Error(e);
+  }).catch((e : Error) => {
+    throw new Error(e.message);
   })
 }
 
@@ -58,7 +58,7 @@ export const payInvoice = async (id: number) => {
       return res.data;
     }
     throw new Error(res.error);
-  }).catch((e) => {
-    throw new Error(e);
+  }).catch((e : Error) => {
+    throw new Error(e.message);
   })
 }

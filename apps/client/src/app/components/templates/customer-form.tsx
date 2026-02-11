@@ -59,7 +59,7 @@ export default function CustomerForm({
     data?: EnterpriseInformation
   ) => {
     if (data) {
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { juridicShape, ...customerInfo } = data;
       form.reset({
         ...customerInfo,
@@ -69,7 +69,7 @@ export default function CustomerForm({
     } else {
       form.reset({ email, phone, siret });
     }
-    form.trigger([
+    await form.trigger([
       "name",
       "address",
       "city",
@@ -81,19 +81,19 @@ export default function CustomerForm({
 
   const onSubmit = (values: CustomerCreateModel) => {
     if (edit && customerId) {
-      UpdateCustomer(customerId, values).then((res) => {
+      void UpdateCustomer(customerId, values).then((res) => {
         if (res === null) {
           toast.error(t("customer.error.edit"));
         } else {
           toast.success(t("customer.success.edit"));
-          queryClient.invalidateQueries({
+          void queryClient.invalidateQueries({
             queryKey: ["customers", customerId],
           });
           router.push("/customers");
         }
       });
     } else {
-      CreateCustomer(values).then((res) => {
+      void CreateCustomer(values).then((res) => {
         if (res === null) {
           toast.error(t("customer.error.create"));
         } else {
@@ -106,20 +106,25 @@ export default function CustomerForm({
 
   const { data: countries } = useQuery(getAllCountriesQueryOptions());
 
-  const fillFormWithEnterpriseinfo = async () => {
-    const data = await fetchEnterpriseInfo(siret?.replace(/\s+/g, "") ?? "");
-    if (data && data.ok && data.data) {
-      updateFormValues(
-        form.getValues().email,
-        form.getValues().phone,
-        data.data
-      );
-    }
+  const fillFormWithEnterpriseinfo = () => {
+    void fetchEnterpriseInfo(siret?.replace(/\s+/g, "") ?? "").then(async (res) => {
+      if (res.data && res.ok) {
+        await updateFormValues(
+          form.getValues().email,
+          form.getValues().phone,
+          res.data
+        );
+      }
+    });
   };
+
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit)
+  }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit}>
         <Card className={className}>
           <CardContent>
             <div className="flex flew-row gap-4 pt-4">
