@@ -4,9 +4,8 @@ import { cookies } from "next/headers";
 import { HttpResponse } from "../types/http-response";
 
 type ClientOptionsProps = {
-  body?: never;
   token?: string;
-} & Omit<RequestInit, "body" | "headers">;
+} & Omit<RequestInit, "headers">;
 
 export const client = async <T>(
   endpoint: string,
