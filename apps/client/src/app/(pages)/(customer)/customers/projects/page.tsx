@@ -8,7 +8,7 @@ export default async function CustomerProjectPage() {
   if (!customerHeaders) {
     return <NotFoundEnterprise />;
   }
-  const customer: CustomerInfo = JSON.parse(customerHeaders);
+  const customer: CustomerInfo = JSON.parse(customerHeaders) as CustomerInfo;
 
   return (
     <>

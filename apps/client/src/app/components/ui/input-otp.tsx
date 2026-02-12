@@ -3,8 +3,8 @@
 import { OTPInput, OTPInputContext, REGEXP_ONLY_DIGITS } from "input-otp"
 import { Dot } from "lucide-react"
 import * as React from "react"
-import { Control, Controller } from "react-hook-form"
 import { cn } from "../../../lib/utils"
+import { FormField } from "./form"
 
 
 const InputOTP = React.forwardRef<
@@ -69,29 +69,27 @@ const InputOTPSeparator = React.forwardRef<
 ))
 InputOTPSeparator.displayName = "InputOTPSeparator"
 
-type InputOtpWithControllerProps = {
+type InputOtpWithControllerProps  = {
   name: string;
-  control: Control<any>;
   length: number;
   className?: string;
 }
 
-function InputOTPWithController({name, control, length, className} : InputOtpWithControllerProps) {
+function InputOTPWithController({name, length, className, ...props} : InputOtpWithControllerProps) {
   return (
-    <Controller
+    <FormField
       name={name}
-      control={control}
       render={({ field }) => (
         <InputOTP
           maxLength={length}
           pattern={REGEXP_ONLY_DIGITS}
-          value={field.value ?? ""}
-          onChange={field.onChange}
           containerClassName={className}
+          {...field}
+          {...props}
         >
           <InputOTPGroup>
             {Array.from({ length }).map((_, index) => (
-              <InputOTPSlot key={index} index={index} />
+              <InputOTPSlot key={index} index={index}/>
             ))}
           </InputOTPGroup>
         </InputOTP>

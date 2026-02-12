@@ -13,7 +13,6 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 import { Banknote, ClipboardCheck, FolderInput, Printer, ReceiptEuro, Send, TicketX } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 import { toast } from "sonner";
 import getQueryClient from "../../../lib/query-client";
 import {
@@ -40,28 +39,27 @@ export default function InvoiceTable({
 }: InvoiceTableProps) {
   const t = useTranslations();
   const queryClient = getQueryClient();
-  const [number, setNumber] = useState<string | undefined>();
 
   const handleValidateQuote = (id: number, value: boolean, code?: string) => {
     validateQuote(id, value, code).then(() => {
-      queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({
         queryKey: ["invoices"]
       });
       onRefetch();
       toast.success("Le devis a bien été validé.")
-    }).catch(e => {
+    }).catch((e : Error)=> {
       toast.error(e.message);
     });
   }
 
   const handlePayInvoice = (id: number) => {
     payInvoice(id).then(() => {
-      queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({
         queryKey: ["invoices"]
       });
       onRefetch();
       toast.success("La facture a bien été payé.")
-    }).catch((e) => {
+    }).catch((e : Error) => {
       toast.error(e.message);
     })
   }

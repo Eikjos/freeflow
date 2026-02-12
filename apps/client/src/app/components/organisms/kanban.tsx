@@ -61,7 +61,7 @@ export function Board({ className, projectId, columns }: KanbanProps) {
     const cols = [...columnsState.filter((p) => p.id !== col.id)];
     cols.splice(index_dest, 0, col);
     const columns = cols.map((c, index) => ({ ...c, index }));
-    reorderColumns(projectId, {
+    void reorderColumns(projectId, {
       orderedColumnIds: columns.map((c) => c.id),
     }).then(() => {
       setColumnsState((prev) => {
@@ -103,7 +103,7 @@ export function Board({ className, projectId, columns }: KanbanProps) {
     // Si ce n'est pas une creation ou une mise à jour de tache
     if (!isCreation) {
       // Appel de l'api
-      moveTask(columnId_dest, task.id, { toPosition: columnId?.tasks.length ?? 0 });
+      void moveTask(columnId_dest, task.id, { toPosition: columnId?.tasks.length ?? 0 });
     } 
 
     const currentTask = columnsState.flatMap(c => c.tasks).find(t => t.id == task.id);
@@ -120,11 +120,15 @@ export function Board({ className, projectId, columns }: KanbanProps) {
           setColumnsState([...columnsState, res]);
         }
       })
-      .catch((e) => {
+      .catch((e : Error) => {
         toast.error(e.message);
       });
     setOpen(false);
   };
+
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmitCreateColumn)
+  }
 
   return (
     <div className="w-full flex flex-col items-end">
@@ -134,7 +138,7 @@ export function Board({ className, projectId, columns }: KanbanProps) {
         </DialogTrigger>
         <DialogContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmitCreateColumn)}>
+            <form onSubmit={handleSubmit}>
               <DialogTitle className="text-3xl">
                 {t("column.createTitle")}
               </DialogTitle>

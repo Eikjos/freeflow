@@ -27,8 +27,8 @@ export const LoginForm = ({ className }: LoginFormProps) => {
       password: "",
     },
   });
-  const onSubmit = (values: LoginData) => {
-    login(values).then((data) => {
+  const onSubmit = async (values: LoginData) => {
+    await login(values).then((data) => {
       if (!data.success) {
         setError(data.message);
       }
@@ -45,10 +45,14 @@ export const LoginForm = ({ className }: LoginFormProps) => {
     });
   };
 
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit);
+  }
+
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={handleSubmit}
         className={cn("px-10 flex flex-col items-center gap-7", className)}
       >
         {error && (

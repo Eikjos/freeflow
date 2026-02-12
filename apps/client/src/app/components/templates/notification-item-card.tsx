@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader } from "@components/ui/card";
+import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { cn } from "../../../lib/utils";
 
 type NotificationItemCardProps = {

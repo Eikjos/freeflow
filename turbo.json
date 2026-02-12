@@ -1,8 +1,10 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalEnv": ["API_URL"],
   "tasks": {
     "build": {
+      "env": ["API_URL"],
       "dependsOn": ["^build"],
       "outputs": [
         "dist/**",
@@ -16,12 +18,14 @@
        "outputs": [],
     },
     "lint": {
+      "env": ["API_URL"],
       "dependsOn": ["^lint"]
     },
     "check-types": {
       "dependsOn": ["^check-types"]
     },
     "dev": {
+      "env": ["API_URL"],
       "dependsOn": ["@repo/shared-types#build", "@repo/pdf-templates#build", "@repo/email-templates#build"],
       "cache": false,
       "persistent": false

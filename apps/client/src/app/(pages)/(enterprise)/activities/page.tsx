@@ -7,7 +7,7 @@ export default async function ActivitiesPage() {
   const t = await getTranslations();
   const headersEnterprise = (await headers()).get("x-enterprise");
   const enterprise: EnterpriseInfo | null = headersEnterprise
-    ? JSON.parse(headersEnterprise)
+    ? JSON.parse(headersEnterprise) as EnterpriseInfo
     : null;
   return (
     <div>

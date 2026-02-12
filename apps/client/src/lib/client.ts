@@ -4,9 +4,8 @@ import { cookies } from "next/headers";
 import { HttpResponse } from "../types/http-response";
 
 type ClientOptionsProps = {
-  body?: any;
   token?: string;
-} & Omit<RequestInit, "body" | "headers">;
+} & Omit<RequestInit, "headers">;
 
 export const client = async <T>(
   endpoint: string,
@@ -35,7 +34,7 @@ export const client = async <T>(
   );
 
   if (!response.ok) {
-    const error = await response.json();
+    const error = await response.json() as Error;
     return {
       ok: false,
       data: undefined,

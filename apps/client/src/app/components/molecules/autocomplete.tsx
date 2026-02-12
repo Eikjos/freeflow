@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "../../../lib/utils";
 import { HttpResponse } from "../../../types/http-response";
 
-type AutoCompleteProps<TData extends Record<string, unknown>> = {} & Omit<
+type AutoCompleteProps<TData extends Record<string, unknown>> = Omit<
   AutoCompleteWithoutControlProps<TData>,
   "onChange"
 > &
@@ -53,7 +53,7 @@ function AutoCompleteItem({ name, value, onClick }: AutocompleteItemProps) {
       type="button"
       variant={"select"}
       className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
-      onClick={(e) => onClick(value, name)}
+      onClick={() => onClick(value, name)}
       tabIndex={0}
     >
       <span className="text-left">{name}</span>
@@ -68,7 +68,6 @@ export function AutoCompleteWithoutControl<
   fieldIdentifier,
   render,
   placeholder,
-  defaultValue,
   value,
   error,
   onAdd,
@@ -115,7 +114,7 @@ export function AutoCompleteWithoutControl<
   });
 
   const handleFilter = (value: string) => {
-    setDisplayValue((prev) => value);
+    setDisplayValue(() => value);
     setHasTyped(true);
   };
 
@@ -127,8 +126,9 @@ export function AutoCompleteWithoutControl<
       value !== undefined &&
       value !== null
     ) {
-      if (data?.data?.data[0]) {
-        setDisplayValue((prev) => render(data?.data?.data[0]!));
+      const firstItem = data?.data?.data?.[0];
+      if (firstItem) {
+        setDisplayValue(() => render(firstItem));
       } else {
         setDisplayValue("");
       }

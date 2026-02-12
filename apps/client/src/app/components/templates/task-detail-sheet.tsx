@@ -92,7 +92,7 @@ export default function TaskDetailSheet({
       }
     };
 
-    fetchAllFiles();
+    void fetchAllFiles();
   }, [task.mediaIds]);
 
   const onSubmit = async (values: CreateTaskData) => {
@@ -107,7 +107,7 @@ export default function TaskDetailSheet({
             newValue.value ?? ""
           );
           deletedImage.forEach((i) => {
-            deleteMedia(task.id, i);
+            void deleteMedia(task.id, i);
           });
         }
       }
@@ -122,7 +122,7 @@ export default function TaskDetailSheet({
           }
         })
         .then(() => onClose())
-        .catch((e) => toast.error(e.message));
+        .catch((e : Error) => toast.error(e.message));
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message);
@@ -137,7 +137,7 @@ export default function TaskDetailSheet({
           onDelete(task)
         }
       })
-      .catch((e) => toast.error(e.message))
+      .catch((e : Error) => toast.error(e.message))
       .finally(() => onClose());
   };
 
@@ -150,12 +150,16 @@ export default function TaskDetailSheet({
   };
 
   const handleDeleteFilesAlreadyUploaded = (file: File, mediaId: number) => {
-    deleteMedia(task.id, mediaId)
-      .catch((err) => toast.error(err.message))
+    void deleteMedia(task.id, mediaId)
+      .catch((err: Error) => toast.error(err.message))
       .then(() => {
         setFetchedFiles((prev) => prev.filter((e) => e.mediaId !== mediaId));
       });
   };
+
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit)
+  }
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
@@ -168,7 +172,7 @@ export default function TaskDetailSheet({
         <Form {...form}>
           <form
             className="flex flex-col items-center mt-5"
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={handleSubmit}
           >
             <Input
               type="text"

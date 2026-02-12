@@ -1,5 +1,6 @@
 "use client";
 
+import NotFoundEnterprise from "(pages)/(enterprise)/not-found";
 import Autocomplete from "@components/molecules/autocomplete";
 import CreateInvoiceLineModal from "@components/organisms/create-invoice-line-dialog";
 import InvoiceLineList from "@components/organisms/invoice-line-list";
@@ -24,7 +25,7 @@ import { createInvoice } from "actions/invoice";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEnterprise } from "providers/enterprise-provider";
-import { useEffect, useReducer, useState } from "react";
+import { ChangeEvent, useEffect, useReducer, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
@@ -45,10 +46,13 @@ export default function CreateInvoicesPage() {
   const searchParams = useSearchParams();
   const devisId = searchParams.get("devisId");
   const { enterprise } = useEnterprise();
+  if (!enterprise) {
+    return <NotFoundEnterprise />
+  }
   const router = useRouter();
   const [maskNameOnInvoice, setMaskNameOnInvoice] = useState<boolean>(true);
-  const [update, forceUpdate] = useReducer((x) => x + 1, 0);
-  const [autocompleteKey, setAutocompleteKey] = useReducer((x) => x + 1, 0);
+  const [update, forceUpdate] = useReducer((x :number) => x + 1, 0);
+  const [autocompleteKey, setAutocompleteKey] = useReducer((x : number) => x + 1, 0);
   const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
   const { data: DevisData, isLoading: isLoadingDevis } = useQuery({
     ...getInvoiceByIdQueryOptions(parseInt(devisId ?? "")),
@@ -56,8 +60,8 @@ export default function CreateInvoicesPage() {
       devisId !== undefined && !isNaN(Number(devisId)) && devisId !== null,
   });
   const { data, isSuccess, isLoading } = useQuery({
-    ...getInformationForInvoiceQueryOptions(enterprise?.id!),
-    enabled: enterprise?.id !== undefined,
+    ...getInformationForInvoiceQueryOptions(enterprise.id),
+    enabled: !!enterprise,
   });
   const form = useForm<InvoiceCreateData>({
     resolver: zodResolver(InvoiceCreateValidation),
@@ -122,16 +126,25 @@ export default function CreateInvoicesPage() {
       if (
         invoiceLine.ok &&
         !invoiceLinesOld.some((e) => e.name === invoiceLine.data?.name)
+        && invoiceLine.data
       ) {
         form.setValue("invoiceLines", [
           ...invoiceLinesOld,
-          { name: invoiceLine.data?.name!, quantity: 1, unitPrice: 0.0 },
+          { name: invoiceLine.data.name, quantity: 1, unitPrice: 0.0 },
         ]);
       }
 
       setAutocompleteKey();
     }
   };
+
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit)
+  }
+
+  const handleChangeCustomer = (event: ChangeEvent<HTMLInputElement>) => {
+    void handleChangeTask(parseInt(event.target.value));
+  }
 
   const handleMashNameChange = (checked: CheckedState) => {
     setMaskNameOnInvoice(checked ? true : false);
@@ -181,7 +194,7 @@ export default function CreateInvoicesPage() {
           toast.error("Il y a eu une erreur.");
         } else {
           toast.success(t("invoice.success.create"));
-          queryClient.invalidateQueries({ queryKey: ["sales"] });
+          void queryClient.invalidateQueries({ queryKey: ["sales"] });
           router.push("/invoices");
         }
       })
@@ -285,7 +298,7 @@ export default function CreateInvoicesPage() {
                 {...form.register("invoiceLine", {
                   onBlur: forceUpdate,
                   value: undefined,
-                  onChange: (event) => handleChangeTask(event.target.value),
+                  onChange: handleChangeCustomer
                 })}
               />
             </form>
@@ -301,7 +314,7 @@ export default function CreateInvoicesPage() {
             </div>
           )}
           <div className="flex flex-row justify-end mt-4">
-            <Button onClick={form.handleSubmit(onSubmit)}>
+            <Button onClick={handleSubmit}>
               {t("common.submitAndSend")}
             </Button>
           </div>

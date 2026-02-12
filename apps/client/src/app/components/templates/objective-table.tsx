@@ -133,7 +133,7 @@ export default function ObjectiveTable({
         toast.success(t("objective.success.delete"));
         onDelete();
       })
-      .catch((err) => {
+      .catch((err : Error) => {
         toast.error(err.message);
       });
   };

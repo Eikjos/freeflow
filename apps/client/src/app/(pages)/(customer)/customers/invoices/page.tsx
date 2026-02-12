@@ -7,6 +7,7 @@ import { InvoiceFilterData, PaginationFilter } from "@repo/shared-types";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { toast } from "sonner";
 import { getAllInvoiceQueryOptions } from "../../../../../lib/api/invoices";
 
 export default function CustomerInvoicePage() {
@@ -20,6 +21,12 @@ export default function CustomerInvoicePage() {
   const { data, isLoading, refetch } = useQuery(
     getAllInvoiceQueryOptions(paginationFilter)
   );
+
+  const handleRefresh = () => {
+    refetch().catch(() => {
+      toast.error(t("common.errorHandler"))
+    })
+  }
 
   return (
      <>
@@ -35,7 +42,7 @@ export default function CustomerInvoicePage() {
         data={data?.data?.data ?? []}
         isLoading={isLoading}
         isCustomer
-        onRefetch={refetch}
+        onRefetch={handleRefresh}
         className="mt-10"
       />
       <Pagination

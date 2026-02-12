@@ -16,7 +16,7 @@ export const login = async (
       password: data.password,
     } as LoginData),
   })
-    .then(async (data) => {
+    .then((data) => {
       if (data.ok) {
         cookieStore.set("access_token", data.data?.access_token ?? "");
         cookieStore.set("refreshToken", data.data?.refreshToken ?? "");

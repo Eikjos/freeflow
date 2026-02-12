@@ -44,6 +44,10 @@ export default function CreateInvoiceLineModal({
     handleOpenModal(false);
   };
 
+  const handleSubmitForm = () => {
+    form.handleSubmit(onSubmit)
+  }
+
   const handleOpenModal = (value: boolean) => {
     if (!value) form.reset();
 
@@ -80,7 +84,7 @@ export default function CreateInvoiceLineModal({
               {formatPrice(quantity * unitPrice, userLocale, currency)}
             </p>
             <DialogFooter>
-              <Button onClick={form.handleSubmit(onSubmit)}>
+              <Button onClick={handleSubmitForm}>
                 {t("common.create")}
               </Button>
             </DialogFooter>

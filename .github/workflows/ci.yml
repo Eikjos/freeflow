@@ -10,15 +10,15 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.6
       - name: Node 24
         uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: 'pnpm'
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Linter
@@ -27,20 +27,19 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     needs: lint
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.6
       - name: Node 24
         uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: 'pnpm'
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Linter
+      - name: Build
         run: pnpm turbo build

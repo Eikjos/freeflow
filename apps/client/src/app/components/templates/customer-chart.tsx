@@ -30,14 +30,14 @@ export default function CustomerChart({ data, className }: CustomerChartProps) {
           tickLine={false}
           axisLine={true}
           tickMargin={8}
-          tickFormatter={(value) => stringToDateYear(value)}
+          tickFormatter={(value : string) => stringToDateYear(value)}
         />
         <YAxis tickLine={false} axisLine={false} tickMargin={8} tickCount={3} />
         <ChartTooltip
           cursor={false}
           content={
             <ChartTooltipContent
-              labelFormatter={(value) => stringToDateYear(value)}
+              labelFormatter={(value : string) => stringToDateYear(value)}
             />
           }
         />

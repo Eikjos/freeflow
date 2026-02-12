@@ -9,7 +9,7 @@ export const createExpense = async (expense: CreateExpenseData) => {
       formData.append(key, value.toISOString());
     } else {
       if (value) {
-        formData.append(key, value.toString());
+        formData.append(key, value as string);
       }
     }
   });
@@ -22,7 +22,7 @@ export const createExpense = async (expense: CreateExpenseData) => {
       body: formData,
     },
     "other"
-  ).then(async (res) => {
+  ).then((res) => {
     if (res.ok) {
       return res.data;
     }
@@ -32,7 +32,7 @@ export const createExpense = async (expense: CreateExpenseData) => {
 
 export const deleteExpense = async (id: number) =>
   await client<void>(`expenses/${id}`, { method: "DELETE" }).then(
-    async (res) => {
+    (res) => {
       if (res.ok) {
         return res.data;
       }

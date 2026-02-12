@@ -86,7 +86,7 @@ export function DateInput({
                   )}
                 >
                   {field.value ? (
-                    dayjs(field.value).format("DD/MM/YYYY")
+                    dayjs(field.value as Date).format("DD/MM/YYYY")
                   ) : (
                     <span>{placeholder}</span>
                   )}
@@ -97,7 +97,7 @@ export function DateInput({
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
-                selected={field.value}
+                selected={field.value as Date}
                 onSelect={(value) => {
                   field.onChange(value);
                   field.onBlur();

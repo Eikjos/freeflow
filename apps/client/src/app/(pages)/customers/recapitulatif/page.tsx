@@ -15,7 +15,7 @@ export default async function RecapCustomerPage() {
   if (!headerUser) {
     return <NotFoundEnterprise />;
   }
-  const user: UserInfoType = JSON.parse(headerUser);
+  const user: UserInfoType = JSON.parse(headerUser) as UserInfoType;
   if (user.role !== "customer") {
     return <NotFoundEnterprise />;
   }

@@ -9,7 +9,7 @@ import { client } from "../../lib/client";
 
 export const CreateProject = async (project: ProjectCreateData) => {
   const formData = new FormData();
-  Object.keys(project).forEach((key) => formData.append(key, project[key]));
+  Object.keys(project).forEach((key) => formData.append(key, project[key] as string));
 
   return client<ProjectData>(
     `projects`,
@@ -20,7 +20,7 @@ export const CreateProject = async (project: ProjectCreateData) => {
     },
     "other"
   )
-    .then(async (data) => {
+    .then((data) => {
       return data;
     })
     .catch(() => {
@@ -30,7 +30,7 @@ export const CreateProject = async (project: ProjectCreateData) => {
 
 export const UpdateProject = async (id: number, project: ProjectCreateData) => {
   const formData = new FormData();
-  Object.keys(project).forEach((key) => formData.append(key, project[key]));
+  Object.keys(project).forEach((key) => formData.append(key, project[key] as string));
 
   return client<ProjectData>(
     `projects/${id}`,
@@ -41,7 +41,7 @@ export const UpdateProject = async (id: number, project: ProjectCreateData) => {
     },
     "other"
   )
-    .then(async (data) => {
+    .then((data) => {
       return data;
     })
     .catch(() => {
@@ -50,11 +50,11 @@ export const UpdateProject = async (id: number, project: ProjectCreateData) => {
 };
 
 export const deleteProject = async (id: number) => {
-  return client<void>(`projects/${id}`, { method: "DELETE" });
+  return client(`projects/${id}`, { method: "DELETE" });
 };
 
 export const reorderColumns = async (id: number, model: ReOrderColumsData) => {
-  return client<void>(`projects/${id}/columns/reorder`, {
+  return client(`projects/${id}/columns/reorder`, {
     method: "PATCH",
     body: JSON.stringify(model),
   });

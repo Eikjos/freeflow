@@ -72,13 +72,11 @@ export default class TasksController {
     @Req() req: Request,
   ) {
     const enterpriseId = req.user['enterpriseId'];
-    const customerId = req.user['customerId'];
     return this.taskService.update(
       id,
       model,
       files,
       parseInt(enterpriseId) || undefined,
-      parseInt(customerId) || undefined,
     );
   }
 

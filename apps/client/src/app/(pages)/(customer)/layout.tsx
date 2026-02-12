@@ -15,7 +15,7 @@ export default async function CustomerLayout({
     return <NotFoundEnterprise />;
   }
 
-  const customer: CustomerInfo = JSON.parse(headersCustomer);
+  const customer: CustomerInfo = JSON.parse(headersCustomer) as CustomerInfo;
 
   return (
     <CustomerProvider initialCustomer={customer}>

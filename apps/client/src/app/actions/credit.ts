@@ -10,7 +10,7 @@ export async function createCredit(model: CreateCreditData, creditFile: File) {
     if (value instanceof Date) {
       formData.append(key, value.toISOString());
     } else {
-      formData.append(key, value);
+      formData.append(key, value as string);
     }
   });
   formData.append(`creditLines`, JSON.stringify(creditLines));
@@ -23,7 +23,7 @@ export async function createCredit(model: CreateCreditData, creditFile: File) {
       body: formData,
     },
     "other"
-  ).then(async (res) => {
+  ).then((res) => {
     if (res.ok) {
       return res.data;
     }

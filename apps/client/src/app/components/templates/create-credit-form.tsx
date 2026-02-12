@@ -95,7 +95,7 @@ export default function CreateCreditForm({
 
   const onSubmit = async (values: CreateCreditData) => {
     // checking if the credit amount not exceed the invoice amount
-    var totalCreditAmount = values.creditLines
+    const totalCreditAmount = values.creditLines
       .map((cl) => cl.price)
       .reduce((i, prev) => prev + i, 0);
     if (totalCreditAmount > totalAmountInvoice - totalCreditInvoice) {
@@ -129,9 +129,9 @@ export default function CreateCreditForm({
       },
       new File([creditBlob], `credit-AV-${values.number}.pdf`)
     )
-      .then((res) => {
+      .then(() => {
         toast.success(t("credit.success.create"));
-        queryClient.invalidateQueries({ queryKey: ["sales"] });
+        void queryClient.invalidateQueries({ queryKey: ["sales"] });
         router.push("/invoices");
       })
       .catch((err: Error) => {
@@ -139,9 +139,13 @@ export default function CreateCreditForm({
       });
   };
 
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit);
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit}>
         <Card>
           <CardContent className="py-2 px-4">
             <div className="flex flex-row justify-end mt-2">

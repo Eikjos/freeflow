@@ -1,5 +1,6 @@
 "use client";
 
+import NotFoundEnterprise from "(pages)/(enterprise)/not-found";
 import CreateCreditForm from "@components/templates/create-credit-form";
 import CreditTemplate from "@components/templates/credit-template";
 import Loading from "@components/ui/loading";
@@ -27,6 +28,9 @@ export default function CreateCreditFormPage({
   invoice,
 }: CreateCreditFormProps) {
   const { enterprise } = useEnterprise();
+  if (!enterprise) {
+    return <NotFoundEnterprise />
+  }
   const initialCreditAmount = invoice.credits
     .map((c) => c.totalAmount)
     .reduce((i, prev) => prev + i, 0);
@@ -53,7 +57,7 @@ export default function CreateCreditFormPage({
     },
   });
   const { data, isLoading } = useQuery({
-    ...getInformationForDevisQueryOptions(enterprise?.id!),
+    ...getInformationForDevisQueryOptions(enterprise?.id),
     enabled: enterprise?.id !== undefined,
   });
   const creditLines = useWatch({ control: form.control, name: "creditLines" });

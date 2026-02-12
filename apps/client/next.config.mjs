@@ -3,7 +3,6 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin();
 const apiUrl = process.env.API_URL;
-console.log("API_URL at build:", process.env.API_URL);
 
 const nextConfig = {
   output: "standalone",
@@ -17,7 +16,7 @@ const nextConfig = {
       bodySizeLimit: "5mb",
     },
   },
-  async rewrites() {
+  rewrites() {
     if (apiUrl) {
       return [
         {

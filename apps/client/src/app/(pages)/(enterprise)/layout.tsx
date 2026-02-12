@@ -17,7 +17,7 @@ export default async function EnterpriseLayout({
   }
 
   const enterprise: EnterpriseInfo | undefined = headersEnterprise
-    ? JSON.parse(headersEnterprise)
+    ? JSON.parse(headersEnterprise) as EnterpriseInfo
     : undefined;
   return (
     <EnterpriseProvider initialEnterprise={enterprise}>

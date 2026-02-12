@@ -3,7 +3,7 @@
 import FileIcon from "@components/atoms/file-icon";
 import { CloudUpload } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { ComponentProps, useRef, useState } from "react";
+import { ChangeEvent, ComponentProps, DragEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Label } from "./label";
 
@@ -44,27 +44,30 @@ const InputFile = ({
     return forbiddenExtensions.includes(ext!);
   };
 
-  const handleFileChange = async (event: any) => {
-    const selectedFiles: File[] = Array.from(event.target.files);
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles: FileList | null = event.target.files;
     if (ref.current) {
       ref.current.value = "";
     }
     const safeFiles: File[] = [];
-    selectedFiles.forEach((file) => {
-      if (isForbidden(file.name)) {
-        toast.error(`Le fichier ${file.name} ne peut etre importé.`);
-      } else {
-        safeFiles.push(file);
-      }
-    });
-    onFilesSelected([...files, ...safeFiles]);
-    setFiles((prev) => [...prev, ...safeFiles]);
+    if (selectedFiles) {
+      for (const file of selectedFiles) {
+         if (isForbidden(file.name)) {
+          toast.error(`Le fichier ${file.name} ne peut etre importé.`);
+        } else {
+          safeFiles.push(file);
+        }
+      } 
+      onFilesSelected([...files, ...safeFiles]);
+      setFiles((prev) => [...prev, ...safeFiles]);
+    }
+    
   };
-  const handleDrop = (event: any) => {
+  const handleDrop = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    const droppedFiles = event.dataTransfer.files;
-    if (droppedFiles.length > 0) {
-      onFilesSelected(droppedFiles);
+    const droppedFiles = event.dataTransfer?.files;
+    if (droppedFiles && droppedFiles.length > 0) {
+      onFilesSelected(Array.from(droppedFiles));
     }
   };
 

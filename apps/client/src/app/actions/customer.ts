@@ -9,7 +9,7 @@ export const CreateCustomer = async (model: CustomerCreateModel) => {
     credentials: "include",
     body: JSON.stringify(model),
   })
-    .then(async (data) => {
+    .then((data) => {
       return data;
     })
     .catch(() => {
@@ -26,7 +26,7 @@ export const UpdateCustomer = async (
     credentials: "include",
     body: JSON.stringify(model),
   })
-    .then(async (data) => {
+    .then((data) => {
       return data;
     })
     .catch(() => {
@@ -35,7 +35,7 @@ export const UpdateCustomer = async (
 };
 
 export const DeleteCutomer = async (id: number) => {
-  return client<any>(`customers/${id}`, { method: "DELETE" });
+  return client(`customers/${id}`, { method: "DELETE" });
 };
 
 export const inviteCustomer = async (id: number) => 

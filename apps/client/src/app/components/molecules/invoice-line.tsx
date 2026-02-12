@@ -26,7 +26,7 @@ export default function InvoiceLine({
   canDelete,
 }: InvoiceLineProps) {
   const t = useTranslations();
-  const [totalKey, updateTotalKey] = useReducer((x) => x + 1, 0);
+  const [totalKey, updateTotalKey] = useReducer((x : number) => x + 1, 0);
   const form = useForm<InvoiceLineData>({
     resolver: zodResolver(InvoiceLineValidation),
     defaultValues: {

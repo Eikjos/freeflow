@@ -49,14 +49,14 @@ export default function CustomerFormVerif({
     },
   });
 
-  const onSubmit = (values: CustomerCreateModel) => {
+  const onSubmit = async (values: CustomerCreateModel) => {
     if (form.formState.isDirty) {
-      UpdateCustomer(customer.id, values).then((res) => {
+      await UpdateCustomer(customer.id, values).then((res) => {
         if (res === null) {
           toast.error(t("customer.error.edit"));
         } else {
           toast.success(t("customer.success.edit"));
-          queryClient.invalidateQueries({
+          void queryClient.invalidateQueries({
             queryKey: ["customers", customer.id],
           });
           router.push("/customers/dashboard");
@@ -73,7 +73,7 @@ export default function CustomerFormVerif({
     data?: EnterpriseInformation
   ) => {
     if (data) {
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
       const { juridicShape, ...customerInfo } = data;
       form.reset({
         ...customerInfo,
@@ -83,7 +83,7 @@ export default function CustomerFormVerif({
     } else {
       form.reset({ email, phone });
     }
-    form.trigger([
+    await form.trigger([
       "name",
       "address",
       "city",
@@ -93,23 +93,28 @@ export default function CustomerFormVerif({
     ]);
   };
 
-  const fillFormWithEnterpriseinfo = async () => {
-    const data = await fetchEnterpriseInfo(
+  const fillFormWithEnterpriseinfo = () => {
+    void fetchEnterpriseInfo(
       form.getValues().siret?.replace(/\s+/g, "") ?? ""
-    );
-    if (data && data.ok && data.data) {
-      updateFormValues(
-        form.getValues().email,
-        form.getValues().phone,
-        data.data
-      );
-    }
+    ).then(async (res) => {
+      if (res && res.ok && res.data) {
+        await updateFormValues(
+          form.getValues().email,
+          form.getValues().phone,
+          res.data
+        );
+      }
+    });
   };
+
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit);
+  }
 
   return (
     <Card className="w-1/2 mx-auto mt-10 mb-28">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit}>
           <CardContent>
             <CardHeader className="font-semibold p-0 my-5 text-xl">
               <h1>{t("customer.verif.title")}</h1>

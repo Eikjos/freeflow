@@ -1,7 +1,7 @@
 "use client";
 
 import StarButton from '@components/atoms/star-button';
-import React, { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react';
 import { cn } from '../../../lib/utils';
 
 interface StarRatingProps {
@@ -26,7 +26,7 @@ export default function StarRating({
   const max = 5
 
   useEffect(() => {
-    if (isControlled) setValue(controlledValue!)
+    if (isControlled) setValue(controlledValue)
   }, [controlledValue])
 
   const handleSet = (newVal: number) => {
@@ -54,7 +54,7 @@ export default function StarRating({
         className={`inline-flex select-none outline-none rounded ${readOnly ? '' : 'cursor-pointer'}`}
       >
         {Array.from({ length: max }).map((_, i) => (
-          <StarButton size={25} index={i} key={i} readOnly={readOnly} displayValue={displayValue} max={max} setHoverValue={setHoverValue} handleSet={handleSet}  />
+          <StarButton size={25} index={i} key={i} readOnly={readOnly} displayValue={displayValue} setHoverValue={setHoverValue} handleSet={handleSet}  />
         ))}
       </div>
     </div>

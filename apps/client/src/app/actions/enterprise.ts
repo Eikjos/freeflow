@@ -14,7 +14,7 @@ export const fetchEnterpriseInfo = async (siret: string) => {
     .then((data) => {
       return data;
     })
-    .catch((e) => {
+    .catch(() => {
       return null;
     });
 };
@@ -25,10 +25,10 @@ export const createEnterprise = async (
 ) => {
   const formData = new FormData();
   Object.keys(enterprise).forEach((key) =>
-    formData.append(key, enterprise[key])
+    formData.append(key, enterprise[key] as string)
   );
   if (logo) formData.append("logo", logo);
-  var cookieStore = await cookies();
+  const cookieStore = await cookies();
   return client<AuthResponseData>(
     `enterprises`,
     {
@@ -36,7 +36,7 @@ export const createEnterprise = async (
       body: formData,
     },
     "other"
-  ).then(async (res) => {
+  ).then((res) => {
     if (res.ok && res.data) {
       cookieStore.set("access_token", res.data.access_token);
       cookieStore.set("refreshToken", res.data.refreshToken);
@@ -53,10 +53,10 @@ export const updateEnterprise = async (
 ) => {
   const formData = new FormData();
   Object.keys(enterprise).forEach((key) =>
-    formData.append(key, enterprise[key])
+    formData.append(key, enterprise[key] as string)
   );
   if (logo) formData.append("logo", logo);
-  var cookieStore = await cookies();
+  const cookieStore = await cookies();
 
   return client<AuthResponseData>(
     `enterprises/${id}`,
@@ -65,7 +65,7 @@ export const updateEnterprise = async (
       body: formData,
     },
     "other"
-  ).then(async (res) => {
+  ).then((res) => {
     if (res.ok && res.data) {
       cookieStore.set("access_token", res.data.access_token);
       cookieStore.set("refreshToken", res.data.refreshToken);

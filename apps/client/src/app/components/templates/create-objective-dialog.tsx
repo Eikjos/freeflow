@@ -26,7 +26,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 type CreateObjectiveDialogProps = {
-  className?: string;
   trigger: JSX.Element;
   defaultValue?: ObjectiveData;
   isUpdate: boolean;
@@ -34,7 +33,6 @@ type CreateObjectiveDialogProps = {
 };
 
 export default function CreateObjectiveDialog({
-  className,
   trigger,
   defaultValue,
   isUpdate,
@@ -66,11 +64,11 @@ export default function CreateObjectiveDialog({
           }
           setOpen(false);
         })
-        .catch((err) => {
+        .catch((err : Error) => {
           toast.error(err.message);
         });
-    } else {
-      updateObjective(defaultValue?.id!, values)
+    } else  if (defaultValue) {
+      updateObjective(defaultValue.id, values)
         .then(() => {
           toast.success(t("objective.success.update"));
           if (callback) {
@@ -78,9 +76,13 @@ export default function CreateObjectiveDialog({
           }
           setOpen(false);
         })
-        .catch((err) => toast.error(err.message));
+        .catch((err : Error) => toast.error(err.message));
     }
   };
+
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit);
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -130,7 +132,7 @@ export default function CreateObjectiveDialog({
                 </Button>
               </DialogClose>
               <Button
-                onClick={form.handleSubmit(onSubmit, (err) => console.log(err))}
+                onClick={handleSubmit}
               >
                 {t("common.save")}
               </Button>
