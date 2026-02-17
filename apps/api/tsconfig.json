@@ -20,8 +20,7 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "*": ["./src/*"]
-    },
-    "types": ["Multer"]
+    }
   },
   "include": ["src"]
 }
