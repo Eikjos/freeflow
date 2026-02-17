@@ -7,9 +7,9 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
+import { mapToTask, TaskDto } from 'dtos/tasks/task.dto'
 import CreateTaskDto from 'dtos/tasks/task-create.dto'
 import { TaskPaginationFilterDto } from 'dtos/tasks/task-filter.dto'
-import { mapToTask, TaskDto } from 'dtos/tasks/task.dto'
 import { PaginationResultDto } from 'dtos/utils/pagination-result.dto'
 import { MediaService } from 'media/media.service'
 import { PrismaService } from 'prisma.service'

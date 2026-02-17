@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import CreateColumnDto from 'dtos/columns/column-create.dto'
-import CreateTaskDto from 'dtos/tasks/task-create.dto'
 import { mapToTask } from 'dtos/tasks/task.dto'
+import CreateTaskDto from 'dtos/tasks/task-create.dto'
 import { MediaService } from 'media/media.service'
 import { PrismaService } from 'prisma.service'
 
