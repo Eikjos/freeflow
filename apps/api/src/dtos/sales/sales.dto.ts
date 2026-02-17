@@ -1,24 +1,24 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Sales } from '@prisma/client';
-import { SaleData } from '@repo/shared-types';
+import { ApiProperty } from '@nestjs/swagger'
+import { Sales } from '@prisma/client'
+import { SaleData } from '@repo/shared-types'
 
 export default class SaleDto implements SaleData {
   @ApiProperty({ description: 'id of sales' })
-  id: number;
+  id: number
   @ApiProperty({ description: 'Year of sales' })
-  year: number;
+  year: number
   @ApiProperty({ description: 'Month of sales' })
-  month: number;
+  month: number
   @ApiProperty({ description: 'EnterpriseId of sales' })
-  enterpriseId: number;
+  enterpriseId: number
   @ApiProperty({ description: 'amount of sales' })
-  amount: number;
+  amount: number
 
   constructor(sale: Sales) {
-    this.id = sale.id;
-    this.enterpriseId = sale.enterpriseId;
-    this.year = sale.year;
-    this.month = sale.month;
-    this.amount = sale.number;
+    this.id = sale.id
+    this.enterpriseId = sale.enterpriseId
+    this.year = sale.year
+    this.month = sale.month
+    this.amount = sale.number
   }
 }

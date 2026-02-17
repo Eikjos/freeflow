@@ -3,12 +3,12 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-} from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import dayjs from 'dayjs';
-import PrevisionDto from '../dtos/sales/prevision.dto';
-import SaleDto from '../dtos/sales/sales.dto';
-import { PrismaService } from '../prisma.service';
+} from '@nestjs/common'
+import { Prisma } from '@prisma/client'
+import dayjs from 'dayjs'
+import PrevisionDto from '../dtos/sales/prevision.dto'
+import SaleDto from '../dtos/sales/sales.dto'
+import { PrismaService } from '../prisma.service'
 
 @Injectable()
 export default class SalesService {
@@ -21,53 +21,53 @@ export default class SalesService {
         where: { enterpriseId: enterpriseId, year: new Date().getFullYear() },
         _sum: { number: true },
       })
-    )._sum.number;
+    )._sum.number
   }
 
   async findAllByYear(year: number, enterpriseId: number) {
     const sales = await this.prismaService.sales.findMany({
       where: { year: year, enterpriseId },
-    });
-    if (!sales) throw new HttpException('NoContent', HttpStatus.NO_CONTENT);
-    return sales.map((s) => new SaleDto(s));
+    })
+    if (!sales) throw new HttpException('NoContent', HttpStatus.NO_CONTENT)
+    return sales.map((s) => new SaleDto(s))
   }
 
   async getAmountByYear(enterpriseId: number, year?: number) {
-    let filterQuery: Prisma.SalesWhereInput = { enterpriseId };
+    let filterQuery: Prisma.SalesWhereInput = { enterpriseId }
     if (year !== undefined) {
       filterQuery = {
         ...filterQuery,
         year: year,
-      };
+      }
     }
     return (
       await this.prismaService.sales.aggregate({
         where: filterQuery,
         _sum: { number: true },
       })
-    )._sum.number;
+    )._sum.number
   }
 
   async total(enterpriseId: number) {
     const enterprise = await this.prismaService.enterprise.findFirst({
       where: { id: enterpriseId },
-    });
-    if (!enterprise) throw new ForbiddenException();
+    })
+    if (!enterprise) throw new ForbiddenException()
     const aggregate = await this.prismaService.sales.aggregate({
       where: { enterpriseId },
       _sum: { number: true },
-    });
-    return aggregate._sum.number;
+    })
+    return aggregate._sum.number
   }
 
   async getPrevisions(enterpriseId: number) {
     const enterprise = await this.prismaService.enterprise.findFirst({
       where: { id: enterpriseId },
-    });
-    if (!enterprise) throw new ForbiddenException();
-    const now = new Date();
-    const year = now.getFullYear();
-    const dateFrom = new Date(`${year}-01-01`);
+    })
+    if (!enterprise) throw new ForbiddenException()
+    const now = new Date()
+    const year = now.getFullYear()
+    const dateFrom = new Date(`${year}-01-01`)
 
     const result = await this.prismaService.$queryRaw<PrevisionDto[]>`
       WITH months AS (
@@ -96,7 +96,7 @@ export default class SalesService {
           month_label AS month,
           SUM(monthly_total) OVER (ORDER BY year, month) AS sale
         FROM monthly_sales;
-      `;
+      `
 
     const devis = await this.prismaService.invoice.findMany({
       where: {
@@ -113,7 +113,7 @@ export default class SalesService {
         ],
       },
       include: { invoiceLines: true },
-    });
+    })
     const total = devis.reduce(
       (prev, curr) =>
         curr.invoiceLines.reduce(
@@ -123,14 +123,14 @@ export default class SalesService {
           (curr.excludeTva ? 1 : 1.2) +
         prev,
       0,
-    );
+    )
     const months = Array.from({ length: 12 }, (_, i) =>
       dayjs().startOf('year').add(i, 'month').format('YYYY-MM'),
-    );
+    )
 
     // Complète les mois manquants
     return months.map((m, index) => {
-      const r = result[index];
+      const r = result[index]
       return {
         month: m,
         sale: r ? Number(r.sale) : null,
@@ -142,21 +142,21 @@ export default class SalesService {
             : index === result.length - 1
               ? (r ? Number(r.sale) : 0) + total
               : null,
-      } as PrevisionDto;
-    });
+      } as PrevisionDto
+    })
   }
 
   async updateSalesAmount(enterpriseId: number, date: Date, value: number) {
     const sale = await this.prismaService.sales.findFirst({
       where: { enterpriseId, month: date.getMonth(), year: date.getFullYear() },
-    });
+    })
     if (sale) {
       await this.prismaService.sales.update({
         where: { id: sale.id },
         data: {
           number: sale.number + value,
         },
-      });
+      })
     } else {
       await this.prismaService.sales.create({
         data: {
@@ -165,7 +165,7 @@ export default class SalesService {
           year: date.getFullYear(),
           number: value,
         },
-      });
+      })
     }
   }
 }

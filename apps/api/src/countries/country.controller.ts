@@ -1,6 +1,6 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import CountryService from './country.service';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import CountryService from './country.service'
 
 @Controller('countries')
 @ApiTags('Country')
@@ -9,12 +9,12 @@ export default class CountryController {
   constructor(private readonly countryService: CountryService) {}
 
   @Get()
-  async findAll() {
-    return this.countryService.findAll();
+  findAll() {
+    return this.countryService.findAll()
   }
 
   @Get(':id')
-  async findById(@Param('id', new ParseIntPipe()) id: number) {
-    return this.countryService.findById(id);
+  findById(@Param('id', new ParseIntPipe()) id: number) {
+    return this.countryService.findById(id)
   }
 }

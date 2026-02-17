@@ -1,5 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'prisma.service';
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { PrismaService } from 'prisma.service'
 
 @Injectable()
 export default class CountryService {
@@ -7,7 +7,7 @@ export default class CountryService {
 
   // - Methods
   async findAll() {
-    return await this.prisma.country.findMany();
+    return await this.prisma.country.findMany()
   }
 
   async findById(id: number) {
@@ -16,9 +16,9 @@ export default class CountryService {
         where: {
           id,
         },
-      });
-    } catch (e) {
-      throw new NotFoundException('country.notFound');
+      })
+    } catch {
+      throw new NotFoundException('country.notFound')
     }
   }
 }

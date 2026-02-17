@@ -1,21 +1,21 @@
-import NotFoundEnterprise from "(pages)/(enterprise)/not-found";
-import SidebarMenuCustomer from "@components/templates/sidebar-menu-customer";
-import { SidebarProvider } from "@components/ui/sidebar";
-import { headers } from "next/headers";
-import { CustomerProvider } from "providers/customer-provider";
-import { CustomerInfo } from "../../../types/customer-info-type";
+import NotFoundEnterprise from '(pages)/(enterprise)/not-found'
+import SidebarMenuCustomer from '@components/templates/sidebar-menu-customer'
+import { SidebarProvider } from '@components/ui/sidebar'
+import { headers } from 'next/headers'
+import { CustomerProvider } from 'providers/customer-provider'
+import { CustomerInfo } from '../../../types/customer-info-type'
 export default async function CustomerLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
-  const headersCustomer = (await headers()).get("x-customer");
+  const headersCustomer = (await headers()).get('x-customer')
 
   if (!headersCustomer) {
-    return <NotFoundEnterprise />;
+    return <NotFoundEnterprise />
   }
 
-  const customer: CustomerInfo = JSON.parse(headersCustomer) as CustomerInfo;
+  const customer: CustomerInfo = JSON.parse(headersCustomer) as CustomerInfo
 
   return (
     <CustomerProvider initialCustomer={customer}>
@@ -24,5 +24,5 @@ export default async function CustomerLayout({
         <div className="px-5 pb-2 pt-7 w-full overflow-auto">{children}</div>
       </SidebarProvider>
     </CustomerProvider>
-  );
+  )
 }

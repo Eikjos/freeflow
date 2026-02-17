@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import CountryController from './country.controller';
-import CountryService from './country.service';
+import { Module } from '@nestjs/common'
+import { PrismaService } from '../prisma.service'
+import CountryController from './country.controller'
+import CountryService from './country.service'
 
 @Module({
   providers: [PrismaService, CountryService],

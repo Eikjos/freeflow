@@ -1,27 +1,27 @@
-"use client";
+'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import { ChartConfig } from "@components/ui/chart";
-import Loading from "@components/ui/loading";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
-import { useQueries } from "@tanstack/react-query";
-import { ChartAreaIcon, ChartBarIcon } from "lucide-react";
-import { useEffect, useState } from "react";
-import { getSalesByYearQueryOptions } from "../../../lib/api/sales";
-import { numberToMonth } from "../../../lib/utils";
-import { SalesChart } from "./sales-chart";
+import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card'
+import { ChartConfig } from '@components/ui/chart'
+import Loading from '@components/ui/loading'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
+import { useQueries } from '@tanstack/react-query'
+import { ChartAreaIcon, ChartBarIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { getSalesByYearQueryOptions } from '../../../lib/api/sales'
+import { numberToMonth } from '../../../lib/utils'
+import { SalesChart } from './sales-chart'
 
 type YearData = {
-  [year: number]: number;
-  label: string;
-};
+  [year: number]: number
+  label: string
+}
 
 type SalesCardProps = {
-  title: string;
-  className?: string;
-  yearInscription?: number;
-  year?: number;
-};
+  title: string
+  className?: string
+  yearInscription?: number
+  year?: number
+}
 
 export default function SalesCard({
   title,
@@ -29,37 +29,37 @@ export default function SalesCard({
   yearInscription,
   year,
 }: SalesCardProps) {
-  const currentYear = new Date().getFullYear();
-  const [chartData, setChartData] = useState<YearData[]>([]);
-  let years: number[] = [];
+  const currentYear = new Date().getFullYear()
+  const [chartData, setChartData] = useState<YearData[]>([])
+  let years: number[] = []
 
   if (yearInscription) {
     years = Array.from({ length: 3 }, (_, i) => currentYear - i).filter(
-      (year) => year >= yearInscription
-    );
+      (year) => year >= yearInscription,
+    )
   } else if (year) {
-    years = [year];
+    years = [year]
   }
 
   const results = useQueries({
     queries: years.map((year) => getSalesByYearQueryOptions(year)),
-  });
-  const [dataCurrent, dataLast, dataTwoYearsAgo] = results.map((r) => r.data);
-  const isLoading = results.some((r) => r.isLoading);
+  })
+  const [dataCurrent, dataLast, dataTwoYearsAgo] = results.map((r) => r.data)
+  const isLoading = results.some((r) => r.isLoading)
 
   useEffect(() => {
     if (!isLoading) {
-      let dataChart: YearData[] = [];
+      let dataChart: YearData[] = []
       for (let i = 0; i < 12; ++i) {
         const values = [
           dataCurrent?.data?.find((e) => e.month == i)?.amount ?? 0,
           dataLast?.data?.find((e) => e.month == i)?.amount ?? 0,
           dataTwoYearsAgo?.data?.find((e) => e.month == i)?.amount ?? 0,
-        ];
+        ]
 
         const obj = Object.fromEntries(
-          years.map((year, idx) => [year, values[idx]])
-        );
+          years.map((year, idx) => [year, values[idx]]),
+        )
 
         dataChart = [
           ...dataChart,
@@ -67,17 +67,17 @@ export default function SalesCard({
             label: numberToMonth(i),
             ...obj,
           },
-        ];
+        ]
       }
-      setChartData(dataChart);
+      setChartData(dataChart)
     }
-  }, [isLoading]);
+  }, [isLoading])
 
-  const colors = ["green", "red", "blue"];
+  const colors = ['green', 'red', 'blue']
 
   const chartConfig = Object.fromEntries(
-    years.map((year, idx) => [year, { label: year, color: colors[idx] }])
-  ) satisfies ChartConfig;
+    years.map((year, idx) => [year, { label: year, color: colors[idx] }]),
+  ) satisfies ChartConfig
 
   return (
     <Card className={className}>
@@ -91,7 +91,7 @@ export default function SalesCard({
             <TabsTrigger value="bar">
               <ChartBarIcon
                 size={20}
-                style={{ transform: "rotateX(-180deg) rotateZ(90deg)" }}
+                style={{ transform: 'rotateX(-180deg) rotateZ(90deg)' }}
               />
             </TabsTrigger>
           </TabsList>
@@ -130,5 +130,5 @@ export default function SalesCard({
         </CardContent>
       </Tabs>
     </Card>
-  );
+  )
 }

@@ -514,7 +514,7 @@
         "task": {
           "title": "Projets & Tâches",
           "content": "Organisez vos projets avec des tableaux Kanban. Assignez des tâches, fixez des échéances et suivez l'avancement."
-        } 
+        }
       }
     },
     "prices": {
@@ -576,10 +576,10 @@
     "validation": {
       "endDate": "La date de fin doit être supérieur à aujourd'hui.",
       "number": "L'objectif visée doit être supérieur à 0."
-    } 
+    }
   },
   "opinion": {
-    "last" : { 
+    "last": {
       "title": "Les derniers avis"
     }
   },
@@ -603,7 +603,7 @@
     },
     "notFound": "Le projet n'a pas été trouvé."
   },
-  "sales": { 
+  "sales": {
     "previsionTitle": "La prévision du chiffre d'affaire",
     "real": "CA réél",
     "prevision": "Prévision du CA"
@@ -620,7 +620,7 @@
     "namePlaceholder": "Nom de la tâche",
     "name": "Tâches",
     "priority": "Priorité",
-    "select": "Sélectionnez une tâche", 
+    "select": "Sélectionnez une tâche",
     "urgents": {
       "title": "Les tâches urgentes",
       "any": "Aucune tâche urgente"

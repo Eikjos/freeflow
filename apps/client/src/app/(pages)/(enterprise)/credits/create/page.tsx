@@ -1,25 +1,25 @@
-import CreateCreditFormPage from "@components/organisms/create-credit-form-page";
-import { InvoiceData } from "@repo/shared-types";
-import { redirect } from "next/navigation";
-import { client } from "../../../../../lib/client";
+import CreateCreditFormPage from '@components/organisms/create-credit-form-page'
+import { InvoiceData } from '@repo/shared-types'
+import { redirect } from 'next/navigation'
+import { client } from '../../../../../lib/client'
 
 type CreateCreditsProps = {
-  searchParams: Promise<{ invoiceId?: string }>;
-};
+  searchParams: Promise<{ invoiceId?: string }>
+}
 
 export default async function CreateCredits({
   searchParams,
 }: CreateCreditsProps) {
-  const invoiceId = (await searchParams).invoiceId;
+  const invoiceId = (await searchParams).invoiceId
 
   if (!invoiceId || isNaN(Number(invoiceId))) {
-    redirect("/invoices");
+    redirect('/invoices')
   }
 
-  const invoice = await client<InvoiceData>(`invoices/${invoiceId}`);
+  const invoice = await client<InvoiceData>(`invoices/${invoiceId}`)
 
   if (!invoice.ok || invoice.error) {
-    redirect("/invoices");
+    redirect('/invoices')
   }
 
   return (
@@ -31,5 +31,5 @@ export default async function CreateCredits({
         <CreateCreditFormPage invoice={invoice.data} />
       )}
     </div>
-  );
+  )
 }

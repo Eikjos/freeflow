@@ -1,7 +1,7 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import ExpenseCategoryDto from 'dtos/expense-categories/expense-category.dto';
-import { AccessTokenGuard } from 'guards/access-token.guard';
-import ExpenseCategoryService from './expense-category.service';
+import { Controller, Get, UseGuards } from '@nestjs/common'
+import ExpenseCategoryDto from 'dtos/expense-categories/expense-category.dto'
+import { AccessTokenGuard } from 'guards/access-token.guard'
+import ExpenseCategoryService from './expense-category.service'
 
 @Controller('expense-categories')
 export default class ExpenseCategoryController {
@@ -11,7 +11,7 @@ export default class ExpenseCategoryController {
 
   @UseGuards(AccessTokenGuard)
   @Get()
-  async findAll(): Promise<ExpenseCategoryDto[]> {
-    return this.expenseCategoryService.findAll();
+  findAll(): Promise<ExpenseCategoryDto[]> {
+    return this.expenseCategoryService.findAll()
   }
 }

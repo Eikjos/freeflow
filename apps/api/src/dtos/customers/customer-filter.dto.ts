@@ -1,33 +1,33 @@
-import { Customer } from '@prisma/client';
-import { Transform } from 'class-transformer';
-import { IsDate, IsInt, IsString } from 'class-validator';
+import { Customer } from '@prisma/client'
+import { Transform } from 'class-transformer'
+import { IsDate, IsInt, IsString } from 'class-validator'
 
 export class CustomerFilterDto
   implements Omit<Customer, 'token' | 'tokenDate'>
 {
   @IsDate()
-  createdAt: Date;
+  createdAt: Date
   @IsInt()
   @Transform(({ value }) => parseInt(value))
-  id: number;
+  id: number
   @IsString()
-  name: string;
+  name: string
   @IsString()
-  siret: string;
+  siret: string
   @IsString()
-  tvaNumber: string;
+  tvaNumber: string
   @IsString()
-  address: string;
+  address: string
   @IsString()
-  zipCode: string;
+  zipCode: string
   @IsString()
-  city: string;
+  city: string
   @IsString()
-  email: string;
+  email: string
   @IsString()
-  phone: string;
+  phone: string
   @IsInt()
   @Transform(({ value }) => parseInt(value))
   countryId: number;
-  [key: string]: string | number | Date;
+  [key: string]: string | number | Date
 }

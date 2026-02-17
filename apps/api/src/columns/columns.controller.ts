@@ -9,15 +9,15 @@ import {
   UploadedFiles,
   UseGuards,
   UseInterceptors,
-} from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
-import CreateColumnDto from 'dtos/columns/column-create.dto';
-import MoveTaskDto from 'dtos/tasks/move-task.dto';
-import CreateTaskDto from 'dtos/tasks/task-create.dto';
-import { CustomerGuard } from 'guards/customer.guard';
-import { EnterpriseGuard } from 'guards/enterprise.guard';
-import ColumnService from './columns.service';
+} from '@nestjs/common'
+import { FilesInterceptor } from '@nestjs/platform-express'
+import { ApiBody, ApiConsumes } from '@nestjs/swagger'
+import CreateColumnDto from 'dtos/columns/column-create.dto'
+import MoveTaskDto from 'dtos/tasks/move-task.dto'
+import CreateTaskDto from 'dtos/tasks/task-create.dto'
+import { CustomerGuard } from 'guards/customer.guard'
+import { EnterpriseGuard } from 'guards/enterprise.guard'
+import ColumnService from './columns.service'
 
 @Controller('columns')
 export default class ColumnsController {
@@ -38,7 +38,7 @@ export default class ColumnsController {
     @UploadedFiles()
     files: Express.Multer.File[],
   ) {
-    return this.columnService.createTask(id, model, files);
+    return this.columnService.createTask(id, model, files)
   }
 
   @HttpCode(200)
@@ -48,7 +48,7 @@ export default class ColumnsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() model: CreateColumnDto,
   ) {
-    return this.columnService.update(id, model);
+    return this.columnService.update(id, model)
   }
 
   @HttpCode(200)
@@ -59,6 +59,6 @@ export default class ColumnsController {
     @Param('taskId', ParseIntPipe) taskId,
     @Body() model: MoveTaskDto,
   ) {
-    return this.columnService.moveTask(id, taskId, model.toPosition);
+    return this.columnService.moveTask(id, taskId, model.toPosition)
   }
 }

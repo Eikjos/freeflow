@@ -13,13 +13,6 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": [
-    "index.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules"
-  ]
+  "include": ["index.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["dist", "node_modules"]
 }

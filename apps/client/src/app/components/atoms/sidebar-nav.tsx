@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
-import { SidebarMenuButton, SidebarMenuItem } from "@components/ui/sidebar";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { SidebarMenuButton, SidebarMenuItem } from '@components/ui/sidebar'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 type SidebarNavProps = {
-  url: string;
-  name: string;
-};
+  url: string
+  name: string
+}
 
 export default function SidebarNav({ name, url }: SidebarNavProps) {
-  const pathname = usePathname();
+  const pathname = usePathname()
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={pathname.startsWith(url)}>
@@ -19,5 +19,5 @@ export default function SidebarNav({ name, url }: SidebarNavProps) {
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>
-  );
+  )
 }

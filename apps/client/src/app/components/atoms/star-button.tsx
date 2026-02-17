@@ -1,21 +1,26 @@
-"use client";
+'use client'
 
-import { useCallback } from "react";
-
+import { useCallback } from 'react'
 
 type StarButtonProps = {
-  readOnly: boolean;
-  displayValue: number;
-  index: number;
-  size: number;
-  setHoverValue: (value: number) => void;
-  handleSet: (value: number) => void;
+  readOnly: boolean
+  displayValue: number
+  index: number
+  size: number
+  setHoverValue: (value: number) => void
+  handleSet: (value: number) => void
 }
 
-
-export default function StarButton({readOnly, displayValue, index, size, setHoverValue, handleSet } : StarButtonProps) { 
+export default function StarButton({
+  readOnly,
+  displayValue,
+  index,
+  size,
+  setHoverValue,
+  handleSet,
+}: StarButtonProps) {
   // how much of this star is filled (0 to 100)
-  const rawFill = Math.max(0, Math.min(1, (displayValue - index)))
+  const rawFill = Math.max(0, Math.min(1, displayValue - index))
   const fillPercent = Math.round(rawFill * 100)
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
@@ -23,15 +28,15 @@ export default function StarButton({readOnly, displayValue, index, size, setHove
     const target = e.currentTarget as HTMLButtonElement
     const rect = target.getBoundingClientRect()
     const x = e.clientX - rect.left
-    const demiRectWidth = rect.width / 2;
-    let selected = 0;
+    const demiRectWidth = rect.width / 2
+    let selected = 0
     if (x >= demiRectWidth) {
-      selected = index + 1;
+      selected = index + 1
     } else {
-      selected = index + 0.5;
+      selected = index + 0.5
     }
     setHoverValue(selected)
-  }, []);
+  }, [])
 
   const handleClick = (e: React.MouseEvent) => {
     if (readOnly) return
@@ -39,12 +44,12 @@ export default function StarButton({readOnly, displayValue, index, size, setHove
     const target = e.currentTarget as HTMLButtonElement
     const rect = target.getBoundingClientRect()
     const x = e.clientX - rect.left
-    const demiRectWidth = rect.width / 2;
-    let selected = 0;
+    const demiRectWidth = rect.width / 2
+    let selected = 0
     if (x >= demiRectWidth) {
-      selected = index + 1;
+      selected = index + 1
     } else {
-      selected = index + 0.5;
+      selected = index + 0.5
     }
     handleSet(selected)
   }
@@ -63,7 +68,15 @@ export default function StarButton({readOnly, displayValue, index, size, setHove
   )
 }
 
-function StarIcon({ size = 28, fillPercent = 100, id }: { size?: number; fillPercent?: number, id: string }) {
+function StarIcon({
+  size = 28,
+  fillPercent = 100,
+  id,
+}: {
+  size?: number
+  fillPercent?: number
+  id: string
+}) {
   const viewBox = '0 0 24 24'
   return (
     <svg
@@ -93,7 +106,10 @@ function StarIcon({ size = 28, fillPercent = 100, id }: { size?: number; fillPer
 
       {/* filled portion clipped */}
       <g clipPath={`url(#clip-${id})`}>
-        <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.402 8.173L12 18.896 4.664 23.171l1.402-8.173L.132 9.21l8.2-1.192z" fill={`url(#${id})`} />
+        <path
+          d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.788 1.402 8.173L12 18.896 4.664 23.171l1.402-8.173L.132 9.21l8.2-1.192z"
+          fill={`url(#${id})`}
+        />
       </g>
 
       {/* subtle stroke */}

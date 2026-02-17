@@ -12,10 +12,6 @@
     "strict": false,
     "skipLibCheck": true
   },
-  "include": [
-    "index.ts",
-    "emails/**/*.ts",
-    "emails/**/*.tsx"
-  ],
+  "include": ["index.ts", "emails/**/*.ts", "emails/**/*.tsx"],
   "exclude": ["dist", "node_modules"]
 }

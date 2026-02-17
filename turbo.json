@@ -6,16 +6,12 @@
     "build": {
       "env": ["API_URL"],
       "dependsOn": ["^build"],
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "!.next/cache/**"
-      ],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
       "cache": true
     },
     "start:prod": {
       "dependsOn": ["^start:prod"],
-       "outputs": [],
+      "outputs": []
     },
     "lint": {
       "env": ["API_URL"],
@@ -26,7 +22,11 @@
     },
     "dev": {
       "env": ["API_URL"],
-      "dependsOn": ["@repo/shared-types#build", "@repo/pdf-templates#build", "@repo/email-templates#build"],
+      "dependsOn": [
+        "@repo/shared-types#build",
+        "@repo/pdf-templates#build",
+        "@repo/email-templates#build"
+      ],
       "cache": false,
       "persistent": false
     }

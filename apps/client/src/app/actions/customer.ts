@@ -1,42 +1,36 @@
-"use server";
+'use server'
 
-import { CustomerCreateModel, CustomerModel } from "@repo/shared-types";
-import { client } from "../../lib/client";
+import { CustomerCreateModel, CustomerModel } from '@repo/shared-types'
+import { client } from '../../lib/client'
 
-export const CreateCustomer = async (model: CustomerCreateModel) => {
-  return client<CustomerModel>(`customers`, {
-    method: "POST",
-    credentials: "include",
+export const CreateCustomer = (model: CustomerCreateModel) =>
+  client<CustomerModel>(`customers`, {
+    method: 'POST',
+    credentials: 'include',
     body: JSON.stringify(model),
   })
     .then((data) => {
-      return data;
+      return data
     })
     .catch(() => {
-      return null;
-    });
-};
+      return null
+    })
 
-export const UpdateCustomer = async (
-  id: number,
-  model: CustomerCreateModel
-) => {
-  return client<CustomerModel>(`customers/${id}`, {
-    method: "PUT",
-    credentials: "include",
+export const UpdateCustomer = (id: number, model: CustomerCreateModel) =>
+  client<CustomerModel>(`customers/${id}`, {
+    method: 'PUT',
+    credentials: 'include',
     body: JSON.stringify(model),
   })
     .then((data) => {
-      return data;
+      return data
     })
     .catch(() => {
-      return null;
-    });
-};
+      return null
+    })
 
-export const DeleteCutomer = async (id: number) => {
-  return client(`customers/${id}`, { method: "DELETE" });
-};
+export const deleteCustomer = (id: number) =>
+  client(`customers/${id}`, { method: 'DELETE' })
 
-export const inviteCustomer = async (id: number) => 
-  client(`customers/${id}/invite`, { method : "POST"})
+export const inviteCustomer = async (id: number) =>
+  client(`customers/${id}/invite`, { method: 'POST' })

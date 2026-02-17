@@ -1,44 +1,57 @@
-import { Button, Text } from "@react-email/components";
-import dayjs from "dayjs";
-import { formatPrice } from "../utils";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import TailwindConfig from "./components/TailwindConfig";
+import { Button, Text } from '@react-email/components'
+import dayjs from 'dayjs'
+import { formatPrice } from '../utils'
+import Footer from './components/Footer'
+import Header from './components/Header'
+import TailwindConfig from './components/TailwindConfig'
 
 type QuoteMailProps = {
-  clientUrl: string;
-  mediaId: number;
-  invoiceNumber: string;
-  date: Date;
-  amount: number;
-  name: string;
+  clientUrl: string
+  mediaId: number
+  invoiceNumber: string
+  date: Date
+  amount: number
+  name: string
 }
 
-export function QuoteMail({ clientUrl, mediaId, invoiceNumber, date, name, amount} : QuoteMailProps ) {
+export function QuoteMail({
+  clientUrl,
+  mediaId,
+  invoiceNumber,
+  date,
+  name,
+  amount,
+}: QuoteMailProps) {
   return (
     <TailwindConfig>
       <Header clientUrl={clientUrl} />
-        <Text className="text-3xl text-center mt-5 mb-5">
-          Vous avez reçu un nouveau devis
+      <Text className="text-3xl text-center mt-5 mb-5">
+        Vous avez reçu un nouveau devis
       </Text>
       <div className="px-8">
         <Text>
           Bonjour,
           <br />
-          Veuillez trouver ci-joint votre devis n°{invoiceNumber}, émise le {dayjs(date).format("DD/MM/YYYY")} et relative à {name}. Le montant de celui-ci s'élève à {formatPrice(amount, "FR-fr", "EUR")}.
+          Veuillez trouver ci-joint votre devis n°{invoiceNumber}, émise le{' '}
+          {dayjs(date).format('DD/MM/YYYY')} et relative à {name}. Le montant de
+          celui-ci s'élève à {formatPrice(amount, 'FR-fr', 'EUR')}.
           <br />
         </Text>
         <Text className="text-2xl text-center mt-5 mb-5">
           Vous pouvez télécharger la devis en utilisant le lien ci-dessous :
         </Text>
         <div className="mt-10 mb-10 text-center">
-            <Button className="bg-primary px-6 py-2 rounded-full text-sm text-white w-44 text-center inline-block">Télécharger le devis</Button>
+          <Button className="bg-primary px-6 py-2 rounded-full text-sm text-white w-44 text-center inline-block">
+            Télécharger le devis
+          </Button>
         </div>
         <Text>
-          Nous vous remercions de bien vouloir valider ou non le devis en le signant sur la plateforme.
+          Nous vous remercions de bien vouloir valider ou non le devis en le
+          signant sur la plateforme.
           <br />
-          Pour toute question ou demande d’information complémentaire, notre service administratif reste à votre disposition à l’adresse suivante : [Email du support].
-          Nous vous remercions pour votre confiance.
+          Pour toute question ou demande d’information complémentaire, notre
+          service administratif reste à votre disposition à l’adresse suivante :
+          [Email du support]. Nous vous remercions pour votre confiance.
           <br />
           <br />
           Cordialement,
@@ -46,7 +59,7 @@ export function QuoteMail({ clientUrl, mediaId, invoiceNumber, date, name, amoun
           Proxiad Axe Seine
         </Text>
       </div>
-     
+
       <Footer />
     </TailwindConfig>
   )

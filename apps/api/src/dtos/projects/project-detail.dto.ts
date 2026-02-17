@@ -1,14 +1,14 @@
-import { Column, Project, Task, TaskMedia } from '@prisma/client';
-import { ProjectDetailWithTasks } from '@repo/shared-types';
-import { ColumnDto } from '../columns/column.dto';
-import { mapToTaskWithTaskMedia } from '../tasks/task.dto';
+import { Column, Project, Task, TaskMedia } from '@prisma/client'
+import { ProjectDetailWithTasks } from '@repo/shared-types'
+import { ColumnDto } from '../columns/column.dto'
+import { mapToTaskWithTaskMedia } from '../tasks/task.dto'
 
 export class ProjectDetailWithTasksDto implements ProjectDetailWithTasks {
-  customerId: number;
-  mediaId: number;
-  name: string;
-  columns: ColumnDto[];
-  id: number;
+  customerId: number
+  mediaId: number
+  name: string
+  columns: ColumnDto[]
+  id: number
 }
 
 export function mapProjectWithTasksAndColumns(
@@ -30,5 +30,5 @@ export function mapProjectWithTasksAndColumns(
               .map((t) => mapToTaskWithTaskMedia(t, t.medias)),
           }) as ColumnDto,
       ),
-  };
+  }
 }

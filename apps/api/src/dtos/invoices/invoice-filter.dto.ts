@@ -1,17 +1,17 @@
-import { InvoiceType, StatusInvoice } from '@prisma/client';
-import { InvoiceFilterData } from '@repo/shared-types';
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { InvoiceType, StatusInvoice } from '@prisma/client'
+import { InvoiceFilterData } from '@repo/shared-types'
+import { IsDate, IsNumber, IsString } from 'class-validator'
 
 export class InvoiceFilterDataDto implements InvoiceFilterData {
   @IsString()
-  number: string;
+  number: string
   @IsNumber()
-  customerId: number;
-  type: InvoiceType;
-  status: StatusInvoice;
+  customerId: number
+  type: InvoiceType
+  status: StatusInvoice
   @IsDate()
-  startDate: Date;
+  startDate: Date
   @IsDate()
   endDate: Date;
-  [key: string]: string | number | Date;
+  [key: string]: string | number | Date
 }

@@ -1,35 +1,31 @@
 /** @type {import('next').NextConfig} */
-import createNextIntlPlugin from "next-intl/plugin";
+import createNextIntlPlugin from 'next-intl/plugin'
 
-const withNextIntl = createNextIntlPlugin();
-const apiUrl = process.env.API_URL;
+const withNextIntl = createNextIntlPlugin()
+const apiUrl = process.env.API_URL
 
 const nextConfig = {
-  output: "standalone",
+  output: 'standalone',
   images: {
-   remotePatterns: apiUrl
-  ? [{ hostname: new URL(apiUrl).hostname }]
-  : [],
+    remotePatterns: apiUrl ? [{ hostname: new URL(apiUrl).hostname }] : [],
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: "5mb",
+      bodySizeLimit: '5mb',
     },
   },
   rewrites() {
     if (apiUrl) {
       return [
         {
-          source: "/api/:path*",
-          // eslint-disable-next-line turbo/no-undeclared-env-vars
+          source: '/api/:path*',
           destination: `${apiUrl}/:path*`,
           basePath: false,
         },
-      ];
+      ]
     }
     return []
-   
   },
-};
+}
 
-export default withNextIntl(nextConfig);
+export default withNextIntl(nextConfig)

@@ -5,39 +5,38 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@components/ui/dropdown-menu";
-import { logout } from "actions/login";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useCustomer } from "providers/customer-provider";
-import { useEnterprise } from "providers/enterprise-provider";
-import { cn } from "../../../lib/utils";
+} from '@components/ui/dropdown-menu'
+import { logout } from 'actions/login'
+import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
+import { useCustomer } from 'providers/customer-provider'
+import { useEnterprise } from 'providers/enterprise-provider'
+import { cn } from '../../../lib/utils'
 
 type ProfileButtonProps = {
-  className?: string;
-  type: "customer" | "enterprise";
-};
+  className?: string
+  type: 'customer' | 'enterprise'
+}
 
 export default function ProfileButton({ className, type }: ProfileButtonProps) {
-  const t = useTranslations();
-  const router = useRouter();
+  const t = useTranslations()
+  const router = useRouter()
 
   const onLogout = () => {
     void logout().then(() => {
-      router.replace("/");
+      router.replace('/')
     })
+  }
 
-  };
-
-  if (type == "enterprise") {
-    const { enterprise } = useEnterprise();
+  if (type == 'enterprise') {
+    const { enterprise } = useEnterprise()
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div
             className={cn(
-              "bg-primary rounded-md text-white py-3 px-2 flex items-center justify-between",
-              className
+              'bg-primary rounded-md text-white py-3 px-2 flex items-center justify-between',
+              className,
             )}
           >
             <span className="text-sm w-1/2">{enterprise?.name}</span>
@@ -48,20 +47,20 @@ export default function ProfileButton({ className, type }: ProfileButtonProps) {
           <DropdownMenuLabel>{enterprise?.name}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={onLogout} className="hover:cursor-pointer">
-            {t("common.logout")}
+            {t('common.logout')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    );
+    )
   } else {
-    const { customer } = useCustomer();
+    const { customer } = useCustomer()
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div
             className={cn(
-              "bg-primary rounded-md text-white py-3 px-2 flex items-center justify-between",
-              className
+              'bg-primary rounded-md text-white py-3 px-2 flex items-center justify-between',
+              className,
             )}
           >
             <span className="text-sm w-1/2">{customer?.name}</span>
@@ -71,10 +70,10 @@ export default function ProfileButton({ className, type }: ProfileButtonProps) {
           <DropdownMenuLabel>{customer?.name}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={onLogout} className="hover:cursor-pointer">
-            {t("common.logout")}
+            {t('common.logout')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    );
+    )
   }
 }

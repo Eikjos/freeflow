@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { Invoice, User } from '@prisma/client';
-import { renderToBuffer } from '@react-pdf/renderer';
-import { DevisTemplate } from '@repo/pdf-templates';
-import { CustomerDetailModel, InvoiceInformation } from '@repo/shared-types';
-import { CreateInvoiceLineDto } from 'dtos/invoices/invoice-create.dto';
+import { Injectable } from '@nestjs/common'
+import { Invoice, User } from '@prisma/client'
+import { renderToBuffer } from '@react-pdf/renderer'
+import { DevisTemplate } from '@repo/pdf-templates'
+import { CustomerDetailModel, InvoiceInformation } from '@repo/shared-types'
+import { CreateInvoiceLineDto } from 'dtos/invoices/invoice-create.dto'
 
 @Injectable()
 export default class InvoiceFileService {
@@ -29,6 +29,6 @@ export default class InvoiceFileService {
         signedDate={devis.signedDate}
         user={user.firstName + ' ' + user.lastName}
       />,
-    );
+    )
   }
 }

@@ -1,21 +1,21 @@
-"use client";
+'use client'
 
-import CardList from "@components/organisms/card-list";
-import { Pagination } from "@components/ui/pagination";
-import { Pagination as PaginationType, ProjectData } from "@repo/shared-types";
-import { useQuery } from "@tanstack/react-query";
-import { deleteProject } from "actions/project";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { toast } from "sonner";
-import { getAllProjectsQueryOptions } from "../../../lib/api/projects";
-import getQueryClient from "../../../lib/query-client";
-import ProjectCard from "./project-card";
+import CardList from '@components/organisms/card-list'
+import { Pagination } from '@components/ui/pagination'
+import { Pagination as PaginationType, ProjectData } from '@repo/shared-types'
+import { useQuery } from '@tanstack/react-query'
+import { deleteProject } from 'actions/project'
+import { useTranslations } from 'next-intl'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { getAllProjectsQueryOptions } from '../../../lib/api/projects'
+import getQueryClient from '../../../lib/query-client'
+import ProjectCard from './project-card'
 
 type ProjectListProps = {
-  enterpriseId?: number;
-  customerId?: number;
-};
+  enterpriseId?: number
+  customerId?: number
+}
 
 export default function ProjectList({
   enterpriseId,
@@ -24,39 +24,39 @@ export default function ProjectList({
   const [pagination, setPagination] = useState<PaginationType>({
     page: 0,
     pageSize: 6,
-  });
-  const queryClient = getQueryClient();
+  })
+  const queryClient = getQueryClient()
   const {
     data: projects,
     refetch,
     isLoading,
   } = useQuery({
     ...getAllProjectsQueryOptions(pagination, enterpriseId, customerId),
-  });
-  const t = useTranslations();
+  })
+  const t = useTranslations()
   const handleChangePage = (page: number) => {
-    setPagination((prev) => ({ ...prev, page }));
-  };
+    setPagination((prev) => ({ ...prev, page }))
+  }
 
   const OnDeleteProject = (project: ProjectData) => {
     void deleteProject(project.id).then(async (res) => {
       if (res.ok) {
         await queryClient.invalidateQueries({
-          queryKey: ["projects", pagination],
-        });
-        toast.success(t("project.removeSuccess", { project: project.name }));
+          queryKey: ['projects', pagination],
+        })
+        toast.success(t('project.removeSuccess', { project: project.name }))
         // si il y a encore un projet après suppression
         if ((projects?.data?.data.length ?? 0) > 1 || pagination.page === 0) {
-          await refetch();
+          await refetch()
           // sinon aller sur la page précédente si elle permet
         } else {
-          setPagination((prev) => ({ ...prev, page: prev.page - 1 }));
+          setPagination((prev) => ({ ...prev, page: prev.page - 1 }))
         }
       } else {
-        toast.error(t("project.removeFailed", { project: project.name }));
+        toast.error(t('project.removeFailed', { project: project.name }))
       }
-    });
-  };
+    })
+  }
 
   return (
     <>
@@ -84,5 +84,5 @@ export default function ProjectList({
         />
       )}
     </>
-  );
+  )
 }

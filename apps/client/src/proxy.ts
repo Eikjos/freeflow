@@ -1,7 +1,7 @@
-import { type NextRequest } from "next/server";
-import { AuthMiddleware } from "./middlewares/auth";
+import { type NextRequest } from 'next/server'
+import { AuthMiddleware } from './middlewares/auth'
 export function proxy(request: NextRequest) {
-  return AuthMiddleware(request);
+  return AuthMiddleware(request)
 }
 
 // here I made sure that the middleware works on every route
@@ -16,4 +16,4 @@ export const config = {
      */
     '/((?!api|login|tarifs|inscription|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.png$|.*\\.jpg$).+)',
   ],
-};
+}

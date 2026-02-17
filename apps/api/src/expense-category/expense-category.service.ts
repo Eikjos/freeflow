@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import ExpenseCategoryDto from 'dtos/expense-categories/expense-category.dto';
-import { PrismaService } from 'prisma.service';
+import { Injectable } from '@nestjs/common'
+import ExpenseCategoryDto from 'dtos/expense-categories/expense-category.dto'
+import { PrismaService } from 'prisma.service'
 
 @Injectable()
 export default class ExpenseCategoryService {
@@ -12,6 +12,6 @@ export default class ExpenseCategoryService {
         ({
           ...e,
         }) as ExpenseCategoryDto,
-    );
+    )
   }
 }

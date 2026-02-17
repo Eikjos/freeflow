@@ -1,103 +1,103 @@
-import Autocomplete from "@components/molecules/autocomplete";
-import { Button } from "@components/ui/button";
-import { Card, CardContent } from "@components/ui/card";
-import { DateInput } from "@components/ui/date-input";
-import { Form } from "@components/ui/form";
-import { Input } from "@components/ui/input";
-import { Select } from "@components/ui/select";
-import { SelectItemProps } from "@radix-ui/react-select";
-import { InvoiceFilterData } from "@repo/shared-types";
-import clsx from "clsx";
-import { useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
-import { getAllCustomersQueryOptions } from "../../../lib/api/customers";
-import { invoiceStatusToString } from "../../../lib/utils";
+import Autocomplete from '@components/molecules/autocomplete'
+import { Button } from '@components/ui/button'
+import { Card, CardContent } from '@components/ui/card'
+import { DateInput } from '@components/ui/date-input'
+import { Form } from '@components/ui/form'
+import { Input } from '@components/ui/input'
+import { Select } from '@components/ui/select'
+import { SelectItemProps } from '@radix-ui/react-select'
+import { InvoiceFilterData } from '@repo/shared-types'
+import clsx from 'clsx'
+import { useTranslations } from 'next-intl'
+import { useForm } from 'react-hook-form'
+import { getAllCustomersQueryOptions } from '../../../lib/api/customers'
+import { invoiceStatusToString } from '../../../lib/utils'
 
 type InvoiceFilterProps = {
-  className?: string;
-  onChangeFilter: (filter: InvoiceFilterData | undefined) => void;
-  isCustomer?: boolean;
-};
+  className?: string
+  onChangeFilter: (filter: InvoiceFilterData | undefined) => void
+  isCustomer?: boolean
+}
 
 export default function InvoiceFilter({
   className,
   onChangeFilter,
-  isCustomer = false
+  isCustomer = false,
 }: InvoiceFilterProps) {
-  const t = useTranslations();
+  const t = useTranslations()
   const form = useForm<InvoiceFilterData>({
     defaultValues: {
-      number: "",
+      number: '',
     },
-  });
-  const startDate = form.watch("startDate");
-  const endDate = form.watch("endDate");
+  })
+  const startDate = form.watch('startDate')
+  const endDate = form.watch('endDate')
   const statusValues: SelectItemProps[] = [
     {
-      value: "WAITING_VALIDATION",
-      textValue: invoiceStatusToString("WAITING_VALIDATION"),
+      value: 'WAITING_VALIDATION',
+      textValue: invoiceStatusToString('WAITING_VALIDATION'),
     },
     {
-      value: "VALIDATE",
-      textValue: invoiceStatusToString("VALIDATE"),
+      value: 'VALIDATE',
+      textValue: invoiceStatusToString('VALIDATE'),
     },
     {
-      value: "WAITING_PAYED",
-      textValue: invoiceStatusToString("WAITING_PAYED"),
+      value: 'WAITING_PAYED',
+      textValue: invoiceStatusToString('WAITING_PAYED'),
     },
     {
-      value: "PAYED",
-      textValue: invoiceStatusToString("PAYED"),
+      value: 'PAYED',
+      textValue: invoiceStatusToString('PAYED'),
     },
-  ];
+  ]
 
   const invoiceTypes: SelectItemProps[] = [
     {
-      value: "QUOTE",
-      textValue: "Devis",
+      value: 'QUOTE',
+      textValue: 'Devis',
     },
     {
-      value: "INVOICE",
-      textValue: "Facture",
+      value: 'INVOICE',
+      textValue: 'Facture',
     },
-  ];
+  ]
 
   const onSubmit = (filter: InvoiceFilterData) => {
-    onChangeFilter(filter);
-  };
+    onChangeFilter(filter)
+  }
 
   const resetForm = () => {
-    onChangeFilter(undefined);
-    form.reset();
-  };
+    onChangeFilter(undefined)
+    form.reset()
+  }
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
+    form.handleSubmit(onSubmit)
   }
 
   return (
-    <Card className={clsx("pt-5 shadow-sm bg-slate-100/45", className)}>
+    <Card className={clsx('pt-5 shadow-sm bg-slate-100/45', className)}>
       <CardContent className="">
         <form onSubmit={handleSubmit}>
           <Form {...form}>
-            <h4 className="font-semibold">{t("common.filters")}</h4>
+            <h4 className="font-semibold">{t('common.filters')}</h4>
             <div className="flex flex-row w-full gap-10">
               <Input
                 type="text"
-                label={t("common.number")}
-                placeholder={t("invoice.search.number")}
+                label={t('common.number')}
+                placeholder={t('invoice.search.number')}
                 className="w-1/4"
-                {...form.register("number")}
+                {...form.register('number')}
               />
               {!isCustomer && (
                 <Autocomplete
-                  label={t("common.customer")}
-                  placeholder={t("invoice.search.customer")}
+                  label={t('common.customer')}
+                  placeholder={t('invoice.search.customer')}
                   queryOptions={(filter) =>
                     getAllCustomersQueryOptions({
                       page: 0,
                       pageSize: 20,
-                      asc: "name",
+                      asc: 'name',
                       filter: {
                         name: filter.search,
                         id: filter.id,
@@ -108,50 +108,50 @@ export default function InvoiceFilter({
                   filterField="name"
                   fieldIdentifier="id"
                   className="w-1/4"
-                  {...form.register("customerId")}
+                  {...form.register('customerId')}
                 />
               )}
               <Select
-                label={t("common.status")}
+                label={t('common.status')}
                 className="w-1/4"
-                placeholder={t("invoice.search.status")}
+                placeholder={t('invoice.search.status')}
                 values={statusValues}
-                {...form.register("status")}
+                {...form.register('status')}
               />
               <Select
-                label={t("common.type")}
+                label={t('common.type')}
                 className="w-1/4"
-                placeholder={t("invoice.search.type")}
+                placeholder={t('invoice.search.type')}
                 values={invoiceTypes}
-                {...form.register("type")}
+                {...form.register('type')}
               />
             </div>
             <div className="flex flex-row items-center gap-5 mt-4">
               <DateInput
-                {...form.register("startDate")}
+                {...form.register('startDate')}
                 className="w-1/6"
-                placeholder={t("common.startDate")}
-                label={t("common.startDate")}
+                placeholder={t('common.startDate')}
+                label={t('common.startDate')}
                 maxDate={endDate}
               />
               <span className="pt-5 text-sm">à</span>
               <DateInput
-                {...form.register("endDate")}
+                {...form.register('endDate')}
                 className="w-1/6"
-                placeholder={t("common.endDate")}
-                label={t("common.endDate")}
+                placeholder={t('common.endDate')}
+                label={t('common.endDate')}
                 minDate={startDate}
               />
             </div>
           </Form>
           <div className="mt-2 flex flex-row justify-end gap-5">
-            <Button variant={"outline"} type="button" onClick={resetForm}>
-              {t("common.reinit")}
+            <Button variant={'outline'} type="button" onClick={resetForm}>
+              {t('common.reinit')}
             </Button>
-            <Button type="submit">{t("common.apply")}</Button>
+            <Button type="submit">{t('common.apply')}</Button>
           </div>
         </form>
       </CardContent>
     </Card>
-  );
+  )
 }

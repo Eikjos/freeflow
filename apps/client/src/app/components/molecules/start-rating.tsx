@@ -1,8 +1,8 @@
-"use client";
+'use client'
 
-import StarButton from '@components/atoms/star-button';
-import { useEffect, useRef, useState } from 'react';
-import { cn } from '../../../lib/utils';
+import StarButton from '@components/atoms/star-button'
+import { useEffect, useRef, useState } from 'react'
+import { cn } from '../../../lib/utils'
 
 interface StarRatingProps {
   value?: number // current rating (can be fractional)
@@ -46,7 +46,9 @@ export default function StarRating({
         {value.toString().replace('.', ',')} / {max}
       </div>
       <div
-        aria-label={readOnly ? `Note: ${value} sur ${max}` : `Note : ${value} sur ${max}`}
+        aria-label={
+          readOnly ? `Note: ${value} sur ${max}` : `Note : ${value} sur ${max}`
+        }
         aria-valuemin={0}
         aria-valuemax={max}
         tabIndex={readOnly ? -1 : 0}
@@ -54,10 +56,17 @@ export default function StarRating({
         className={`inline-flex select-none outline-none rounded ${readOnly ? '' : 'cursor-pointer'}`}
       >
         {Array.from({ length: max }).map((_, i) => (
-          <StarButton size={25} index={i} key={i} readOnly={readOnly} displayValue={displayValue} setHoverValue={setHoverValue} handleSet={handleSet}  />
+          <StarButton
+            size={25}
+            index={i}
+            key={i}
+            readOnly={readOnly}
+            displayValue={displayValue}
+            setHoverValue={setHoverValue}
+            handleSet={handleSet}
+          />
         ))}
       </div>
     </div>
   )
 }
-

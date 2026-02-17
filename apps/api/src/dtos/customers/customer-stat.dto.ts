@@ -1,6 +1,6 @@
-import { CustomerStatData } from '@repo/shared-types';
+import { CustomerStatData } from '@repo/shared-types'
 
 export default class CustomerStatDto implements CustomerStatData {
-  month: string;
-  customers: number;
+  month: string
+  customers: number
 }

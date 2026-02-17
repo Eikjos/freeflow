@@ -5,13 +5,13 @@ import {
   Post,
   Req,
   UseGuards,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { LoginDto } from 'dtos/auth/login.dto';
-import { Request } from 'express';
-import { AccessTokenGuard } from 'guards/access-token.guard';
-import { RefreshTokenGuard } from 'guards/refresh-token.guard';
-import AuthService from './auth.service';
+} from '@nestjs/common'
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { LoginDto } from 'dtos/auth/login.dto'
+import { Request } from 'express'
+import { AccessTokenGuard } from 'guards/access-token.guard'
+import { RefreshTokenGuard } from 'guards/refresh-token.guard'
+import AuthService from './auth.service'
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -21,25 +21,25 @@ export default class AuthController {
   @Post('login')
   @ApiOperation({ summary: 'SignIn the user' })
   @HttpCode(200)
-  async signIn(@Body() model: LoginDto) {
-    return this.authService.signIn(model.email, model.password);
+  signIn(@Body() model: LoginDto) {
+    return this.authService.signIn(model.email, model.password)
   }
 
   @UseGuards(AccessTokenGuard)
   @Post('logout')
   @HttpCode(200)
-  async logout(@Req() req: Request) {
-    const userId = req.user['sub'];
-    return this.authService.logout(userId);
+  logout(@Req() req: Request) {
+    const userId = req.user['sub']
+    return this.authService.logout(userId)
   }
 
   @UseGuards(RefreshTokenGuard)
   @ApiBearerAuth()
   @Post('refresh')
   @HttpCode(200)
-  async refresh(@Req() req: Request) {
-    const userId = req.user['sub'];
-    const refreshToken = req.user['refreshToken'];
-    return this.authService.refresh(userId, refreshToken);
+  refresh(@Req() req: Request) {
+    const userId = req.user['sub']
+    const refreshToken = req.user['refreshToken']
+    return this.authService.refresh(userId, refreshToken)
   }
 }

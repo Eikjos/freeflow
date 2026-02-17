@@ -1,11 +1,10 @@
-"use client"
+'use client'
 
-import { OTPInput, OTPInputContext, REGEXP_ONLY_DIGITS } from "input-otp"
-import { Dot } from "lucide-react"
-import * as React from "react"
-import { cn } from "../../../lib/utils"
-import { FormField } from "./form"
-
+import { OTPInput, OTPInputContext, REGEXP_ONLY_DIGITS } from 'input-otp'
+import { Dot } from 'lucide-react'
+import * as React from 'react'
+import { cn } from '../../../lib/utils'
+import { FormField } from './form'
 
 const InputOTP = React.forwardRef<
   React.ElementRef<typeof OTPInput>,
@@ -14,37 +13,37 @@ const InputOTP = React.forwardRef<
   <OTPInput
     ref={ref}
     containerClassName={cn(
-      "flex items-center gap-2 has-[:disabled]:opacity-50",
-      containerClassName
+      'flex items-center gap-2 has-[:disabled]:opacity-50',
+      containerClassName,
     )}
-    className={cn("disabled:cursor-not-allowed", className)}
+    className={cn('disabled:cursor-not-allowed', className)}
     {...props}
   />
 ))
-InputOTP.displayName = "InputOTP"
+InputOTP.displayName = 'InputOTP'
 
 const InputOTPGroup = React.forwardRef<
-  React.ElementRef<"div">,
-  React.ComponentPropsWithoutRef<"div">
+  React.ElementRef<'div'>,
+  React.ComponentPropsWithoutRef<'div'>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("flex items-center", className)} {...props} />
+  <div ref={ref} className={cn('flex items-center', className)} {...props} />
 ))
-InputOTPGroup.displayName = "InputOTPGroup"
+InputOTPGroup.displayName = 'InputOTPGroup'
 
 const InputOTPSlot = React.forwardRef<
-  React.ElementRef<"div">,
-  React.ComponentPropsWithoutRef<"div"> & { index: number }
+  React.ElementRef<'div'>,
+  React.ComponentPropsWithoutRef<'div'> & { index: number }
 >(({ index, className, ...props }, ref) => {
   const inputOTPContext = React.useContext(OTPInputContext)
-  const slot =  inputOTPContext.slots[index]!
+  const slot = inputOTPContext.slots[index]!
 
   return (
     <div
       ref={ref}
       className={cn(
-        "relative flex h-10 w-10 items-center justify-center border-y border-r border-input text-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md",
-        slot.isActive && "z-10 ring-2 ring-ring ring-offset-background",
-        className
+        'relative flex h-10 w-10 items-center justify-center border-y border-r border-input text-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md',
+        slot.isActive && 'z-10 ring-2 ring-ring ring-offset-background',
+        className,
       )}
       {...props}
     >
@@ -57,25 +56,30 @@ const InputOTPSlot = React.forwardRef<
     </div>
   )
 })
-InputOTPSlot.displayName = "InputOTPSlot"
+InputOTPSlot.displayName = 'InputOTPSlot'
 
 const InputOTPSeparator = React.forwardRef<
-  React.ElementRef<"div">,
-  React.ComponentPropsWithoutRef<"div">
+  React.ElementRef<'div'>,
+  React.ComponentPropsWithoutRef<'div'>
 >(({ ...props }, ref) => (
   <div ref={ref} role="separator" {...props}>
     <Dot />
   </div>
 ))
-InputOTPSeparator.displayName = "InputOTPSeparator"
+InputOTPSeparator.displayName = 'InputOTPSeparator'
 
-type InputOtpWithControllerProps  = {
-  name: string;
-  length: number;
-  className?: string;
+type InputOtpWithControllerProps = {
+  name: string
+  length: number
+  className?: string
 }
 
-function InputOTPWithController({name, length, className, ...props} : InputOtpWithControllerProps) {
+function InputOTPWithController({
+  name,
+  length,
+  className,
+  ...props
+}: InputOtpWithControllerProps) {
   return (
     <FormField
       name={name}
@@ -89,7 +93,7 @@ function InputOTPWithController({name, length, className, ...props} : InputOtpWi
         >
           <InputOTPGroup>
             {Array.from({ length }).map((_, index) => (
-              <InputOTPSlot key={index} index={index}/>
+              <InputOTPSlot key={index} index={index} />
             ))}
           </InputOTPGroup>
         </InputOTP>
@@ -98,5 +102,10 @@ function InputOTPWithController({name, length, className, ...props} : InputOtpWi
   )
 }
 
-export { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot, InputOTPWithController }
-
+export {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+  InputOTPWithController,
+}

@@ -1,83 +1,83 @@
-"use client";
+'use client'
 
-import NotFoundEnterprise from "(pages)/(enterprise)/not-found";
-import CreateCreditForm from "@components/templates/create-credit-form";
-import CreditTemplate from "@components/templates/credit-template";
-import Loading from "@components/ui/loading";
-import { Progress } from "@components/ui/progress";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { PDFViewer } from "@react-pdf/renderer";
+import NotFoundEnterprise from '(pages)/(enterprise)/not-found'
+import CreateCreditForm from '@components/templates/create-credit-form'
+import CreditTemplate from '@components/templates/credit-template'
+import Loading from '@components/ui/loading'
+import { Progress } from '@components/ui/progress'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { PDFViewer } from '@react-pdf/renderer'
 import {
   CreateCreditData,
   CreateCreditDataValidation,
   CreateCreditLineData,
   InvoiceData,
-} from "@repo/shared-types";
-import { useQuery } from "@tanstack/react-query";
-import { useEnterprise } from "providers/enterprise-provider";
-import { useEffect, useState } from "react";
-import { FormProvider, useForm, useWatch } from "react-hook-form";
-import { getInformationForDevisQueryOptions } from "../../../lib/api/enterprise";
-import { formatPrice } from "../../../lib/utils";
+} from '@repo/shared-types'
+import { useQuery } from '@tanstack/react-query'
+import { useEnterprise } from 'providers/enterprise-provider'
+import { useEffect, useState } from 'react'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
+import { getInformationForDevisQueryOptions } from '../../../lib/api/enterprise'
+import { formatPrice } from '../../../lib/utils'
 
 type CreateCreditFormProps = {
-  invoice: InvoiceData;
-};
+  invoice: InvoiceData
+}
 
 export default function CreateCreditFormPage({
   invoice,
 }: CreateCreditFormProps) {
-  const { enterprise } = useEnterprise();
+  const { enterprise } = useEnterprise()
   if (!enterprise) {
     return <NotFoundEnterprise />
   }
   const initialCreditAmount = invoice.credits
     .map((c) => c.totalAmount)
-    .reduce((i, prev) => prev + i, 0);
+    .reduce((i, prev) => prev + i, 0)
   const totalAmount =
     invoice.invoiceLines
       .map((e) => e.unitPrice * e.quantity)
-      .reduce((i, prev) => prev + i) * (invoice.excludeTva ? 1 : 1.2);
+      .reduce((i, prev) => prev + i) * (invoice.excludeTva ? 1 : 1.2)
   const [creditsTotalAmount, setCreditTotalAmount] =
-    useState(initialCreditAmount);
+    useState(initialCreditAmount)
   const [ratio, setRatio] = useState<number>(
-    (creditsTotalAmount / totalAmount) * 100
-  );
+    (creditsTotalAmount / totalAmount) * 100,
+  )
   const form = useForm<
     CreateCreditData & { newLine: CreateCreditLineData; maskName: boolean }
   >({
     resolver: zodResolver(CreateCreditDataValidation),
     defaultValues: {
-      title: "",
-      number: "",
+      title: '',
+      number: '',
       creditLines: [],
       invoiceId: invoice.id,
-      newLine: { title: "", price: 0 },
+      newLine: { title: '', price: 0 },
       maskName: true,
     },
-  });
+  })
   const { data, isLoading } = useQuery({
     ...getInformationForDevisQueryOptions(enterprise?.id),
     enabled: enterprise?.id !== undefined,
-  });
-  const creditLines = useWatch({ control: form.control, name: "creditLines" });
+  })
+  const creditLines = useWatch({ control: form.control, name: 'creditLines' })
 
   useEffect(() => {
     const totalCreditsAmount =
       initialCreditAmount +
       creditLines
-        ?.map((e) => parseFloat(!e.price ? "0" : e.price.toString()))
-        .reduce((e, prev) => e + prev, 0);
-    setRatio((totalCreditsAmount / totalAmount) * 100);
-    setCreditTotalAmount(totalCreditsAmount);
-  }, [creditLines]);
+        ?.map((e) => parseFloat(!e.price ? '0' : e.price.toString()))
+        .reduce((e, prev) => e + prev, 0)
+    setRatio((totalCreditsAmount / totalAmount) * 100)
+    setCreditTotalAmount(totalCreditsAmount)
+  }, [creditLines])
 
   if (isLoading) {
     return (
       <div className="h-full w-full flex items-center justify-center">
         <Loading />
       </div>
-    );
+    )
   }
 
   return (
@@ -90,7 +90,7 @@ export default function CreateCreditFormPage({
                 marginRight: `${ratio === 0 ? 97 : 97 - ratio < 0 ? 0 : 97 - ratio}%`,
               }}
             >
-              {formatPrice(creditsTotalAmount, "FR-fr", "EUR")}
+              {formatPrice(creditsTotalAmount, 'FR-fr', 'EUR')}
             </span>
           </div>
           <Progress value={ratio > 100 ? 100 : ratio} />
@@ -118,5 +118,5 @@ export default function CreateCreditFormPage({
         </PDFViewer>
       </FormProvider>
     </>
-  );
+  )
 }

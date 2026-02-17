@@ -1,5 +1,5 @@
-import { Button } from "@components/ui/button";
-import { DataTable } from "@components/ui/data-table";
+import { Button } from '@components/ui/button'
+import { DataTable } from '@components/ui/data-table'
 import {
   Dialog,
   DialogClose,
@@ -8,22 +8,22 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@components/ui/dialog";
-import { ObjectiveData } from "@repo/shared-types";
-import { ColumnDef } from "@tanstack/react-table";
-import { deleteObjective } from "actions/objective";
-import dayjs from "dayjs";
-import { PenBox, Trash } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { toast } from "sonner";
-import CreateObjectiveDialog from "./create-objective-dialog";
+} from '@components/ui/dialog'
+import { ObjectiveData } from '@repo/shared-types'
+import { ColumnDef } from '@tanstack/react-table'
+import { deleteObjective } from 'actions/objective'
+import dayjs from 'dayjs'
+import { PenBox, Trash } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { toast } from 'sonner'
+import CreateObjectiveDialog from './create-objective-dialog'
 
 type ObjectiveTableProps = {
-  data: ObjectiveData[];
-  isLoading: boolean;
-  onDelete: () => void;
-  onUpdate: () => void;
-};
+  data: ObjectiveData[]
+  isLoading: boolean
+  onDelete: () => void
+  onUpdate: () => void
+}
 
 export default function ObjectiveTable({
   data,
@@ -31,36 +31,36 @@ export default function ObjectiveTable({
   onDelete,
   onUpdate,
 }: ObjectiveTableProps) {
-  const t = useTranslations();
+  const t = useTranslations()
   const columnDefs: ColumnDef<ObjectiveData>[] = [
     {
-      accessorKey: "startDate",
-      header: t("common.startDate"),
+      accessorKey: 'startDate',
+      header: t('common.startDate'),
       cell: ({ row }) => (
-        <span>{dayjs(row.original.startDate).format("DD/MM/YYYY")}</span>
+        <span>{dayjs(row.original.startDate).format('DD/MM/YYYY')}</span>
       ),
     },
     {
-      accessorKey: "endDate",
-      header: t("common.endDate"),
+      accessorKey: 'endDate',
+      header: t('common.endDate'),
       cell: ({ row }) => (
-        <span>{dayjs(row.original.endDate).format("DD/MM/YYYY")}</span>
+        <span>{dayjs(row.original.endDate).format('DD/MM/YYYY')}</span>
       ),
     },
     {
-      accessorKey: "category",
-      header: t("common.category"),
+      accessorKey: 'category',
+      header: t('common.category'),
       cell: ({ row }) => (
         <span>
-          {row.original.objectiveCategory === "CUSTOMER"
-            ? t("common.customer")
-            : t("common.sales")}
+          {row.original.objectiveCategory === 'CUSTOMER'
+            ? t('common.customer')
+            : t('common.sales')}
         </span>
       ),
     },
     {
-      accessorKey: "level",
-      header: t("common.level"),
+      accessorKey: 'level',
+      header: t('common.level'),
       cell: ({ row }) => (
         <span>
           {row.original.currentNumber} / {row.original.objectiveNumber}
@@ -68,26 +68,26 @@ export default function ObjectiveTable({
       ),
     },
     {
-      accessorKey: "status",
-      header: t("common.status"),
+      accessorKey: 'status',
+      header: t('common.status'),
       cell: ({ row }) => {
         if (row.original.currentNumber >= row.original.objectiveNumber) {
-          return <span className="text-green-500">{t("common.success")}</span>;
+          return <span className="text-green-500">{t('common.success')}</span>
         } else if (
           dayjs(row.original.endDate).isBefore(new Date()) &&
           dayjs(row.original.startDate).isBefore(new Date())
         ) {
-          return <span className="text-red-500">{t("common.failed")}</span>;
+          return <span className="text-red-500">{t('common.failed')}</span>
         } else if (dayjs(row.original.startDate).isAfter(new Date())) {
-          return <span className="text-muted">{t("objective.noStart")}</span>;
+          return <span className="text-muted">{t('objective.noStart')}</span>
         } else {
-          return <span>{t("objective.inProgress")}</span>;
+          return <span>{t('objective.inProgress')}</span>
         }
       },
     },
     {
-      accessorKey: "actions",
-      header: t("common.actions"),
+      accessorKey: 'actions',
+      header: t('common.actions'),
       cell: ({ row }) => (
         <div className="flex flex-row items-center gap-4">
           <CreateObjectiveDialog
@@ -103,20 +103,20 @@ export default function ObjectiveTable({
             <DialogContent>
               <DialogHeader>
                 <DialogTitle className="text-3xl">
-                  {t("objective.delete.title")}
+                  {t('objective.delete.title')}
                 </DialogTitle>
               </DialogHeader>
-              <p>{t("objective.delete.description")}</p>
+              <p>{t('objective.delete.description')}</p>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant={"outline"}>{t("common.cancel")}</Button>
+                  <Button variant={'outline'}>{t('common.cancel')}</Button>
                 </DialogClose>
                 <DialogClose asChild>
                   <Button
-                    variant={"destructive"}
+                    variant={'destructive'}
                     onClick={() => handleDelete(row.original.id)}
                   >
-                    {t("common.remove")}
+                    {t('common.remove')}
                   </Button>
                 </DialogClose>
               </DialogFooter>
@@ -125,20 +125,20 @@ export default function ObjectiveTable({
         </div>
       ),
     },
-  ];
+  ]
 
   const handleDelete = (id: number) => {
     deleteObjective(id)
       .then(() => {
-        toast.success(t("objective.success.delete"));
-        onDelete();
+        toast.success(t('objective.success.delete'))
+        onDelete()
       })
-      .catch((err : Error) => {
-        toast.error(err.message);
-      });
-  };
+      .catch((err: Error) => {
+        toast.error(err.message)
+      })
+  }
 
   return (
     <DataTable columns={columnDefs} data={data ?? []} isLoading={isLoading} />
-  );
+  )
 }

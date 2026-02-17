@@ -13,17 +13,17 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
-import CreateColumnDto from 'dtos/columns/column-create.dto';
-import ReorderColumnsDto from 'dtos/customers/reorder-colums.dto';
-import ProjectCreateDto from 'dtos/projects/project-create.dto';
-import { Request } from 'express';
-import { AccessTokenGuard } from 'guards/access-token.guard';
-import { CustomerGuard } from 'guards/customer.guard';
-import { EnterpriseGuard } from 'guards/enterprise.guard';
-import ProjectService from './project.service';
+} from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger'
+import CreateColumnDto from 'dtos/columns/column-create.dto'
+import ReorderColumnsDto from 'dtos/customers/reorder-colums.dto'
+import ProjectCreateDto from 'dtos/projects/project-create.dto'
+import { Request } from 'express'
+import { AccessTokenGuard } from 'guards/access-token.guard'
+import { CustomerGuard } from 'guards/customer.guard'
+import { EnterpriseGuard } from 'guards/enterprise.guard'
+import ProjectService from './project.service'
 
 @Controller('projects')
 @ApiBearerAuth()
@@ -39,7 +39,7 @@ export default class ProjectController {
     type: ProjectCreateDto,
   })
   @UseInterceptors(FileInterceptor('media'))
-  async create(
+  create(
     @Body() body: ProjectCreateDto,
     @Req() req: Request,
     @UploadedFile()
@@ -49,20 +49,20 @@ export default class ProjectController {
       body,
       parseInt(req.user['enterpriseId']),
       media,
-    );
+    )
   }
 
   @UseGuards(AccessTokenGuard)
   @Get('count')
-  async count(@Req() req: Request) {
-    const enterpriseId = parseInt(req.user['enterpriseId']);
-    return this.projectService.count(enterpriseId);
+  count(@Req() req: Request) {
+    const enterpriseId = parseInt(req.user['enterpriseId'])
+    return this.projectService.count(enterpriseId)
   }
 
   @UseGuards(CustomerGuard, EnterpriseGuard)
   @Post(':id/columns')
   @HttpCode(200)
-  async createColumn(
+  createColumn(
     @Param('id', ParseIntPipe) id: number,
     @Body() model: CreateColumnDto,
     @Req() req: Request,
@@ -72,30 +72,30 @@ export default class ProjectController {
       model,
       parseInt(req.user['enterpriseId']) || undefined,
       parseInt(req.user['customerId']) || undefined,
-    );
+    )
   }
 
   @HttpCode(200)
   @UseGuards(EnterpriseGuard, CustomerGuard)
   @Patch(':id/columns/reorder')
-  async reorderColums(
+  reorderColums(
     @Param('id', ParseIntPipe) id: number,
     @Body() model: ReorderColumnsDto,
   ) {
-    return this.projectService.reorderColumns(id, model.orderedColumnIds);
+    return this.projectService.reorderColumns(id, model.orderedColumnIds)
   }
 
   @UseGuards(EnterpriseGuard, CustomerGuard)
   @Get(':id')
-  async findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
-    const enterpriseId = req.user['enterpriseId'];
-    const customerId = req.user['customerId'];
-    return this.projectService.findById(id, enterpriseId, customerId);
+  findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    const enterpriseId = req.user['enterpriseId']
+    const customerId = req.user['customerId']
+    return this.projectService.findById(id, enterpriseId, customerId)
   }
 
   @UseGuards(EnterpriseGuard, CustomerGuard)
   @Get(':id/details')
-  async findAllTasksByProjectId(
+  findAllTasksByProjectId(
     @Param('id', ParseIntPipe) id: number,
     @Req() req: Request,
   ) {
@@ -103,7 +103,7 @@ export default class ProjectController {
       id,
       req.user['enterpriseId'],
       req.user['customerId'],
-    );
+    )
   }
 
   @UseGuards(EnterpriseGuard, CustomerGuard)
@@ -113,27 +113,27 @@ export default class ProjectController {
     type: ProjectCreateDto,
   })
   @Put(':id')
-  async update(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() model: ProjectCreateDto,
     @Req() req: Request,
     @UploadedFile()
     media?: Express.Multer.File,
   ) {
-    const enterpriseId = parseInt(req.user['enterpriseId']);
-    const customerId = parseInt(req.user['customerId']);
+    const enterpriseId = parseInt(req.user['enterpriseId'])
+    const customerId = parseInt(req.user['customerId'])
     return this.projectService.update(
       id,
       model,
       enterpriseId,
       customerId,
       media,
-    );
+    )
   }
 
   @UseGuards(EnterpriseGuard)
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
-    return this.projectService.delete(id, parseInt(req.user['enterpriseId']));
+  delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    return this.projectService.delete(id, parseInt(req.user['enterpriseId']))
   }
 }

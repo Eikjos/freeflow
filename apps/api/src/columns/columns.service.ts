@@ -2,12 +2,12 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import CreateColumnDto from 'dtos/columns/column-create.dto';
-import CreateTaskDto from 'dtos/tasks/task-create.dto';
-import { mapToTask } from 'dtos/tasks/task.dto';
-import { MediaService } from 'media/media.service';
-import { PrismaService } from 'prisma.service';
+} from '@nestjs/common'
+import CreateColumnDto from 'dtos/columns/column-create.dto'
+import CreateTaskDto from 'dtos/tasks/task-create.dto'
+import { mapToTask } from 'dtos/tasks/task.dto'
+import { MediaService } from 'media/media.service'
+import { PrismaService } from 'prisma.service'
 
 @Injectable()
 export default class ColumnService {
@@ -16,28 +16,28 @@ export default class ColumnService {
     private readonly mediaService: MediaService,
   ) {}
 
-  async initializeForProject(projectId: number) {
-    const columnNames = ['À faire', 'En cours', 'À tester', 'À valider'];
+  initializeForProject(projectId: number) {
+    const columnNames = ['À faire', 'En cours', 'À tester', 'À valider']
     columnNames.map(async (c, index) => {
       const column = await this.prisma.column.create({
         data: { name: c, index, projectId },
-      });
-      return column.id;
-    });
+      })
+      return column.id
+    })
   }
 
   async update(id: number, model: CreateColumnDto) {
-    const column = await this.prisma.column.findFirst({ where: { id } });
-    if (!column) throw new NotFoundException();
+    const column = await this.prisma.column.findFirst({ where: { id } })
+    if (!column) throw new NotFoundException()
 
     const updated = await this.prisma.column.update({
       data: {
         ...model,
       },
       where: { id },
-    });
+    })
 
-    return updated;
+    return updated
   }
 
   async createTask(
@@ -48,18 +48,17 @@ export default class ColumnService {
     const column = await this.prisma.column.findFirst({
       where: { id: columnId },
       include: { tasks: true, project: true },
-    });
-    if (!column) throw new NotFoundException();
+    })
+    if (!column) throw new NotFoundException()
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { mediaIds, files: _, ...modelTask } = model;
+    const { mediaIds, files: _, ...modelTask } = model
     const task = await this.prisma.task.create({
       data: {
         ...modelTask,
         index: column.tasks.length,
         columnId: columnId,
       },
-    });
+    })
 
     if (task.id > 0) {
       if (model.mediaIds && model.mediaIds.length > 0) {
@@ -69,7 +68,7 @@ export default class ColumnService {
             taskId: task.id,
             type: 'DESCRIPTION',
           })),
-        });
+        })
       }
 
       const uploads =
@@ -84,7 +83,7 @@ export default class ColumnService {
                 ),
               )),
             ]
-          : [];
+          : []
 
       await this.prisma.taskMedia.createMany({
         data: uploads.map((m) => ({
@@ -92,23 +91,23 @@ export default class ColumnService {
           taskId: task.id,
           type: 'ATTACHED',
         })),
-      });
+      })
 
-      return mapToTask(task, uploads);
+      return mapToTask(task, uploads)
     }
-    throw new ConflictException();
+    throw new ConflictException()
   }
 
   async moveTask(columnId: number, taskId: number, toPosition: number) {
     const column = await this.prisma.column.findFirst({
       where: { id: columnId },
-    });
-    if (!column) throw new NotFoundException();
+    })
+    if (!column) throw new NotFoundException()
 
-    const task = await this.prisma.task.findFirst({ where: { id: taskId } });
-    if (!task) throw new NotFoundException();
+    const task = await this.prisma.task.findFirst({ where: { id: taskId } })
+    if (!task) throw new NotFoundException()
 
-    const isSameColumn = task.columnId === columnId;
+    const isSameColumn = task.columnId === columnId
 
     // 1. Décale les tâches de la colonne cible
     await this.prisma.$transaction(async (tx) => {
@@ -126,7 +125,7 @@ export default class ColumnService {
               decrement: 1,
             },
           },
-        });
+        })
       }
 
       // Décale les tâches de la cible pour faire de la place
@@ -142,7 +141,7 @@ export default class ColumnService {
             increment: 1,
           },
         },
-      });
+      })
 
       // Déplace la tâche
       await tx.task.update({
@@ -151,7 +150,7 @@ export default class ColumnService {
           columnId: columnId,
           index: toPosition,
         },
-      });
-    });
+      })
+    })
   }
 }

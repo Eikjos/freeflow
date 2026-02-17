@@ -3,7 +3,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@components/ui/chart";
+} from '@components/ui/chart'
 import {
   Area,
   AreaChart,
@@ -12,19 +12,19 @@ import {
   CartesianGrid,
   XAxis,
   YAxis,
-} from "recharts";
+} from 'recharts'
 
 type SalesChartProps<TConfig extends ChartConfig> = {
-  className?: string;
-  config: TConfig;
+  className?: string
+  config: TConfig
   data: ({
-    label: string;
+    label: string
   } & {
     // chaque clé du config doit exister dans data
-    [year: number]: number;
-  })[];
-  type: "BAR" | "CHART";
-};
+    [year: number]: number
+  })[]
+  type: 'BAR' | 'CHART'
+}
 
 export const SalesChart = <TConfig extends ChartConfig>({
   config,
@@ -34,10 +34,10 @@ export const SalesChart = <TConfig extends ChartConfig>({
 }: SalesChartProps<TConfig>) => {
   return (
     <>
-      {type == "CHART" && (
-        <ChartContainer config={config} className={className} >
-          <AreaChart  data={data}>
-            <CartesianGrid vertical={false}/>
+      {type == 'CHART' && (
+        <ChartContainer config={config} className={className}>
+          <AreaChart data={data}>
+            <CartesianGrid vertical={false} />
             <XAxis
               dataKey="label"
               tickLine={false}
@@ -64,7 +64,7 @@ export const SalesChart = <TConfig extends ChartConfig>({
           </AreaChart>
         </ChartContainer>
       )}
-      {type == "BAR" && (
+      {type == 'BAR' && (
         <ChartContainer config={config} className={className}>
           <BarChart data={data}>
             <CartesianGrid vertical={false} />
@@ -95,5 +95,5 @@ export const SalesChart = <TConfig extends ChartConfig>({
         </ChartContainer>
       )}
     </>
-  );
-};
+  )
+}
