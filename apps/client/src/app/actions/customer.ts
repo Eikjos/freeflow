@@ -1,5 +1,3 @@
-'use server';
-
 import { CustomerCreateModel, CustomerModel } from '@repo/shared-types';
 import { client } from '../../lib/client';
 

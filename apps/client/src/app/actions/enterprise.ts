@@ -9,7 +9,7 @@ import {
 import { cookies } from 'next/headers';
 import { client } from '../../lib/client';
 
-export const fetchEnterpriseInfo = (siret: string) =>
+export const fetchEnterpriseInfo = async (siret: string) =>
   client<EnterpriseInformation>(`enterprises/information?siret=${siret}`)
     .then((data) => {
       return data;

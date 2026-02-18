@@ -1,5 +1,3 @@
-'use server';
-
 import { CreateCreditData } from '@repo/shared-types';
 import { client } from '../../lib/client';
 
