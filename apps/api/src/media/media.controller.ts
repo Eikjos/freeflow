@@ -30,22 +30,8 @@ export class MediaController {
       );
 
       res.send(file);
-    } catch (error) {
+    } catch {
       throw new NotFoundException('Fichier non trouvé');
     }
   }
-
-  // @UseGuards(AccessTokenGuard)
-  // @Post()
-  // @HttpCode(200)
-  // @ApiConsumes('multipart/form-data')
-  // @UseInterceptors(FileInterceptor('file'))
-  // async upload(
-  //   @UploadedFile()
-  //   file: Express.Multer.File,
-  //   @Req() req: Request,
-  // ) {
-  //   const enterpriseId = req.user['enterpriseId'];
-  //   return await this.mediaService.upload(file, parseInt(enterpriseId));
-  // }
 }

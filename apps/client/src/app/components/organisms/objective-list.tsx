@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import CreateObjectiveDialog from "@components/templates/create-objective-dialog";
-import ObjectiveTable from "@components/templates/objective-table";
-import { Button } from "@components/ui/button";
-import { Pagination } from "@components/ui/pagination";
-import { PaginationFilter } from "@repo/shared-types";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { getAllObjectiveQueryOptions } from "../../../lib/api/objectives";
+import CreateObjectiveDialog from '@components/templates/create-objective-dialog';
+import ObjectiveTable from '@components/templates/objective-table';
+import { Button } from '@components/ui/button';
+import { Pagination } from '@components/ui/pagination';
+import { PaginationFilter } from '@repo/shared-types';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Plus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { getAllObjectiveQueryOptions } from '../../../lib/api/objectives';
 
 export default function ObjectiveList() {
   const t = useTranslations();
@@ -19,7 +19,7 @@ export default function ObjectiveList() {
     pageSize: 15,
   });
   const { data, isLoading, refetch } = useQuery(
-    getAllObjectiveQueryOptions(filter)
+    getAllObjectiveQueryOptions(filter),
   );
   const handleChangePage = (page: number) => {
     setFilter((prev) => ({ ...prev, page }));
@@ -27,9 +27,14 @@ export default function ObjectiveList() {
 
   const handleReload = () => {
     void queryClient.invalidateQueries({
-      queryKey: ["objectives"],
+      queryKey: ['objectives'],
     });
-    if (data && data.data && data.data.totalItems % filter.pageSize === 1 && filter.page > 0) {
+    if (
+      data &&
+      data.data &&
+      data.data.totalItems % filter.pageSize === 1 &&
+      filter.page > 0
+    ) {
       setFilter((prev) => ({ ...prev, page: prev.page - 1 }));
     }
     void refetch();
@@ -41,7 +46,7 @@ export default function ObjectiveList() {
         <CreateObjectiveDialog
           trigger={
             <Button>
-              {t("common.add")} <Plus />
+              {t('common.add')} <Plus />
             </Button>
           }
           isUpdate={false}

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Button } from "@components/ui/button";
-import { DateInput } from "@components/ui/date-input";
+import { Button } from '@components/ui/button';
+import { DateInput } from '@components/ui/date-input';
 import {
   Dialog,
   DialogClose,
@@ -9,21 +9,21 @@ import {
   DialogFooter,
   DialogTitle,
   DialogTrigger,
-} from "@components/ui/dialog";
-import { Form } from "@components/ui/form";
-import { Input } from "@components/ui/input";
-import { Select } from "@components/ui/select";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from '@components/ui/dialog';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { Select } from '@components/ui/select';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CreateObjectiveData,
   CreateObjectiveDataValidation,
   ObjectiveData,
-} from "@repo/shared-types";
-import { createObjective, updateObjective } from "actions/objective";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+} from '@repo/shared-types';
+import { createObjective, updateObjective } from 'actions/objective';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 type CreateObjectiveDialogProps = {
   trigger: JSX.Element;
@@ -58,31 +58,31 @@ export default function CreateObjectiveDialog({
     if (!isUpdate) {
       createObjective(values)
         .then(() => {
-          toast.success(t("objective.success.create"));
+          toast.success(t('objective.success.create'));
           if (callback) {
             callback();
           }
           setOpen(false);
         })
-        .catch((err : Error) => {
+        .catch((err: Error) => {
           toast.error(err.message);
         });
-    } else  if (defaultValue) {
+    } else if (defaultValue) {
       updateObjective(defaultValue.id, values)
         .then(() => {
-          toast.success(t("objective.success.update"));
+          toast.success(t('objective.success.update'));
           if (callback) {
             callback();
           }
           setOpen(false);
         })
-        .catch((err : Error) => toast.error(err.message));
+        .catch((err: Error) => toast.error(err.message));
     }
   };
 
   const handleSubmit = () => {
     form.handleSubmit(onSubmit);
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -91,51 +91,47 @@ export default function CreateObjectiveDialog({
           <DialogTrigger asChild>{trigger}</DialogTrigger>
           <DialogContent>
             <DialogTitle className="text-3xl">
-              {t("objective.title.create")}
+              {t('objective.title.create')}
             </DialogTitle>
             <div className="flex flex-row gap-3">
               <DateInput
-                label={t("common.startDate")}
-                placeholder={t("common.startDate")}
+                label={t('common.startDate')}
+                placeholder={t('common.startDate')}
                 maxDate={form.getValues().endDate}
-                {...form.register("startDate")}
+                {...form.register('startDate')}
               />
               <DateInput
-                {...form.register("endDate")}
-                label={t("common.endDate")}
+                {...form.register('endDate')}
+                label={t('common.endDate')}
                 minDate={form.getValues().startDate ?? new Date()}
-                placeholder={t("common.endDate")}
+                placeholder={t('common.endDate')}
               />
             </div>
             <p className="text-sm text-muted-foreground">
-              {t("objective.start.description")}
+              {t('objective.start.description')}
             </p>
             <Select
-              {...form.register("objectiveCategory")}
-              label={t("common.category")}
-              placeholder={t("common.category")}
+              {...form.register('objectiveCategory')}
+              label={t('common.category')}
+              placeholder={t('common.category')}
               values={[
-                { textValue: t("common.customer"), value: "CUSTOMER" },
-                { textValue: t("common.sales"), value: "SALES" },
+                { textValue: t('common.customer'), value: 'CUSTOMER' },
+                { textValue: t('common.sales'), value: 'SALES' },
               ]}
             />
             <Input
               type="number"
-              {...form.register("objectiveNumber")}
-              label={t("objective.number")}
-              placeholder={t("objective.number")}
+              {...form.register('objectiveNumber')}
+              label={t('objective.number')}
+              placeholder={t('objective.number')}
             />
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant={"outline"} type="button">
-                  {t("common.cancel")}
+                <Button variant={'outline'} type="button">
+                  {t('common.cancel')}
                 </Button>
               </DialogClose>
-              <Button
-                onClick={handleSubmit}
-              >
-                {t("common.save")}
-              </Button>
+              <Button onClick={handleSubmit}>{t('common.save')}</Button>
             </DialogFooter>
           </DialogContent>
         </form>

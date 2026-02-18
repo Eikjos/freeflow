@@ -11,13 +11,13 @@ export default class JuridicShapesController {
 
   @Get()
   @UseGuards(AccessTokenGuard)
-  async findAll() {
+  findAll() {
     return this.juridicShapeService.findAll();
   }
 
   @Get(':code')
   @UseGuards(AccessTokenGuard)
-  async findByCode(@Param('code') code: string) {
+  findByCode(@Param('code') code: string) {
     return this.juridicShapeService.findByCode(code);
   }
 }

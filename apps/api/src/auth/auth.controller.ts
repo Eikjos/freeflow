@@ -21,14 +21,14 @@ export default class AuthController {
   @Post('login')
   @ApiOperation({ summary: 'SignIn the user' })
   @HttpCode(200)
-  async signIn(@Body() model: LoginDto) {
+  signIn(@Body() model: LoginDto) {
     return this.authService.signIn(model.email, model.password);
   }
 
   @UseGuards(AccessTokenGuard)
   @Post('logout')
   @HttpCode(200)
-  async logout(@Req() req: Request) {
+  logout(@Req() req: Request) {
     const userId = req.user['sub'];
     return this.authService.logout(userId);
   }
@@ -37,7 +37,7 @@ export default class AuthController {
   @ApiBearerAuth()
   @Post('refresh')
   @HttpCode(200)
-  async refresh(@Req() req: Request) {
+  refresh(@Req() req: Request) {
     const userId = req.user['sub'];
     const refreshToken = req.user['refreshToken'];
     return this.authService.refresh(userId, refreshToken);

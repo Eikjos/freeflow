@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import NotFoundEnterprise from "(pages)/(enterprise)/not-found";
-import EnterpriseSettingsForm from "@components/templates/enterprise-settings-form";
-import Loading from "@components/ui/loading";
-import { useQuery } from "@tanstack/react-query";
-import { useEnterprise } from "providers/enterprise-provider";
-import { getEntepriseQueryOptions } from "../../../lib/api/enterprise";
+import NotFoundEnterprise from '(pages)/(enterprise)/not-found';
+import EnterpriseSettingsForm from '@components/templates/enterprise-settings-form';
+import Loading from '@components/ui/loading';
+import { useQuery } from '@tanstack/react-query';
+import { useEnterprise } from 'providers/enterprise-provider';
+import { getEntepriseQueryOptions } from '../../../lib/api/enterprise';
 
 export default function EnterpriseSettings() {
   const { enterprise } = useEnterprise();
   if (!enterprise) {
-    return <NotFoundEnterprise />
+    return <NotFoundEnterprise />;
   }
   const { data, isLoading } = useQuery({
     ...getEntepriseQueryOptions(enterprise?.id),
@@ -26,9 +26,7 @@ export default function EnterpriseSettings() {
 
   return (
     <>
-      {data && data.data && (
-          <EnterpriseSettingsForm enterprise={data.data} />
-      )}
+      {data && data.data && <EnterpriseSettingsForm enterprise={data.data} />}
     </>
   );
 }

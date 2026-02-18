@@ -1,17 +1,16 @@
-/* eslint-disable no-unused-vars */
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader } from "@components/ui/card";
-import { Input } from "@components/ui/input";
-import { ColumnsData, TaskData } from "@repo/shared-types";
-import { updateColumn } from "actions/column";
-import { Plus, Trash2Icon } from "lucide-react";
-import React, { useRef, useState } from "react";
-import { useDrag, useDrop } from "react-dnd";
-import { toast } from "sonner";
-import { cn } from "../../../lib/utils";
-import TaskCard from "./task-card";
-import TaksCreateSheet from "./task-create-sheet";
+import { Card, CardContent, CardHeader } from '@components/ui/card';
+import { Input } from '@components/ui/input';
+import { ColumnsData, TaskData } from '@repo/shared-types';
+import { updateColumn } from 'actions/column';
+import { Plus, Trash2Icon } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
+import { toast } from 'sonner';
+import { cn } from '../../../lib/utils';
+import TaskCard from './task-card';
+import TaksCreateSheet from './task-create-sheet';
 
 type ColumnTaksProps = {
   id: number;
@@ -21,7 +20,7 @@ type ColumnTaksProps = {
   onDropTask: (
     task: TaskData,
     columnId_dest: number,
-    isCreation?: boolean
+    isCreation?: boolean,
   ) => void;
   onDropColumn: (col: ColumnsData, index_dest: number) => void;
 };
@@ -40,17 +39,17 @@ export default function ColumnTask({
   const columRef = useRef<HTMLDivElement>(null);
   const [{ opacity }, dragRef] = useDrag(
     () => ({
-      type: "Column",
+      type: 'Column',
       item: { id, name, index, tasks },
       collect: (monitor) => ({
         opacity: monitor.isDragging() ? 50 : 100,
       }),
     }),
-    [id, name, index, tasks]
+    [id, name, index, tasks],
   );
   const [{ isOver }, dropRef] = useDrop<ColumnsData, void, { isOver: boolean }>(
     {
-      accept: "Column",
+      accept: 'Column',
       drop(item: ColumnsData) {
         if (item.index !== index) {
           onDropColumn(item, index);
@@ -62,11 +61,11 @@ export default function ColumnTask({
           isOver: monitor.isOver() && item.id !== id,
         };
       },
-    }
+    },
   );
   const [, drop] = useDrop(
     () => ({
-      accept: "TaskCard",
+      accept: 'TaskCard',
       drop: (item: TaskData, monitor) => {
         const isOver = monitor.isOver();
         if (isOver) {
@@ -74,7 +73,7 @@ export default function ColumnTask({
         }
       },
     }),
-    [id]
+    [id],
   );
   drop(ref);
   dragRef(dropRef(columRef));
@@ -88,7 +87,7 @@ export default function ColumnTask({
   };
 
   const updateTask = (task: TaskData) => {
-    console.log("update", task);
+    console.log('update', task);
     onDropTask(task, id, true);
   };
 
@@ -103,7 +102,7 @@ export default function ColumnTask({
           setCurrentName(res.name);
         }
       })
-      .catch((e : Error) => {
+      .catch((e: Error) => {
         toast.error(e.message);
         setCurrentName(name);
       });
@@ -119,8 +118,8 @@ export default function ColumnTask({
       <Card ref={columRef}>
         <CardContent
           className={cn(
-            "h-full w-64 p-0 overflow-hidden",
-            `opacity-${opacity}`
+            'h-full w-64 p-0 overflow-hidden',
+            `opacity-${opacity}`,
           )}
         >
           <CardHeader className="h-10 mb-2 px-5 pl-0 py-3 shadow-sm rounded-sm flex flex-row justify-between items-center">

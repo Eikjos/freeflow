@@ -39,7 +39,6 @@ export class CustomerDetailDto
 }
 
 export function mapCustomerToDto(customer: Customer, country?: Country) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { createdAt, token, tokenDate, ...c } = customer;
   return { ...c, country: country?.name } as CustomerDetailDto;
 }

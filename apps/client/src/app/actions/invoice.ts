@@ -1,9 +1,9 @@
-import { InvoiceCreateData, QuoteValidateData } from "@repo/shared-types";
-import { client } from "../../lib/client";
+import { InvoiceCreateData, QuoteValidateData } from '@repo/shared-types';
+import { client } from '../../lib/client';
 
-export const createInvoice = async (
+export const createInvoice = (
   invoice: InvoiceCreateData,
-  invoiceFile: File | undefined
+  invoiceFile: File | undefined,
 ) => {
   const formData = new FormData();
   const { invoiceLines, ...inv } = invoice;
@@ -15,15 +15,15 @@ export const createInvoice = async (
     }
   });
   formData.append(`invoiceLines`, JSON.stringify(invoiceLines));
-  if (invoiceFile) formData.append("invoice", invoiceFile);
+  if (invoiceFile) formData.append('invoice', invoiceFile);
 
   return client<void>(
     `invoices`,
     {
-      method: "POST",
+      method: 'POST',
       body: formData,
     },
-    "other"
+    'other',
   ).then((res) => {
     if (res.ok) {
       return res.data;
@@ -32,33 +32,33 @@ export const createInvoice = async (
   });
 };
 
-export const sendValidationQuote = async (id: number) => {
-  return client<void>(`invoices/${id}/send-validation`, { method : 'POST'});
-}
+export const sendValidationQuote = async (id: number) =>
+  client<void>(`invoices/${id}/send-validation`, { method: 'POST' });
 
-export const validateQuote = async (id: number, value: boolean, code?: string) => {
-  return client<void>(`invoices/${id}/validate`,
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        value: value,
-        code
-      } as QuoteValidateData)
-    }).then(res => {
-    if (res.ok) return res.data
-    throw new Error(res.error);
-  }).catch((e : Error) => {
-    throw new Error(e.message);
+export const validateQuote = (id: number, value: boolean, code?: string) =>
+  client<void>(`invoices/${id}/validate`, {
+    method: 'POST',
+    body: JSON.stringify({
+      value: value,
+      code,
+    } as QuoteValidateData),
   })
-}
+    .then((res) => {
+      if (res.ok) return res.data;
+      throw new Error(res.error);
+    })
+    .catch((e: Error) => {
+      throw new Error(e.message);
+    });
 
-export const payInvoice = async (id: number) => {
-  return client<void>(`invoices/${id}/pay`, { method: 'POST'}).then((res) => {
-    if (res.ok) {
-      return res.data;
-    }
-    throw new Error(res.error);
-  }).catch((e : Error) => {
-    throw new Error(e.message);
-  })
-}
+export const payInvoice = (id: number) =>
+  client<void>(`invoices/${id}/pay`, { method: 'POST' })
+    .then((res) => {
+      if (res.ok) {
+        return res.data;
+      }
+      throw new Error(res.error);
+    })
+    .catch((e: Error) => {
+      throw new Error(e.message);
+    });

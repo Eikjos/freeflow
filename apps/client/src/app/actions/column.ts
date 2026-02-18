@@ -1,15 +1,15 @@
-"use server";
+'use server';
 
 import {
   ColumnsData,
   CreateColumnData,
   MoveTaskData,
-} from "@repo/shared-types";
-import { client } from "../../lib/client";
+} from '@repo/shared-types';
+import { client } from '../../lib/client';
 
 export async function createColumn(projectId: number, col: CreateColumnData) {
   return await client<ColumnsData>(`projects/${projectId}/columns`, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(col),
   }).then((res) => {
     if (res.ok) {
@@ -21,7 +21,7 @@ export async function createColumn(projectId: number, col: CreateColumnData) {
 
 export async function updateColumn(id: number, col: CreateColumnData) {
   return await client<ColumnsData>(`columns/${id}`, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(col),
   }).then((res) => {
     if (res.ok) {
@@ -34,10 +34,10 @@ export async function updateColumn(id: number, col: CreateColumnData) {
 export async function moveTask(
   columId: number,
   taskId: number,
-  model: MoveTaskData
+  model: MoveTaskData,
 ) {
   return await client<void>(`columns/${columId}/tasks/${taskId}/move`, {
-    method: "PATCH",
+    method: 'PATCH',
     body: JSON.stringify(model),
   });
 }

@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import CardList from "@components/organisms/card-list";
-import { Pagination } from "@components/ui/pagination";
-import { Pagination as PaginationType, ProjectData } from "@repo/shared-types";
-import { useQuery } from "@tanstack/react-query";
-import { deleteProject } from "actions/project";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { toast } from "sonner";
-import { getAllProjectsQueryOptions } from "../../../lib/api/projects";
-import getQueryClient from "../../../lib/query-client";
-import ProjectCard from "./project-card";
+import CardList from '@components/organisms/card-list';
+import { Pagination } from '@components/ui/pagination';
+import { Pagination as PaginationType, ProjectData } from '@repo/shared-types';
+import { useQuery } from '@tanstack/react-query';
+import { deleteProject } from 'actions/project';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { getAllProjectsQueryOptions } from '../../../lib/api/projects';
+import getQueryClient from '../../../lib/query-client';
+import ProjectCard from './project-card';
 
 type ProjectListProps = {
   enterpriseId?: number;
@@ -42,9 +42,9 @@ export default function ProjectList({
     void deleteProject(project.id).then(async (res) => {
       if (res.ok) {
         await queryClient.invalidateQueries({
-          queryKey: ["projects", pagination],
+          queryKey: ['projects', pagination],
         });
-        toast.success(t("project.removeSuccess", { project: project.name }));
+        toast.success(t('project.removeSuccess', { project: project.name }));
         // si il y a encore un projet après suppression
         if ((projects?.data?.data.length ?? 0) > 1 || pagination.page === 0) {
           await refetch();
@@ -53,7 +53,7 @@ export default function ProjectList({
           setPagination((prev) => ({ ...prev, page: prev.page - 1 }));
         }
       } else {
-        toast.error(t("project.removeFailed", { project: project.name }));
+        toast.error(t('project.removeFailed', { project: project.name }));
       }
     });
   };

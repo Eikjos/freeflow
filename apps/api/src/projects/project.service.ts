@@ -7,15 +7,15 @@ import {
 import { Project } from '@prisma/client';
 import { PaginationFilter } from '@repo/shared-types';
 import ColumnService from 'columns/columns.service';
-import CreateColumnDto from 'dtos/columns/column-create.dto';
 import { mapToColumn } from 'dtos/columns/column.dto';
-import ProjectCreateDto from 'dtos/projects/project-create.dto';
-import { mapProjectWithTasksAndColumns } from 'dtos/projects/project-detail.dto';
+import CreateColumnDto from 'dtos/columns/column-create.dto';
 import {
-  ProjectDto,
   mapProjectToDetailDto,
   mapProjectToDto,
+  ProjectDto,
 } from 'dtos/projects/project.dto';
+import ProjectCreateDto from 'dtos/projects/project-create.dto';
+import { mapProjectWithTasksAndColumns } from 'dtos/projects/project-detail.dto';
 import { PaginationResultDto } from 'dtos/utils/pagination-result.dto';
 import { MediaService } from 'media/media.service';
 import { PrismaService } from 'prisma.service';

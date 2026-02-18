@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
 import StarButton from '@components/atoms/star-button';
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '../../../lib/utils';
 
 interface StarRatingProps {
-  value?: number // current rating (can be fractional)
-  defaultValue?: number
-  readOnly?: boolean
-  onChange?: (value: number) => void
-  className?: string
+  value?: number; // current rating (can be fractional)
+  defaultValue?: number;
+  readOnly?: boolean;
+  onChange?: (value: number) => void;
+  className?: string;
 }
 
 export default function StarRating({
@@ -19,23 +19,23 @@ export default function StarRating({
   onChange,
   className = '',
 }: StarRatingProps) {
-  const isControlled = controlledValue !== undefined
-  const [value, setValue] = useState<number>(controlledValue ?? defaultValue)
-  const [hoverValue, setHoverValue] = useState<number | null>(null)
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const max = 5
+  const isControlled = controlledValue !== undefined;
+  const [value, setValue] = useState<number>(controlledValue ?? defaultValue);
+  const [hoverValue, setHoverValue] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const max = 5;
 
   useEffect(() => {
-    if (isControlled) setValue(controlledValue)
-  }, [controlledValue])
+    if (isControlled) setValue(controlledValue);
+  }, [controlledValue]);
 
   const handleSet = (newVal: number) => {
-    if (readOnly) return
-    if (!isControlled) setValue(newVal)
-    onChange?.(newVal)
-  }
+    if (readOnly) return;
+    if (!isControlled) setValue(newVal);
+    onChange?.(newVal);
+  };
 
-  const displayValue = hoverValue ?? value
+  const displayValue = hoverValue ?? value;
 
   return (
     <div
@@ -46,7 +46,9 @@ export default function StarRating({
         {value.toString().replace('.', ',')} / {max}
       </div>
       <div
-        aria-label={readOnly ? `Note: ${value} sur ${max}` : `Note : ${value} sur ${max}`}
+        aria-label={
+          readOnly ? `Note: ${value} sur ${max}` : `Note : ${value} sur ${max}`
+        }
         aria-valuemin={0}
         aria-valuemax={max}
         tabIndex={readOnly ? -1 : 0}
@@ -54,10 +56,17 @@ export default function StarRating({
         className={`inline-flex select-none outline-none rounded ${readOnly ? '' : 'cursor-pointer'}`}
       >
         {Array.from({ length: max }).map((_, i) => (
-          <StarButton size={25} index={i} key={i} readOnly={readOnly} displayValue={displayValue} setHoverValue={setHoverValue} handleSet={handleSet}  />
+          <StarButton
+            size={25}
+            index={i}
+            key={i}
+            readOnly={readOnly}
+            displayValue={displayValue}
+            setHoverValue={setHoverValue}
+            handleSet={handleSet}
+          />
         ))}
       </div>
     </div>
-  )
+  );
 }
-

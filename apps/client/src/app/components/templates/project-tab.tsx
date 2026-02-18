@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Button } from "@components/ui/button";
-import { Plus } from "lucide-react";
-import { useTranslations } from "next-intl";
-import Link from "next/link";
-import ProjectList from "./project-list";
+import { Button } from '@components/ui/button';
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import ProjectList from './project-list';
 
 type ProjectTabProps = {
   enterpriseId: number;
@@ -15,8 +15,8 @@ export default function ProjectTab({ enterpriseId }: ProjectTabProps) {
   return (
     <div className="w-full flex flex-col items-end">
       <Button asChild className="ml-auto mb-10">
-        <Link href={"/activities/projects/create"}>
-          {t("common.add")} <Plus />
+        <Link href={'/activities/projects/create'}>
+          {t('common.add')} <Plus />
         </Link>
       </Button>
       <ProjectList enterpriseId={enterpriseId} />

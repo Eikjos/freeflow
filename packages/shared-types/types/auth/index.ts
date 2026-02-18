@@ -1,10 +1,10 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export type AuthResponseData = {
   userId: number;
   firstName: string;
   lastName: string;
-  role: "enterprise" | "customer";
+  role: 'enterprise' | 'customer';
   enterpriseName?: string;
   enterpriseId?: number;
   customerId?: number;
@@ -19,7 +19,7 @@ export const LoginDataValidation = z.object({
     .string()
     .min(1, { message: "L'email est requis." })
     .email({ message: "L'email est invalide." }),
-  password: z.string().min(1, { message: "Le mot de passe est requis." }),
+  password: z.string().min(1, { message: 'Le mot de passe est requis.' }),
 });
 
 export type LoginData = z.infer<typeof LoginDataValidation>;

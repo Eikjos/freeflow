@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Cell,
@@ -6,8 +6,8 @@ import {
   PieChart as PieChartProvider,
   ResponsiveContainer,
   Tooltip,
-} from "recharts";
-import { cn, formatPrice } from "../../../lib/utils";
+} from 'recharts';
+import { cn, formatPrice } from '../../../lib/utils';
 
 type PieChartData = {
   name: string;
@@ -18,14 +18,14 @@ type PieChartProps = {
   data: PieChartData[];
   className: string;
   colors: string[];
-  type?: "PRICE" | "DEFAULT";
+  type?: 'PRICE' | 'DEFAULT';
 };
 
 export default function PieChart({
   data,
   className,
   colors,
-  type = "DEFAULT",
+  type = 'DEFAULT',
 }: PieChartProps) {
   return (
     <div className={cn(className)}>
@@ -38,8 +38,8 @@ export default function PieChart({
           </Pie>
           <Tooltip
             formatter={(value: number) => {
-              if (type === "DEFAULT") return value;
-              return formatPrice(value, "fr-FR", "EUR");
+              if (type === 'DEFAULT') return value;
+              return formatPrice(value, 'fr-FR', 'EUR');
             }}
           />
         </PieChartProvider>

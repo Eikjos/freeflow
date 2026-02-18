@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useTranslations } from "next-intl";
-import Image from "next/image";
-import { Suspense } from "react";
-import { LoginForm } from "../../components/templates/login-form";
+import Image from 'next/image';
+import { useTranslations } from 'next-intl';
+import { Suspense } from 'react';
+import { LoginForm } from '../../components/templates/login-form';
 
 const LoginPage = () => {
   const t = useTranslations();
@@ -32,7 +32,7 @@ const LoginPage = () => {
           />
           <span className="font-amica text-5xl">Freeflow</span>
         </div>
-        <h1 className="text-5xl mt-28 text-center font-amica">{t("signIn")}</h1>
+        <h1 className="text-5xl mt-28 text-center font-amica">{t('signIn')}</h1>
         <Suspense>
           <LoginForm className="mt-12 px-10" />
         </Suspense>

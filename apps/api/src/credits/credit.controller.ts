@@ -24,7 +24,7 @@ export default class CreditController {
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('credit'))
   @HttpCode(200)
-  async create(
+  create(
     @Body() model: CreateCreditDto,
     @Req() req: Request,
     @UploadedFile()

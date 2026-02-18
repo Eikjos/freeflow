@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table';
 
 import {
   Table,
@@ -14,9 +14,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "components/ui/table";
-import { useTranslations } from "next-intl";
-import { cn } from "../../../lib/utils";
+} from 'components/ui/table';
+import { useTranslations } from 'next-intl';
+import { cn } from '../../../lib/utils';
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
@@ -25,9 +25,8 @@ interface DataTableProps<TData> {
   isLoading?: boolean;
 }
 
-declare module "@tanstack/react-table" {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint, @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends unknown, TValue> {
+declare module '@tanstack/react-table' {
+  interface ColumnMeta<TData, TValue> {
     className?: string;
   }
 }
@@ -47,7 +46,7 @@ export function DataTable<TData>({
 
   return (
     <>
-      <div className={cn("rounded-md border", className)}>
+      <div className={cn('rounded-md border', className)}>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -62,7 +61,7 @@ export function DataTable<TData>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -77,7 +76,7 @@ export function DataTable<TData>({
                   table.getRowModel().rows.map((row) => (
                     <TableRow
                       key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
+                      data-state={row.getIsSelected() && 'selected'}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell
@@ -86,7 +85,7 @@ export function DataTable<TData>({
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </TableCell>
                       ))}
@@ -98,7 +97,7 @@ export function DataTable<TData>({
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      {t("common.emptyData")}
+                      {t('common.emptyData')}
                     </TableCell>
                   </TableRow>
                 )}

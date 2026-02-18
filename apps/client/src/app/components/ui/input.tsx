@@ -1,5 +1,6 @@
-import { ComponentProps, forwardRef } from "react";
-import { cn } from "../../../lib/utils";
+import { cva, VariantProps } from 'class-variance-authority';
+import { ComponentProps, forwardRef } from 'react';
+import { cn } from '../../../lib/utils';
 import {
   FormControl,
   FormDescription,
@@ -7,11 +8,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./form";
-import { Label } from "./label";
-import { cva, VariantProps } from "class-variance-authority";
+} from './form';
+import { Label } from './label';
 
-export type InputProps = Omit<ComponentProps<"input">, "name"> & {
+export type InputProps = Omit<ComponentProps<'input'>, 'name'> & {
   name?: string;
   description?: string;
   label?: string;
@@ -19,25 +19,25 @@ export type InputProps = Omit<ComponentProps<"input">, "name"> & {
 } & VariantProps<typeof inputVariant>;
 
 const inputVariant = cva(
-  "flex h-10 w-full rounded-md text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+  'flex h-10 w-full rounded-md text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
   {
     variants: {
       variant: {
         default:
-          "border border-input bg-background focus-visible:outline-none focus-visible:ring-[1px] focus-visible:ring-primary px-3 py-2",
-        ghost: "bg-transparent py-0 px-2 m-0 w-full text-inherit",
+          'border border-input bg-background focus-visible:outline-none focus-visible:ring-[1px] focus-visible:ring-primary px-3 py-2',
+        ghost: 'bg-transparent py-0 px-2 m-0 w-full text-inherit',
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: 'default',
     },
-  }
+  },
 );
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     { className, type, name, description, label, error, variant, ...props },
-    ref
+    ref,
   ) => {
     const hasError = !!error;
 
@@ -54,7 +54,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                   inputVariant({
                     variant,
                   }),
-                  fieldState.error && "border-destructive text-destructive"
+                  fieldState.error && 'border-destructive text-destructive',
                 )}
                 {...props}
                 {...field}
@@ -75,16 +75,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             inputVariant({
               variant,
             }),
-            hasError && "border-destructive text-destructive"
+            hasError && 'border-destructive text-destructive',
           )}
           {...props}
           ref={ref}
         />
       </div>
     );
-  }
+  },
 );
 
-Input.displayName = "Input";
+Input.displayName = 'Input';
 
 export { Input };

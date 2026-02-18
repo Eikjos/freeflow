@@ -16,7 +16,7 @@ export default class JuridicShapeService {
           code,
         },
       });
-    } catch (e) {
+    } catch {
       throw new NotFoundException('juridicShape.notFound');
     }
   }

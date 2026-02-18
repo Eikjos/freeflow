@@ -26,7 +26,7 @@ export default class UsersController {
     type: Boolean,
     description: 'Indicates whether the user is an enterprise user',
   })
-  public async create(
+  create(
     @Body() model: CreateUserDto,
     @Query('isEnterprise', ParseBoolPipe) isEnterprise: boolean,
     @Query('token') token?: string,

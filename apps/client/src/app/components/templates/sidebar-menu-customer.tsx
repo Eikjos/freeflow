@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import SidebarNav from "@components/atoms/sidebar-nav";
-import Logo from "@components/molecules/logo";
-import ProfileButton from "@components/molecules/profileButton";
+import SidebarNav from '@components/atoms/sidebar-nav';
+import Logo from '@components/molecules/logo';
+import ProfileButton from '@components/molecules/profileButton';
 import {
   Sidebar,
   SidebarContent,
@@ -10,7 +10,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
-} from "@components/ui/sidebar";
+} from '@components/ui/sidebar';
 
 type SidebarMenuProps = {
   className?: string;
@@ -19,12 +19,12 @@ type SidebarMenuProps = {
 export default function SidebarMenuCustomer({ className }: SidebarMenuProps) {
   const navLinks = [
     {
-      name: "Mes projects",
-      url: "/customers/projects",
+      name: 'Mes projects',
+      url: '/customers/projects',
     },
     {
-      name: "Mes factures",
-      url: "/customers/invoices",
+      name: 'Mes factures',
+      url: '/customers/invoices',
     },
   ];
 

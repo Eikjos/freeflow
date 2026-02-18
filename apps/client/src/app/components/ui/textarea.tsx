@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { cn } from "../../../lib/utils";
+import { cn } from '../../../lib/utils';
 import {
   FormControl,
   FormDescription,
@@ -8,12 +8,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./form";
-import { Label } from "./label";
+} from './form';
+import { Label } from './label';
 
 const Textarea = React.forwardRef<
   HTMLTextAreaElement,
-  React.ComponentProps<"textarea"> & { label?: string; description?: string }
+  React.ComponentProps<'textarea'> & { label?: string; description?: string }
 >(({ className, name, label, description, ...props }, ref) => {
   return name ? (
     <FormField
@@ -24,9 +24,9 @@ const Textarea = React.forwardRef<
           <FormControl>
             <textarea
               className={cn(
-                "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+                'flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
                 className,
-                { "border-destructive text-destructive": fieldState.error }
+                { 'border-destructive text-destructive': fieldState.error },
               )}
               {...props}
               {...field}
@@ -43,8 +43,8 @@ const Textarea = React.forwardRef<
       {label && <Label>{label}</Label>}
       <textarea
         className={cn(
-          "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-          className
+          'flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+          className,
         )}
         ref={ref}
         {...props}
@@ -52,6 +52,6 @@ const Textarea = React.forwardRef<
     </div>
   );
 });
-Textarea.displayName = "Textarea";
+Textarea.displayName = 'Textarea';
 
 export { Textarea };

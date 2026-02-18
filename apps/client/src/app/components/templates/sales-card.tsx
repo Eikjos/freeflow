@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import { ChartConfig } from "@components/ui/chart";
-import Loading from "@components/ui/loading";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
-import { useQueries } from "@tanstack/react-query";
-import { ChartAreaIcon, ChartBarIcon } from "lucide-react";
-import { useEffect, useState } from "react";
-import { getSalesByYearQueryOptions } from "../../../lib/api/sales";
-import { numberToMonth } from "../../../lib/utils";
-import { SalesChart } from "./sales-chart";
+import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
+import { ChartConfig } from '@components/ui/chart';
+import Loading from '@components/ui/loading';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
+import { useQueries } from '@tanstack/react-query';
+import { ChartAreaIcon, ChartBarIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { getSalesByYearQueryOptions } from '../../../lib/api/sales';
+import { numberToMonth } from '../../../lib/utils';
+import { SalesChart } from './sales-chart';
 
 type YearData = {
   [year: number]: number;
@@ -35,7 +35,7 @@ export default function SalesCard({
 
   if (yearInscription) {
     years = Array.from({ length: 3 }, (_, i) => currentYear - i).filter(
-      (year) => year >= yearInscription
+      (year) => year >= yearInscription,
     );
   } else if (year) {
     years = [year];
@@ -58,7 +58,7 @@ export default function SalesCard({
         ];
 
         const obj = Object.fromEntries(
-          years.map((year, idx) => [year, values[idx]])
+          years.map((year, idx) => [year, values[idx]]),
         );
 
         dataChart = [
@@ -73,10 +73,10 @@ export default function SalesCard({
     }
   }, [isLoading]);
 
-  const colors = ["green", "red", "blue"];
+  const colors = ['green', 'red', 'blue'];
 
   const chartConfig = Object.fromEntries(
-    years.map((year, idx) => [year, { label: year, color: colors[idx] }])
+    years.map((year, idx) => [year, { label: year, color: colors[idx] }]),
   ) satisfies ChartConfig;
 
   return (
@@ -91,7 +91,7 @@ export default function SalesCard({
             <TabsTrigger value="bar">
               <ChartBarIcon
                 size={20}
-                style={{ transform: "rotateX(-180deg) rotateZ(90deg)" }}
+                style={{ transform: 'rotateX(-180deg) rotateZ(90deg)' }}
               />
             </TabsTrigger>
           </TabsList>

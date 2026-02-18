@@ -1,18 +1,18 @@
-import { Button } from "@components/ui/button";
+import { Button } from '@components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@components/ui/dialog";
-import { Form } from "@components/ui/form";
-import { Input } from "@components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { InvoiceLineData, InvoiceLineValidation } from "@repo/shared-types";
-import { useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
-import { formatPrice } from "../../../lib/utils";
+} from '@components/ui/dialog';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { InvoiceLineData, InvoiceLineValidation } from '@repo/shared-types';
+import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
+import { formatPrice } from '../../../lib/utils';
 
 export type CreateInvoiceLineModal = {
   open: boolean;
@@ -29,15 +29,15 @@ export default function CreateInvoiceLineModal({
   const form = useForm<InvoiceLineData>({
     resolver: zodResolver(InvoiceLineValidation),
     defaultValues: {
-      name: "",
+      name: '',
       quantity: 1,
       unitPrice: 0.0,
     },
   });
-  const quantity = form.watch("quantity");
-  const unitPrice = form.watch("unitPrice");
-  const userLocale = "fr-FR";
-  const currency = "EUR";
+  const quantity = form.watch('quantity');
+  const unitPrice = form.watch('unitPrice');
+  const userLocale = 'fr-FR';
+  const currency = 'EUR';
 
   const onSubmit = (values: InvoiceLineData) => {
     handleSubmit(values);
@@ -45,8 +45,8 @@ export default function CreateInvoiceLineModal({
   };
 
   const handleSubmitForm = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   const handleOpenModal = (value: boolean) => {
     if (!value) form.reset();
@@ -59,34 +59,32 @@ export default function CreateInvoiceLineModal({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-3xl">
-            {t("invoice.lines.add")}
+            {t('invoice.lines.add')}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form>
-            <Input label={"Nom"} placeholder="Nom" {...form.register("name")} />
+            <Input label={'Nom'} placeholder="Nom" {...form.register('name')} />
             <Input
-              label={t("common.quantity")}
-              placeholder={t("common.quantity")}
+              label={t('common.quantity')}
+              placeholder={t('common.quantity')}
               type="number"
-              {...form.register("quantity", { valueAsNumber: true })}
+              {...form.register('quantity', { valueAsNumber: true })}
             />
             <Input
-              label={"Prix HT"}
+              label={'Prix HT'}
               placeholder="Prix HT"
               type="number"
-              {...form.register("unitPrice", {
+              {...form.register('unitPrice', {
                 valueAsNumber: true,
               })}
             />
             <p>
-              {quantity} x {formatPrice(unitPrice, userLocale, currency)} ={" "}
+              {quantity} x {formatPrice(unitPrice, userLocale, currency)} ={' '}
               {formatPrice(quantity * unitPrice, userLocale, currency)}
             </p>
             <DialogFooter>
-              <Button onClick={handleSubmitForm}>
-                {t("common.create")}
-              </Button>
+              <Button onClick={handleSubmitForm}>{t('common.create')}</Button>
             </DialogFooter>
           </form>
         </Form>

@@ -7,11 +7,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import AuthService from 'auth/auth.service';
+import EnterpriseDto from 'dtos/enterprises/enterprise.dto';
 import { CreateEnterpriseDto } from 'dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from 'dtos/enterprises/enterprise-information.dto';
 import EnterpriseStatDto from 'dtos/enterprises/enterprise-stat.dto';
 import EnterpriseUpdateDto from 'dtos/enterprises/enterprise-update.dto';
-import EnterpriseDto from 'dtos/enterprises/enterprise.dto';
 import InvoiceInformationDto from 'dtos/invoices/invoice-information.dto';
 import ExpenseService from 'expenses/expense.service';
 import MailingService from 'mailing/mailing.service';
@@ -177,7 +177,6 @@ export default class EnterpriseService {
       prefixeInvoice,
       lastInvoiceNumber,
       juridicShape,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       juridicShapeId,
       ...rest
     } = enterprise;
@@ -203,10 +202,8 @@ export default class EnterpriseService {
     if (!enterprise) throw new NotFoundException();
     const {
       prefixeInvoice,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       lastInvoiceNumber,
       juridicShape,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       juridicShapeId,
       ...rest
     } = enterprise;

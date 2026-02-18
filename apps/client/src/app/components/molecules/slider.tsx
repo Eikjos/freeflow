@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { cn } from "../../../lib/utils";
+import React, { useEffect, useState } from 'react';
+import { cn } from '../../../lib/utils';
 
 type SliderProps = {
   children: React.ReactNode;
@@ -33,7 +33,7 @@ export default function Slider({
   }, [current, autoSlide, autoSlideInterval]);
 
   return (
-    <div className={cn("relative w-full h-full overflow-hidden", className)}>
+    <div className={cn('relative w-full h-full overflow-hidden', className)}>
       <div
         className="flex transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${current * 100}%)` }}
@@ -49,7 +49,7 @@ export default function Slider({
             key={index}
             onClick={() => setCurrent(index)}
             className={`h-2 w-2 rounded-full transition-all shadow-lg border-gray-400 border ${
-              current === index ? "bg-primary" : "bg-white/40"
+              current === index ? 'bg-primary' : 'bg-white/40'
             }`}
           />
         ))}

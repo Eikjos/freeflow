@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Kanban from "@components/organisms/kanban";
-import Loading from "@components/ui/loading";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
-import { getProjectWithTasksQueryOption } from "../../../../../../lib/api/projects";
+import Kanban from '@components/organisms/kanban';
+import Loading from '@components/ui/loading';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
+import { getProjectWithTasksQueryOption } from '../../../../../../lib/api/projects';
 
 type ProjectDetailsParams = {
   id: string;
@@ -13,7 +13,7 @@ type ProjectDetailsParams = {
 export default function ProjectDetailWithTasksPage() {
   const { id } = useParams<ProjectDetailsParams>();
   const { data, isLoading } = useQuery(
-    getProjectWithTasksQueryOption(parseInt(id))
+    getProjectWithTasksQueryOption(parseInt(id)),
   );
 
   if (isLoading) {

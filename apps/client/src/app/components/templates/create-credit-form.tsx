@@ -1,26 +1,26 @@
-import { Button } from "@components/ui/button";
-import { Card, CardContent, CardFooter } from "@components/ui/card";
-import { Checkbox } from "@components/ui/checkbox";
-import { Form } from "@components/ui/form";
-import { Input } from "@components/ui/input";
-import { Separator } from "@components/ui/separator";
-import { pdf } from "@react-pdf/renderer";
+import { Button } from '@components/ui/button';
+import { Card, CardContent, CardFooter } from '@components/ui/card';
+import { Checkbox } from '@components/ui/checkbox';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { Separator } from '@components/ui/separator';
+import { pdf } from '@react-pdf/renderer';
 import {
   CreateCreditData,
   CreateCreditLineData,
   CreateCreditLineDataValidation,
   InvoiceData,
   InvoiceInformation,
-} from "@repo/shared-types";
-import { createCredit } from "actions/credit";
-import { Plus, Trash } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useFieldArray, useFormContext } from "react-hook-form";
-import { toast } from "sonner";
-import getQueryClient from "../../../lib/query-client";
-import { formatPrice } from "../../../lib/utils";
-import CreditTemplate from "./credit-template";
+} from '@repo/shared-types';
+import { createCredit } from 'actions/credit';
+import { Plus, Trash } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useFieldArray, useFormContext } from 'react-hook-form';
+import { toast } from 'sonner';
+import getQueryClient from '../../../lib/query-client';
+import { formatPrice } from '../../../lib/utils';
+import CreditTemplate from './credit-template';
 
 type CreateCreditFormProps = {
   invoice: InvoiceData;
@@ -43,19 +43,19 @@ export default function CreateCreditForm({
   const router = useRouter();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "creditLines",
+    name: 'creditLines',
   });
 
   const addLine = () => {
     const { newLine } = form.getValues();
-    form.clearErrors("newLine.price");
-    form.clearErrors("newLine.title");
+    form.clearErrors('newLine.price');
+    form.clearErrors('newLine.title');
     const result = CreateCreditLineDataValidation.safeParse(newLine);
     if (!result.success) {
       result.error.errors.forEach((err) => {
         return form.setError(
-          err.path[0] === "price" ? "newLine.price" : "newLine.title",
-          { message: err.message }
+          err.path[0] === 'price' ? 'newLine.price' : 'newLine.title',
+          { message: err.message },
         );
       });
       return;
@@ -71,12 +71,12 @@ export default function CreateCreditForm({
     const totalCredits = parseFloat(newLine.price.toString()) + previousTotal;
 
     if (totalAmountInvoice < totalCredits) {
-      form.setError("newLine.price", {
-        message: t("credit.notExceedAmount", {
+      form.setError('newLine.price', {
+        message: t('credit.notExceedAmount', {
           amount: formatPrice(
             totalAmountInvoice - totalCreditInvoice,
-            "FR-fr",
-            "EUR"
+            'FR-fr',
+            'EUR',
           ),
         }),
       });
@@ -85,12 +85,12 @@ export default function CreateCreditForm({
     }
 
     append(result.data);
-    form.setValue("newLine.title", "");
-    form.setValue("newLine.price", 0);
+    form.setValue('newLine.title', '');
+    form.setValue('newLine.price', 0);
   };
 
   const handleMaskNameChange = () => {
-    form.setValue("maskName", !form.watch("maskName"));
+    form.setValue('maskName', !form.watch('maskName'));
   };
 
   const onSubmit = async (values: CreateCreditData) => {
@@ -100,13 +100,13 @@ export default function CreateCreditForm({
       .reduce((i, prev) => prev + i, 0);
     if (totalCreditAmount > totalAmountInvoice - totalCreditInvoice) {
       toast.error(
-        t("credit.notExceedAmount", {
+        t('credit.notExceedAmount', {
           amount: formatPrice(
             totalAmountInvoice - totalCreditInvoice,
-            "FR-fr",
-            "EUR"
+            'FR-fr',
+            'EUR',
           ),
-        })
+        }),
       );
       return;
     }
@@ -119,20 +119,20 @@ export default function CreateCreditForm({
         information={information}
         maskName={form.getValues().maskName}
         lines={values.creditLines}
-      />
+      />,
     ).toBlob();
     createCredit(
       {
         ...values,
-        number: `AV-${String(values.number).padStart(5, "0")}`,
+        number: `AV-${String(values.number).padStart(5, '0')}`,
         invoiceId: form.getValues().invoiceId,
       },
-      new File([creditBlob], `credit-AV-${values.number}.pdf`)
+      new File([creditBlob], `credit-AV-${values.number}.pdf`),
     )
       .then(() => {
-        toast.success(t("credit.success.create"));
-        void queryClient.invalidateQueries({ queryKey: ["sales"] });
-        router.push("/invoices");
+        toast.success(t('credit.success.create'));
+        void queryClient.invalidateQueries({ queryKey: ['sales'] });
+        router.push('/invoices');
       })
       .catch((err: Error) => {
         toast.error(err.message);
@@ -141,7 +141,7 @@ export default function CreateCreditForm({
 
   const handleSubmit = () => {
     form.handleSubmit(onSubmit);
-  }
+  };
 
   return (
     <Form {...form}>
@@ -150,31 +150,31 @@ export default function CreateCreditForm({
           <CardContent className="py-2 px-4">
             <div className="flex flex-row justify-end mt-2">
               <Checkbox
-                label={t("invoice.maskName")}
+                label={t('invoice.maskName')}
                 checked={form.getValues().maskName}
                 onCheckedChange={handleMaskNameChange}
               />
             </div>
 
-            <Input label={t("common.number")} {...form.register("number")} />
-            <Input label={t("common.title")} {...form.register("title")} />
+            <Input label={t('common.number')} {...form.register('number')} />
+            <Input label={t('common.title')} {...form.register('title')} />
             <div className="mt-5 pt-5 border-t border-secondary">
-              <span>{t("credit.lines.add")}</span>
+              <span>{t('credit.lines.add')}</span>
               <div className="flex flex-row w-full items-start gap-2">
                 <div className="flex flex-row items-start gap-2 w-full">
                   <Input
-                    label={t("common.name")}
+                    label={t('common.name')}
                     className="w-3/5"
                     error={form.formState.errors.newLine?.title?.message}
                     {...form.register(`newLine.title`)}
                   />
                   <Input
-                    label={t("common.priceTTC")}
+                    label={t('common.priceTTC')}
                     className="w-2/5"
                     type="number"
                     step="0.5"
                     error={form.formState.errors.newLine?.price?.message}
-                    description={t("credit.warning.amount")}
+                    description={t('credit.warning.amount')}
                     {...form.register(`newLine.price`)}
                   />
                 </div>
@@ -221,7 +221,7 @@ export default function CreateCreditForm({
 
             <CardFooter className="flex flex-row justify-end mt-5 p-0">
               <Button type="submit" disabled={!form.formState.isValid}>
-                {t("common.create")}
+                {t('common.create')}
               </Button>
             </CardFooter>
           </CardContent>

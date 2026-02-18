@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { createContext, useContext, useState } from "react";
-import { CustomerInfo } from "../../types/customer-info-type";
+import { createContext, useContext, useState } from 'react';
+import { CustomerInfo } from '../../types/customer-info-type';
 
 interface CustomerContextType {
   customer: CustomerInfo | undefined;
@@ -10,7 +10,7 @@ interface CustomerContextType {
 
 const CustomerContext = createContext<CustomerContextType>({
   customer: undefined,
-  setCustomer: () => {},
+  setCustomer: () => undefined,
 });
 
 export const useCustomer = () => useContext(CustomerContext);
@@ -22,7 +22,7 @@ interface ProviderProps {
 
 export function CustomerProvider({ initialCustomer, children }: ProviderProps) {
   const [customer, setCustomer] = useState<CustomerInfo | undefined>(
-    initialCustomer
+    initialCustomer,
   );
 
   return (

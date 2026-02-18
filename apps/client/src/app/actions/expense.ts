@@ -1,7 +1,7 @@
-import { CreateExpenseData } from "@repo/shared-types";
-import { client } from "../../lib/client";
+import { CreateExpenseData } from '@repo/shared-types';
+import { client } from '../../lib/client';
 
-export const createExpense = async (expense: CreateExpenseData) => {
+export const createExpense = (expense: CreateExpenseData) => {
   const formData = new FormData();
   const { expense: file, ...exp } = expense;
   Object.entries(exp).forEach(([key, value]) => {
@@ -13,15 +13,15 @@ export const createExpense = async (expense: CreateExpenseData) => {
       }
     }
   });
-  if (file) formData.append("expense", file);
+  if (file) formData.append('expense', file);
 
   return client<void>(
     `expenses`,
     {
-      method: "POST",
+      method: 'POST',
       body: formData,
     },
-    "other"
+    'other',
   ).then((res) => {
     if (res.ok) {
       return res.data;
@@ -30,12 +30,10 @@ export const createExpense = async (expense: CreateExpenseData) => {
   });
 };
 
-export const deleteExpense = async (id: number) =>
-  await client<void>(`expenses/${id}`, { method: "DELETE" }).then(
-    (res) => {
-      if (res.ok) {
-        return res.data;
-      }
-      throw new Error(res.error);
+export const deleteExpense = (id: number) =>
+  client<void>(`expenses/${id}`, { method: 'DELETE' }).then((res) => {
+    if (res.ok) {
+      return res.data;
     }
-  );
+    throw new Error(res.error);
+  });

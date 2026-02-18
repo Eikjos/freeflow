@@ -1,16 +1,16 @@
-"use server";
+'use server';
 
-import { AuthResponseData, LoginData } from "@repo/shared-types";
-import { cookies } from "next/headers";
-import { client } from "../../lib/client";
-import { ServerActionsReturns } from "../../types/server-actions-type";
+import { AuthResponseData, LoginData } from '@repo/shared-types';
+import { cookies } from 'next/headers';
+import { client } from '../../lib/client';
+import { ServerActionsReturns } from '../../types/server-actions-type';
 
 export const login = async (
-  data: LoginData
+  data: LoginData,
 ): Promise<ServerActionsReturns<AuthResponseData>> => {
   const cookieStore = await cookies();
   return await client<AuthResponseData>(`auth/login`, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify({
       email: data.email,
       password: data.password,
@@ -18,8 +18,8 @@ export const login = async (
   })
     .then((data) => {
       if (data.ok) {
-        cookieStore.set("access_token", data.data?.access_token ?? "");
-        cookieStore.set("refreshToken", data.data?.refreshToken ?? "");
+        cookieStore.set('access_token', data.data?.access_token ?? '');
+        cookieStore.set('refreshToken', data.data?.refreshToken ?? '');
         return {
           success: true,
           data: data.data,
@@ -40,6 +40,6 @@ export const login = async (
 
 export const logout = async () => {
   const cookieStore = await cookies();
-  cookieStore.delete("access_token");
-  cookieStore.delete("refreshToken");
-}
+  cookieStore.delete('access_token');
+  cookieStore.delete('refreshToken');
+};

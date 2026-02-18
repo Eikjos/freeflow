@@ -5,14 +5,14 @@ import {
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { randomBytes } from 'crypto';
-import CustomerCreateDto from 'dtos/customers/customer-create.dto';
-import { CustomerFilterDto } from 'dtos/customers/customer-filter.dto';
-import CustomerStatDto from 'dtos/customers/customer-stat.dto';
 import {
   CustomerDto,
   mapCustomerToDetailDto,
   mapCustomerToDto,
 } from 'dtos/customers/customer.dto';
+import CustomerCreateDto from 'dtos/customers/customer-create.dto';
+import { CustomerFilterDto } from 'dtos/customers/customer-filter.dto';
+import CustomerStatDto from 'dtos/customers/customer-stat.dto';
 import {
   PaginationFilterDto,
   PaginationResultDto,

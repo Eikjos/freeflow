@@ -3,10 +3,10 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@components/ui/chart";
-import { CustomerStatData } from "@repo/shared-types";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { stringToDateYear } from "../../../lib/utils";
+} from '@components/ui/chart';
+import { CustomerStatData } from '@repo/shared-types';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { stringToDateYear } from '../../../lib/utils';
 
 type CustomerChartProps = {
   data: CustomerStatData[];
@@ -15,8 +15,8 @@ type CustomerChartProps = {
 
 const config = {
   customers: {
-    color: "red",
-    label: "Nombre de client",
+    color: 'red',
+    label: 'Nombre de client',
   },
 } as ChartConfig;
 
@@ -30,23 +30,23 @@ export default function CustomerChart({ data, className }: CustomerChartProps) {
           tickLine={false}
           axisLine={true}
           tickMargin={8}
-          tickFormatter={(value : string) => stringToDateYear(value)}
+          tickFormatter={(value: string) => stringToDateYear(value)}
         />
         <YAxis tickLine={false} axisLine={false} tickMargin={8} tickCount={3} />
         <ChartTooltip
           cursor={false}
           content={
             <ChartTooltipContent
-              labelFormatter={(value : string) => stringToDateYear(value)}
+              labelFormatter={(value: string) => stringToDateYear(value)}
             />
           }
         />
         <Area
-          dataKey={"customers"}
+          dataKey={'customers'}
           type="monotone"
-          fill={"#fea052"}
+          fill={'#fea052'}
           fillOpacity={0.4}
-          stroke={"#fea052"}
+          stroke={'#fea052'}
         />
       </AreaChart>
     </ChartContainer>

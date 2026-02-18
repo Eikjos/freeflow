@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader } from "@components/ui/card";
-import { TaskData } from "@repo/shared-types";
-import { ChevronsDown, ChevronsUp, Equal } from "lucide-react";
-import { useRef, useState } from "react";
-import { useDrag } from "react-dnd";
-import { cn } from "../../../lib/utils";
-import TaskDetailSheet from "./task-detail-sheet";
+import { Card, CardContent, CardHeader } from '@components/ui/card';
+import { TaskData } from '@repo/shared-types';
+import { ChevronsDown, ChevronsUp, Equal } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { useDrag } from 'react-dnd';
+import { cn } from '../../../lib/utils';
+import TaskDetailSheet from './task-detail-sheet';
 
 type TaskCardProps = {
   task: TaskData;
@@ -30,13 +30,13 @@ export default function TaskCard({
   const [open, setOpen] = useState(false);
   const [{ opacity }, dragRef] = useDrag(
     () => ({
-      type: "TaskCard",
+      type: 'TaskCard',
       item: { id: task.id },
       collect: (monitor) => ({
         opacity: monitor.isDragging() ? 50 : 100,
       }),
     }),
-    [task.id]
+    [task.id],
   );
 
   dragRef(ref);
@@ -60,8 +60,8 @@ export default function TaskCard({
       >
         <CardContent
           className={cn(
-            "h-20 py-1 px-2 flex flex-col justify-between",
-            `opacity-${opacity}`
+            'h-20 py-1 px-2 flex flex-col justify-between',
+            `opacity-${opacity}`,
           )}
         >
           <CardHeader className="p-0">
@@ -71,9 +71,9 @@ export default function TaskCard({
             <div className="bg-gray-200 p-1 rounded-full text-xs">
               {task.estimation}h
             </div>
-            {task.priority === "HIGH" && <ChevronsUp size={15} color="red" />}
-            {task.priority === "MEDIUM" && <Equal size={15} color="green" />}
-            {task.priority === "LOW" && <ChevronsDown size={15} color="blue" />}
+            {task.priority === 'HIGH' && <ChevronsUp size={15} color="red" />}
+            {task.priority === 'MEDIUM' && <Equal size={15} color="green" />}
+            {task.priority === 'LOW' && <ChevronsDown size={15} color="blue" />}
           </div>
         </CardContent>
       </Card>

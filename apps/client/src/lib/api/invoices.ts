@@ -3,9 +3,9 @@ import {
   InvoiceFilterData,
   PaginationFilter,
   PaginationResult,
-} from "@repo/shared-types";
-import { client } from "../client";
-import { generateQueryString } from "../utils";
+} from '@repo/shared-types';
+import { client } from '../client';
+import { generateQueryString } from '../utils';
 
 export const getAllInvoice = (filter: PaginationFilter<InvoiceFilterData>) => {
   const query = generateQueryString(filter);
@@ -13,10 +13,10 @@ export const getAllInvoice = (filter: PaginationFilter<InvoiceFilterData>) => {
 };
 
 export const getAllInvoiceQueryOptions = (
-  filter: PaginationFilter<InvoiceFilterData>
+  filter: PaginationFilter<InvoiceFilterData>,
 ) => ({
   queryFn: () => getAllInvoice(filter),
-  queryKey: ["invoices", filter],
+  queryKey: ['invoices', filter],
   retry: false,
 });
 
@@ -25,6 +25,6 @@ export const getInvoiceById = (id: number) =>
 
 export const getInvoiceByIdQueryOptions = (id: number) => ({
   queryFn: () => getInvoiceById(id),
-  queryKey: ["invoices", id],
+  queryKey: ['invoices', id],
   retry: false,
 });

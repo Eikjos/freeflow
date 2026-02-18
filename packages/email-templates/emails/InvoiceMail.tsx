@@ -1,9 +1,9 @@
-import { Button, Text } from "@react-email/components";
-import dayjs from "dayjs";
+import { Button, Text } from '@react-email/components';
+import dayjs from 'dayjs';
 import { formatPrice } from '../utils';
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import TailwindConfig from "./components/TailwindConfig";
+import Footer from './components/Footer';
+import Header from './components/Header';
+import TailwindConfig from './components/TailwindConfig';
 
 type InvoiceMailProps = {
   clientUrl: string;
@@ -12,32 +12,45 @@ type InvoiceMailProps = {
   date: Date;
   amount: number;
   name: string;
-}
+};
 
-export function InvoiceMail({ clientUrl, mediaId, invoiceNumber, date, amount, name } : InvoiceMailProps) {
+export function InvoiceMail({
+  clientUrl,
+  mediaId,
+  invoiceNumber,
+  date,
+  amount,
+  name,
+}: InvoiceMailProps) {
   return (
     <TailwindConfig>
       <Header clientUrl={clientUrl} />
-        <Text className="text-3xl text-center mt-5 mb-5">
-          Vous avez reçu une nouvelle facture
+      <Text className="text-3xl text-center mt-5 mb-5">
+        Vous avez reçu une nouvelle facture
       </Text>
       <div className="px-8">
         <Text>
           Bonjour,
           <br />
-          Veuillez trouver ci-joint votre facture n°{invoiceNumber}, émise le  {dayjs(date).format("DD/MM/YYYY")} et relative à {name}. Le montant de celle-ci s'élève à {formatPrice(amount, "FR-fr", "EUR")}.
+          Veuillez trouver ci-joint votre facture n°{invoiceNumber}, émise le{' '}
+          {dayjs(date).format('DD/MM/YYYY')} et relative à {name}. Le montant de
+          celle-ci s'élève à {formatPrice(amount, 'FR-fr', 'EUR')}.
           <br />
         </Text>
         <Text className="text-2xl text-center mt-5 mb-5">
           Vous pouvez télécharger la facture en utilisant le lien ci-dessous :
         </Text>
         <div className="mt-10 text-center">
-            <Button className="bg-primary px-6 py-2 rounded-full text-sm text-white w-44 text-center inline-block">Télécharger la facture</Button>
+          <Button className="bg-primary px-6 py-2 rounded-full text-sm text-white w-44 text-center inline-block">
+            Télécharger la facture
+          </Button>
         </div>
         <Text>
-          Nous vous remercions de bien vouloir procéder au règlement dans les délais impartis.
-          Pour toute question ou demande d’information complémentaire, notre service administratif reste à votre disposition à l’adresse suivante : [Email du support].
-          Nous vous remercions pour votre confiance.
+          Nous vous remercions de bien vouloir procéder au règlement dans les
+          délais impartis. Pour toute question ou demande d’information
+          complémentaire, notre service administratif reste à votre disposition
+          à l’adresse suivante : [Email du support]. Nous vous remercions pour
+          votre confiance.
           <br />
           <br />
           Cordialement,
@@ -45,8 +58,8 @@ export function InvoiceMail({ clientUrl, mediaId, invoiceNumber, date, amount, n
           Proxiad Axe Seine
         </Text>
       </div>
-     
+
       <Footer />
     </TailwindConfig>
-  )
+  );
 }

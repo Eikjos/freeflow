@@ -24,7 +24,7 @@ export default class ObjectiveController {
 
   @UseGuards(AccessTokenGuard)
   @Get('in-progress')
-  async getInProgress(@Req() req: Request) {
+  getInProgress(@Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.objectiveService.findInProgress(enterpriseId);
   }
@@ -32,7 +32,7 @@ export default class ObjectiveController {
   @UseGuards(AccessTokenGuard)
   @Post()
   @HttpCode(200)
-  async create(@Body() model: CreateObjectiveDto, @Req() request: Request) {
+  create(@Body() model: CreateObjectiveDto, @Req() request: Request) {
     const enterpriseId = parseInt(request.user['enterpriseId']);
     return this.objectiveService.create(model, enterpriseId);
   }
@@ -40,7 +40,7 @@ export default class ObjectiveController {
   @UseGuards(AccessTokenGuard)
   @Put(':id')
   @HttpCode(200)
-  async update(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() model: CreateObjectiveDto,
     @Req() request: Request,
@@ -51,7 +51,7 @@ export default class ObjectiveController {
 
   @UseGuards(AccessTokenGuard)
   @Get()
-  async findAll(
+  findAll(
     @Query() fitler: PaginationFilterDto<undefined>,
     @Req() request: Request,
   ) {
@@ -61,7 +61,7 @@ export default class ObjectiveController {
 
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number, @Req() request: Request) {
+  delete(@Param('id', ParseIntPipe) id: number, @Req() request: Request) {
     const enterpriseId = parseInt(request.user['enterpriseId']);
     return this.objectiveService.delete(id, enterpriseId);
   }

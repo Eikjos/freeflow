@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import Autocomplete from "@components/molecules/autocomplete";
-import { Button } from "@components/ui/button";
-import { Card, CardContent } from "@components/ui/card";
-import { Form } from "@components/ui/form";
-import { Input } from "@components/ui/input";
-import InputFile from "@components/ui/input-file";
-import { zodResolver } from "@hookform/resolvers/zod";
+import Autocomplete from '@components/molecules/autocomplete';
+import { Button } from '@components/ui/button';
+import { Card, CardContent } from '@components/ui/card';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import InputFile from '@components/ui/input-file';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ProjectCreateData,
   ProjectCreateValidation,
   ProjectDetailData,
-} from "@repo/shared-types";
-import { CreateProject, UpdateProject } from "actions/project";
-import clsx from "clsx";
-import { Trash2Icon } from "lucide-react";
-import { useTranslations } from "next-intl";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { getAllCustomersQueryOptions } from "../../../lib/api/customers";
-import getQueryClient from "../../../lib/query-client";
-import { cn, getMediaUrl } from "../../../lib/utils";
+} from '@repo/shared-types';
+import { CreateProject, UpdateProject } from 'actions/project';
+import clsx from 'clsx';
+import { Trash2Icon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { getAllCustomersQueryOptions } from '../../../lib/api/customers';
+import getQueryClient from '../../../lib/query-client';
+import { cn, getMediaUrl } from '../../../lib/utils';
 
 type ProjectFormProps = {
   className?: string;
@@ -46,7 +46,7 @@ export default function ProjectForm({
   const form = useForm<ProjectCreateData>({
     resolver: zodResolver(ProjectCreateValidation),
     defaultValues: {
-      name: data?.name ?? "",
+      name: data?.name ?? '',
       customerId: data?.customerId ?? undefined,
       media: undefined,
     },
@@ -56,9 +56,9 @@ export default function ProjectForm({
   const onChangeInput = (files: File[]) => {
     const file = files[files.length - 1];
     if (file) {
-      form.setValue("media", file, { shouldValidate: true });
+      form.setValue('media', file, { shouldValidate: true });
     } else {
-      form.setValue("media", undefined, { shouldValidate: false });
+      form.setValue('media', undefined, { shouldValidate: false });
     }
   };
 
@@ -66,62 +66,64 @@ export default function ProjectForm({
     if (edit && projectId) {
       await UpdateProject(projectId, values).then((res) => {
         if (res === null) {
-          toast.error(t("customer.error.create"));
+          toast.error(t('customer.error.create'));
         } else if (!res.ok && res.error) {
           toast.error(res.error);
         } else {
-          toast.success("Projet a été mis à jour avec succès");
-          router.push("/activities");
+          toast.success('Projet a été mis à jour avec succès');
+          router.push('/activities');
         }
       });
     } else {
       await CreateProject(values).then(async (res) => {
         if (res === null) {
-          toast.error(t("customer.error.create"));
+          toast.error(t('customer.error.create'));
         } else if (!res.ok && res.error) {
           toast.error(res.error);
         } else {
-          toast.success("project.success.create");
-          await queryClient.invalidateQueries({ queryKey: ["project", projectId] });
-          router.push("/activities");
+          toast.success('project.success.create');
+          await queryClient.invalidateQueries({
+            queryKey: ['project', projectId],
+          });
+          router.push('/activities');
         }
       });
     }
   };
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   return (
     <>
       <Form {...form}>
         <form onSubmit={handleSubmit}>
-          <Card className={cn("p-5", className)}>
+          <Card className={cn('p-5', className)}>
             <CardContent>
               <div className="flex flex-row items-center">
                 <div className="w-1/2 pr-5 py-5 mr-5">
                   <Input
                     type="text"
-                    {...form.register("name")}
-                    label={t("common.name")}
-                    placeholder={t("common.name")}
+                    {...form.register('name')}
+                    label={t('common.name')}
+                    placeholder={t('common.name')}
                   />
                   <Autocomplete
                     queryOptions={(filter) =>
                       getAllCustomersQueryOptions({
                         page: 0,
                         pageSize: 10,
-                        asc: "name",
+                        asc: 'name',
                         filter: { name: filter.search, id: filter.id },
                       })
                     }
                     filterField="name"
                     render={(customer) => customer.name}
                     fieldIdentifier="id"
-                    {...form.register("customerId")}
+                    {...form.register('customerId')}
                     label="Client"
-                    className={clsx("mt-3", { hidden: isCustomer })}
+                    className={clsx('mt-3', { hidden: isCustomer })}
                     placeholder="Sélectionner un client"
                   />
                 </div>
@@ -134,14 +136,14 @@ export default function ProjectForm({
                   {(media || data?.mediaId) && (
                     <div>
                       <div className="flex flex-row justify-center items-center">
-                        <span>{t("common.preview")} :</span>
+                        <span>{t('common.preview')} :</span>
                         <Image
                           src={
                             media
                               ? URL.createObjectURL(media)
                               : data?.mediaId
                                 ? getMediaUrl(data?.mediaId)
-                                : ""
+                                : ''
                           }
                           width={100}
                           height={100}
@@ -151,7 +153,7 @@ export default function ProjectForm({
                         <Trash2Icon
                           size={20}
                           onClick={() =>
-                            form.setValue("media", undefined, {
+                            form.setValue('media', undefined, {
                               shouldValidate: true,
                             })
                           }
@@ -163,16 +165,16 @@ export default function ProjectForm({
               </div>
 
               <div className="w-full flex flex-row justify-end gap-5 mt-5">
-                <Button asChild variant={"outline"}>
+                <Button asChild variant={'outline'}>
                   <Link
                     href={!isCustomer ? `/activities` : `/customers/projects`}
                   >
-                    {t("common.back")}
+                    {t('common.back')}
                   </Link>
                 </Button>
 
                 <Button type="submit">
-                  {edit ? t("common.modify") : t("common.create")}
+                  {edit ? t('common.modify') : t('common.create')}
                 </Button>
               </div>
             </CardContent>

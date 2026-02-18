@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import Loading from "@components/ui/loading";
-import { Tabs, TabsList, TabsTrigger } from "@components/ui/tabs";
-import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { getStatsQueryOptions } from "../../../lib/api/customers";
-import CustomerChart from "./customer-chart";
+import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
+import Loading from '@components/ui/loading';
+import { Tabs, TabsList, TabsTrigger } from '@components/ui/tabs';
+import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { getStatsQueryOptions } from '../../../lib/api/customers';
+import CustomerChart from './customer-chart';
 
 type CustomerStatProps = {
   className?: string;
@@ -22,7 +22,7 @@ export default function CustomerStatCard({ className }: CustomerStatProps) {
     <Card className={className}>
       <CardContent className="py-4 px-4">
         <CardHeader className="flex flex-row w-full justify-between items-center">
-          <CardTitle>{t("mynumbers.customers")}</CardTitle>
+          <CardTitle>{t('mynumbers.customers')}</CardTitle>
           <Tabs defaultValue="6">
             <TabsList>
               <TabsTrigger onClick={() => setMonth(3)} value="3">

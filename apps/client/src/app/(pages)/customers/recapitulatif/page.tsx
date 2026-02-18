@@ -1,27 +1,27 @@
-import NotFoundEnterprise from "(pages)/(enterprise)/not-found";
-import CustomerFormVerif from "@components/templates/customer-form-verif";
-import Footer from "@components/templates/footer";
-import Header from "@components/templates/header";
-import Loading from "@components/ui/loading";
-import { CustomerDetailModel } from "@repo/shared-types";
-import { headers } from "next/headers";
-import { Suspense } from "react";
-import { client } from "../../../../lib/client";
-import { UserInfoType } from "../../../../types/user-info-types";
+import NotFoundEnterprise from '(pages)/(enterprise)/not-found';
+import CustomerFormVerif from '@components/templates/customer-form-verif';
+import Footer from '@components/templates/footer';
+import Header from '@components/templates/header';
+import Loading from '@components/ui/loading';
+import { CustomerDetailModel } from '@repo/shared-types';
+import { headers } from 'next/headers';
+import { Suspense } from 'react';
+import { client } from '../../../../lib/client';
+import { UserInfoType } from '../../../../types/user-info-types';
 
 export default async function RecapCustomerPage() {
   // Vérification que c'est un client qui est connecté
-  const headerUser = (await headers()).get("x-user");
+  const headerUser = (await headers()).get('x-user');
   if (!headerUser) {
     return <NotFoundEnterprise />;
   }
   const user: UserInfoType = JSON.parse(headerUser) as UserInfoType;
-  if (user.role !== "customer") {
+  if (user.role !== 'customer') {
     return <NotFoundEnterprise />;
   }
 
   const { data } = await client<CustomerDetailModel>(
-    `customers/${user.customerId}`
+    `customers/${user.customerId}`,
   );
 
   return (

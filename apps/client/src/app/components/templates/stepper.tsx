@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import BadgeStepper from "@components/atoms/badge-stepper";
-import { Button } from "@components/ui/button";
-import React, { Fragment, useState } from "react";
-import { cn } from "../../../lib/utils";
+import BadgeStepper from '@components/atoms/badge-stepper';
+import { Button } from '@components/ui/button';
+import React, { Fragment, useState } from 'react';
+import { cn } from '../../../lib/utils';
 
 type StepperProps = {
   labels: string[];
@@ -21,8 +21,8 @@ const Stepper = ({ isValid, labels, components, className }: StepperProps) => {
     <>
       <div
         className={cn(
-          "flex flex-row justify-center items-start mb-5",
-          className
+          'flex flex-row justify-center items-start mb-5',
+          className,
         )}
       >
         {labels.map((label, index) => {
@@ -42,10 +42,10 @@ const Stepper = ({ isValid, labels, components, className }: StepperProps) => {
       </div>
       {components[step]}
       <div
-        className={cn("flex flex-row w-3/4 mx-auto mt-5", {
-          "justify-between": step > 0 && step < labels.length,
-          "justify-end": step === 0,
-          "justify-start": step === labels.length - 1,
+        className={cn('flex flex-row w-3/4 mx-auto mt-5', {
+          'justify-between': step > 0 && step < labels.length,
+          'justify-end': step === 0,
+          'justify-start': step === labels.length - 1,
         })}
       >
         {step > 0 && (

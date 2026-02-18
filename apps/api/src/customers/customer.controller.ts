@@ -35,17 +35,14 @@ export default class CustomerController {
 
   @Get('stats')
   @UseGuards(AccessTokenGuard)
-  async getStats(
-    @Query('months', ParseIntPipe) months: number,
-    @Req() req: Request,
-  ) {
+  getStats(@Query('months', ParseIntPipe) months: number, @Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.customerService.getStats(enterpriseId, months);
   }
 
   @Get()
   @UseGuards(AccessTokenGuard)
-  async findAll(
+  findAll(
     @Query()
     filter: PaginationFilterDto<CustomerFilterDto>,
     @Req() req: Request,
@@ -57,21 +54,21 @@ export default class CustomerController {
   @Post()
   @UseGuards(AccessTokenGuard)
   @HttpCode(200)
-  async create(@Body() model: CustomerCreateDto, @Req() req: Request) {
+  create(@Body() model: CustomerCreateDto, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
     return this.customerService.create(enterpriseId, model);
   }
 
   @UseGuards(AccessTokenGuard)
   @Get('count')
-  async count(@Req() req: Request) {
+  count(@Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.customerService.count(enterpriseId);
   }
 
   @Put(':id')
   @UseGuards(AccessTokenGuard)
-  async update(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() model: CustomerCreateDto,
     @Req() req: Request,
@@ -86,7 +83,7 @@ export default class CustomerController {
 
   @Get(':id')
   @UseGuards(EnterpriseGuard, CustomerGuard)
-  async findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+  findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
     const customerId = req.user['customerId'];
     if (enterpriseId) {
@@ -101,7 +98,7 @@ export default class CustomerController {
   @Delete(':id')
   @HttpCode(204)
   @UseGuards(AccessTokenGuard)
-  async delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+  delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
     return this.customerService.delete(id, enterpriseId);
   }
@@ -109,7 +106,7 @@ export default class CustomerController {
   @Post(':customerId/invite')
   @HttpCode(204)
   @UseGuards(AccessTokenGuard)
-  async inviteCustomer(
+  inviteCustomer(
     @Param('customerId', ParseIntPipe) customerId: number,
     @Req() req: Request,
   ) {
@@ -119,7 +116,7 @@ export default class CustomerController {
 
   @Get(':customerId/projects')
   @UseGuards(CustomerGuard)
-  async getProjectsByCustomerId(
+  getProjectsByCustomerId(
     @Param('customerId', ParseIntPipe) id: number,
     @Query() filter: PaginationFilterDto<Project>,
     @Req() req: Request,
@@ -131,7 +128,7 @@ export default class CustomerController {
 
   @Get(':year/stats')
   @UseGuards(AccessTokenGuard)
-  async getStatsByYear(
+  getStatsByYear(
     @Param('year', ParseIntPipe) year: number,
     @Req() req: Request,
   ) {

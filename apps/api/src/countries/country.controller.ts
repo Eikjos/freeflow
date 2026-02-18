@@ -9,12 +9,12 @@ export default class CountryController {
   constructor(private readonly countryService: CountryService) {}
 
   @Get()
-  async findAll() {
+  findAll() {
     return this.countryService.findAll();
   }
 
   @Get(':id')
-  async findById(@Param('id', new ParseIntPipe()) id: number) {
+  findById(@Param('id', new ParseIntPipe()) id: number) {
     return this.countryService.findById(id);
   }
 }

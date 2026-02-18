@@ -1,5 +1,5 @@
-import InvoiceLine from "@components/molecules/invoice-line";
-import { InvoiceLineCreateData } from "@repo/shared-types";
+import InvoiceLine from '@components/molecules/invoice-line';
+import { InvoiceLineCreateData } from '@repo/shared-types';
 
 type InvoiceLineListProps = {
   invoices: InvoiceLineCreateData[];

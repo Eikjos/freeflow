@@ -7,9 +7,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { mapToTask, TaskDto } from 'dtos/tasks/task.dto';
 import CreateTaskDto from 'dtos/tasks/task-create.dto';
 import { TaskPaginationFilterDto } from 'dtos/tasks/task-filter.dto';
-import { TaskDto, mapToTask } from 'dtos/tasks/task.dto';
 import { PaginationResultDto } from 'dtos/utils/pagination-result.dto';
 import { MediaService } from 'media/media.service';
 import { PrismaService } from 'prisma.service';
@@ -136,7 +136,6 @@ export default class TaskService {
     });
     if (!task) throw new NotFoundException();
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { mediaIds, files: _, ...modelTask } = model;
     const updatedTask = await this.prisma.task.update({
       where: { id: taskId },

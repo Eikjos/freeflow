@@ -1,9 +1,7 @@
-"use server";
+import { CreateCreditData } from '@repo/shared-types';
+import { client } from '../../lib/client';
 
-import { CreateCreditData } from "@repo/shared-types";
-import { client } from "../../lib/client";
-
-export async function createCredit(model: CreateCreditData, creditFile: File) {
+export function createCredit(model: CreateCreditData, creditFile: File) {
   const formData = new FormData();
   const { creditLines, ...credit } = model;
   Object.entries(credit).forEach(([key, value]) => {
@@ -14,15 +12,15 @@ export async function createCredit(model: CreateCreditData, creditFile: File) {
     }
   });
   formData.append(`creditLines`, JSON.stringify(creditLines));
-  if (creditFile) formData.append("credit", creditFile);
+  if (creditFile) formData.append('credit', creditFile);
 
   return client<void>(
     `credits`,
     {
-      method: "POST",
+      method: 'POST',
       body: formData,
     },
-    "other"
+    'other',
   ).then((res) => {
     if (res.ok) {
       return res.data;

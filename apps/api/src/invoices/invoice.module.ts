@@ -4,9 +4,9 @@ import { MediaModule } from 'media/media.module';
 import ObjectiveModule from 'objective/objective.module';
 import { PrismaService } from 'prisma.service';
 import { SalesModule } from 'sales/sales.module';
-import InvoiceFileService from './invoice-file.service';
 import InvoiceController from './invoice.controller';
 import InvoiceService from './invoice.service';
+import InvoiceFileService from './invoice-file.service';
 
 @Module({
   imports: [MediaModule, ObjectiveModule, SalesModule, MailingModule],

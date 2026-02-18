@@ -1,18 +1,17 @@
-
-import { z } from "zod";
-import { CreditForInvoiceData } from "../credits";
-import { CustomerDetailModel } from "../customers";
-import { EnterpriseInformation } from "../enterprises";
+import { z } from 'zod';
+import { CreditForInvoiceData } from '../credits';
+import { CustomerDetailModel } from '../customers';
+import { EnterpriseInformation } from '../enterprises';
 
 export type InvoiceStatus =
-  | "WAITING_VALIDATION"
-  | "VALIDATE"
-  | "REJECTED"
-  | "WAITING_PAYED"
-  | "PAYED"
-  | "CREDITED"
-  | "PARTIAL_CREDITED";
-export type InvoiceType = "QUOTE" | "INVOICE";
+  | 'WAITING_VALIDATION'
+  | 'VALIDATE'
+  | 'REJECTED'
+  | 'WAITING_PAYED'
+  | 'PAYED'
+  | 'CREDITED'
+  | 'PARTIAL_CREDITED';
+export type InvoiceType = 'QUOTE' | 'INVOICE';
 
 export type InvoiceData = {
   id: number;
@@ -33,7 +32,7 @@ export type InvoiceData = {
 export type EnterpriseInvoiceModel = {
   id: number;
   name: string;
-}
+};
 
 export type InvoiceLineData = {
   id: number;
@@ -67,24 +66,24 @@ export type InvoiceInformation = {
 };
 
 export const InvoiceCreateValidation = z.object({
-  number: z.string().min(1, { message: "the number of invoice is required" }),
-  title: z.string().min(1, { message: "The title is required" }),
-  customerId: z.number({ required_error: "Le client est requis" }),
+  number: z.string().min(1, { message: 'the number of invoice is required' }),
+  title: z.string().min(1, { message: 'The title is required' }),
+  customerId: z.number({ required_error: 'Le client est requis' }),
   date: z.date(),
   invoiceLines: z.array(
     z.object({
-      name: z.string().min(1, { message: "Le nom est requis." }),
+      name: z.string().min(1, { message: 'Le nom est requis.' }),
       quantity: z.coerce
         .number()
-        .min(1, { message: "The quantity must be positive" }),
+        .min(1, { message: 'The quantity must be positive' }),
       unitPrice: z.coerce.number(),
-    })
+    }),
   ),
 });
 
 export const InvoiceLineValidation = z.object({
-  name: z.string().min(1, { message: "name.required" }),
-  quantity: z.coerce.number().min(1, { message: "quantity.required" }),
+  name: z.string().min(1, { message: 'name.required' }),
+  quantity: z.coerce.number().min(1, { message: 'quantity.required' }),
   unitPrice: z.coerce.number(),
 });
 
@@ -99,10 +98,10 @@ export type InvoiceFilterData = {
 };
 
 export const ValidateQuoteValidation = z.object({
-  code: z.string().min(5, { message: "Le code de validation est requis." })
+  code: z.string().min(5, { message: 'Le code de validation est requis.' }),
 });
 
 export type QuoteValidateData = {
   value: boolean;
   code?: string;
-}
+};

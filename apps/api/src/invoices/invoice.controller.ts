@@ -34,7 +34,7 @@ export default class InvoiceController {
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('invoice'))
   @HttpCode(200)
-  async create(
+  create(
     @Body() body: CreateInvoiceDto,
     @UploadedFile()
     invoice: Express.Multer.File,
@@ -46,7 +46,7 @@ export default class InvoiceController {
 
   @Get()
   @UseGuards(EnterpriseGuard, CustomerGuard)
-  async findAll(
+  findAll(
     @Query() filter: PaginationFilterDto<InvoiceFilterDataDto>,
     @Req() req: Request,
   ) {
@@ -57,10 +57,7 @@ export default class InvoiceController {
 
   @Get(':id')
   @UseGuards(EnterpriseGuard, CustomerGuard)
-  async findById(
-    @Param('id', ParseIntPipe) id: number,
-    @Req() request: Request,
-  ) {
+  findById(@Param('id', ParseIntPipe) id: number, @Req() request: Request) {
     const enterpriseId = parseInt(request.user['enterpriseId']);
     return this.invoiceService.findById(id, enterpriseId);
   }
@@ -68,7 +65,7 @@ export default class InvoiceController {
   @Post(':id/send-validation')
   @UseGuards(CustomerGuard)
   @HttpCode(200)
-  async sendValidationQuote(
+  sendValidationQuote(
     @Param('id', ParseIntPipe) id: number,
     @Req() req: Request,
   ) {
@@ -79,7 +76,7 @@ export default class InvoiceController {
   @Post(':id/validate')
   @UseGuards(CustomerGuard)
   @HttpCode(200)
-  async validteQuote(
+  validteQuote(
     @Param('id', ParseIntPipe) id: number,
     @Body() model: QuoteValidateDto,
     @Req() req: Request,
@@ -92,7 +89,7 @@ export default class InvoiceController {
   @Post(':id/pay')
   @UseGuards(CustomerGuard)
   @HttpCode(200)
-  async payInvoice(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+  payInvoice(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const customerId = parseInt(req.user['customerId']);
     return this.invoiceService.pay(id, customerId);
   }

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { createContext, useContext, useState } from "react";
-import { EnterpriseInfo } from "../../types/enterprise-info-type";
+import { createContext, useContext, useState } from 'react';
+import { EnterpriseInfo } from '../../types/enterprise-info-type';
 
 interface EnterpriseContextType {
   enterprise: EnterpriseInfo | undefined;
@@ -10,7 +10,7 @@ interface EnterpriseContextType {
 
 const EnterpriseContext = createContext<EnterpriseContextType>({
   enterprise: undefined,
-  setEnterprise: () => {},
+  setEnterprise: () => undefined,
 });
 
 export const useEnterprise = () => useContext(EnterpriseContext);
@@ -25,7 +25,7 @@ export function EnterpriseProvider({
   children,
 }: ProviderProps) {
   const [enterprise, setEnterprise] = useState<EnterpriseInfo | undefined>(
-    initialEnterprise
+    initialEnterprise,
   );
 
   return (

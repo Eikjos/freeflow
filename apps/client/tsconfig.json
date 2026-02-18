@@ -17,7 +17,8 @@
     "next.config.mjs",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-, "../../packages/pdf-templates/pdf/invoice-template.tsx"  ],
+    ".next/types/**/*.ts",
+    "../../packages/pdf-templates/pdf/invoice-template.tsx"
+  ],
   "exclude": ["node_modules"]
 }

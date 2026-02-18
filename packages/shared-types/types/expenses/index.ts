@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export type ExpenseCategoryData = {
   id: number;
@@ -37,14 +37,14 @@ export type CreateExpenseData = {
 };
 
 export const CreateExpenseDataValidation = z.object({
-  name: z.string().min(1, { message: "name.required" }),
+  name: z.string().min(1, { message: 'name.required' }),
   description: z.string().optional(),
   date: z.date().refine((date) => date <= new Date(), {
-    message: "date.not.in.future",
+    message: 'date.not.in.future',
   }),
   categoryId: z
-    .string({ required_error: "category.required" })
+    .string({ required_error: 'category.required' })
     .transform((val) => Number(val)),
-  amount: z.coerce.number().min(0.01, { message: "amount.required" }),
+  amount: z.coerce.number().min(0.01, { message: 'amount.required' }),
   expense: z.any(),
 });

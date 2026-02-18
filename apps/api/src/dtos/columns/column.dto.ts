@@ -9,7 +9,6 @@ export class ColumnDto implements ColumnsData {
 }
 
 export function mapToColumn(col: Column): ColumnDto {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { projectId, ...column } = col;
   return {
     ...column,

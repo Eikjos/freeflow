@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import CreateColumnDto from 'dtos/columns/column-create.dto';
-import CreateTaskDto from 'dtos/tasks/task-create.dto';
 import { mapToTask } from 'dtos/tasks/task.dto';
+import CreateTaskDto from 'dtos/tasks/task-create.dto';
 import { MediaService } from 'media/media.service';
 import { PrismaService } from 'prisma.service';
 
@@ -16,7 +16,7 @@ export default class ColumnService {
     private readonly mediaService: MediaService,
   ) {}
 
-  async initializeForProject(projectId: number) {
+  initializeForProject(projectId: number) {
     const columnNames = ['À faire', 'En cours', 'À tester', 'À valider'];
     columnNames.map(async (c, index) => {
       const column = await this.prisma.column.create({
@@ -51,7 +51,6 @@ export default class ColumnService {
     });
     if (!column) throw new NotFoundException();
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { mediaIds, files: _, ...modelTask } = model;
     const task = await this.prisma.task.create({
       data: {

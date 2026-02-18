@@ -1,15 +1,15 @@
-import NotFoundEnterprise from "(pages)/(enterprise)/not-found";
-import SidebarMenuCustomer from "@components/templates/sidebar-menu-customer";
-import { SidebarProvider } from "@components/ui/sidebar";
-import { headers } from "next/headers";
-import { CustomerProvider } from "providers/customer-provider";
-import { CustomerInfo } from "../../../types/customer-info-type";
+import NotFoundEnterprise from '(pages)/(enterprise)/not-found';
+import SidebarMenuCustomer from '@components/templates/sidebar-menu-customer';
+import { SidebarProvider } from '@components/ui/sidebar';
+import { headers } from 'next/headers';
+import { CustomerProvider } from 'providers/customer-provider';
+import { CustomerInfo } from '../../../types/customer-info-type';
 export default async function CustomerLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const headersCustomer = (await headers()).get("x-customer");
+  const headersCustomer = (await headers()).get('x-customer');
 
   if (!headersCustomer) {
     return <NotFoundEnterprise />;

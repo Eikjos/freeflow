@@ -3,11 +3,11 @@ import {
   PaginationResult,
   TaskData,
   TaskFilter,
-} from "@repo/shared-types";
-import { queryOptions, UseQueryOptions } from "@tanstack/react-query";
-import { HttpResponse } from "../../types/http-response";
-import { client } from "../client";
-import { generateQueryString } from "../utils";
+} from '@repo/shared-types';
+import { queryOptions, UseQueryOptions } from '@tanstack/react-query';
+import { HttpResponse } from '../../types/http-response';
+import { client } from '../client';
+import { generateQueryString } from '../utils';
 
 export const getAllTasks = async (pagination: PaginationFilter<TaskFilter>) => {
   const query = generateQueryString(pagination);
@@ -19,20 +19,20 @@ export const getTasksById = async (id: number) => {
 };
 
 export const getAllTasksQueryOptions = (
-  pagination: PaginationFilter<TaskFilter>
+  pagination: PaginationFilter<TaskFilter>,
 ): UseQueryOptions<HttpResponse<PaginationResult<TaskData>>, Error> => ({
-  queryKey: ["tasks", pagination],
+  queryKey: ['tasks', pagination],
   queryFn: () => getAllTasks(pagination),
   retry: false,
 });
 
 export const getUrgentTasks = async () => {
   return await client<TaskData[]>(`tasks/urgents`);
-}
+};
 
-export const getUrgentTasksQueryOptions = () =>  queryOptions({
-  queryFn: getUrgentTasks,
-  queryKey: ['tasks', "urgents"],
-  retry: false,
-})
-
+export const getUrgentTasksQueryOptions = () =>
+  queryOptions({
+    queryFn: getUrgentTasks,
+    queryKey: ['tasks', 'urgents'],
+    retry: false,
+  });

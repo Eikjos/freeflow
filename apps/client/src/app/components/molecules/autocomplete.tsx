@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { Button } from "@components/ui/button";
+import { Button } from '@components/ui/button';
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@components/ui/form";
-import { InputProps } from "@components/ui/input";
-import Loading from "@components/ui/loading";
-import { PaginationResult } from "@repo/shared-types";
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { ChevronDown, ChevronUp, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { cn } from "../../../lib/utils";
-import { HttpResponse } from "../../../types/http-response";
+} from '@components/ui/form';
+import { InputProps } from '@components/ui/input';
+import Loading from '@components/ui/loading';
+import { PaginationResult } from '@repo/shared-types';
+import { UseQueryOptions, useQuery } from '@tanstack/react-query';
+import { ChevronDown, ChevronUp, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { cn } from '../../../lib/utils';
+import { HttpResponse } from '../../../types/http-response';
 
 type AutoCompleteProps<TData extends Record<string, unknown>> = Omit<
   AutoCompleteWithoutControlProps<TData>,
-  "onChange"
+  'onChange'
 > &
-  Omit<InputProps, "type" | "value" | "defaultValue" | "onChange">;
+  Omit<InputProps, 'type' | 'value' | 'defaultValue' | 'onChange'>;
 
 type AutoCompleteWithoutControlProps<TData extends Record<string, unknown>> = {
   queryOptions: (filter: {
@@ -39,7 +39,7 @@ type AutoCompleteWithoutControlProps<TData extends Record<string, unknown>> = {
   onAdd?: () => void;
   addLabel?: string;
   onChange?: (value?: number) => void;
-} & Omit<InputProps, "type" | "value" | "defaultValue" | "onChange">;
+} & Omit<InputProps, 'type' | 'value' | 'defaultValue' | 'onChange'>;
 
 type AutocompleteItemProps = {
   name: string;
@@ -51,7 +51,7 @@ function AutoCompleteItem({ name, value, onClick }: AutocompleteItemProps) {
   return (
     <Button
       type="button"
-      variant={"select"}
+      variant={'select'}
       className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
       onClick={() => onClick(value, name)}
       tabIndex={0}
@@ -77,7 +77,7 @@ export function AutoCompleteWithoutControl<
 }: AutoCompleteWithoutControlProps<TData>) {
   const [open, setOpen] = useState<boolean>(false);
   const [hasTyped, setHasTyped] = useState(false);
-  const [displayValue, setDisplayValue] = useState<string>("");
+  const [displayValue, setDisplayValue] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -90,7 +90,7 @@ export function AutoCompleteWithoutControl<
   };
 
   const handleClear = () => {
-    setDisplayValue("");
+    setDisplayValue('');
     if (props.onChange) {
       props.onChange();
     }
@@ -130,14 +130,14 @@ export function AutoCompleteWithoutControl<
       if (firstItem) {
         setDisplayValue(() => render(firstItem));
       } else {
-        setDisplayValue("");
+        setDisplayValue('');
       }
     }
   }, [data]);
 
   useEffect(() => {
     if (!value) {
-      setDisplayValue("");
+      setDisplayValue('');
       if (props.onChange) {
         props.onChange();
       }
@@ -156,9 +156,9 @@ export function AutoCompleteWithoutControl<
       }
     };
 
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
@@ -168,10 +168,10 @@ export function AutoCompleteWithoutControl<
         <input
           type="text"
           className={cn(
-            "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-basefile:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[1px] focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+            'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-basefile:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[1px] focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
             {
-              "border-destructive text-destructive": error,
-            }
+              'border-destructive text-destructive': error,
+            },
           )}
           onChange={(e) => handleFilter(e.currentTarget.value)}
           onFocus={() => setOpen(true)}
@@ -233,7 +233,7 @@ export function AutoCompleteWithoutControl<
               <>
                 <Button
                   type="button"
-                  variant={"select"}
+                  variant={'select'}
                   className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
                   disabled
                   tabIndex={0}
@@ -261,9 +261,9 @@ export default function Autocomplete<TData extends Record<string, unknown>>({
 }: AutoCompleteProps<TData>) {
   return (
     <FormField
-      name={props.name ?? ""}
+      name={props.name ?? ''}
       render={({ field, fieldState }) => (
-        <FormItem className={cn("w-full relative", props.className)}>
+        <FormItem className={cn('w-full relative', props.className)}>
           <FormLabel>{props.label}</FormLabel>
           <FormControl>
             <div>

@@ -1,5 +1,5 @@
-import { Button } from "@components/ui/button";
-import { DataTable } from "@components/ui/data-table";
+import { Button } from '@components/ui/button';
+import { DataTable } from '@components/ui/data-table';
 import {
   Dialog,
   DialogClose,
@@ -8,12 +8,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@components/ui/dialog";
-import { ExpenseData } from "@repo/shared-types";
-import { ColumnDef } from "@tanstack/react-table";
-import { Trash } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { formatPrice } from "../../../lib/utils";
+} from '@components/ui/dialog';
+import { ExpenseData } from '@repo/shared-types';
+import { ColumnDef } from '@tanstack/react-table';
+import { Trash } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { formatPrice } from '../../../lib/utils';
 
 type ExpenseTableProps = {
   data: ExpenseData[];
@@ -32,25 +32,25 @@ export default function ExpenseTable({
 
   const columnDefs: ColumnDef<ExpenseData>[] = [
     {
-      accessorKey: "name",
-      header: t("common.name"),
+      accessorKey: 'name',
+      header: t('common.name'),
       meta: {
-        className: "w-[500px] max-w-[700px] min-w-[200px]",
+        className: 'w-[500px] max-w-[700px] min-w-[200px]',
       },
     },
     {
-      header: t("common.category"),
+      header: t('common.category'),
       accessorFn: (row) => t(row.category.key),
     },
     {
-      accessorKey: "amount",
-      header: t("common.amount"),
+      accessorKey: 'amount',
+      header: t('common.amount'),
       cell: ({ row }) => (
-        <span>{formatPrice(row.original.amount, "FR-fr", "EUR")}</span>
+        <span>{formatPrice(row.original.amount, 'FR-fr', 'EUR')}</span>
       ),
     },
     {
-      header: t("expense.amountTvaRecoverable"),
+      header: t('expense.amountTvaRecoverable'),
       cell: ({ row }) => {
         const amountTva =
           row.original.amount * (row.original.category.tva / 100);
@@ -58,15 +58,15 @@ export default function ExpenseTable({
           <span>
             {formatPrice(
               amountTva * (row.original.category.recoverablePercent / 100),
-              "Fr-fr",
-              "EUR"
+              'Fr-fr',
+              'EUR',
             )}
           </span>
         );
       },
     },
     {
-      header: t("expense.costReal"),
+      header: t('expense.costReal'),
       cell: ({ row }) => {
         const amountTva =
           row.original.amount * (row.original.category.tva / 100);
@@ -75,15 +75,15 @@ export default function ExpenseTable({
             {formatPrice(
               row.original.amount -
                 amountTva * (row.original.category.recoverablePercent / 100),
-              "Fr-fr",
-              "EUR"
+              'Fr-fr',
+              'EUR',
             )}
           </span>
         );
       },
     },
     {
-      header: t("common.actions"),
+      header: t('common.actions'),
       cell: ({ row }) => (
         <div className="flex flex-row items-center gap-4">
           <Dialog>
@@ -93,20 +93,20 @@ export default function ExpenseTable({
             <DialogContent>
               <DialogHeader>
                 <DialogTitle className="text-3xl">
-                  {t("expense.delete.title")}
+                  {t('expense.delete.title')}
                 </DialogTitle>
               </DialogHeader>
-              <p>{t("expense.delete.description")}</p>
+              <p>{t('expense.delete.description')}</p>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant={"outline"}>{t("common.cancel")}</Button>
+                  <Button variant={'outline'}>{t('common.cancel')}</Button>
                 </DialogClose>
                 <DialogClose asChild>
                   <Button
-                    variant={"destructive"}
+                    variant={'destructive'}
                     onClick={() => handleDelete(row.original.id)}
                   >
-                    {t("common.remove")}
+                    {t('common.remove')}
                   </Button>
                 </DialogClose>
               </DialogFooter>

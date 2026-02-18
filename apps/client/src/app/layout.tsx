@@ -1,29 +1,29 @@
-import { Toaster } from "@components/ui/sonner";
-import type { Metadata } from "next";
-import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
-import localFont from "next/font/local";
-import Providers from "providers/query-client-provider";
-import "./globals.css";
+import { Toaster } from '@components/ui/sonner';
+import type { Metadata } from 'next';
+import localFont from 'next/font/local';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
+import Providers from 'providers/query-client-provider';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Freeflow",
+  title: 'Freeflow',
   description: "Freeflow platform to manage the life's freelance",
 };
 
 const amica = localFont({
-  src: "./fonts/AmaticSC-Regular.ttf",
-  variable: "--font-amica",
+  src: './fonts/AmaticSC-Regular.ttf',
+  variable: '--font-amica',
 });
 
 const montserrat = localFont({
-  src: "./fonts/Montserrat-Regular.ttf",
-  variable: "--font-montserrat",
+  src: './fonts/Montserrat-Regular.ttf',
+  variable: '--font-montserrat',
 });
 
 const montserratMedium = localFont({
-  src: "./fonts/Montserrat-Medium.ttf",
-  variable: "--font-montserrat-medium",
+  src: './fonts/Montserrat-Medium.ttf',
+  variable: '--font-montserrat-medium',
 });
 
 export default async function RootLayout({

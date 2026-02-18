@@ -39,7 +39,7 @@ export default class ProjectController {
     type: ProjectCreateDto,
   })
   @UseInterceptors(FileInterceptor('media'))
-  async create(
+  create(
     @Body() body: ProjectCreateDto,
     @Req() req: Request,
     @UploadedFile()
@@ -54,7 +54,7 @@ export default class ProjectController {
 
   @UseGuards(AccessTokenGuard)
   @Get('count')
-  async count(@Req() req: Request) {
+  count(@Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.projectService.count(enterpriseId);
   }
@@ -62,7 +62,7 @@ export default class ProjectController {
   @UseGuards(CustomerGuard, EnterpriseGuard)
   @Post(':id/columns')
   @HttpCode(200)
-  async createColumn(
+  createColumn(
     @Param('id', ParseIntPipe) id: number,
     @Body() model: CreateColumnDto,
     @Req() req: Request,
@@ -78,7 +78,7 @@ export default class ProjectController {
   @HttpCode(200)
   @UseGuards(EnterpriseGuard, CustomerGuard)
   @Patch(':id/columns/reorder')
-  async reorderColums(
+  reorderColums(
     @Param('id', ParseIntPipe) id: number,
     @Body() model: ReorderColumnsDto,
   ) {
@@ -87,7 +87,7 @@ export default class ProjectController {
 
   @UseGuards(EnterpriseGuard, CustomerGuard)
   @Get(':id')
-  async findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+  findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
     const customerId = req.user['customerId'];
     return this.projectService.findById(id, enterpriseId, customerId);
@@ -95,7 +95,7 @@ export default class ProjectController {
 
   @UseGuards(EnterpriseGuard, CustomerGuard)
   @Get(':id/details')
-  async findAllTasksByProjectId(
+  findAllTasksByProjectId(
     @Param('id', ParseIntPipe) id: number,
     @Req() req: Request,
   ) {
@@ -113,7 +113,7 @@ export default class ProjectController {
     type: ProjectCreateDto,
   })
   @Put(':id')
-  async update(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() model: ProjectCreateDto,
     @Req() req: Request,
@@ -133,7 +133,7 @@ export default class ProjectController {
 
   @UseGuards(EnterpriseGuard)
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+  delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     return this.projectService.delete(id, parseInt(req.user['enterpriseId']));
   }
 }

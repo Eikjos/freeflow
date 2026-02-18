@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export type CreditForInvoiceData = {
   id: number;
@@ -19,12 +19,12 @@ export type CreateCreditLineData = {
 };
 
 export const CreateCreditLineDataValidation = z.object({
-  title: z.string().min(1, { message: "title.required" }),
-  price: z.coerce.number().min(1, { message: "price.must.be.positive" }),
+  title: z.string().min(1, { message: 'title.required' }),
+  price: z.coerce.number().min(1, { message: 'price.must.be.positive' }),
 });
 
 export const CreateCreditDataValidation = z.object({
-  number: z.string().min(1, { message: "the number of invoice is required" }),
-  title: z.string().min(1, { message: "The title is required" }),
+  number: z.string().min(1, { message: 'the number of invoice is required' }),
+  title: z.string().min(1, { message: 'The title is required' }),
   creditLines: z.array(CreateCreditLineDataValidation),
 });

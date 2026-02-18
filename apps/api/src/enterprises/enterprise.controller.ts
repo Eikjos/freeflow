@@ -39,7 +39,7 @@ export default class EnterprisesController {
 
   @UseGuards(AccessTokenGuard)
   @Get('stats')
-  async getStatsByYear(
+  getStatsByYear(
     @Req() request: Request,
     @Query('year')
     year?: number,
@@ -51,7 +51,7 @@ export default class EnterprisesController {
 
   @UseGuards(AccessTokenGuard)
   @Get('information')
-  async getInformation(
+  getInformation(
     @Query('siret') siret: string,
   ): Promise<Omit<EnterpriseInformationDto, 'id'>> {
     return this.enterpriseService.getInformationBySiret(siret);
@@ -59,7 +59,7 @@ export default class EnterprisesController {
 
   @UseGuards(AccessTokenGuard)
   @Get('inscription-year')
-  async getInscriptionYear(@Req() req: Request) {
+  getInscriptionYear(@Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.enterpriseService.getInscriptionYear(enterpriseId);
   }
@@ -73,7 +73,7 @@ export default class EnterprisesController {
     type: CreateEnterpriseDto,
   })
   @UseInterceptors(FileInterceptor('logo'))
-  async createEnterprise(
+  createEnterprise(
     @Body() body: CreateEnterpriseDto,
     @UploadedFile()
     logo: Express.Multer.File,
@@ -88,13 +88,13 @@ export default class EnterprisesController {
 
   @UseGuards(AccessTokenGuard)
   @Get(':id')
-  async finfById(@Param('id', ParseIntPipe) id: number) {
+  findById(@Param('id', ParseIntPipe) id: number) {
     return this.enterpriseService.findById(id);
   }
 
   @UseGuards(AccessTokenGuard)
   @Get(':id/projects')
-  async getProjectsByEnterpriseId(
+  getProjectsByEnterpriseId(
     @Param('id', ParseIntPipe) id: number,
     @Query() filter: PaginationFilterDto<Project>,
     @Req() req: Request,
@@ -106,13 +106,13 @@ export default class EnterprisesController {
 
   @UseGuards(AccessTokenGuard)
   @Get(':id/get-information-for-invoice')
-  async getInformationForInvoice(@Param('id', ParseIntPipe) id: number) {
+  getInformationForInvoice(@Param('id', ParseIntPipe) id: number) {
     return this.enterpriseService.getInformationForInvoice(id);
   }
 
   @UseGuards(AccessTokenGuard)
   @Get(':id/get-information-for-devis')
-  async getInformationForDevis(@Param('id', ParseIntPipe) id: number) {
+  getInformationForDevis(@Param('id', ParseIntPipe) id: number) {
     return this.enterpriseService.getInformationForDevis(id);
   }
 
@@ -125,7 +125,7 @@ export default class EnterprisesController {
     type: EnterpriseUpdateDto,
   })
   @UseInterceptors(FileInterceptor('logo'))
-  async update(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Req() req: Request,
     @Body() model: EnterpriseUpdateDto,

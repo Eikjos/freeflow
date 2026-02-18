@@ -1,10 +1,10 @@
-"use server";
+'use server';
 
-import CustomerForm from "@components/templates/customer-form";
-import { CustomerDetailModel } from "@repo/shared-types";
-import { getTranslations } from "next-intl/server";
-import { notFound } from "next/navigation";
-import { client } from "../../../../../../lib/client";
+import CustomerForm from '@components/templates/customer-form';
+import { CustomerDetailModel } from '@repo/shared-types';
+import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
+import { client } from '../../../../../../lib/client';
 
 type EditCustomerParams = {
   id: string;
@@ -30,7 +30,7 @@ export default async function EditCustomerPage({
       {customer && customer?.ok && (
         <>
           <h1 className="font-amica text-4xl mb-20">
-            {t("customer.edit", { customer: customer.data?.name ?? "" })}
+            {t('customer.edit', { customer: customer.data?.name ?? '' })}
           </h1>
           <CustomerForm edit customerId={parseInt(id)} data={customer.data} />
         </>

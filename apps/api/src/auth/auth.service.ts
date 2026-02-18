@@ -46,7 +46,7 @@ export default class AuthService {
     return this.generateToken(user);
   }
 
-  public async logout(userId: number) {
+  public logout(userId: number) {
     return this.userService.udpateRefreshToken(userId, null);
   }
 

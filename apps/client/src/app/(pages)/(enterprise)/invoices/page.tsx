@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import InvoiceFilter from "@components/organisms/invoice-filter";
-import InvoiceTable from "@components/templates/invoice-table";
-import { Button } from "@components/ui/button";
-import { Pagination } from "@components/ui/pagination";
-import { InvoiceFilterData, PaginationFilter } from "@repo/shared-types";
-import { useQuery } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
-import { useTranslations } from "next-intl";
-import Link from "next/link";
-import { useState } from "react";
-import { getAllInvoiceQueryOptions } from "../../../../lib/api/invoices";
+import InvoiceFilter from '@components/organisms/invoice-filter';
+import InvoiceTable from '@components/templates/invoice-table';
+import { Button } from '@components/ui/button';
+import { Pagination } from '@components/ui/pagination';
+import { InvoiceFilterData, PaginationFilter } from '@repo/shared-types';
+import { useQuery } from '@tanstack/react-query';
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { getAllInvoiceQueryOptions } from '../../../../lib/api/invoices';
 
 export default function InvoicePage() {
   const t = useTranslations();
@@ -21,24 +21,24 @@ export default function InvoicePage() {
     filter: filter,
   };
   const { data, isLoading } = useQuery(
-    getAllInvoiceQueryOptions(paginationFilter)
+    getAllInvoiceQueryOptions(paginationFilter),
   );
 
   return (
     <>
       <div className="w-full flex flex-row justify-between items-center">
-        <h1 className="font-amica text-4xl">{t("invoice.titlePage")}</h1>
+        <h1 className="font-amica text-4xl">{t('invoice.titlePage')}</h1>
         <div className="flex flex-row gap-4">
-          <Button asChild variant={"outline"}>
-            <Link href={"/devis/create"}>
+          <Button asChild variant={'outline'}>
+            <Link href={'/devis/create'}>
               <Plus size={20} />
-              {t("devis.createButton")}
+              {t('devis.createButton')}
             </Link>
           </Button>
           <Button asChild>
-            <Link href={"/invoices/create"}>
+            <Link href={'/invoices/create'}>
               <Plus size={20} />
-              {t("invoice.createButton")}
+              {t('invoice.createButton')}
             </Link>
           </Button>
         </div>

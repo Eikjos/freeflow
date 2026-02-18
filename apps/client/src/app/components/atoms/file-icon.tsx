@@ -1,5 +1,5 @@
-import { Card, CardContent } from "@components/ui/card";
-import { ArrowDownToLine, CircleXIcon, FileVideo } from "lucide-react";
+import { Card, CardContent } from '@components/ui/card';
+import { ArrowDownToLine, CircleXIcon, FileVideo } from 'lucide-react';
 import {
   FaFile,
   FaFileAlt,
@@ -10,8 +10,8 @@ import {
   FaFilePdf,
   FaFilePowerpoint,
   FaFileWord,
-} from "react-icons/fa";
-import { cn } from "../../../lib/utils";
+} from 'react-icons/fa';
+import { cn } from '../../../lib/utils';
 
 type FileIconProps = {
   file: File;
@@ -27,35 +27,35 @@ export default function FileIcon({
   canDownload,
 }: FileIconProps) {
   const getFileIcon = (fileName: string) => {
-    const extension = (fileName.split(".").pop() ?? "").toLowerCase();
+    const extension = (fileName.split('.').pop() ?? '').toLowerCase();
 
-    if (["jpg", "jpeg", "png", "gif", "bmp", "webp"].includes(extension)) {
+    if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension)) {
       return <FaFileImage color="#4dabf7" size={30} />;
     }
-    if (["pdf"].includes(extension)) {
+    if (['pdf'].includes(extension)) {
       return <FaFilePdf color="#e03131" size={30} />;
     }
-    if (["doc", "docx"].includes(extension)) {
+    if (['doc', 'docx'].includes(extension)) {
       return <FaFileWord color="#1971c2" size={30} />;
     }
-    if (["xls", "xlsx", "csv"].includes(extension)) {
+    if (['xls', 'xlsx', 'csv'].includes(extension)) {
       return <FaFileExcel color="#2b8a3e" size={30} />;
     }
-    if (["ppt", "pptx"].includes(extension)) {
+    if (['ppt', 'pptx'].includes(extension)) {
       return <FaFilePowerpoint color="#e8590c" size={30} />;
     }
-    if (["txt", "rtf", "odt"].includes(extension)) {
+    if (['txt', 'rtf', 'odt'].includes(extension)) {
       return <FaFileAlt color="#495057" size={30} />;
     }
-    if (["mp4", "avi", "mov"].includes(extension)) {
+    if (['mp4', 'avi', 'mov'].includes(extension)) {
       return <FileVideo size={30} />;
     }
-    if (["js", "jsx", "ts", "tsx", "html", "css", "json"].includes(extension)) {
+    if (['js', 'jsx', 'ts', 'tsx', 'html', 'css', 'json'].includes(extension)) {
       return <FaFileCode size={30} />;
     }
     if (
-      ["zip", "rar", "7z", "tar", "gz", "bz2", "xz", "iso", "cab"].includes(
-        extension
+      ['zip', 'rar', '7z', 'tar', 'gz', 'bz2', 'xz', 'iso', 'cab'].includes(
+        extension,
       )
     ) {
       return <FaFileArchive size={30} color="#f59f00" />;
@@ -64,7 +64,7 @@ export default function FileIcon({
   };
 
   const downloadFile = () => {
-    const downloadLink = document.createElement("a");
+    const downloadLink = document.createElement('a');
     const objectURL = URL.createObjectURL(file);
 
     downloadLink.href = objectURL;
@@ -80,8 +80,8 @@ export default function FileIcon({
       <Card>
         <CardContent
           className={cn(
-            "flex flex-col items-center justify-center p-3 h-24 relative",
-            className
+            'flex flex-col items-center justify-center p-3 h-24 relative',
+            className,
           )}
         >
           <div

@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@components/ui/card"
+import { Card, CardContent } from '@components/ui/card';
 
 export default function DemoBanner() {
   return (
@@ -6,7 +6,7 @@ export default function DemoBanner() {
       <div className="relative h-96">
         <Card className="w-1/2 absolute top-5 left-1/4 z-50 p-0">
           <CardContent className="p-0 object-fill">
-            <img src="/assets/demo-1.png" className="object-fill w-full"  />
+            <img src="/assets/demo-1.png" className="object-fill w-full" />
           </CardContent>
         </Card>
         <Card className="w-[40%] absolute top-1/2 left-0 z-30 p-0">
@@ -21,6 +21,5 @@ export default function DemoBanner() {
         </Card>
       </div>
     </div>
-   
-  )
+  );
 }

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Loading from "@components/ui/loading";
-import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import Loading from '@components/ui/loading';
+import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import {
   CartesianGrid,
   DotProps,
@@ -12,10 +12,10 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
-} from "recharts";
-import { getPrevisionsQueryOptions } from "../../../lib/api/sales";
-import { cn, stringToDateYear } from "../../../lib/utils";
+  YAxis,
+} from 'recharts';
+import { getPrevisionsQueryOptions } from '../../../lib/api/sales';
+import { cn, stringToDateYear } from '../../../lib/utils';
 
 type PrevisionCAChartProps = {
   className?: string;
@@ -34,7 +34,7 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
   }
 
   return (
-    <div className={cn("h-[300px]", className)}>
+    <div className={cn('h-[300px]', className)}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data?.data}
@@ -43,7 +43,7 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="month"
-            tickFormatter={(v : string) => stringToDateYear(v)}
+            tickFormatter={(v: string) => stringToDateYear(v)}
             tickLine={false}
             tick={false}
             tickMargin={8}
@@ -51,19 +51,18 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
           <YAxis tickFormatter={(v) => `${v / 1000}k €`} />
           <Tooltip
             content={({ active, payload, label }) => {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              const lab : string = label;
+              const lab: string = label;
               if (active && payload && payload.length) {
-                const salePoint = payload.find((p) => p.dataKey === "sale");
+                const salePoint = payload.find((p) => p.dataKey === 'sale');
                 const previsionPoint = payload.find(
-                  (p) => p.dataKey === "prevision"
+                  (p) => p.dataKey === 'prevision',
                 );
 
                 return (
                   <div
                     style={{
-                      background: "white",
-                      border: "1px solid #ccc",
+                      background: 'white',
+                      border: '1px solid #ccc',
                       padding: 8,
                     }}
                   >
@@ -76,7 +75,7 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
                     {previsionPoint &&
                       salePoint?.value != previsionPoint.value && (
                         <div>
-                          {previsionPoint.name}:{" "}
+                          {previsionPoint.name}:{' '}
                           {previsionPoint.value?.toLocaleString()} €
                         </div>
                       )}
@@ -91,14 +90,18 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
           {/* Ligne CA réel */}
           {/* Ligne Prévision (pointillée) */}
           <Line
-            key={"previsions"}
+            key={'previsions'}
             type="monotone"
             dataKey="prevision"
             stroke="#00C49F"
             strokeWidth={3}
             strokeDasharray="6 4"
-            name={t("sales.prevision")}
-            dot={(props : DotProps & { payload: { sale : number, prevision : number } }) => {
+            name={t('sales.prevision')}
+            dot={(
+              props: DotProps & {
+                payload: { sale: number; prevision: number };
+              },
+            ) => {
               const { cx, cy, payload } = props;
               // n’affiche le dot que si c’est un point de prévision
               if (
@@ -123,13 +126,13 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
             connectNulls={false}
           />
           <Line
-            key={"sales"}
+            key={'sales'}
             type="monotone"
             dataKey="sale"
             stroke="#0011AA"
             strokeWidth={3}
-            dot={{ r: 5, fill: "#0011AA" }}
-            name={t("sales.real")}
+            dot={{ r: 5, fill: '#0011AA' }}
+            name={t('sales.real')}
             connectNulls={false}
             activeDot={false}
           />

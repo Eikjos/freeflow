@@ -1,5 +1,5 @@
-import { type NextRequest } from "next/server";
-import { AuthMiddleware } from "./middlewares/auth";
+import { type NextRequest } from 'next/server';
+import { AuthMiddleware } from './middlewares/auth';
 export function proxy(request: NextRequest) {
   return AuthMiddleware(request);
 }

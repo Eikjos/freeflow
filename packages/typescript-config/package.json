@@ -6,7 +6,7 @@
   "publishConfig": {
     "access": "public"
   },
-   "scripts": {
+  "scripts": {
     "build": "echo \"nothing to build\""
   },
   "turbo": {

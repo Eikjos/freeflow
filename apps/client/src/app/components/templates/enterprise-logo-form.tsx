@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Card, CardContent } from "@components/ui/card";
-import InputFile from "@components/ui/input-file";
-import { EnterpriseCreateModel } from "@repo/shared-types";
-import { useTranslations } from "next-intl";
-import Image from "next/image";
-import { useFormContext } from "react-hook-form";
+import { Card, CardContent } from '@components/ui/card';
+import InputFile from '@components/ui/input-file';
+import { EnterpriseCreateModel } from '@repo/shared-types';
+import Image from 'next/image';
+import { useTranslations } from 'next-intl';
+import { useFormContext } from 'react-hook-form';
 
 const EnterpriseLogoForm = () => {
   const t = useTranslations();
@@ -15,9 +15,9 @@ const EnterpriseLogoForm = () => {
   const onChangeInput = (files: File[]) => {
     const file = files[files.length - 1];
     if (file) {
-      form.setValue("logo", file, { shouldValidate: true });
+      form.setValue('logo', file, { shouldValidate: true });
     } else {
-      form.setValue("logo", undefined, { shouldValidate: false });
+      form.setValue('logo', undefined, { shouldValidate: false });
     }
   };
 
@@ -42,7 +42,7 @@ const EnterpriseLogoForm = () => {
           {!logo && (
             <div className="w-48 mx-auto">
               <p className="text-sm text-center">
-                {t("common.previsualizeImage")}
+                {t('common.previsualizeImage')}
               </p>
             </div>
           )}

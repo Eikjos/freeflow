@@ -32,7 +32,7 @@ export class MediaService {
       });
 
       return media.id;
-    } catch (e) {
+    } catch {
       return -1;
     }
   }
@@ -61,7 +61,7 @@ export class MediaService {
       });
 
       return media.id;
-    } catch (e) {
+    } catch {
       return -1;
     }
   }
@@ -83,7 +83,7 @@ export class MediaService {
         mimeType,
         filename: this.getOriginalName(media.uploadedPath),
       };
-    } catch (e) {
+    } catch {
       throw new NotFoundException('media.notFound');
     }
   }
