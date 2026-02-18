@@ -1,5 +1,5 @@
-import { Button } from '@components/ui/button'
-import { DataTable } from '@components/ui/data-table'
+import { Button } from '@components/ui/button';
+import { DataTable } from '@components/ui/data-table';
 import {
   Dialog,
   DialogClose,
@@ -8,19 +8,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@components/ui/dialog'
-import { ExpenseData } from '@repo/shared-types'
-import { ColumnDef } from '@tanstack/react-table'
-import { Trash } from 'lucide-react'
-import { useTranslations } from 'next-intl'
-import { formatPrice } from '../../../lib/utils'
+} from '@components/ui/dialog';
+import { ExpenseData } from '@repo/shared-types';
+import { ColumnDef } from '@tanstack/react-table';
+import { Trash } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { formatPrice } from '../../../lib/utils';
 
 type ExpenseTableProps = {
-  data: ExpenseData[]
-  isLoading: boolean
-  className?: string
-  handleDelete: (id: number) => void
-}
+  data: ExpenseData[];
+  isLoading: boolean;
+  className?: string;
+  handleDelete: (id: number) => void;
+};
 
 export default function ExpenseTable({
   className,
@@ -28,7 +28,7 @@ export default function ExpenseTable({
   isLoading,
   handleDelete,
 }: ExpenseTableProps) {
-  const t = useTranslations()
+  const t = useTranslations();
 
   const columnDefs: ColumnDef<ExpenseData>[] = [
     {
@@ -53,7 +53,7 @@ export default function ExpenseTable({
       header: t('expense.amountTvaRecoverable'),
       cell: ({ row }) => {
         const amountTva =
-          row.original.amount * (row.original.category.tva / 100)
+          row.original.amount * (row.original.category.tva / 100);
         return (
           <span>
             {formatPrice(
@@ -62,14 +62,14 @@ export default function ExpenseTable({
               'EUR',
             )}
           </span>
-        )
+        );
       },
     },
     {
       header: t('expense.costReal'),
       cell: ({ row }) => {
         const amountTva =
-          row.original.amount * (row.original.category.tva / 100)
+          row.original.amount * (row.original.category.tva / 100);
         return (
           <span>
             {formatPrice(
@@ -79,7 +79,7 @@ export default function ExpenseTable({
               'EUR',
             )}
           </span>
-        )
+        );
       },
     },
     {
@@ -115,7 +115,7 @@ export default function ExpenseTable({
         </div>
       ),
     },
-  ]
+  ];
 
   return (
     <DataTable
@@ -124,5 +124,5 @@ export default function ExpenseTable({
       isLoading={isLoading}
       className={className}
     />
-  )
+  );
 }

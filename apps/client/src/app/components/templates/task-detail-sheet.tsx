@@ -1,56 +1,58 @@
-'use client'
+'use client';
 
-import FileIcon from '@components/atoms/file-icon'
-import { Button } from '@components/ui/button'
-import { Editor, uploadAndReplace } from '@components/ui/editor'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import InputFile from '@components/ui/input-file'
-import { Select } from '@components/ui/select'
+import FileIcon from '@components/atoms/file-icon';
+import { Button } from '@components/ui/button';
+import { Editor, uploadAndReplace } from '@components/ui/editor';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import InputFile from '@components/ui/input-file';
+import { Select } from '@components/ui/select';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '@components/ui/sheet'
-import { zodResolver } from '@hookform/resolvers/zod'
+} from '@components/ui/sheet';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CreateTaskData,
   CreateTaskValidation,
   TaskData,
-} from '@repo/shared-types'
-import { deleteMedia, deleteTask, updateTask } from 'actions/tasks'
-import { TrashIcon } from 'lucide-react'
-import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
-import { toast } from 'sonner'
-import { getImage } from '../../../lib/utils'
+} from '@repo/shared-types';
+import { deleteMedia, deleteTask, updateTask } from 'actions/tasks';
+import { TrashIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
+import { toast } from 'sonner';
+import { getImage } from '../../../lib/utils';
 
 type TaskDetailSheetProps = {
-  task: TaskData
-  open: boolean
-  onClose: () => void
-  onEdit?: (task: TaskData) => void
-  onDelete?: (task: TaskData) => void
-}
+  task: TaskData;
+  open: boolean;
+  onClose: () => void;
+  onEdit?: (task: TaskData) => void;
+  onDelete?: (task: TaskData) => void;
+};
 
 type FetchedFilesType = {
-  mediaId: number
-  file: File
-}
+  mediaId: number;
+  file: File;
+};
 
 const getDeletedFiles = (oldValue: string, newValue: string) => {
-  const regExpImg = /\/media\/(\d+)/gi
+  const regExpImg = /\/media\/(\d+)/gi;
   const oldImages = [...oldValue.matchAll(regExpImg)]
     .map((m) => m[1])
-    .filter((i) => i !== undefined)
+    .filter((i) => i !== undefined);
   const newImages = [...newValue.matchAll(regExpImg)]
     .map((m) => m[1])
-    .filter((i) => i !== undefined)
+    .filter((i) => i !== undefined);
 
-  return oldImages.filter((i) => !newImages.includes(i)).map((i) => parseInt(i))
-}
+  return oldImages
+    .filter((i) => !newImages.includes(i))
+    .map((i) => parseInt(i));
+};
 
 export default function TaskDetailSheet({
   task,
@@ -59,23 +61,23 @@ export default function TaskDetailSheet({
   onEdit,
   onDelete,
 }: TaskDetailSheetProps) {
-  const t = useTranslations()
+  const t = useTranslations();
   const form = useForm<CreateTaskData>({
     resolver: zodResolver(CreateTaskValidation),
     defaultValues: {
       ...task,
     },
-  })
+  });
   const files = useWatch({
     control: form.control,
     name: 'files',
-  })
+  });
 
-  const [fetchedFiles, setFetchedFiles] = useState<FetchedFilesType[]>([])
+  const [fetchedFiles, setFetchedFiles] = useState<FetchedFilesType[]>([]);
 
   useEffect(() => {
     const fetchAllFiles = async () => {
-      if (!task.mediaIds?.length) return
+      if (!task.mediaIds?.length) return;
 
       try {
         const files = await Promise.all(
@@ -83,30 +85,30 @@ export default function TaskDetailSheet({
             mediaId: m,
             file: await getImage(m),
           })),
-        )
-        setFetchedFiles(files)
+        );
+        setFetchedFiles(files);
       } catch {
-        toast.error('Erreur lors du chargement des fichiers')
+        toast.error('Erreur lors du chargement des fichiers');
       }
-    }
+    };
 
-    void fetchAllFiles()
-  }, [task.mediaIds])
+    void fetchAllFiles();
+  }, [task.mediaIds]);
 
   const onSubmit = async (values: CreateTaskData) => {
     try {
       if (values.description) {
-        const newValue = await uploadAndReplace(values.description)
+        const newValue = await uploadAndReplace(values.description);
         if (newValue) {
-          values.description = newValue.value
-          values.mediaIds = newValue.images
+          values.description = newValue.value;
+          values.mediaIds = newValue.images;
           const deletedImage = getDeletedFiles(
             task.description ?? '',
             newValue.value ?? '',
-          )
+          );
           deletedImage.forEach((i) => {
-            void deleteMedia(task.id, i)
-          })
+            void deleteMedia(task.id, i);
+          });
         }
       }
 
@@ -114,50 +116,50 @@ export default function TaskDetailSheet({
         .then((res) => {
           if (res) {
             if (onEdit) {
-              console.log('api', res)
-              onEdit(res)
+              console.log('api', res);
+              onEdit(res);
             }
           }
         })
         .then(() => onClose())
-        .catch((e: Error) => toast.error(e.message))
+        .catch((e: Error) => toast.error(e.message));
     } catch (e) {
       if (e instanceof Error) {
-        toast.error(e.message)
+        toast.error(e.message);
       }
     }
-  }
+  };
 
   const handleDelete = () => {
     deleteTask(task.id)
       .then(() => {
         if (onDelete) {
-          onDelete(task)
+          onDelete(task);
         }
       })
       .catch((e: Error) => toast.error(e.message))
-      .finally(() => onClose())
-  }
+      .finally(() => onClose());
+  };
 
   const handleDeleteFile = (file: File) => {
-    form.setValue('files', files?.filter((f) => f !== file) ?? [])
-  }
+    form.setValue('files', files?.filter((f) => f !== file) ?? []);
+  };
 
   const handleUploadFile = (files: File[]) => {
-    form.setValue('files', files)
-  }
+    form.setValue('files', files);
+  };
 
   const handleDeleteFilesAlreadyUploaded = (file: File, mediaId: number) => {
     void deleteMedia(task.id, mediaId)
       .catch((err: Error) => toast.error(err.message))
       .then(() => {
-        setFetchedFiles((prev) => prev.filter((e) => e.mediaId !== mediaId))
-      })
-  }
+        setFetchedFiles((prev) => prev.filter((e) => e.mediaId !== mediaId));
+      });
+  };
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
@@ -254,5 +256,5 @@ export default function TaskDetailSheet({
         </Form>
       </SheetContent>
     </Sheet>
-  )
+  );
 }

@@ -1,33 +1,33 @@
-'use client'
+'use client';
 
-import { Button } from '@components/ui/button'
-import { Card, CardContent, CardFooter } from '@components/ui/card'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import { Select } from '@components/ui/select'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@components/ui/button';
+import { Card, CardContent, CardFooter } from '@components/ui/card';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { Select } from '@components/ui/select';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CustomerCreateModel,
   CustomerCreateValidation,
   CustomerDetailModel,
   EnterpriseInformation,
-} from '@repo/shared-types'
-import { useQuery } from '@tanstack/react-query'
-import { CreateCustomer, UpdateCustomer } from 'actions/customer'
-import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
-import { getAllCountriesQueryOptions } from '../../../lib/api/countries'
-import { fetchEnterpriseInfo } from '../../../lib/api/enterprise'
-import getQueryClient from '../../../lib/query-client'
+} from '@repo/shared-types';
+import { useQuery } from '@tanstack/react-query';
+import { CreateCustomer, UpdateCustomer } from 'actions/customer';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { getAllCountriesQueryOptions } from '../../../lib/api/countries';
+import { fetchEnterpriseInfo } from '../../../lib/api/enterprise';
+import getQueryClient from '../../../lib/query-client';
 
 type CustomerFormProps = {
-  className?: string
-  edit?: boolean
-  customerId?: number
-  data?: CustomerDetailModel
-}
+  className?: string;
+  edit?: boolean;
+  customerId?: number;
+  data?: CustomerDetailModel;
+};
 
 export default function CustomerForm({
   className,
@@ -35,9 +35,9 @@ export default function CustomerForm({
   customerId,
   data,
 }: CustomerFormProps) {
-  const queryClient = getQueryClient()
-  const t = useTranslations()
-  const router = useRouter()
+  const queryClient = getQueryClient();
+  const t = useTranslations();
+  const router = useRouter();
   const form = useForm<CustomerCreateModel>({
     resolver: zodResolver(CustomerCreateValidation),
     defaultValues: {
@@ -51,22 +51,22 @@ export default function CustomerForm({
       zipCode: edit ? (data?.zipCode ?? '') : '',
       countryId: edit ? (data?.countryId.toString() ?? '') : '',
     },
-  })
-  const siret = form.watch('siret')
+  });
+  const siret = form.watch('siret');
   const updateFormValues = async (
     email: string,
     phone: string,
     data?: EnterpriseInformation,
   ) => {
     if (data) {
-      const { juridicShape, ...customerInfo } = data
+      const { juridicShape, ...customerInfo } = data;
       form.reset({
         ...customerInfo,
         email,
         phone,
-      })
+      });
     } else {
-      form.reset({ email, phone, siret })
+      form.reset({ email, phone, siret });
     }
     await form.trigger([
       'name',
@@ -75,35 +75,35 @@ export default function CustomerForm({
       'tvaNumber',
       'zipCode',
       'countryId',
-    ])
-  }
+    ]);
+  };
 
   const onSubmit = (values: CustomerCreateModel) => {
     if (edit && customerId) {
       void UpdateCustomer(customerId, values).then((res) => {
         if (res === null) {
-          toast.error(t('customer.error.edit'))
+          toast.error(t('customer.error.edit'));
         } else {
-          toast.success(t('customer.success.edit'))
+          toast.success(t('customer.success.edit'));
           void queryClient.invalidateQueries({
             queryKey: ['customers', customerId],
-          })
-          router.push('/customers')
+          });
+          router.push('/customers');
         }
-      })
+      });
     } else {
       void CreateCustomer(values).then((res) => {
         if (res === null) {
-          toast.error(t('customer.error.create'))
+          toast.error(t('customer.error.create'));
         } else {
-          toast.success(t('customer.success.create'))
-          router.push('/customers')
+          toast.success(t('customer.success.create'));
+          router.push('/customers');
         }
-      })
+      });
     }
-  }
+  };
 
-  const { data: countries } = useQuery(getAllCountriesQueryOptions())
+  const { data: countries } = useQuery(getAllCountriesQueryOptions());
 
   const fillFormWithEnterpriseinfo = () => {
     void fetchEnterpriseInfo(siret?.replace(/\s+/g, '') ?? '').then(
@@ -113,15 +113,15 @@ export default function CustomerForm({
             form.getValues().email,
             form.getValues().phone,
             res.data,
-          )
+          );
         }
       },
-    )
-  }
+    );
+  };
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   return (
     <Form {...form}>
@@ -232,5 +232,5 @@ export default function CustomerForm({
         </Card>
       </form>
     </Form>
-  )
+  );
 }

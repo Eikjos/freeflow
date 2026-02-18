@@ -1,17 +1,17 @@
-'use client'
+'use client';
 
-import { Button } from '@components/ui/button'
-import { Plus } from 'lucide-react'
-import Link from 'next/link'
-import { useTranslations } from 'next-intl'
-import ProjectList from './project-list'
+import { Button } from '@components/ui/button';
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import ProjectList from './project-list';
 
 type ProjectTabProps = {
-  enterpriseId: number
-}
+  enterpriseId: number;
+};
 
 export default function ProjectTab({ enterpriseId }: ProjectTabProps) {
-  const t = useTranslations()
+  const t = useTranslations();
   return (
     <div className="w-full flex flex-col items-end">
       <Button asChild className="ml-auto mb-10">
@@ -21,5 +21,5 @@ export default function ProjectTab({ enterpriseId }: ProjectTabProps) {
       </Button>
       <ProjectList enterpriseId={enterpriseId} />
     </div>
-  )
+  );
 }

@@ -1,24 +1,24 @@
-import { HttpService } from '@nestjs/axios'
+import { HttpService } from '@nestjs/axios';
 import {
   ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
   NotFoundException,
-} from '@nestjs/common'
-import AuthService from 'auth/auth.service'
-import EnterpriseDto from 'dtos/enterprises/enterprise.dto'
-import { CreateEnterpriseDto } from 'dtos/enterprises/enterprise-create.dto'
-import { EnterpriseInformationDto } from 'dtos/enterprises/enterprise-information.dto'
-import EnterpriseStatDto from 'dtos/enterprises/enterprise-stat.dto'
-import EnterpriseUpdateDto from 'dtos/enterprises/enterprise-update.dto'
-import InvoiceInformationDto from 'dtos/invoices/invoice-information.dto'
-import ExpenseService from 'expenses/expense.service'
-import MailingService from 'mailing/mailing.service'
-import { MediaService } from 'media/media.service'
-import { PrismaService } from 'prisma.service'
-import SalesService from 'sales/sales.service'
-import { EtablissementResponse } from 'types/sirene-api'
+} from '@nestjs/common';
+import AuthService from 'auth/auth.service';
+import EnterpriseDto from 'dtos/enterprises/enterprise.dto';
+import { CreateEnterpriseDto } from 'dtos/enterprises/enterprise-create.dto';
+import { EnterpriseInformationDto } from 'dtos/enterprises/enterprise-information.dto';
+import EnterpriseStatDto from 'dtos/enterprises/enterprise-stat.dto';
+import EnterpriseUpdateDto from 'dtos/enterprises/enterprise-update.dto';
+import InvoiceInformationDto from 'dtos/invoices/invoice-information.dto';
+import ExpenseService from 'expenses/expense.service';
+import MailingService from 'mailing/mailing.service';
+import { MediaService } from 'media/media.service';
+import { PrismaService } from 'prisma.service';
+import SalesService from 'sales/sales.service';
+import { EtablissementResponse } from 'types/sirene-api';
 
 @Injectable()
 export default class EnterpriseService {
@@ -67,22 +67,22 @@ export default class EnterpriseService {
           },
         },
       },
-    })
+    });
 
     // if enterprise save - save image
     if (enterprise.id && logo) {
       const mediaId = await this.mediaService.upload(
         logo,
         `${enterprise.id}/images`,
-      )
+      );
       await this.prisma.enterprise.update({
         where: { id: enterprise.id },
         data: { mediaId },
-      })
+      });
     }
-    const user = await this.prisma.user.findFirst({ where: { id: userId } })
-    this.mailingService.sendInscriptionMail(user.email)
-    return this.authService.generateToken(user)
+    const user = await this.prisma.user.findFirst({ where: { id: userId } });
+    this.mailingService.sendInscriptionMail(user.email);
+    return this.authService.generateToken(user);
   }
 
   async update(
@@ -92,11 +92,11 @@ export default class EnterpriseService {
     userId: number,
     logo?: Express.Multer.File,
   ) {
-    if (enterpriseId !== id) throw new ForbiddenException()
+    if (enterpriseId !== id) throw new ForbiddenException();
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id },
-    })
-    if (!enterprise) throw new NotFoundException()
+    });
+    if (!enterprise) throw new NotFoundException();
     const enterpriseUpdate = await this.prisma.enterprise.update({
       where: { id },
       data: {
@@ -112,19 +112,19 @@ export default class EnterpriseService {
         lastInvoiceNumber: model.invoiceNumber,
         prefixeInvoice: model.invoicePrefixe,
       },
-    })
+    });
 
     if (enterpriseUpdate && logo) {
-      this.mediaService.delete(enterprise.mediaId)
-      const mediaId = await this.mediaService.upload(logo, `${id}/images`)
+      this.mediaService.delete(enterprise.mediaId);
+      const mediaId = await this.mediaService.upload(logo, `${id}/images`);
       this.prisma.enterprise.update({
         where: { id },
         data: { mediaId: mediaId },
-      })
+      });
     }
 
-    const user = await this.prisma.user.findFirst({ where: { id: userId } })
-    return this.authService.generateToken(user)
+    const user = await this.prisma.user.findFirst({ where: { id: userId } });
+    return this.authService.generateToken(user);
   }
 
   async findById(id: number) {
@@ -132,15 +132,15 @@ export default class EnterpriseService {
       where: {
         id,
       },
-    })
-    if (!enterprise) throw new NotFoundException()
-    return new EnterpriseDto(enterprise)
+    });
+    if (!enterprise) throw new NotFoundException();
+    return new EnterpriseDto(enterprise);
   }
 
   async getInformationBySiret(
     siret: string,
   ): Promise<Omit<EnterpriseInformationDto, 'id'>> {
-    const insee = await this.getInseeInformation(siret)
+    const insee = await this.getInseeInformation(siret);
     return {
       siret: insee.etablissement.siret,
       name: insee.etablissement.uniteLegale.denominationUniteLegale
@@ -162,7 +162,7 @@ export default class EnterpriseService {
         'FR' +
         this.getCleControleTVANumber(insee.etablissement.siren) +
         insee.etablissement.siren,
-    }
+    };
   }
 
   async getInformationForInvoice(
@@ -171,15 +171,15 @@ export default class EnterpriseService {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
       include: { juridicShape: true },
-    })
-    if (!enterprise) throw new NotFoundException()
+    });
+    if (!enterprise) throw new NotFoundException();
     const {
       prefixeInvoice,
       lastInvoiceNumber,
       juridicShape,
       juridicShapeId,
       ...rest
-    } = enterprise
+    } = enterprise;
     const invoiceInformation: InvoiceInformationDto = {
       prefixe: prefixeInvoice ?? '',
       lastNumber: lastInvoiceNumber + 1,
@@ -188,8 +188,8 @@ export default class EnterpriseService {
         juridicShape: juridicShape.designation,
         countryId: rest.countryId.toString(),
       },
-    }
-    return invoiceInformation
+    };
+    return invoiceInformation;
   }
 
   async getInformationForDevis(
@@ -198,18 +198,18 @@ export default class EnterpriseService {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
       include: { juridicShape: true },
-    })
-    if (!enterprise) throw new NotFoundException()
+    });
+    if (!enterprise) throw new NotFoundException();
     const {
       prefixeInvoice,
       lastInvoiceNumber,
       juridicShape,
       juridicShapeId,
       ...rest
-    } = enterprise
+    } = enterprise;
     const devisCount = await this.prisma.invoice.count({
       where: { enterpriseId, type: 'QUOTE' },
-    })
+    });
     const invoiceInformation: InvoiceInformationDto = {
       prefixe: prefixeInvoice ?? '',
       lastNumber: devisCount + 1,
@@ -218,56 +218,56 @@ export default class EnterpriseService {
         juridicShape: juridicShape.designation,
         countryId: rest.countryId.toString(),
       },
-    }
-    return invoiceInformation
+    };
+    return invoiceInformation;
   }
 
   async getInscriptionYear(enterpriseId: number) {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
-    })
-    if (!enterprise) throw new ForbiddenException()
-    return enterprise.createdAt.getFullYear()
+    });
+    if (!enterprise) throw new ForbiddenException();
+    return enterprise.createdAt.getFullYear();
   }
 
   // -- Tools --
   private async getInseeInformation(siret: string) {
     // Récupération des informations de l'entreprise
     const url =
-      'https://api.insee.fr/api-sirene/3.11/siret/' + siret.replace(/\s+/g, '')
+      'https://api.insee.fr/api-sirene/3.11/siret/' + siret.replace(/\s+/g, '');
     return await this.httpService.axiosRef
       .get<EtablissementResponse>(url, {
         headers: { 'X-INSEE-Api-Key-Integration': process.env.INSEE_API_KEY },
       })
       .then((res) => {
-        return res.data
+        return res.data;
       })
       .catch(() => {
-        throw new NotFoundException('enterprise.infoNotFound')
-      })
+        throw new NotFoundException('enterprise.infoNotFound');
+      });
   }
 
   async getStatsByYear(enterpriseId: number, year: number) {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
-    })
-    if (!enterprise) throw new ForbiddenException()
-    const sales = await this.salesService.getAmountByYear(enterpriseId, year)
+    });
+    if (!enterprise) throw new ForbiddenException();
+    const sales = await this.salesService.getAmountByYear(enterpriseId, year);
     const expenses = await this.expenseService.getTotalExpenseByYear(
       enterpriseId,
       year,
-    )
-    return new EnterpriseStatDto(sales, expenses)
+    );
+    return new EnterpriseStatDto(sales, expenses);
   }
 
   private getCleControleTVANumber(siren: string) {
     // Convertir le SIREN en entier
-    const sirenInt = parseInt(siren, 10)
+    const sirenInt = parseInt(siren, 10);
 
     // Calculer la clé de contrôle
-    const cleDeControle = (12 + 3 * (sirenInt % 97)) % 97
+    const cleDeControle = (12 + 3 * (sirenInt % 97)) % 97;
 
     // Retourner la clé de contrôle sous forme de chaîne de 2 chiffres
-    return cleDeControle.toString().padStart(2, '0')
+    return cleDeControle.toString().padStart(2, '0');
   }
 }

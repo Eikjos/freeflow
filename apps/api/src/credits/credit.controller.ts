@@ -7,13 +7,13 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
-} from '@nestjs/common'
-import { FileInterceptor } from '@nestjs/platform-express'
-import { ApiConsumes } from '@nestjs/swagger'
-import CreateCreditDto from 'dtos/credits/create-credit.dto'
-import { Request } from 'express'
-import { AccessTokenGuard } from 'guards/access-token.guard'
-import CreditService from './credit.service'
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes } from '@nestjs/swagger';
+import CreateCreditDto from 'dtos/credits/create-credit.dto';
+import { Request } from 'express';
+import { AccessTokenGuard } from 'guards/access-token.guard';
+import CreditService from './credit.service';
 
 @Controller('credits')
 export default class CreditController {
@@ -30,7 +30,7 @@ export default class CreditController {
     @UploadedFile()
     credit: Express.Multer.File,
   ) {
-    const entrepriseId = parseInt(req.user['enterpriseId'])
-    return this.creditService.create(model, entrepriseId, credit)
+    const entrepriseId = parseInt(req.user['enterpriseId']);
+    return this.creditService.create(model, entrepriseId, credit);
   }
 }

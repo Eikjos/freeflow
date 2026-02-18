@@ -5,9 +5,9 @@ import {
   Param,
   ParseIntPipe,
   Res,
-} from '@nestjs/common'
-import { Response } from 'express'
-import { MediaService } from './media.service'
+} from '@nestjs/common';
+import { Response } from 'express';
+import { MediaService } from './media.service';
 
 @Controller('media')
 export class MediaController {
@@ -20,15 +20,18 @@ export class MediaController {
   ) {
     try {
       const { file, mimeType, filename } =
-        await this.mediaService.download(mediaId)
+        await this.mediaService.download(mediaId);
 
-      res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition')
-      res.setHeader('Content-Type', mimeType)
-      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`)
+      res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+      res.setHeader('Content-Type', mimeType);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${filename}"`,
+      );
 
-      res.send(file)
+      res.send(file);
     } catch {
-      throw new NotFoundException('Fichier non trouvé')
+      throw new NotFoundException('Fichier non trouvé');
     }
   }
 }

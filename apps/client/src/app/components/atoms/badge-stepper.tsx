@@ -1,10 +1,10 @@
-import { cn } from '../../../lib/utils'
+import { cn } from '../../../lib/utils';
 
 type BadgeStepperProps = {
-  number: number
-  label: string
-  active: boolean
-}
+  number: number;
+  label: string;
+  active: boolean;
+};
 
 const BadgeStepper = ({ number, label, active }: BadgeStepperProps) => {
   return (
@@ -27,7 +27,7 @@ const BadgeStepper = ({ number, label, active }: BadgeStepperProps) => {
       </div>
       <span className="text-center text-md w-20 mt-2">{label}</span>
     </div>
-  )
-}
+  );
+};
 
-export default BadgeStepper
+export default BadgeStepper;

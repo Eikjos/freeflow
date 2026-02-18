@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import Image from 'next/image'
-import { useTranslations } from 'next-intl'
-import { Suspense } from 'react'
-import { LoginForm } from '../../components/templates/login-form'
+import Image from 'next/image';
+import { useTranslations } from 'next-intl';
+import { Suspense } from 'react';
+import { LoginForm } from '../../components/templates/login-form';
 
 const LoginPage = () => {
-  const t = useTranslations()
+  const t = useTranslations();
 
   return (
     <div className="flex flew-row items-center h-screen">
@@ -38,7 +38,7 @@ const LoginPage = () => {
         </Suspense>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

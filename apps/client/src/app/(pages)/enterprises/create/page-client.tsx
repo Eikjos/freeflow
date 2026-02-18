@@ -1,21 +1,21 @@
-'use client'
+'use client';
 
-import EnterpriseForm from '@components/templates/enterprise-form'
-import EnterpriseLogoForm from '@components/templates/enterprise-logo-form'
-import Footer from '@components/templates/footer'
-import Header from '@components/templates/header'
-import RecapEnterpriseForm from '@components/templates/recap-enterprise-form'
-import { Stepper } from '@components/templates/stepper'
-import { zodResolver } from '@hookform/resolvers/zod'
+import EnterpriseForm from '@components/templates/enterprise-form';
+import EnterpriseLogoForm from '@components/templates/enterprise-logo-form';
+import Footer from '@components/templates/footer';
+import Header from '@components/templates/header';
+import RecapEnterpriseForm from '@components/templates/recap-enterprise-form';
+import { Stepper } from '@components/templates/stepper';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   EnterpriseCreateModel,
   EnterpriseCreateValidation,
-} from '@repo/shared-types'
-import { useTranslations } from 'next-intl'
-import { FormProvider, useForm } from 'react-hook-form'
+} from '@repo/shared-types';
+import { useTranslations } from 'next-intl';
+import { FormProvider, useForm } from 'react-hook-form';
 
 const CreateEnterprisePage = () => {
-  const t = useTranslations()
+  const t = useTranslations();
   const form = useForm<EnterpriseCreateModel>({
     resolver: zodResolver(EnterpriseCreateValidation),
     defaultValues: {
@@ -31,7 +31,7 @@ const CreateEnterprisePage = () => {
       prefixeInvoice: '',
       lastInvoiceNumber: 0,
     },
-  })
+  });
 
   return (
     <>
@@ -59,7 +59,7 @@ const CreateEnterprisePage = () => {
       </div>
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default CreateEnterprisePage
+export default CreateEnterprisePage;

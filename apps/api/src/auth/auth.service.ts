@@ -4,17 +4,17 @@ import {
   forwardRef,
   Inject,
   Injectable,
-} from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
-import { User } from '@prisma/client'
-import { AuthResponseData } from '@repo/shared-types'
-import * as bcrypt from 'bcrypt'
-import CustomerService from 'customers/customer.service'
-import { CustomerDto } from 'dtos/customers/customer.dto'
-import EnterpriseDto from 'dtos/enterprises/enterprise.dto'
-import EnterpriseService from 'enterprises/enterprise.service'
-import SalesService from 'sales/sales.service'
-import UserService from 'users/user.service'
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
+import { AuthResponseData } from '@repo/shared-types';
+import * as bcrypt from 'bcrypt';
+import CustomerService from 'customers/customer.service';
+import { CustomerDto } from 'dtos/customers/customer.dto';
+import EnterpriseDto from 'dtos/enterprises/enterprise.dto';
+import EnterpriseService from 'enterprises/enterprise.service';
+import SalesService from 'sales/sales.service';
+import UserService from 'users/user.service';
 
 @Injectable()
 export default class AuthService {
@@ -31,36 +31,36 @@ export default class AuthService {
   // --
 
   public async signIn(email: string, password: string) {
-    const user = await this.userService.findUserByEmail(email)
+    const user = await this.userService.findUserByEmail(email);
     if (!user) {
       throw new BadRequestException('credentials.invalid', {
         description: 'credentials.invalid',
-      })
+      });
     }
-    const isMatch = await bcrypt.compare(password, user.password)
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new BadRequestException('credentials.invalid', {
         description: 'credentials.invalid',
-      })
+      });
     }
-    return this.generateToken(user)
+    return this.generateToken(user);
   }
 
   public logout(userId: number) {
-    return this.userService.udpateRefreshToken(userId, null)
+    return this.userService.udpateRefreshToken(userId, null);
   }
 
   public async refresh(userId: number, refreshToken: string) {
-    const user = await this.userService.findUserById(userId)
+    const user = await this.userService.findUserById(userId);
     if (!user || !user.refreshToken)
-      throw new ForbiddenException('access.denied')
+      throw new ForbiddenException('access.denied');
     const refreshTokenMatches = await bcrypt.compare(
       refreshToken,
       user.refreshToken,
-    )
-    if (!refreshTokenMatches) throw new ForbiddenException('access.denied')
+    );
+    if (!refreshTokenMatches) throw new ForbiddenException('access.denied');
 
-    return this.generateToken(user)
+    return this.generateToken(user);
   }
 
   public async generateToken(user: User): Promise<AuthResponseData> {
@@ -70,25 +70,25 @@ export default class AuthService {
       isEnterprise: user.isEnterprise,
       isCustomer: user.isCustomer,
       customerId: user.customerId,
-    }
+    };
 
-    const access_token = await this.jwtService.signAsync(payload)
+    const access_token = await this.jwtService.signAsync(payload);
     const refreshToken = await this.jwtService.signAsync(payload, {
       secret: process.env.JWT_REFRESH_SECRET,
       expiresIn: '7d',
-    })
+    });
 
-    this.userService.udpateRefreshToken(user.id, refreshToken)
+    this.userService.udpateRefreshToken(user.id, refreshToken);
 
-    let sales: number
-    let enterprise: EnterpriseDto
-    let customer: CustomerDto
+    let sales: number;
+    let enterprise: EnterpriseDto;
+    let customer: CustomerDto;
 
     if (user.isEnterprise && user.enterpriseId) {
-      enterprise = await this.enterpriseService.findById(user.enterpriseId)
-      sales = (await this.salesService.getCurrentSales(user.enterpriseId)) ?? 0
+      enterprise = await this.enterpriseService.findById(user.enterpriseId);
+      sales = (await this.salesService.getCurrentSales(user.enterpriseId)) ?? 0;
     } else if (user.isCustomer) {
-      customer = await this.customerService.findById(user.customerId)
+      customer = await this.customerService.findById(user.customerId);
     }
 
     return {
@@ -103,6 +103,6 @@ export default class AuthService {
       sales: sales,
       access_token,
       refreshToken,
-    }
+    };
   }
 }

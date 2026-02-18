@@ -1,14 +1,14 @@
-import ProjectTab from '@components/templates/project-tab'
-import { headers } from 'next/headers'
-import { getTranslations } from 'next-intl/server'
-import { EnterpriseInfo } from '../../../../types/enterprise-info-type'
+import ProjectTab from '@components/templates/project-tab';
+import { headers } from 'next/headers';
+import { getTranslations } from 'next-intl/server';
+import { EnterpriseInfo } from '../../../../types/enterprise-info-type';
 
 export default async function ActivitiesPage() {
-  const t = await getTranslations()
-  const headersEnterprise = (await headers()).get('x-enterprise')
+  const t = await getTranslations();
+  const headersEnterprise = (await headers()).get('x-enterprise');
   const enterprise: EnterpriseInfo | null = headersEnterprise
     ? (JSON.parse(headersEnterprise) as EnterpriseInfo)
-    : null
+    : null;
   return (
     <div>
       <h1 className="font-amica text-4xl">
@@ -16,5 +16,5 @@ export default async function ActivitiesPage() {
       </h1>
       <ProjectTab enterpriseId={enterprise?.id ?? 0} />
     </div>
-  )
+  );
 }

@@ -1,37 +1,37 @@
-import Autocomplete from '@components/molecules/autocomplete'
-import { Button } from '@components/ui/button'
-import { Card, CardContent } from '@components/ui/card'
-import { DateInput } from '@components/ui/date-input'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import { Select } from '@components/ui/select'
-import { SelectItemProps } from '@radix-ui/react-select'
-import { InvoiceFilterData } from '@repo/shared-types'
-import clsx from 'clsx'
-import { useTranslations } from 'next-intl'
-import { useForm } from 'react-hook-form'
-import { getAllCustomersQueryOptions } from '../../../lib/api/customers'
-import { invoiceStatusToString } from '../../../lib/utils'
+import Autocomplete from '@components/molecules/autocomplete';
+import { Button } from '@components/ui/button';
+import { Card, CardContent } from '@components/ui/card';
+import { DateInput } from '@components/ui/date-input';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { Select } from '@components/ui/select';
+import { SelectItemProps } from '@radix-ui/react-select';
+import { InvoiceFilterData } from '@repo/shared-types';
+import clsx from 'clsx';
+import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
+import { getAllCustomersQueryOptions } from '../../../lib/api/customers';
+import { invoiceStatusToString } from '../../../lib/utils';
 
 type InvoiceFilterProps = {
-  className?: string
-  onChangeFilter: (filter: InvoiceFilterData | undefined) => void
-  isCustomer?: boolean
-}
+  className?: string;
+  onChangeFilter: (filter: InvoiceFilterData | undefined) => void;
+  isCustomer?: boolean;
+};
 
 export default function InvoiceFilter({
   className,
   onChangeFilter,
   isCustomer = false,
 }: InvoiceFilterProps) {
-  const t = useTranslations()
+  const t = useTranslations();
   const form = useForm<InvoiceFilterData>({
     defaultValues: {
       number: '',
     },
-  })
-  const startDate = form.watch('startDate')
-  const endDate = form.watch('endDate')
+  });
+  const startDate = form.watch('startDate');
+  const endDate = form.watch('endDate');
   const statusValues: SelectItemProps[] = [
     {
       value: 'WAITING_VALIDATION',
@@ -49,7 +49,7 @@ export default function InvoiceFilter({
       value: 'PAYED',
       textValue: invoiceStatusToString('PAYED'),
     },
-  ]
+  ];
 
   const invoiceTypes: SelectItemProps[] = [
     {
@@ -60,20 +60,20 @@ export default function InvoiceFilter({
       value: 'INVOICE',
       textValue: 'Facture',
     },
-  ]
+  ];
 
   const onSubmit = (filter: InvoiceFilterData) => {
-    onChangeFilter(filter)
-  }
+    onChangeFilter(filter);
+  };
 
   const resetForm = () => {
-    onChangeFilter(undefined)
-    form.reset()
-  }
+    onChangeFilter(undefined);
+    form.reset();
+  };
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   return (
     <Card className={clsx('pt-5 shadow-sm bg-slate-100/45', className)}>
@@ -153,5 +153,5 @@ export default function InvoiceFilter({
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

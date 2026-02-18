@@ -1,28 +1,28 @@
-'use client'
+'use client';
 
-import InvoiceFilter from '@components/organisms/invoice-filter'
-import InvoiceTable from '@components/templates/invoice-table'
-import { Button } from '@components/ui/button'
-import { Pagination } from '@components/ui/pagination'
-import { InvoiceFilterData, PaginationFilter } from '@repo/shared-types'
-import { useQuery } from '@tanstack/react-query'
-import { Plus } from 'lucide-react'
-import Link from 'next/link'
-import { useTranslations } from 'next-intl'
-import { useState } from 'react'
-import { getAllInvoiceQueryOptions } from '../../../../lib/api/invoices'
+import InvoiceFilter from '@components/organisms/invoice-filter';
+import InvoiceTable from '@components/templates/invoice-table';
+import { Button } from '@components/ui/button';
+import { Pagination } from '@components/ui/pagination';
+import { InvoiceFilterData, PaginationFilter } from '@repo/shared-types';
+import { useQuery } from '@tanstack/react-query';
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { getAllInvoiceQueryOptions } from '../../../../lib/api/invoices';
 
 export default function InvoicePage() {
-  const t = useTranslations()
-  const [filter, setFilter] = useState<InvoiceFilterData>()
+  const t = useTranslations();
+  const [filter, setFilter] = useState<InvoiceFilterData>();
   const paginationFilter: PaginationFilter<InvoiceFilterData> = {
     page: 0,
     pageSize: 10,
     filter: filter,
-  }
+  };
   const { data, isLoading } = useQuery(
     getAllInvoiceQueryOptions(paginationFilter),
-  )
+  );
 
   return (
     <>
@@ -60,5 +60,5 @@ export default function InvoicePage() {
         totalItems={data?.data?.totalItems ?? 0}
       />
     </>
-  )
+  );
 }

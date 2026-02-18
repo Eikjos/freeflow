@@ -5,31 +5,31 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@components/ui/dropdown-menu'
-import { logout } from 'actions/login'
-import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { useCustomer } from 'providers/customer-provider'
-import { useEnterprise } from 'providers/enterprise-provider'
-import { cn } from '../../../lib/utils'
+} from '@components/ui/dropdown-menu';
+import { logout } from 'actions/login';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useCustomer } from 'providers/customer-provider';
+import { useEnterprise } from 'providers/enterprise-provider';
+import { cn } from '../../../lib/utils';
 
 type ProfileButtonProps = {
-  className?: string
-  type: 'customer' | 'enterprise'
-}
+  className?: string;
+  type: 'customer' | 'enterprise';
+};
 
 export default function ProfileButton({ className, type }: ProfileButtonProps) {
-  const t = useTranslations()
-  const router = useRouter()
+  const t = useTranslations();
+  const router = useRouter();
 
   const onLogout = () => {
     void logout().then(() => {
-      router.replace('/')
-    })
-  }
+      router.replace('/');
+    });
+  };
 
   if (type == 'enterprise') {
-    const { enterprise } = useEnterprise()
+    const { enterprise } = useEnterprise();
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -51,9 +51,9 @@ export default function ProfileButton({ className, type }: ProfileButtonProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    )
+    );
   } else {
-    const { customer } = useCustomer()
+    const { customer } = useCustomer();
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -74,6 +74,6 @@ export default function ProfileButton({ className, type }: ProfileButtonProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    )
+    );
   }
 }

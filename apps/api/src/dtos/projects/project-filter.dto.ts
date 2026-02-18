@@ -1,20 +1,20 @@
-import { Project } from '@prisma/client'
-import { Transform } from 'class-transformer'
-import { IsInt, IsString } from 'class-validator'
+import { Project } from '@prisma/client';
+import { Transform } from 'class-transformer';
+import { IsInt, IsString } from 'class-validator';
 
 export default class ProjectFilterDto implements Project {
   @IsInt()
   @Transform(({ value }) => parseInt(value))
-  id: number
+  id: number;
   @IsString()
-  name: string
+  name: string;
   @IsInt()
   @Transform(({ value }) => parseInt(value))
-  customerId: number
+  customerId: number;
   @IsInt()
   @Transform(({ value }) => parseInt(value))
-  enterpriseId: number
+  enterpriseId: number;
   @IsInt()
   @Transform(({ value }) => parseInt(value))
-  mediaId: number
+  mediaId: number;
 }

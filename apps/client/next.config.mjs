@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
-import createNextIntlPlugin from 'next-intl/plugin'
+import createNextIntlPlugin from 'next-intl/plugin';
 
-const withNextIntl = createNextIntlPlugin()
-const apiUrl = process.env.API_URL
+const withNextIntl = createNextIntlPlugin();
+const apiUrl = process.env.API_URL;
 
 const nextConfig = {
   output: 'standalone',
@@ -22,10 +22,10 @@ const nextConfig = {
           destination: `${apiUrl}/:path*`,
           basePath: false,
         },
-      ]
+      ];
     }
-    return []
+    return [];
   },
-}
+};
 
-export default withNextIntl(nextConfig)
+export default withNextIntl(nextConfig);

@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { Button } from '@components/ui/button'
-import { DateInput } from '@components/ui/date-input'
+import { Button } from '@components/ui/button';
+import { DateInput } from '@components/ui/date-input';
 import {
   Dialog,
   DialogClose,
@@ -9,28 +9,28 @@ import {
   DialogFooter,
   DialogTitle,
   DialogTrigger,
-} from '@components/ui/dialog'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import { Select } from '@components/ui/select'
-import { zodResolver } from '@hookform/resolvers/zod'
+} from '@components/ui/dialog';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { Select } from '@components/ui/select';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CreateObjectiveData,
   CreateObjectiveDataValidation,
   ObjectiveData,
-} from '@repo/shared-types'
-import { createObjective, updateObjective } from 'actions/objective'
-import { useTranslations } from 'next-intl'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+} from '@repo/shared-types';
+import { createObjective, updateObjective } from 'actions/objective';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 type CreateObjectiveDialogProps = {
-  trigger: JSX.Element
-  defaultValue?: ObjectiveData
-  isUpdate: boolean
-  callback?: () => void
-}
+  trigger: JSX.Element;
+  defaultValue?: ObjectiveData;
+  isUpdate: boolean;
+  callback?: () => void;
+};
 
 export default function CreateObjectiveDialog({
   trigger,
@@ -38,8 +38,8 @@ export default function CreateObjectiveDialog({
   isUpdate,
   callback,
 }: CreateObjectiveDialogProps) {
-  const t = useTranslations()
-  const [open, setOpen] = useState<boolean>(false)
+  const t = useTranslations();
+  const [open, setOpen] = useState<boolean>(false);
   const form = useForm<CreateObjectiveData>({
     resolver: zodResolver(CreateObjectiveDataValidation),
     defaultValues: defaultValue
@@ -52,37 +52,37 @@ export default function CreateObjectiveDialog({
           startDate: undefined,
           objectiveNumber: 0,
         },
-  })
+  });
 
   const onSubmit = (values: CreateObjectiveData) => {
     if (!isUpdate) {
       createObjective(values)
         .then(() => {
-          toast.success(t('objective.success.create'))
+          toast.success(t('objective.success.create'));
           if (callback) {
-            callback()
+            callback();
           }
-          setOpen(false)
+          setOpen(false);
         })
         .catch((err: Error) => {
-          toast.error(err.message)
-        })
+          toast.error(err.message);
+        });
     } else if (defaultValue) {
       updateObjective(defaultValue.id, values)
         .then(() => {
-          toast.success(t('objective.success.update'))
+          toast.success(t('objective.success.update'));
           if (callback) {
-            callback()
+            callback();
           }
-          setOpen(false)
+          setOpen(false);
         })
-        .catch((err: Error) => toast.error(err.message))
+        .catch((err: Error) => toast.error(err.message));
     }
-  }
+  };
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -137,5 +137,5 @@ export default function CreateObjectiveDialog({
         </form>
       </Form>
     </Dialog>
-  )
+  );
 }

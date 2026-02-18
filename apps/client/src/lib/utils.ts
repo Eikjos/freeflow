@@ -1,29 +1,29 @@
-import { InvoiceStatus } from '@repo/shared-types'
-import { type ClassValue, clsx } from 'clsx'
-import { twMerge } from 'tailwind-merge'
+import { InvoiceStatus } from '@repo/shared-types';
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export function generateQueryString<T extends object>(filter: T): string {
   return Object.keys(filter)
     .map((k) => {
-      const key = k as keyof T
-      const value = filter[key]
+      const key = k as keyof T;
+      const value = filter[key];
 
       if (typeof value === 'object') {
-        return generateQueryStringOfSubObject(key as string, value as object)
+        return generateQueryStringOfSubObject(key as string, value as object);
       }
 
       if (value !== undefined && value !== null) {
-        return `${encodeURIComponent(key as string)}=${encodeURIComponent(String(value))}`
+        return `${encodeURIComponent(key as string)}=${encodeURIComponent(String(value))}`;
       }
 
-      return ''
+      return '';
     })
     .filter(Boolean)
-    .join('&')
+    .join('&');
 }
 
 function generateQueryStringOfSubObject<T extends object>(
@@ -32,39 +32,39 @@ function generateQueryStringOfSubObject<T extends object>(
 ): string {
   return Object.keys(filter)
     .map((k) => {
-      const keySub = k as keyof T
-      const value = filter[keySub]
+      const keySub = k as keyof T;
+      const value = filter[keySub];
 
       if (typeof value === 'object') {
-        return generateQueryString(value as object)
+        return generateQueryString(value as object);
       }
 
       if (value !== undefined && value !== null) {
-        return `${encodeURIComponent(key)}[${encodeURIComponent(keySub as string)}]=${encodeURIComponent(String(value))}`
+        return `${encodeURIComponent(key)}[${encodeURIComponent(keySub as string)}]=${encodeURIComponent(String(value))}`;
       }
 
-      return ''
+      return '';
     })
     .filter(Boolean)
-    .join('&')
+    .join('&');
 }
 
 export function getMediaUrl(mediaId: number) {
-  return `${process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL}/media/${mediaId}`
+  return `${process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL}/media/${mediaId}`;
 }
 
 export async function getImage(mediaId: number) {
-  const file = await fetch(getMediaUrl(mediaId))
-  const contentDisposition = file.headers.get('Content-Disposition')
-  let filename = `fichier-${mediaId}`
+  const file = await fetch(getMediaUrl(mediaId));
+  const contentDisposition = file.headers.get('Content-Disposition');
+  let filename = `fichier-${mediaId}`;
   if (contentDisposition) {
-    const match = contentDisposition.match(/filename="(.+)"/)
+    const match = contentDisposition.match(/filename="(.+)"/);
     if (match && match[1]) {
-      filename = match[1].replace(/['"]/g, '')
+      filename = match[1].replace(/['"]/g, '');
     }
   }
-  const blob = await file.blob()
-  return new File([blob], filename, { type: blob.type })
+  const blob = await file.blob();
+  return new File([blob], filename, { type: blob.type });
 }
 
 export const formatPrice = (
@@ -79,65 +79,65 @@ export const formatPrice = (
     maximumFractionDigits: 2,
   })
     .format(value)
-    .replace(/\u202F/g, ' ')
+    .replace(/\u202F/g, ' ');
 
 export const invoiceStatusToString = (invoiceStatus: InvoiceStatus) => {
   switch (invoiceStatus) {
     case 'WAITING_VALIDATION':
-      return 'En attente de validation'
+      return 'En attente de validation';
     case 'VALIDATE':
-      return 'Validé'
+      return 'Validé';
     case 'WAITING_PAYED':
-      return 'En attente de paiement'
+      return 'En attente de paiement';
     case 'PAYED':
-      return 'Payée'
+      return 'Payée';
     case 'CREDITED':
-      return 'Crédité'
+      return 'Crédité';
     case 'PARTIAL_CREDITED':
-      return 'Partiellement crédité'
+      return 'Partiellement crédité';
     case 'REJECTED':
-      return 'Refusé'
+      return 'Refusé';
   }
-}
+};
 
 export function numberToMonth(m: number): string {
   switch (m) {
     case 0:
-      return 'Janvier'
+      return 'Janvier';
     case 1:
-      return 'Février'
+      return 'Février';
     case 2:
-      return 'Mars'
+      return 'Mars';
     case 3:
-      return 'Avril'
+      return 'Avril';
     case 4:
-      return 'Mai'
+      return 'Mai';
     case 5:
-      return 'Juin'
+      return 'Juin';
     case 6:
-      return 'Juillet'
+      return 'Juillet';
     case 7:
-      return 'Août'
+      return 'Août';
     case 8:
-      return 'Septembre'
+      return 'Septembre';
     case 9:
-      return 'Octobre'
+      return 'Octobre';
     case 10:
-      return 'Novembre'
+      return 'Novembre';
     case 11:
-      return 'Décembre'
+      return 'Décembre';
     default:
-      return 'Mois invalide'
+      return 'Mois invalide';
   }
 }
 
 export function stringToDateYear(date: string) {
-  const regex = /(\d+)-(\d+)/
-  const match = date.match(regex)
+  const regex = /(\d+)-(\d+)/;
+  const match = date.match(regex);
   if (match) {
-    const year = match[1]
-    const month = parseInt(match[2]!) - 1
-    return numberToMonth(month) + ' ' + year
+    const year = match[1];
+    const month = parseInt(match[2]!) - 1;
+    return numberToMonth(month) + ' ' + year;
   }
-  return date
+  return date;
 }

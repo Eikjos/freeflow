@@ -1,21 +1,21 @@
-'use client'
+'use client';
 
-import BadgeStepper from '@components/atoms/badge-stepper'
-import { Button } from '@components/ui/button'
-import React, { Fragment, useState } from 'react'
-import { cn } from '../../../lib/utils'
+import BadgeStepper from '@components/atoms/badge-stepper';
+import { Button } from '@components/ui/button';
+import React, { Fragment, useState } from 'react';
+import { cn } from '../../../lib/utils';
 
 type StepperProps = {
-  labels: string[]
-  components: React.ReactNode[]
-  className?: string
-  isValid: boolean
-}
+  labels: string[];
+  components: React.ReactNode[];
+  className?: string;
+  isValid: boolean;
+};
 
 const Stepper = ({ isValid, labels, components, className }: StepperProps) => {
-  const [step, setStep] = useState(0)
-  const nextStep = () => setStep((prev) => prev + 1)
-  const previousStep = () => setStep((prev) => prev - 1)
+  const [step, setStep] = useState(0);
+  const nextStep = () => setStep((prev) => prev + 1);
+  const previousStep = () => setStep((prev) => prev - 1);
 
   return (
     <>
@@ -37,7 +37,7 @@ const Stepper = ({ isValid, labels, components, className }: StepperProps) => {
                 <div className="w-56 border-dashed-spaces h-20" />
               )}
             </Fragment>
-          )
+          );
         })}
       </div>
       {components[step]}
@@ -60,7 +60,7 @@ const Stepper = ({ isValid, labels, components, className }: StepperProps) => {
         )}
       </div>
     </>
-  )
-}
+  );
+};
 
-export { Stepper }
+export { Stepper };

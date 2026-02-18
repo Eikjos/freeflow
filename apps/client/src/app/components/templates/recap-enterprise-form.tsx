@@ -1,44 +1,44 @@
-'use client'
+'use client';
 
-import { Button } from '@components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader } from '@components/ui/card'
-import { Input } from '@components/ui/input'
-import { EnterpriseCreateModel } from '@repo/shared-types'
-import { useQuery } from '@tanstack/react-query'
-import { createEnterprise } from 'actions/enterprise'
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { useFormContext } from 'react-hook-form'
-import { toast } from 'sonner'
-import { getCountryByIdQueryOptions } from '../../../lib/api/countries'
-import { getAllJuridicShapesByCodeQueryOptions } from '../../../lib/api/juridic-shapes'
+import { Button } from '@components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader } from '@components/ui/card';
+import { Input } from '@components/ui/input';
+import { EnterpriseCreateModel } from '@repo/shared-types';
+import { useQuery } from '@tanstack/react-query';
+import { createEnterprise } from 'actions/enterprise';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useFormContext } from 'react-hook-form';
+import { toast } from 'sonner';
+import { getCountryByIdQueryOptions } from '../../../lib/api/countries';
+import { getAllJuridicShapesByCodeQueryOptions } from '../../../lib/api/juridic-shapes';
 
 export default function RecapEnterpriseForm() {
-  const t = useTranslations()
-  const form = useFormContext<EnterpriseCreateModel>()
-  const router = useRouter()
-  const data = form.getValues()
+  const t = useTranslations();
+  const form = useFormContext<EnterpriseCreateModel>();
+  const router = useRouter();
+  const data = form.getValues();
   const onCreateEnterprise = () => {
-    const { logo, ...enterprise } = form.getValues()
+    const { logo, ...enterprise } = form.getValues();
     createEnterprise(enterprise, logo)
       .then((res) => {
         if (res) {
-          router.replace('/dashboard')
+          router.replace('/dashboard');
         }
       })
       .catch((e: Error) => {
-        toast.error(e.message)
-      })
-  }
+        toast.error(e.message);
+      });
+  };
 
   const { data: countryData } = useQuery(
     getCountryByIdQueryOptions(parseInt(data.countryId)),
-  )
+  );
 
   const { data: juridicShapeData } = useQuery(
     getAllJuridicShapesByCodeQueryOptions(data.juridicShape),
-  )
+  );
 
   return (
     <Card className="w-1/2 mx-auto">
@@ -157,5 +157,5 @@ export default function RecapEnterpriseForm() {
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }

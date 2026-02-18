@@ -1,11 +1,11 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 export type CreateUserData = {
-  firstName: string
-  lastName: string
-  email: string
-  password: string
-}
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+};
 
 export const CreateUserDataValidation = z
   .object({
@@ -25,4 +25,4 @@ export const CreateUserDataValidation = z
   .refine((val) => val.password == val.confirmPassword, {
     message: 'Les mots de passe doivent être identiques',
     path: ['confirmPassword'],
-  })
+  });

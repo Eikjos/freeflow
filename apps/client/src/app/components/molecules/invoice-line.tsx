@@ -1,23 +1,23 @@
-import { Button } from '@components/ui/button'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@components/ui/button';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   InvoiceLineCreateData,
   InvoiceLineData,
   InvoiceLineValidation,
-} from '@repo/shared-types'
-import { Trash } from 'lucide-react'
-import { useTranslations } from 'next-intl'
-import { useReducer } from 'react'
-import { useForm } from 'react-hook-form'
+} from '@repo/shared-types';
+import { Trash } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useReducer } from 'react';
+import { useForm } from 'react-hook-form';
 
 type InvoiceLineProps = {
-  invoice: InvoiceLineCreateData
-  onChange: (value: InvoiceLineCreateData) => void
-  onDelete: (value: InvoiceLineCreateData) => void
-  canDelete: boolean
-}
+  invoice: InvoiceLineCreateData;
+  onChange: (value: InvoiceLineCreateData) => void;
+  onDelete: (value: InvoiceLineCreateData) => void;
+  canDelete: boolean;
+};
 
 export default function InvoiceLine({
   invoice,
@@ -25,8 +25,8 @@ export default function InvoiceLine({
   onDelete,
   canDelete,
 }: InvoiceLineProps) {
-  const t = useTranslations()
-  const [totalKey, updateTotalKey] = useReducer((x: number) => x + 1, 0)
+  const t = useTranslations();
+  const [totalKey, updateTotalKey] = useReducer((x: number) => x + 1, 0);
   const form = useForm<InvoiceLineData>({
     resolver: zodResolver(InvoiceLineValidation),
     defaultValues: {
@@ -34,26 +34,26 @@ export default function InvoiceLine({
       quantity: invoice.quantity,
       unitPrice: invoice.unitPrice,
     },
-  })
-  const quantity = form.watch('quantity')
-  const unitPrice = form.watch('unitPrice')
+  });
+  const quantity = form.watch('quantity');
+  const unitPrice = form.watch('unitPrice');
 
   const handleChangeTotal = (value: number) => {
     if (!isNaN(value)) {
-      form.setValue('quantity', 1)
-      form.setValue('unitPrice', value)
-      onChange(form.getValues())
+      form.setValue('quantity', 1);
+      form.setValue('unitPrice', value);
+      onChange(form.getValues());
     } else {
-      form.setValue('quantity', 1)
-      form.setValue('unitPrice', 0)
-      onChange(form.getValues())
+      form.setValue('quantity', 1);
+      form.setValue('unitPrice', 0);
+      onChange(form.getValues());
     }
-  }
+  };
 
   const handleBlur = () => {
-    updateTotalKey()
-    onChange(form.getValues())
-  }
+    updateTotalKey();
+    onChange(form.getValues());
+  };
 
   return (
     <div className="w-full flex flex-row gap-4 items-center justify-between">
@@ -106,5 +106,5 @@ export default function InvoiceLine({
         </form>
       </Form>
     </div>
-  )
+  );
 }

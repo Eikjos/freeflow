@@ -1,10 +1,10 @@
-import { Button } from '@components/ui/button'
-import { ArrowRight, PlayIcon } from 'lucide-react'
-import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
+import { Button } from '@components/ui/button';
+import { ArrowRight, PlayIcon } from 'lucide-react';
+import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 
 export default async function HeroBanner() {
-  const t = await getTranslations()
+  const t = await getTranslations();
   return (
     <div className="mt-10 mb-10">
       <h1 className="text-4xl sm:text-5xl lg:text-6xl mb-6 text-center">
@@ -28,5 +28,5 @@ export default async function HeroBanner() {
         </Button>
       </div>
     </div>
-  )
+  );
 }

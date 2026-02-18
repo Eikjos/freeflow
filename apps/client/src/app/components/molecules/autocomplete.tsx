@@ -1,51 +1,51 @@
-'use client'
+'use client';
 
-import { Button } from '@components/ui/button'
+import { Button } from '@components/ui/button';
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '@components/ui/form'
-import { InputProps } from '@components/ui/input'
-import Loading from '@components/ui/loading'
-import { PaginationResult } from '@repo/shared-types'
-import { UseQueryOptions, useQuery } from '@tanstack/react-query'
-import { ChevronDown, ChevronUp, X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
-import { cn } from '../../../lib/utils'
-import { HttpResponse } from '../../../types/http-response'
+} from '@components/ui/form';
+import { InputProps } from '@components/ui/input';
+import Loading from '@components/ui/loading';
+import { PaginationResult } from '@repo/shared-types';
+import { UseQueryOptions, useQuery } from '@tanstack/react-query';
+import { ChevronDown, ChevronUp, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { cn } from '../../../lib/utils';
+import { HttpResponse } from '../../../types/http-response';
 
 type AutoCompleteProps<TData extends Record<string, unknown>> = Omit<
   AutoCompleteWithoutControlProps<TData>,
   'onChange'
 > &
-  Omit<InputProps, 'type' | 'value' | 'defaultValue' | 'onChange'>
+  Omit<InputProps, 'type' | 'value' | 'defaultValue' | 'onChange'>;
 
 type AutoCompleteWithoutControlProps<TData extends Record<string, unknown>> = {
   queryOptions: (filter: {
-    id?: number
-    search?: string
-  }) => UseQueryOptions<HttpResponse<PaginationResult<TData>>, Error>
-  filterField: keyof TData
-  fieldIdentifier: keyof TData
-  render: (data: TData) => string
-  value?: number
-  defaultValue?: number
-  className?: string
-  placeholder?: string
-  error?: string
-  onAdd?: () => void
-  addLabel?: string
-  onChange?: (value?: number) => void
-} & Omit<InputProps, 'type' | 'value' | 'defaultValue' | 'onChange'>
+    id?: number;
+    search?: string;
+  }) => UseQueryOptions<HttpResponse<PaginationResult<TData>>, Error>;
+  filterField: keyof TData;
+  fieldIdentifier: keyof TData;
+  render: (data: TData) => string;
+  value?: number;
+  defaultValue?: number;
+  className?: string;
+  placeholder?: string;
+  error?: string;
+  onAdd?: () => void;
+  addLabel?: string;
+  onChange?: (value?: number) => void;
+} & Omit<InputProps, 'type' | 'value' | 'defaultValue' | 'onChange'>;
 
 type AutocompleteItemProps = {
-  name: string
-  value: number
-  onClick: (value: number, displayValue: string) => void
-}
+  name: string;
+  value: number;
+  onClick: (value: number, displayValue: string) => void;
+};
 
 function AutoCompleteItem({ name, value, onClick }: AutocompleteItemProps) {
   return (
@@ -58,7 +58,7 @@ function AutoCompleteItem({ name, value, onClick }: AutocompleteItemProps) {
     >
       <span className="text-left">{name}</span>
     </Button>
-  )
+  );
 }
 
 export function AutoCompleteWithoutControl<
@@ -75,48 +75,48 @@ export function AutoCompleteWithoutControl<
   disabled = false,
   ...props
 }: AutoCompleteWithoutControlProps<TData>) {
-  const [open, setOpen] = useState<boolean>(false)
-  const [hasTyped, setHasTyped] = useState(false)
-  const [displayValue, setDisplayValue] = useState<string>('')
-  const inputRef = useRef<HTMLInputElement>(null)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const [open, setOpen] = useState<boolean>(false);
+  const [hasTyped, setHasTyped] = useState(false);
+  const [displayValue, setDisplayValue] = useState<string>('');
+  const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleChange = (newValue: number, newDisplayValue: string) => {
-    setDisplayValue(newDisplayValue)
+    setDisplayValue(newDisplayValue);
     if (props.onChange) {
-      props.onChange(newValue)
+      props.onChange(newValue);
     }
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const handleClear = () => {
-    setDisplayValue('')
+    setDisplayValue('');
     if (props.onChange) {
-      props.onChange()
+      props.onChange();
     }
-    inputRef.current?.focus()
-  }
+    inputRef.current?.focus();
+  };
 
   const handleOpen = () => {
     if (!disabled) {
-      setOpen((prev) => !prev)
+      setOpen((prev) => !prev);
     }
-  }
+  };
 
   const queryParams = hasTyped
     ? { search: displayValue }
     : value
       ? { id: value }
-      : {}
+      : {};
 
   const { data, isLoading } = useQuery({
     ...queryOptions(queryParams),
-  })
+  });
 
   const handleFilter = (value: string) => {
-    setDisplayValue(() => value)
-    setHasTyped(true)
-  }
+    setDisplayValue(() => value);
+    setHasTyped(true);
+  };
 
   useEffect(() => {
     if (
@@ -126,23 +126,23 @@ export function AutoCompleteWithoutControl<
       value !== undefined &&
       value !== null
     ) {
-      const firstItem = data?.data?.data?.[0]
+      const firstItem = data?.data?.data?.[0];
       if (firstItem) {
-        setDisplayValue(() => render(firstItem))
+        setDisplayValue(() => render(firstItem));
       } else {
-        setDisplayValue('')
+        setDisplayValue('');
       }
     }
-  }, [data])
+  }, [data]);
 
   useEffect(() => {
     if (!value) {
-      setDisplayValue('')
+      setDisplayValue('');
       if (props.onChange) {
-        props.onChange()
+        props.onChange();
       }
     }
-  }, [value])
+  }, [value]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -152,15 +152,15 @@ export function AutoCompleteWithoutControl<
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
-        setOpen(false)
+        setOpen(false);
       }
-    }
+    };
 
-    document.addEventListener('click', handleClickOutside)
+    document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside)
-    }
-  }, [])
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div>
@@ -223,8 +223,8 @@ export function AutoCompleteWithoutControl<
                     name={addLabel!}
                     value={0}
                     onClick={() => {
-                      setOpen(false)
-                      onAdd()
+                      setOpen(false);
+                      onAdd();
                     }}
                   />
                 )}
@@ -253,7 +253,7 @@ export function AutoCompleteWithoutControl<
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export default function Autocomplete<TData extends Record<string, unknown>>({
@@ -272,7 +272,7 @@ export default function Autocomplete<TData extends Record<string, unknown>>({
                 {...props}
                 error={fieldState.error?.message}
                 onChange={(value) => {
-                  field.onChange(value)
+                  field.onChange(value);
                 }}
               />
               <FormMessage />
@@ -281,5 +281,5 @@ export default function Autocomplete<TData extends Record<string, unknown>>({
         </FormItem>
       )}
     />
-  )
+  );
 }

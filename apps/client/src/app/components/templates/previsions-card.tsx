@@ -1,14 +1,14 @@
-import { Card, CardContent, CardHeader } from '@components/ui/card'
-import { useTranslations } from 'next-intl'
-import { cn } from '../../../lib/utils'
-import PrevisionCAChart from './prevision-chart'
+import { Card, CardContent, CardHeader } from '@components/ui/card';
+import { useTranslations } from 'next-intl';
+import { cn } from '../../../lib/utils';
+import PrevisionCAChart from './prevision-chart';
 
 type PrevisionsCardProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export default function PrevisionsCard({ className }: PrevisionsCardProps) {
-  const t = useTranslations()
+  const t = useTranslations();
 
   return (
     <Card className={cn(className)}>
@@ -17,5 +17,5 @@ export default function PrevisionsCard({ className }: PrevisionsCardProps) {
         <PrevisionCAChart className="mx-3" />
       </CardContent>
     </Card>
-  )
+  );
 }

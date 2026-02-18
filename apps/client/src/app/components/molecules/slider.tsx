@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import React, { useEffect, useState } from 'react'
-import { cn } from '../../../lib/utils'
+import React, { useEffect, useState } from 'react';
+import { cn } from '../../../lib/utils';
 
 type SliderProps = {
-  children: React.ReactNode
-  autoSlide: boolean
-  autoSlideInterval: number
-  className?: string
-}
+  children: React.ReactNode;
+  autoSlide: boolean;
+  autoSlideInterval: number;
+  className?: string;
+};
 
 export default function Slider({
   children,
@@ -16,21 +16,21 @@ export default function Slider({
   autoSlideInterval = 3000,
   className,
 }: SliderProps) {
-  const [current, setCurrent] = useState(0)
-  const length = React.Children.count(children)
-  let timeoutRef: NodeJS.Timeout
+  const [current, setCurrent] = useState(0);
+  const length = React.Children.count(children);
+  let timeoutRef: NodeJS.Timeout;
 
   const nextSlide = () =>
-    setCurrent((prev) => (prev === length - 1 ? 0 : prev + 1))
+    setCurrent((prev) => (prev === length - 1 ? 0 : prev + 1));
 
   useEffect(() => {
-    if (!autoSlide) return
+    if (!autoSlide) return;
     const play = () => {
-      timeoutRef = setTimeout(nextSlide, autoSlideInterval)
-    }
-    play()
-    return () => clearTimeout(timeoutRef)
-  }, [current, autoSlide, autoSlideInterval])
+      timeoutRef = setTimeout(nextSlide, autoSlideInterval);
+    };
+    play();
+    return () => clearTimeout(timeoutRef);
+  }, [current, autoSlide, autoSlideInterval]);
 
   return (
     <div className={cn('relative w-full h-full overflow-hidden', className)}>
@@ -55,5 +55,5 @@ export default function Slider({
         ))}
       </div>
     </div>
-  )
+  );
 }

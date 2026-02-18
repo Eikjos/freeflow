@@ -1,16 +1,16 @@
-import { Card, CardContent } from '@components/ui/card'
-import { Input } from '@components/ui/input'
-import { EditEnterpriseData } from '@repo/shared-types'
-import { useTranslations } from 'next-intl'
-import { useFormContext } from 'react-hook-form'
+import { Card, CardContent } from '@components/ui/card';
+import { Input } from '@components/ui/input';
+import { EditEnterpriseData } from '@repo/shared-types';
+import { useTranslations } from 'next-intl';
+import { useFormContext } from 'react-hook-form';
 
 type InvoiceInfoFormProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export default function InvoiceInfoForm({ className }: InvoiceInfoFormProps) {
-  const form = useFormContext<EditEnterpriseData>()
-  const t = useTranslations()
+  const form = useFormContext<EditEnterpriseData>();
+  const t = useTranslations();
   return (
     <Card className={className}>
       <CardContent className="p-5">
@@ -31,5 +31,5 @@ export default function InvoiceInfoForm({ className }: InvoiceInfoFormProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

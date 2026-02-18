@@ -1,34 +1,34 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 export type CreateTaskData = {
-  name: string
-  description?: string
-  priority: 'HIGH' | 'MEDIUM' | 'LOW'
-  files?: File[]
-  mediaIds?: number[]
-  estimation?: number
-}
+  name: string;
+  description?: string;
+  priority: 'HIGH' | 'MEDIUM' | 'LOW';
+  files?: File[];
+  mediaIds?: number[];
+  estimation?: number;
+};
 
 export type MoveTaskData = {
-  toPosition: number
-}
+  toPosition: number;
+};
 
 export type TaskData = {
-  id: number
-  name: string
-  columnId: number
-  description: string
-  estimation?: number
-  priority: 'HIGH' | 'MEDIUM' | 'LOW'
-  index: number
-  mediaIds: number[]
-}
+  id: number;
+  name: string;
+  columnId: number;
+  description: string;
+  estimation?: number;
+  priority: 'HIGH' | 'MEDIUM' | 'LOW';
+  index: number;
+  mediaIds: number[];
+};
 
 export type TaskFilter = {
-  id?: number
-  name?: string
-  customerId?: number
-}
+  id?: number;
+  name?: string;
+  customerId?: number;
+};
 
 export const CreateTaskValidation = z.object({
   name: z.string().min(1, { message: 'Le nom est requis' }),
@@ -37,4 +37,4 @@ export const CreateTaskValidation = z.object({
     message: 'La valeur est invalide',
   }),
   estimation: z.coerce.number().gte(0, 'Must be 0 and above').optional(),
-})
+});

@@ -1,19 +1,19 @@
-'use client'
+'use client';
 
-import { Card, CardContent, CardHeader } from '@components/ui/card'
-import Loading from '@components/ui/loading'
-import { useQuery } from '@tanstack/react-query'
-import { useTranslations } from 'next-intl'
-import { getUrgentTasksQueryOptions } from '../../../lib/api/tasks'
-import TaskItemCard from './task-item-card'
+import { Card, CardContent, CardHeader } from '@components/ui/card';
+import Loading from '@components/ui/loading';
+import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { getUrgentTasksQueryOptions } from '../../../lib/api/tasks';
+import TaskItemCard from './task-item-card';
 
 type UrgentTaskCardProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export default function UrgentTaskCard({ className }: UrgentTaskCardProps) {
-  const { data, isLoading } = useQuery(getUrgentTasksQueryOptions())
-  const t = useTranslations()
+  const { data, isLoading } = useQuery(getUrgentTasksQueryOptions());
+  const t = useTranslations();
   return (
     <Card className={className}>
       <CardContent>
@@ -42,5 +42,5 @@ export default function UrgentTaskCard({ className }: UrgentTaskCardProps) {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -13,17 +13,17 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
-} from '@nestjs/common'
-import { FileInterceptor } from '@nestjs/platform-express'
-import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger'
-import CreateColumnDto from 'dtos/columns/column-create.dto'
-import ReorderColumnsDto from 'dtos/customers/reorder-colums.dto'
-import ProjectCreateDto from 'dtos/projects/project-create.dto'
-import { Request } from 'express'
-import { AccessTokenGuard } from 'guards/access-token.guard'
-import { CustomerGuard } from 'guards/customer.guard'
-import { EnterpriseGuard } from 'guards/enterprise.guard'
-import ProjectService from './project.service'
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import CreateColumnDto from 'dtos/columns/column-create.dto';
+import ReorderColumnsDto from 'dtos/customers/reorder-colums.dto';
+import ProjectCreateDto from 'dtos/projects/project-create.dto';
+import { Request } from 'express';
+import { AccessTokenGuard } from 'guards/access-token.guard';
+import { CustomerGuard } from 'guards/customer.guard';
+import { EnterpriseGuard } from 'guards/enterprise.guard';
+import ProjectService from './project.service';
 
 @Controller('projects')
 @ApiBearerAuth()
@@ -49,14 +49,14 @@ export default class ProjectController {
       body,
       parseInt(req.user['enterpriseId']),
       media,
-    )
+    );
   }
 
   @UseGuards(AccessTokenGuard)
   @Get('count')
   count(@Req() req: Request) {
-    const enterpriseId = parseInt(req.user['enterpriseId'])
-    return this.projectService.count(enterpriseId)
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return this.projectService.count(enterpriseId);
   }
 
   @UseGuards(CustomerGuard, EnterpriseGuard)
@@ -72,7 +72,7 @@ export default class ProjectController {
       model,
       parseInt(req.user['enterpriseId']) || undefined,
       parseInt(req.user['customerId']) || undefined,
-    )
+    );
   }
 
   @HttpCode(200)
@@ -82,15 +82,15 @@ export default class ProjectController {
     @Param('id', ParseIntPipe) id: number,
     @Body() model: ReorderColumnsDto,
   ) {
-    return this.projectService.reorderColumns(id, model.orderedColumnIds)
+    return this.projectService.reorderColumns(id, model.orderedColumnIds);
   }
 
   @UseGuards(EnterpriseGuard, CustomerGuard)
   @Get(':id')
   findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
-    const enterpriseId = req.user['enterpriseId']
-    const customerId = req.user['customerId']
-    return this.projectService.findById(id, enterpriseId, customerId)
+    const enterpriseId = req.user['enterpriseId'];
+    const customerId = req.user['customerId'];
+    return this.projectService.findById(id, enterpriseId, customerId);
   }
 
   @UseGuards(EnterpriseGuard, CustomerGuard)
@@ -103,7 +103,7 @@ export default class ProjectController {
       id,
       req.user['enterpriseId'],
       req.user['customerId'],
-    )
+    );
   }
 
   @UseGuards(EnterpriseGuard, CustomerGuard)
@@ -120,20 +120,20 @@ export default class ProjectController {
     @UploadedFile()
     media?: Express.Multer.File,
   ) {
-    const enterpriseId = parseInt(req.user['enterpriseId'])
-    const customerId = parseInt(req.user['customerId'])
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    const customerId = parseInt(req.user['customerId']);
     return this.projectService.update(
       id,
       model,
       enterpriseId,
       customerId,
       media,
-    )
+    );
   }
 
   @UseGuards(EnterpriseGuard)
   @Delete(':id')
   delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
-    return this.projectService.delete(id, parseInt(req.user['enterpriseId']))
+    return this.projectService.delete(id, parseInt(req.user['enterpriseId']));
   }
 }

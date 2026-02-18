@@ -1,15 +1,15 @@
-'use client'
+'use client';
 
-import { useCallback } from 'react'
+import { useCallback } from 'react';
 
 type StarButtonProps = {
-  readOnly: boolean
-  displayValue: number
-  index: number
-  size: number
-  setHoverValue: (value: number) => void
-  handleSet: (value: number) => void
-}
+  readOnly: boolean;
+  displayValue: number;
+  index: number;
+  size: number;
+  setHoverValue: (value: number) => void;
+  handleSet: (value: number) => void;
+};
 
 export default function StarButton({
   readOnly,
@@ -20,39 +20,39 @@ export default function StarButton({
   handleSet,
 }: StarButtonProps) {
   // how much of this star is filled (0 to 100)
-  const rawFill = Math.max(0, Math.min(1, displayValue - index))
-  const fillPercent = Math.round(rawFill * 100)
+  const rawFill = Math.max(0, Math.min(1, displayValue - index));
+  const fillPercent = Math.round(rawFill * 100);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (readOnly) return
-    const target = e.currentTarget as HTMLButtonElement
-    const rect = target.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const demiRectWidth = rect.width / 2
-    let selected = 0
+    if (readOnly) return;
+    const target = e.currentTarget as HTMLButtonElement;
+    const rect = target.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const demiRectWidth = rect.width / 2;
+    let selected = 0;
     if (x >= demiRectWidth) {
-      selected = index + 1
+      selected = index + 1;
     } else {
-      selected = index + 0.5
+      selected = index + 0.5;
     }
-    setHoverValue(selected)
-  }, [])
+    setHoverValue(selected);
+  }, []);
 
   const handleClick = (e: React.MouseEvent) => {
-    if (readOnly) return
+    if (readOnly) return;
     // use hoverValue if present
-    const target = e.currentTarget as HTMLButtonElement
-    const rect = target.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const demiRectWidth = rect.width / 2
-    let selected = 0
+    const target = e.currentTarget as HTMLButtonElement;
+    const rect = target.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const demiRectWidth = rect.width / 2;
+    let selected = 0;
     if (x >= demiRectWidth) {
-      selected = index + 1
+      selected = index + 1;
     } else {
-      selected = index + 0.5
+      selected = index + 0.5;
     }
-    handleSet(selected)
-  }
+    handleSet(selected);
+  };
 
   return (
     <button
@@ -65,7 +65,7 @@ export default function StarButton({
     >
       <StarIcon size={size} fillPercent={fillPercent} id={`star-${index}`} />
     </button>
-  )
+  );
 }
 
 function StarIcon({
@@ -73,11 +73,11 @@ function StarIcon({
   fillPercent = 100,
   id,
 }: {
-  size?: number
-  fillPercent?: number
-  id: string
+  size?: number;
+  fillPercent?: number;
+  id: string;
 }) {
-  const viewBox = '0 0 24 24'
+  const viewBox = '0 0 24 24';
   return (
     <svg
       width={size}
@@ -120,5 +120,5 @@ function StarIcon({
         strokeWidth="0.6"
       />
     </svg>
-  )
+  );
 }

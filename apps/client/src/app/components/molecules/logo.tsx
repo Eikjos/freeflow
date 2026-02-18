@@ -1,12 +1,12 @@
-import { Url } from 'next/dist/shared/lib/router/router'
-import Image from 'next/image'
-import Link from 'next/link'
-import { cn } from '../../../lib/utils'
+import { Url } from 'next/dist/shared/lib/router/router';
+import Image from 'next/image';
+import Link from 'next/link';
+import { cn } from '../../../lib/utils';
 
 type LogoProps = {
-  className?: string
-  href?: Url
-}
+  className?: string;
+  href?: Url;
+};
 
 export default function Logo({ className, href }: LogoProps) {
   return (
@@ -25,5 +25,5 @@ export default function Logo({ className, href }: LogoProps) {
       />
       <span className="font-amica text-5xl">Freeflow</span>
     </Link>
-  )
+  );
 }

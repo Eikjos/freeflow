@@ -10,4 +10,4 @@ export const formatPrice = (
     maximumFractionDigits: 2,
   })
     .format(value)
-    .replace(/\u202F/g, ' ')
+    .replace(/\u202F/g, ' ');

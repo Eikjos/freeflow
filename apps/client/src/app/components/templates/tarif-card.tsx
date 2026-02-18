@@ -1,21 +1,21 @@
-import { Button } from '@components/ui/button'
+import { Button } from '@components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-} from '@components/ui/card'
-import { ArrowRight, Check } from 'lucide-react'
-import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
-import { formatPrice } from '../../../lib/utils'
+} from '@components/ui/card';
+import { ArrowRight, Check } from 'lucide-react';
+import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
+import { formatPrice } from '../../../lib/utils';
 
 type TarifCardProps = {
-  title: string
-  description: string
-  price: number
-  maxUser: number
-}
+  title: string;
+  description: string;
+  price: number;
+  maxUser: number;
+};
 
 export default async function TarifCard({
   price,
@@ -23,7 +23,7 @@ export default async function TarifCard({
   description,
   maxUser,
 }: TarifCardProps) {
-  const t = await getTranslations()
+  const t = await getTranslations();
   return (
     <Card className="hover:shadow-2xl hover:shadow-secondary">
       <CardContent>
@@ -78,5 +78,5 @@ export default async function TarifCard({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

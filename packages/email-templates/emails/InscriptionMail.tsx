@@ -1,11 +1,11 @@
-import { Button, Text } from '@react-email/components'
-import Footer from './components/Footer'
-import Header from './components/Header'
-import TailwindConfig from './components/TailwindConfig'
+import { Button, Text } from '@react-email/components';
+import Footer from './components/Footer';
+import Header from './components/Header';
+import TailwindConfig from './components/TailwindConfig';
 
 export type InscriptionMailProps = {
-  clientUrl: string
-}
+  clientUrl: string;
+};
 
 export function InscriptionMail({ clientUrl }: InscriptionMailProps) {
   return (
@@ -52,5 +52,5 @@ export function InscriptionMail({ clientUrl }: InscriptionMailProps) {
       </div>
       <Footer />
     </TailwindConfig>
-  )
+  );
 }

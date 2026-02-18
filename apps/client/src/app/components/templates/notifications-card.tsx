@@ -1,15 +1,15 @@
-'use client'
+'use client';
 
-import { Card, CardContent, CardHeader } from '@components/ui/card'
-import { useTranslations } from 'next-intl'
-import NotificationItemCard from './notification-item-card'
+import { Card, CardContent, CardHeader } from '@components/ui/card';
+import { useTranslations } from 'next-intl';
+import NotificationItemCard from './notification-item-card';
 
 type NotificationCardProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export default function NotificationCard({ className }: NotificationCardProps) {
-  const t = useTranslations()
+  const t = useTranslations();
 
   return (
     <Card className={className}>
@@ -23,5 +23,5 @@ export default function NotificationCard({ className }: NotificationCardProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

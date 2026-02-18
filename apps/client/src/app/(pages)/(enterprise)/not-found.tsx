@@ -1,5 +1,5 @@
-import { Button } from '@components/ui/button'
-import Link from 'next/link'
+import { Button } from '@components/ui/button';
+import Link from 'next/link';
 
 export default function NotFoundEnterprise() {
   return (
@@ -13,5 +13,5 @@ export default function NotFoundEnterprise() {
         <Link href="/">Retour à l'accueil</Link>
       </Button>
     </div>
-  )
+  );
 }

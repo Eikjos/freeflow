@@ -1,15 +1,15 @@
-'use client'
+'use client';
 
-import * as CheckboxPrimitive from '@radix-ui/react-checkbox'
-import { Check } from 'lucide-react'
-import * as React from 'react'
+import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
+import { Check } from 'lucide-react';
+import * as React from 'react';
 
-import { cn } from '../../../lib/utils'
-import { Label } from './label'
+import { cn } from '../../../lib/utils';
+import { Label } from './label';
 
 type CheckboxProps = {
-  label?: string
-} & React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
+  label?: string;
+} & React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>;
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
@@ -32,7 +32,7 @@ const Checkbox = React.forwardRef<
     </CheckboxPrimitive.Root>
     {props.label && <Label>{props.label}</Label>}
   </div>
-))
-Checkbox.displayName = CheckboxPrimitive.Root.displayName
+));
+Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
-export { Checkbox }
+export { Checkbox };

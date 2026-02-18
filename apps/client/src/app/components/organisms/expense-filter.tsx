@@ -1,55 +1,55 @@
-'use client'
+'use client';
 
-import { Button } from '@components/ui/button'
-import { Card, CardContent } from '@components/ui/card'
-import { DateInput } from '@components/ui/date-input'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import { Select } from '@components/ui/select'
-import { ExpenseFilterData } from '@repo/shared-types'
-import { useQuery } from '@tanstack/react-query'
-import clsx from 'clsx'
-import { useTranslations } from 'next-intl'
-import { useForm } from 'react-hook-form'
-import { fetchExpenseCategories } from '../../../lib/api/expense-categories'
+import { Button } from '@components/ui/button';
+import { Card, CardContent } from '@components/ui/card';
+import { DateInput } from '@components/ui/date-input';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { Select } from '@components/ui/select';
+import { ExpenseFilterData } from '@repo/shared-types';
+import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
+import { fetchExpenseCategories } from '../../../lib/api/expense-categories';
 
 type ExpenseFilterProps = {
-  className?: string
-  onChangeFilter: (filter: ExpenseFilterData | undefined) => void
-}
+  className?: string;
+  onChangeFilter: (filter: ExpenseFilterData | undefined) => void;
+};
 
 export default function ExpenseFilter({
   className,
   onChangeFilter,
 }: ExpenseFilterProps) {
-  const t = useTranslations()
+  const t = useTranslations();
   const form = useForm<ExpenseFilterData>({
     defaultValues: {
       search: '',
       category: undefined,
     },
-  })
-  const startDate = form.watch('startDate')
-  const endDate = form.watch('endDate')
-  const amountMin = form.watch('amountMin')
-  const amountMax = form.watch('amountMax')
+  });
+  const startDate = form.watch('startDate');
+  const endDate = form.watch('endDate');
+  const amountMin = form.watch('amountMin');
+  const amountMax = form.watch('amountMax');
   const { data } = useQuery({
     queryFn: () => fetchExpenseCategories(),
     queryKey: ['expense', 'category'],
-  })
+  });
 
   const onSubmit = (filter: ExpenseFilterData) => {
-    onChangeFilter(filter)
-  }
+    onChangeFilter(filter);
+  };
 
   const resetForm = () => {
-    onChangeFilter(undefined)
-    form.reset()
-  }
+    onChangeFilter(undefined);
+    form.reset();
+  };
 
   const handleSubmitForm = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   return (
     <Card className={clsx('pt-5 shadow-sm bg-slate-100/45', className)}>
@@ -123,5 +123,5 @@ export default function ExpenseFilter({
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

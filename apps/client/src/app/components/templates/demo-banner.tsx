@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@components/ui/card'
+import { Card, CardContent } from '@components/ui/card';
 
 export default function DemoBanner() {
   return (
@@ -21,5 +21,5 @@ export default function DemoBanner() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

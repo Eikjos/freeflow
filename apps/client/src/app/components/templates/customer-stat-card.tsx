@@ -1,22 +1,22 @@
-'use client'
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card'
-import Loading from '@components/ui/loading'
-import { Tabs, TabsList, TabsTrigger } from '@components/ui/tabs'
-import { useQuery } from '@tanstack/react-query'
-import { useTranslations } from 'next-intl'
-import { useState } from 'react'
-import { getStatsQueryOptions } from '../../../lib/api/customers'
-import CustomerChart from './customer-chart'
+import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
+import Loading from '@components/ui/loading';
+import { Tabs, TabsList, TabsTrigger } from '@components/ui/tabs';
+import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { getStatsQueryOptions } from '../../../lib/api/customers';
+import CustomerChart from './customer-chart';
 
 type CustomerStatProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export default function CustomerStatCard({ className }: CustomerStatProps) {
-  const t = useTranslations()
-  const [month, setMonth] = useState(6)
-  const { data, isLoading } = useQuery(getStatsQueryOptions(month))
+  const t = useTranslations();
+  const [month, setMonth] = useState(6);
+  const { data, isLoading } = useQuery(getStatsQueryOptions(month));
 
   return (
     <Card className={className}>
@@ -46,5 +46,5 @@ export default function CustomerStatCard({ className }: CustomerStatProps) {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

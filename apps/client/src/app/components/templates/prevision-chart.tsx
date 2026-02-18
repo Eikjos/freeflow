@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import Loading from '@components/ui/loading'
-import { useQuery } from '@tanstack/react-query'
-import { useTranslations } from 'next-intl'
+import Loading from '@components/ui/loading';
+import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import {
   CartesianGrid,
   DotProps,
@@ -13,24 +13,24 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts'
-import { getPrevisionsQueryOptions } from '../../../lib/api/sales'
-import { cn, stringToDateYear } from '../../../lib/utils'
+} from 'recharts';
+import { getPrevisionsQueryOptions } from '../../../lib/api/sales';
+import { cn, stringToDateYear } from '../../../lib/utils';
 
 type PrevisionCAChartProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
-  const { data, isLoading } = useQuery(getPrevisionsQueryOptions())
-  const t = useTranslations()
+  const { data, isLoading } = useQuery(getPrevisionsQueryOptions());
+  const t = useTranslations();
 
   if (isLoading) {
     return (
       <div className="w-full h-[300px] flex justify-center items-center">
         <Loading />
       </div>
-    )
+    );
   }
 
   return (
@@ -51,12 +51,12 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
           <YAxis tickFormatter={(v) => `${v / 1000}k €`} />
           <Tooltip
             content={({ active, payload, label }) => {
-              const lab: string = label
+              const lab: string = label;
               if (active && payload && payload.length) {
-                const salePoint = payload.find((p) => p.dataKey === 'sale')
+                const salePoint = payload.find((p) => p.dataKey === 'sale');
                 const previsionPoint = payload.find(
                   (p) => p.dataKey === 'prevision',
-                )
+                );
 
                 return (
                   <div
@@ -80,9 +80,9 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
                         </div>
                       )}
                   </div>
-                )
+                );
               }
-              return null
+              return null;
             }}
           />
           <Legend />
@@ -99,10 +99,10 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
             name={t('sales.prevision')}
             dot={(
               props: DotProps & {
-                payload: { sale: number; prevision: number }
+                payload: { sale: number; prevision: number };
               },
             ) => {
-              const { cx, cy, payload } = props
+              const { cx, cy, payload } = props;
               // n’affiche le dot que si c’est un point de prévision
               if (
                 payload &&
@@ -118,9 +118,9 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
                     fill="#00C49F"
                     stroke="#00C49F"
                   />
-                )
+                );
               }
-              return <g key={Math.random()} /> // sinon aucun point
+              return <g key={Math.random()} />; // sinon aucun point
             }}
             activeDot={false}
             connectNulls={false}
@@ -139,5 +139,5 @@ export default function PrevisionCAChart({ className }: PrevisionCAChartProps) {
         </LineChart>
       </ResponsiveContainer>
     </div>
-  )
+  );
 }

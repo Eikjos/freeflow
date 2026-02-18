@@ -1,8 +1,8 @@
-import { getTranslations } from 'next-intl/server'
-import TarifCard from './tarif-card'
+import { getTranslations } from 'next-intl/server';
+import TarifCard from './tarif-card';
 
 export default async function TarifsSection() {
-  const t = await getTranslations()
+  const t = await getTranslations();
   return (
     <div className="my-10" id="tarifs">
       <h2 className="text-2xl text-center text-secondary">
@@ -36,5 +36,5 @@ export default async function TarifsSection() {
         />
       </div>
     </div>
-  )
+  );
 }

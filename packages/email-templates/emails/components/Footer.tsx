@@ -9,5 +9,5 @@ export default function Footer() {
         <span className="text-sm ml-2">2025</span>
       </div>
     </div>
-  )
+  );
 }

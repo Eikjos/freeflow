@@ -1,11 +1,11 @@
-import InvoiceLine from '@components/molecules/invoice-line'
-import { InvoiceLineCreateData } from '@repo/shared-types'
+import InvoiceLine from '@components/molecules/invoice-line';
+import { InvoiceLineCreateData } from '@repo/shared-types';
 
 type InvoiceLineListProps = {
-  invoices: InvoiceLineCreateData[]
-  handleChange: (values: InvoiceLineCreateData[]) => void
-  canDelete?: boolean
-}
+  invoices: InvoiceLineCreateData[];
+  handleChange: (values: InvoiceLineCreateData[]) => void;
+  canDelete?: boolean;
+};
 
 export default function InvoiceLineList({
   invoices,
@@ -13,14 +13,14 @@ export default function InvoiceLineList({
   canDelete = true,
 }: InvoiceLineListProps) {
   const handleChangeLine = (value: InvoiceLineCreateData) => {
-    const index = invoices.findIndex((e) => e.name === value.name)
-    invoices[index] = value
-    handleChange(invoices)
-  }
+    const index = invoices.findIndex((e) => e.name === value.name);
+    invoices[index] = value;
+    handleChange(invoices);
+  };
 
   const handleDeleteLine = (value: InvoiceLineCreateData) => {
-    handleChange(invoices.filter((e) => e.name !== value.name))
-  }
+    handleChange(invoices.filter((e) => e.name !== value.name));
+  };
 
   return (
     <div className="w-full py-2 px-4 rounded-md bg-gray-200/20 mt-4">
@@ -40,5 +40,5 @@ export default function InvoiceLineList({
         </div>
       ))}
     </div>
-  )
+  );
 }

@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import { Eye, EyeOff } from 'lucide-react'
-import { forwardRef, useState } from 'react'
-import { cn } from '../../../lib/utils'
+import { Eye, EyeOff } from 'lucide-react';
+import { forwardRef, useState } from 'react';
+import { cn } from '../../../lib/utils';
 import {
   FormControl,
   FormDescription,
@@ -10,18 +10,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './form'
-import { InputProps } from './input'
+} from './form';
+import { InputProps } from './input';
 
-type SecretInputProps = Omit<InputProps, 'type'>
+type SecretInputProps = Omit<InputProps, 'type'>;
 
 const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>(
   ({ className, ...props }, ref) => {
-    const [visible, setVisible] = useState(false)
+    const [visible, setVisible] = useState(false);
 
     const changeVisibility = () => {
-      setVisible((prev) => !prev)
-    }
+      setVisible((prev) => !prev);
+    };
 
     return (
       <FormField
@@ -59,9 +59,9 @@ const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>(
           </FormItem>
         )}
       ></FormField>
-    )
+    );
   },
-)
-SecretInput.displayName = 'SecretInput'
+);
+SecretInput.displayName = 'SecretInput';
 
-export { SecretInput }
+export { SecretInput };

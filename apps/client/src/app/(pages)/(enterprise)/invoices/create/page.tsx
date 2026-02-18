@@ -1,71 +1,71 @@
-'use client'
+'use client';
 
-import NotFoundEnterprise from '(pages)/(enterprise)/not-found'
-import Autocomplete from '@components/molecules/autocomplete'
-import CreateInvoiceLineModal from '@components/organisms/create-invoice-line-dialog'
-import InvoiceLineList from '@components/organisms/invoice-line-list'
-import { Button } from '@components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card'
-import { Checkbox } from '@components/ui/checkbox'
-import { DateInput } from '@components/ui/date-input'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import Loading from '@components/ui/loading'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { CheckedState } from '@radix-ui/react-checkbox'
-import { PDFViewer, pdf } from '@react-pdf/renderer'
-import { InvoiceTemplate } from '@repo/pdf-templates'
+import NotFoundEnterprise from '(pages)/(enterprise)/not-found';
+import Autocomplete from '@components/molecules/autocomplete';
+import CreateInvoiceLineModal from '@components/organisms/create-invoice-line-dialog';
+import InvoiceLineList from '@components/organisms/invoice-line-list';
+import { Button } from '@components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
+import { Checkbox } from '@components/ui/checkbox';
+import { DateInput } from '@components/ui/date-input';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import Loading from '@components/ui/loading';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CheckedState } from '@radix-ui/react-checkbox';
+import { PDFViewer, pdf } from '@react-pdf/renderer';
+import { InvoiceTemplate } from '@repo/pdf-templates';
 import {
   InvoiceCreateData,
   InvoiceCreateValidation,
   InvoiceLineCreateData,
-} from '@repo/shared-types'
-import { useQuery } from '@tanstack/react-query'
-import { createInvoice } from 'actions/invoice'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { useEnterprise } from 'providers/enterprise-provider'
-import { ChangeEvent, useEffect, useReducer, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+} from '@repo/shared-types';
+import { useQuery } from '@tanstack/react-query';
+import { createInvoice } from 'actions/invoice';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useEnterprise } from 'providers/enterprise-provider';
+import { ChangeEvent, useEffect, useReducer, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import {
   getAllCustomersQueryOptions,
   getCustomerByIdOptions,
-} from '../../../../../lib/api/customers'
-import { getInformationForInvoiceQueryOptions } from '../../../../../lib/api/enterprise'
-import { getInvoiceByIdQueryOptions } from '../../../../../lib/api/invoices'
+} from '../../../../../lib/api/customers';
+import { getInformationForInvoiceQueryOptions } from '../../../../../lib/api/enterprise';
+import { getInvoiceByIdQueryOptions } from '../../../../../lib/api/invoices';
 import {
   getAllTasksQueryOptions,
   getTasksById,
-} from '../../../../../lib/api/tasks'
-import getQueryClient from '../../../../../lib/query-client'
+} from '../../../../../lib/api/tasks';
+import getQueryClient from '../../../../../lib/query-client';
 
 export default function CreateInvoicesPage() {
-  const queryClient = getQueryClient()
-  const t = useTranslations()
-  const searchParams = useSearchParams()
-  const devisId = searchParams.get('devisId')
-  const { enterprise } = useEnterprise()
+  const queryClient = getQueryClient();
+  const t = useTranslations();
+  const searchParams = useSearchParams();
+  const devisId = searchParams.get('devisId');
+  const { enterprise } = useEnterprise();
   if (!enterprise) {
-    return <NotFoundEnterprise />
+    return <NotFoundEnterprise />;
   }
-  const router = useRouter()
-  const [maskNameOnInvoice, setMaskNameOnInvoice] = useState<boolean>(true)
-  const [update, forceUpdate] = useReducer((x: number) => x + 1, 0)
+  const router = useRouter();
+  const [maskNameOnInvoice, setMaskNameOnInvoice] = useState<boolean>(true);
+  const [update, forceUpdate] = useReducer((x: number) => x + 1, 0);
   const [autocompleteKey, setAutocompleteKey] = useReducer(
     (x: number) => x + 1,
     0,
-  )
-  const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false)
+  );
+  const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
   const { data: DevisData, isLoading: isLoadingDevis } = useQuery({
     ...getInvoiceByIdQueryOptions(parseInt(devisId ?? '')),
     enabled:
       devisId !== undefined && !isNaN(Number(devisId)) && devisId !== null,
-  })
+  });
   const { data, isSuccess, isLoading } = useQuery({
     ...getInformationForInvoiceQueryOptions(enterprise.id),
     enabled: !!enterprise,
-  })
+  });
   const form = useForm<InvoiceCreateData>({
     resolver: zodResolver(InvoiceCreateValidation),
     defaultValues: {
@@ -77,23 +77,23 @@ export default function CreateInvoicesPage() {
       invoiceLines: [],
       excludeTva: false,
     },
-  })
-  const customerId = form.watch('customerId')
+  });
+  const customerId = form.watch('customerId');
   const customer = useQuery({
     ...getCustomerByIdOptions(customerId ? customerId.toString() : ''),
     enabled: customerId !== undefined,
-  })
+  });
 
   useEffect(() => {
     if (data?.data?.lastNumber !== undefined && isSuccess) {
-      form.setValue('number', (data.data.lastNumber ?? 1).toString())
+      form.setValue('number', (data.data.lastNumber ?? 1).toString());
     }
-    forceUpdate()
-  }, [data?.data])
+    forceUpdate();
+  }, [data?.data]);
 
   useEffect(() => {
     if (DevisData?.ok && DevisData.data) {
-      form.setValue('customerId', DevisData.data.customer.id)
+      form.setValue('customerId', DevisData.data.customer.id);
       form.setValue(
         'invoiceLines',
         DevisData.data.invoiceLines.map(
@@ -104,28 +104,28 @@ export default function CreateInvoicesPage() {
               unitPrice: e.unitPrice,
             }) as InvoiceLineCreateData,
         ),
-      )
-      form.setValue('title', DevisData.data.title)
-      form.setValue('excludeTva', DevisData.data.excludeTva)
-      forceUpdate()
+      );
+      form.setValue('title', DevisData.data.title);
+      form.setValue('excludeTva', DevisData.data.excludeTva);
+      forceUpdate();
     }
-  }, [DevisData?.data])
+  }, [DevisData?.data]);
 
   const appendInvoiceLine = (value: InvoiceLineCreateData) => {
-    const invoiceLinesOld = form.getValues().invoiceLines
-    form.setValue('invoiceLines', [...invoiceLinesOld, value])
-    forceUpdate()
-  }
+    const invoiceLinesOld = form.getValues().invoiceLines;
+    form.setValue('invoiceLines', [...invoiceLinesOld, value]);
+    forceUpdate();
+  };
 
   const handleChangeInvoiceLine = (values: InvoiceLineCreateData[]) => {
-    form.setValue('invoiceLines', values)
-    forceUpdate()
-  }
+    form.setValue('invoiceLines', values);
+    forceUpdate();
+  };
 
   const handleChangeTask = async (value: number | undefined) => {
     if (value !== undefined) {
-      const invoiceLine = await getTasksById(value)
-      const invoiceLinesOld = form.getValues().invoiceLines
+      const invoiceLine = await getTasksById(value);
+      const invoiceLinesOld = form.getValues().invoiceLines;
       if (
         invoiceLine.ok &&
         !invoiceLinesOld.some((e) => e.name === invoiceLine.data?.name) &&
@@ -134,30 +134,30 @@ export default function CreateInvoicesPage() {
         form.setValue('invoiceLines', [
           ...invoiceLinesOld,
           { name: invoiceLine.data.name, quantity: 1, unitPrice: 0.0 },
-        ])
+        ]);
       }
 
-      setAutocompleteKey()
+      setAutocompleteKey();
     }
-  }
+  };
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   const handleChangeCustomer = (event: ChangeEvent<HTMLInputElement>) => {
-    void handleChangeTask(parseInt(event.target.value))
-  }
+    void handleChangeTask(parseInt(event.target.value));
+  };
 
   const handleMashNameChange = (checked: CheckedState) => {
-    setMaskNameOnInvoice(checked ? true : false)
-    forceUpdate()
-  }
+    setMaskNameOnInvoice(checked ? true : false);
+    forceUpdate();
+  };
 
   const handleExcludeTvaChange = (checked: CheckedState) => {
-    form.setValue('excludeTva', checked ? true : false)
-    forceUpdate()
-  }
+    form.setValue('excludeTva', checked ? true : false);
+    forceUpdate();
+  };
 
   const onSubmit = async (values: InvoiceCreateData) => {
     const invoiceBlob = await pdf(
@@ -174,7 +174,7 @@ export default function CreateInvoicesPage() {
         devisDate={DevisData?.data?.date}
         apiUrl={process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? ''}
       />,
-    ).toBlob()
+    ).toBlob();
 
     createInvoice(
       {
@@ -194,24 +194,24 @@ export default function CreateInvoicesPage() {
     )
       .then((res) => {
         if (res === null) {
-          toast.error('Il y a eu une erreur.')
+          toast.error('Il y a eu une erreur.');
         } else {
-          toast.success(t('invoice.success.create'))
-          void queryClient.invalidateQueries({ queryKey: ['sales'] })
-          router.push('/invoices')
+          toast.success(t('invoice.success.create'));
+          void queryClient.invalidateQueries({ queryKey: ['sales'] });
+          router.push('/invoices');
         }
       })
       .catch((err: Error) => {
-        toast.error(err.message)
-      })
-  }
+        toast.error(err.message);
+      });
+  };
 
   if (isLoading || isLoadingDevis) {
     return (
       <div className="w-full h-full flex-row flex justify-center items-center">
         <Loading />
       </div>
-    )
+    );
   }
 
   return (
@@ -344,5 +344,5 @@ export default function CreateInvoicesPage() {
         />
       </PDFViewer>
     </div>
-  )
+  );
 }

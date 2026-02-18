@@ -1,32 +1,32 @@
-import { Button } from '@components/ui/button'
-import { Editor, uploadAndReplace } from '@components/ui/editor'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import InputFile from '@components/ui/input-file'
-import { Select } from '@components/ui/select'
+import { Button } from '@components/ui/button';
+import { Editor, uploadAndReplace } from '@components/ui/editor';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import InputFile from '@components/ui/input-file';
+import { Select } from '@components/ui/select';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '@components/ui/sheet'
-import { zodResolver } from '@hookform/resolvers/zod'
+} from '@components/ui/sheet';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CreateTaskData,
   CreateTaskValidation,
   TaskData,
-} from '@repo/shared-types'
-import { createTask } from 'actions/tasks'
-import { useTranslations } from 'next-intl'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+} from '@repo/shared-types';
+import { createTask } from 'actions/tasks';
+import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 type TaskCreateSheetProps = {
-  open: boolean
-  columnId: number
-  onClose: () => void
-  onAddTask: (task: TaskData) => void
-}
+  open: boolean;
+  columnId: number;
+  onClose: () => void;
+  onAddTask: (task: TaskData) => void;
+};
 
 export default function TaksCreateSheet({
   open,
@@ -34,7 +34,7 @@ export default function TaksCreateSheet({
   columnId,
   onAddTask,
 }: TaskCreateSheetProps) {
-  const t = useTranslations()
+  const t = useTranslations();
   const form = useForm<CreateTaskData>({
     resolver: zodResolver(CreateTaskValidation),
     defaultValues: {
@@ -43,39 +43,39 @@ export default function TaksCreateSheet({
       description: '',
       files: [],
     },
-  })
+  });
   const onSubmit = async (values: CreateTaskData) => {
     try {
       if (values.description) {
-        const newValue = await uploadAndReplace(values.description)
+        const newValue = await uploadAndReplace(values.description);
         if (newValue) {
-          values.description = newValue.value
-          values.mediaIds = newValue.images
+          values.description = newValue.value;
+          values.mediaIds = newValue.images;
         }
       }
     } catch (e) {
       if (e instanceof Error) {
-        toast.error('uploaded ' + e.message)
+        toast.error('uploaded ' + e.message);
       }
     }
     createTask(columnId, values, form.getValues('files'))
       .then((res) => {
         if (res) {
-          onAddTask(res)
+          onAddTask(res);
         }
       })
       .then(() => form.reset())
       .catch((e: Error) => toast.error(e.message))
-      .finally(() => onClose())
-  }
+      .finally(() => onClose());
+  };
 
   const handleUploadFile = (files: File[]) => {
-    form.setValue('files', files, { shouldDirty: true, shouldValidate: true })
-  }
+    form.setValue('files', files, { shouldDirty: true, shouldValidate: true });
+  };
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
@@ -131,5 +131,5 @@ export default function TaksCreateSheet({
         </Form>
       </SheetContent>
     </Sheet>
-  )
+  );
 }

@@ -1,20 +1,20 @@
-import { Card, CardContent, CardHeader } from '@components/ui/card'
-import { TaskData } from '@repo/shared-types'
-import { ChevronsDown, ChevronsUp, Equal } from 'lucide-react'
-import { useState } from 'react'
-import { cn } from '../../../lib/utils'
-import TaskDetailSheet from './task-detail-sheet'
+import { Card, CardContent, CardHeader } from '@components/ui/card';
+import { TaskData } from '@repo/shared-types';
+import { ChevronsDown, ChevronsUp, Equal } from 'lucide-react';
+import { useState } from 'react';
+import { cn } from '../../../lib/utils';
+import TaskDetailSheet from './task-detail-sheet';
 
 type TaskItemCardProps = {
-  task: TaskData
-  className?: string
-}
+  task: TaskData;
+  className?: string;
+};
 
 export default function TaskItemCard({ task, className }: TaskItemCardProps) {
-  const [open, setOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false);
 
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   return (
     <div className={className}>
@@ -37,5 +37,5 @@ export default function TaskItemCard({ task, className }: TaskItemCardProps) {
       </Card>
       <TaskDetailSheet open={open} onClose={handleClose} task={task} />
     </div>
-  )
+  );
 }

@@ -1,25 +1,25 @@
-'use client'
+'use client';
 
-import { Card, CardContent } from '@components/ui/card'
-import InputFile from '@components/ui/input-file'
-import { EnterpriseCreateModel } from '@repo/shared-types'
-import Image from 'next/image'
-import { useTranslations } from 'next-intl'
-import { useFormContext } from 'react-hook-form'
+import { Card, CardContent } from '@components/ui/card';
+import InputFile from '@components/ui/input-file';
+import { EnterpriseCreateModel } from '@repo/shared-types';
+import Image from 'next/image';
+import { useTranslations } from 'next-intl';
+import { useFormContext } from 'react-hook-form';
 
 const EnterpriseLogoForm = () => {
-  const t = useTranslations()
-  const form = useFormContext<EnterpriseCreateModel>()
-  const { logo } = form.watch()
+  const t = useTranslations();
+  const form = useFormContext<EnterpriseCreateModel>();
+  const { logo } = form.watch();
 
   const onChangeInput = (files: File[]) => {
-    const file = files[files.length - 1]
+    const file = files[files.length - 1];
     if (file) {
-      form.setValue('logo', file, { shouldValidate: true })
+      form.setValue('logo', file, { shouldValidate: true });
     } else {
-      form.setValue('logo', undefined, { shouldValidate: false })
+      form.setValue('logo', undefined, { shouldValidate: false });
     }
-  }
+  };
 
   return (
     <Card className="w-1/2 h-auto mx-auto">
@@ -49,7 +49,7 @@ const EnterpriseLogoForm = () => {
         </div>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default EnterpriseLogoForm
+export default EnterpriseLogoForm;

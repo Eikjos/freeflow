@@ -1,39 +1,39 @@
-'use client'
+'use client';
 
-import { Button } from '@components/ui/button'
-import { Card, CardContent, CardHeader } from '@components/ui/card'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import { Select } from '@components/ui/select'
-import { Separator } from '@components/ui/separator'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@components/ui/button';
+import { Card, CardContent, CardHeader } from '@components/ui/card';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { Select } from '@components/ui/select';
+import { Separator } from '@components/ui/separator';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CustomerCreateModel,
   CustomerCreateValidation,
   CustomerDetailModel,
   EnterpriseInformation,
-} from '@repo/shared-types'
-import { useQuery } from '@tanstack/react-query'
-import { UpdateCustomer } from 'actions/customer'
-import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
-import { getAllCountriesQueryOptions } from '../../../lib/api/countries'
-import { fetchEnterpriseInfo } from '../../../lib/api/enterprise'
-import getQueryClient from '../../../lib/query-client'
+} from '@repo/shared-types';
+import { useQuery } from '@tanstack/react-query';
+import { UpdateCustomer } from 'actions/customer';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { getAllCountriesQueryOptions } from '../../../lib/api/countries';
+import { fetchEnterpriseInfo } from '../../../lib/api/enterprise';
+import getQueryClient from '../../../lib/query-client';
 
 type CustomerFormVerifProps = {
-  customer: CustomerDetailModel
-}
+  customer: CustomerDetailModel;
+};
 
 export default function CustomerFormVerif({
   customer,
 }: CustomerFormVerifProps) {
-  const router = useRouter()
-  const t = useTranslations()
-  const queryClient = getQueryClient()
-  const { data: countries } = useQuery(getAllCountriesQueryOptions())
+  const router = useRouter();
+  const t = useTranslations();
+  const queryClient = getQueryClient();
+  const { data: countries } = useQuery(getAllCountriesQueryOptions());
   const form = useForm<CustomerCreateModel>({
     resolver: zodResolver(CustomerCreateValidation),
     defaultValues: {
@@ -47,25 +47,25 @@ export default function CustomerFormVerif({
       phone: customer.phone,
       email: customer.email,
     },
-  })
+  });
 
   const onSubmit = async (values: CustomerCreateModel) => {
     if (form.formState.isDirty) {
       await UpdateCustomer(customer.id, values).then((res) => {
         if (res === null) {
-          toast.error(t('customer.error.edit'))
+          toast.error(t('customer.error.edit'));
         } else {
-          toast.success(t('customer.success.edit'))
+          toast.success(t('customer.success.edit'));
           void queryClient.invalidateQueries({
             queryKey: ['customers', customer.id],
-          })
-          router.push('/customers/dashboard')
+          });
+          router.push('/customers/dashboard');
         }
-      })
+      });
     } else {
-      router.push('/customers/dashboard')
+      router.push('/customers/dashboard');
     }
-  }
+  };
 
   const updateFormValues = async (
     email: string,
@@ -73,14 +73,14 @@ export default function CustomerFormVerif({
     data?: EnterpriseInformation,
   ) => {
     if (data) {
-      const { juridicShape, ...customerInfo } = data
+      const { juridicShape, ...customerInfo } = data;
       form.reset({
         ...customerInfo,
         email,
         phone,
-      })
+      });
     } else {
-      form.reset({ email, phone })
+      form.reset({ email, phone });
     }
     await form.trigger([
       'name',
@@ -89,8 +89,8 @@ export default function CustomerFormVerif({
       'tvaNumber',
       'zipCode',
       'countryId',
-    ])
-  }
+    ]);
+  };
 
   const fillFormWithEnterpriseinfo = () => {
     void fetchEnterpriseInfo(
@@ -101,14 +101,14 @@ export default function CustomerFormVerif({
           form.getValues().email,
           form.getValues().phone,
           res.data,
-        )
+        );
       }
-    })
-  }
+    });
+  };
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   return (
     <Card className="w-1/2 mx-auto mt-10 mb-28">
@@ -191,5 +191,5 @@ export default function CustomerFormVerif({
         </form>
       </Form>
     </Card>
-  )
+  );
 }

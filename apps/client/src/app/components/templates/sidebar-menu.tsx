@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import SidebarNav from '@components/atoms/sidebar-nav'
-import Logo from '@components/molecules/logo'
-import ProfileButton from '@components/molecules/profileButton'
+import SidebarNav from '@components/atoms/sidebar-nav';
+import Logo from '@components/molecules/logo';
+import ProfileButton from '@components/molecules/profileButton';
 import {
   Sidebar,
   SidebarContent,
@@ -10,11 +10,11 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
-} from '@components/ui/sidebar'
+} from '@components/ui/sidebar';
 
 type SidebarMenuProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export default function SidebarMenu({ className }: SidebarMenuProps) {
   const navLinks = [
@@ -42,7 +42,7 @@ export default function SidebarMenu({ className }: SidebarMenuProps) {
       name: 'Mes activités',
       url: '/activities',
     },
-  ]
+  ];
 
   return (
     <Sidebar className={className}>
@@ -64,5 +64,5 @@ export default function SidebarMenu({ className }: SidebarMenuProps) {
         <p className="text-[10px] text-center my-2">CGU - FreeFlow - 2025</p>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

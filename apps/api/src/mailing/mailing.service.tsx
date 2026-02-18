@@ -1,19 +1,19 @@
-import { Injectable } from '@nestjs/common'
-import { Invoice } from '@prisma/client'
-import { render } from '@react-email/render'
+import { Injectable } from '@nestjs/common';
+import { Invoice } from '@prisma/client';
+import { render } from '@react-email/render';
 import {
   CustomerInviteMail,
   InscriptionMail,
   InvoiceMail,
   QuoteMail,
   ValidateQuoteMail,
-} from '@repo/email-templates'
-import { createTransport, Transporter } from 'nodemailer'
+} from '@repo/email-templates';
+import { createTransport, Transporter } from 'nodemailer';
 
 @Injectable()
 export default class MailingService {
-  private transporter: Transporter
-  private clientUrl: string
+  private transporter: Transporter;
+  private clientUrl: string;
   constructor() {
     this.transporter = createTransport({
       host: process.env['SMTP_URL'],
@@ -23,20 +23,20 @@ export default class MailingService {
         user: process.env['SMTP_USER'],
         pass: process.env['SMTP_PASSWORD'],
       },
-    })
-    this.clientUrl = process.env['CLIENT_URL']
+    });
+    this.clientUrl = process.env['CLIENT_URL'];
   }
 
   async sendInscriptionMail(to: string) {
     const emailHtml = await render(
       <InscriptionMail clientUrl={this.clientUrl} />,
-    )
+    );
     this.transporter.sendMail({
       from: 'ne-pas-repondre@freeflow.com',
       to,
       subject: 'Bienvenue sur la plateforme Freeflow',
       html: emailHtml,
-    })
+    });
   }
 
   async sendInvoice(
@@ -56,13 +56,13 @@ export default class MailingService {
         name={name}
         amount={amount}
       />,
-    )
+    );
     this.transporter.sendMail({
       from: 'ne-pas-repondre@freeflow.fr',
       to,
       subject: 'Une nouvelle facture est disponible',
       html: emailHtml,
-    })
+    });
   }
 
   async sendQuote(
@@ -82,13 +82,13 @@ export default class MailingService {
         date={date}
         name={name}
       />,
-    )
+    );
     this.transporter.sendMail({
       from: 'ne-pas-repondre@freeflow.fr',
       to,
       subject: 'Un nouveau devis est disponible',
       html: emailHtml,
-    })
+    });
   }
 
   async sendQuoteValidationMail(to: string, code: string, devis: Invoice) {
@@ -98,13 +98,13 @@ export default class MailingService {
         code={code}
         devis={devis.number}
       />,
-    )
+    );
     this.transporter.sendMail({
       from: 'ne-pas-repondre@freeflow.fr',
       to,
       subject: `Code de validation pour le devis ${devis.number}`,
       html: emailHtml,
-    })
+    });
   }
 
   async sendCustomerInvite(
@@ -119,12 +119,12 @@ export default class MailingService {
         token={token}
         enterpriseName={enterprise}
       />,
-    )
+    );
     this.transporter.sendMail({
       from: 'ne-pas-repondre@freeflow.fr',
       to,
       subject: 'Création du compte Client sur la plateforme Freeflow',
       html: emailHtml,
-    })
+    });
   }
 }

@@ -1,23 +1,23 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-export type ObjectiveCategory = 'CUSTOMER' | 'SALES'
+export type ObjectiveCategory = 'CUSTOMER' | 'SALES';
 
 export type ObjectiveData = {
-  id: number
-  startDate: Date
-  endDate: Date
-  currentNumber: number
-  objectiveNumber: number
-  objectiveCategory: ObjectiveCategory
-  enterpriseId: number
-}
+  id: number;
+  startDate: Date;
+  endDate: Date;
+  currentNumber: number;
+  objectiveNumber: number;
+  objectiveCategory: ObjectiveCategory;
+  enterpriseId: number;
+};
 
 export type CreateObjectiveData = {
-  startDate?: Date
-  endDate: Date
-  objectiveNumber: number
-  objectiveCategory: ObjectiveCategory
-}
+  startDate?: Date;
+  endDate: Date;
+  objectiveNumber: number;
+  objectiveCategory: ObjectiveCategory;
+};
 
 export const CreateObjectiveDataValidation = z.object({
   startDate: z.coerce.date().optional(),
@@ -28,4 +28,4 @@ export const CreateObjectiveDataValidation = z.object({
     .number()
     .min(1, { message: 'objective.validation.number' }),
   objectiveCategory: z.enum(['SALES', 'CUSTOMER']),
-})
+});

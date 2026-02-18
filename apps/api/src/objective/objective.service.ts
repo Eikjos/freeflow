@@ -2,15 +2,15 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common'
-import { ObjectiveCategory } from '@prisma/client'
-import CreateObjectiveDto from 'dtos/objectives/create-objective.dto'
-import ObjectiveDto from 'dtos/objectives/objective.dto'
+} from '@nestjs/common';
+import { ObjectiveCategory } from '@prisma/client';
+import CreateObjectiveDto from 'dtos/objectives/create-objective.dto';
+import ObjectiveDto from 'dtos/objectives/objective.dto';
 import {
   PaginationFilterDto,
   PaginationResultDto,
-} from 'dtos/utils/pagination-result.dto'
-import { PrismaService } from 'prisma.service'
+} from 'dtos/utils/pagination-result.dto';
+import { PrismaService } from 'prisma.service';
 
 @Injectable()
 export default class ObjectiveService {
@@ -19,8 +19,8 @@ export default class ObjectiveService {
   async create(model: CreateObjectiveDto, enterpriseId: number) {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
-    })
-    if (!enterprise) throw new ForbiddenException()
+    });
+    if (!enterprise) throw new ForbiddenException();
 
     await this.prisma.objective.create({
       data: {
@@ -31,14 +31,14 @@ export default class ObjectiveService {
         currentNumber: 0,
         enterpriseId,
       },
-    })
+    });
   }
 
   async findInProgress(enterpriseId: number) {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
-    })
-    if (!enterprise) throw new ForbiddenException()
+    });
+    if (!enterprise) throw new ForbiddenException();
 
     const objectives = await this.prisma.objective.findMany({
       where: {
@@ -46,20 +46,20 @@ export default class ObjectiveService {
         startDate: { lte: new Date() },
         endDate: { gt: new Date() },
       },
-    })
-    return objectives.map((o) => new ObjectiveDto(o))
+    });
+    return objectives.map((o) => new ObjectiveDto(o));
   }
 
   async update(id: number, model: CreateObjectiveDto, enterpriseId: number) {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
-    })
-    if (!enterprise) throw new ForbiddenException()
+    });
+    if (!enterprise) throw new ForbiddenException();
 
     const objective = await this.prisma.objective.findFirst({
       where: { id, enterpriseId },
-    })
-    if (!objective) throw new NotFoundException()
+    });
+    if (!objective) throw new NotFoundException();
 
     await this.prisma.objective.update({
       where: { id },
@@ -70,43 +70,43 @@ export default class ObjectiveService {
         objectiveNumber: model.objectiveNumber,
         enterpriseId,
       },
-    })
+    });
   }
 
   async findAll(filter: PaginationFilterDto<undefined>, enterpriseId: number) {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
-    })
-    if (!enterprise) throw new ForbiddenException()
+    });
+    if (!enterprise) throw new ForbiddenException();
     const objectives = await this.prisma.objective.findMany({
       where: { enterpriseId },
       take: filter.pageSize,
       skip: filter.page * filter.pageSize,
-    })
+    });
     const objectivesCount = await this.prisma.objective.count({
       where: { enterpriseId },
-    })
+    });
 
     return {
       data: objectives.map((o) => new ObjectiveDto(o)),
       totalItems: objectivesCount,
       page: filter.page,
       pageSize: filter.pageSize,
-    } as PaginationResultDto<ObjectiveDto>
+    } as PaginationResultDto<ObjectiveDto>;
   }
 
   async delete(id: number, enterpriseId: number) {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
-    })
-    if (!enterprise) throw new ForbiddenException()
+    });
+    if (!enterprise) throw new ForbiddenException();
 
     const objective = await this.prisma.objective.findFirst({
       where: { id, enterpriseId },
-    })
-    if (!objective) throw new NotFoundException()
+    });
+    if (!objective) throw new NotFoundException();
 
-    await this.prisma.objective.delete({ where: { id, enterpriseId } })
+    await this.prisma.objective.delete({ where: { id, enterpriseId } });
   }
 
   async increaseObjective(
@@ -121,7 +121,7 @@ export default class ObjectiveService {
         endDate: { gt: new Date() },
         category: category,
       },
-    })
+    });
     await Promise.all(
       objectives.map(async (o) => {
         await this.prisma.objective.update({
@@ -130,8 +130,8 @@ export default class ObjectiveService {
             currentNumber:
               o.currentNumber + value < 0 ? 0 : o.currentNumber + value,
           },
-        })
+        });
       }),
-    )
+    );
   }
 }

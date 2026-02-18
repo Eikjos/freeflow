@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { Button } from '@components/ui/button'
-import { DataTable } from '@components/ui/data-table'
+import { Button } from '@components/ui/button';
+import { DataTable } from '@components/ui/data-table';
 import {
   Dialog,
   DialogClose,
@@ -10,68 +10,75 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@components/ui/dialog'
-import { Pagination } from '@components/ui/pagination'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@components/ui/tooltip'
-import { CustomerModel, Pagination as PaginationType } from '@repo/shared-types'
-import { useQuery } from '@tanstack/react-query'
-import { ColumnDef } from '@tanstack/react-table'
-import { deleteCustomer, inviteCustomer } from 'actions/customer'
-import { Mails, PenBoxIcon, Trash } from 'lucide-react'
-import Link from 'next/link'
-import { useTranslations } from 'next-intl'
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { getAllCustomersQueryOptions } from '../../../lib/api/customers'
-import getQueryClient from '../../../lib/query-client'
+} from '@components/ui/dialog';
+import { Pagination } from '@components/ui/pagination';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@components/ui/tooltip';
+import {
+  CustomerModel,
+  Pagination as PaginationType,
+} from '@repo/shared-types';
+import { useQuery } from '@tanstack/react-query';
+import { ColumnDef } from '@tanstack/react-table';
+import { deleteCustomer, inviteCustomer } from 'actions/customer';
+import { Mails, PenBoxIcon, Trash } from 'lucide-react';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { getAllCustomersQueryOptions } from '../../../lib/api/customers';
+import getQueryClient from '../../../lib/query-client';
 
 export default function CustomerTable() {
-  const t = useTranslations()
-  const queryClient = getQueryClient()
-  const [page, setPage] = useState<PaginationType>({ page: 0, pageSize: 10 })
+  const t = useTranslations();
+  const queryClient = getQueryClient();
+  const [page, setPage] = useState<PaginationType>({ page: 0, pageSize: 10 });
   const {
     data: customers,
     refetch,
     isLoading,
-  } = useQuery(getAllCustomersQueryOptions(page))
+  } = useQuery(getAllCustomersQueryOptions(page));
 
   const handleChangePage = (page: number) => {
-    setPage((prev) => ({ ...prev, page }))
-  }
+    setPage((prev) => ({ ...prev, page }));
+  };
 
   const sendInviteMail = (customerId: number) => {
     inviteCustomer(customerId)
       .then((res) => {
         if (res.ok) {
-          toast.success('Invitation envoyée')
+          toast.success('Invitation envoyée');
         } else {
-          toast.error('Une erreur est survenue. Veuillez réessayer plus tard.')
+          toast.error('Une erreur est survenue. Veuillez réessayer plus tard.');
         }
       })
       .catch(() => {
-        toast.error('Une erreur est survenue. Veuillez réessayer plus tard.')
-      })
-  }
+        toast.error('Une erreur est survenue. Veuillez réessayer plus tard.');
+      });
+  };
 
   const OnDeleteCustomer = (customer: CustomerModel) => {
     void deleteCustomer(customer.id).then(async (res) => {
       await queryClient.invalidateQueries({
         queryKey: ['customers', page],
-      })
+      });
       if (res.ok) {
-        toast.success(t('customer.removeSuccess', { customer: customer.name }))
+        toast.success(t('customer.removeSuccess', { customer: customer.name }));
         // si il y a encore un client après suppression
         if ((customers?.data?.data.length ?? 0) > 1 || page.page === 0) {
-          await refetch()
+          await refetch();
           // sinon aller sur la page précédente si elle permet
         } else {
-          setPage((prev) => ({ ...prev, page: prev.page - 1 }))
+          setPage((prev) => ({ ...prev, page: prev.page - 1 }));
         }
       } else {
-        toast.error(t('customer.removeFailed', { customer: customer.name }))
+        toast.error(t('customer.removeFailed', { customer: customer.name }));
       }
-    })
-  }
+    });
+  };
 
   const columnDefs: ColumnDef<CustomerModel>[] = [
     {
@@ -160,7 +167,7 @@ export default function CustomerTable() {
         </div>
       ),
     },
-  ]
+  ];
 
   return (
     <>
@@ -180,5 +187,5 @@ export default function CustomerTable() {
         />
       )}
     </>
-  )
+  );
 }

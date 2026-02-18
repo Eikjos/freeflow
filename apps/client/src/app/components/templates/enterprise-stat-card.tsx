@@ -1,22 +1,22 @@
-'use client'
+'use client';
 
-import { KPICard } from '@components/molecules/kpi-card'
-import { useQuery } from '@tanstack/react-query'
-import { useTranslations } from 'next-intl'
-import { getEnterpriseStatQueryOptions } from '../../../lib/api/enterprise'
-import { cn } from '../../../lib/utils'
+import { KPICard } from '@components/molecules/kpi-card';
+import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { getEnterpriseStatQueryOptions } from '../../../lib/api/enterprise';
+import { cn } from '../../../lib/utils';
 
 export type EnterpriseStatCardProps = {
-  year?: number
-  className?: string
-}
+  year?: number;
+  className?: string;
+};
 
 export default function EnterpriseStatCard({
   year,
   className,
 }: EnterpriseStatCardProps) {
-  const { data } = useQuery(getEnterpriseStatQueryOptions(year))
-  const t = useTranslations()
+  const { data } = useQuery(getEnterpriseStatQueryOptions(year));
+  const t = useTranslations();
 
   return (
     <div className={cn('flex flex-row item-center w-full gap-4', className)}>
@@ -39,5 +39,5 @@ export default function EnterpriseStatCard({
         className="w-1/3"
       />
     </div>
-  )
+  );
 }

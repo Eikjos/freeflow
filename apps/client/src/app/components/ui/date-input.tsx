@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import { cva, VariantProps } from 'class-variance-authority'
-import clsx from 'clsx'
-import dayjs from 'dayjs'
-import { CalendarIcon } from 'lucide-react'
-import { ComponentProps } from 'react'
-import { Matcher } from 'react-day-picker'
-import { cn } from '../../../lib/utils'
-import { Button } from './button'
-import { Calendar } from './calendar'
+import { cva, VariantProps } from 'class-variance-authority';
+import clsx from 'clsx';
+import dayjs from 'dayjs';
+import { CalendarIcon } from 'lucide-react';
+import { ComponentProps } from 'react';
+import { Matcher } from 'react-day-picker';
+import { cn } from '../../../lib/utils';
+import { Button } from './button';
+import { Calendar } from './calendar';
 import {
   FormControl,
   FormDescription,
@@ -16,20 +16,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './form'
-import { Popover, PopoverContent, PopoverTrigger } from './popover'
+} from './form';
+import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
 export type DateInputProps = Omit<
   ComponentProps<'input'>,
   'name' | 'max' | 'min'
 > & {
-  name?: string
-  description?: string
-  label?: string
-  maxDate?: Date
-  minDate?: Date
-  error?: string // Ajout pour les erreurs sans react-hook-form
-} & VariantProps<typeof inputVariant>
+  name?: string;
+  description?: string;
+  label?: string;
+  maxDate?: Date;
+  minDate?: Date;
+  error?: string; // Ajout pour les erreurs sans react-hook-form
+} & VariantProps<typeof inputVariant>;
 
 const inputVariant = cva(
   'flex h-10 w-full rounded-md text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
@@ -45,7 +45,7 @@ const inputVariant = cva(
       variant: 'default',
     },
   },
-)
+);
 
 export function DateInput({
   name,
@@ -56,16 +56,16 @@ export function DateInput({
   maxDate,
   ...props
 }: DateInputProps) {
-  const disbledDate: Matcher[] = []
+  const disbledDate: Matcher[] = [];
   if (minDate) {
     disbledDate.push({
       before: minDate,
-    })
+    });
   }
   if (maxDate) {
     disbledDate.push({
       after: maxDate,
-    })
+    });
   }
 
   return (
@@ -98,8 +98,8 @@ export function DateInput({
                 mode="single"
                 selected={field.value as Date}
                 onSelect={(value) => {
-                  field.onChange(value)
-                  field.onBlur()
+                  field.onChange(value);
+                  field.onBlur();
                 }}
                 disabled={disbledDate}
                 captionLayout="dropdown"
@@ -113,5 +113,5 @@ export function DateInput({
         </FormItem>
       )}
     />
-  )
+  );
 }

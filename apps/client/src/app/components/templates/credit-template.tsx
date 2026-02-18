@@ -5,15 +5,15 @@ import {
   StyleSheet,
   Text,
   View,
-} from '@react-pdf/renderer'
+} from '@react-pdf/renderer';
 import {
   CreateCreditLineData,
   CustomerDetailModel,
   InvoiceData,
   InvoiceInformation,
-} from '@repo/shared-types'
-import dayjs from 'dayjs'
-import { formatPrice, getMediaUrl } from '../../../lib/utils'
+} from '@repo/shared-types';
+import dayjs from 'dayjs';
+import { formatPrice, getMediaUrl } from '../../../lib/utils';
 
 const styles = StyleSheet.create({
   page: {
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   enterpriseName: {
     maxWidth: '250px',
   },
-})
+});
 
 // Create Document Component
 const CreditTemplate = ({
@@ -141,22 +141,22 @@ const CreditTemplate = ({
   maskName,
   excludeTva,
 }: {
-  title?: string
-  number?: string
-  invoice?: InvoiceData
-  customer?: CustomerDetailModel
-  lines: CreateCreditLineData[]
-  information?: InvoiceInformation
-  maskName?: boolean
-  excludeTva?: boolean
+  title?: string;
+  number?: string;
+  invoice?: InvoiceData;
+  customer?: CustomerDetailModel;
+  lines: CreateCreditLineData[];
+  information?: InvoiceInformation;
+  maskName?: boolean;
+  excludeTva?: boolean;
 }) => {
   const sum = (values: number[]) => {
-    let result = 0
+    let result = 0;
     values.map((v) => {
-      result += v
-    })
-    return result
-  }
+      result += v;
+    });
+    return result;
+  };
 
   return (
     <Document>
@@ -249,8 +249,8 @@ const CreditTemplate = ({
             {lines &&
               lines.length > 0 &&
               lines.map((line, index) => {
-                const title = line?.title ?? ''
-                const price = line?.price ?? 0
+                const title = line?.title ?? '';
+                const price = line?.price ?? 0;
 
                 return (
                   <View style={styles.tableRow} key={index}>
@@ -267,7 +267,7 @@ const CreditTemplate = ({
                       </Text>
                     </View>
                   </View>
-                )
+                );
               })}
           </>
         </View>
@@ -320,7 +320,7 @@ const CreditTemplate = ({
         </View>
       </Page>
     </Document>
-  )
-}
+  );
+};
 
-export default CreditTemplate
+export default CreditTemplate;

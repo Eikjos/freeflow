@@ -3,22 +3,22 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common'
-import { Project } from '@prisma/client'
-import { PaginationFilter } from '@repo/shared-types'
-import ColumnService from 'columns/columns.service'
-import { mapToColumn } from 'dtos/columns/column.dto'
-import CreateColumnDto from 'dtos/columns/column-create.dto'
+} from '@nestjs/common';
+import { Project } from '@prisma/client';
+import { PaginationFilter } from '@repo/shared-types';
+import ColumnService from 'columns/columns.service';
+import { mapToColumn } from 'dtos/columns/column.dto';
+import CreateColumnDto from 'dtos/columns/column-create.dto';
 import {
   mapProjectToDetailDto,
   mapProjectToDto,
   ProjectDto,
-} from 'dtos/projects/project.dto'
-import ProjectCreateDto from 'dtos/projects/project-create.dto'
-import { mapProjectWithTasksAndColumns } from 'dtos/projects/project-detail.dto'
-import { PaginationResultDto } from 'dtos/utils/pagination-result.dto'
-import { MediaService } from 'media/media.service'
-import { PrismaService } from 'prisma.service'
+} from 'dtos/projects/project.dto';
+import ProjectCreateDto from 'dtos/projects/project-create.dto';
+import { mapProjectWithTasksAndColumns } from 'dtos/projects/project-detail.dto';
+import { PaginationResultDto } from 'dtos/utils/pagination-result.dto';
+import { MediaService } from 'media/media.service';
+import { PrismaService } from 'prisma.service';
 @Injectable()
 export default class ProjectService {
   constructor(
@@ -32,9 +32,9 @@ export default class ProjectService {
   async count(enterpriseId: number): Promise<number> {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
-    })
-    if (!enterprise) throw new ForbiddenException()
-    return await this.prisma.project.count({ where: { enterpriseId } })
+    });
+    if (!enterprise) throw new ForbiddenException();
+    return await this.prisma.project.count({ where: { enterpriseId } });
   }
 
   async findAllByEnterpriseId(
@@ -46,19 +46,19 @@ export default class ProjectService {
       include: { customer: true, enterprise: true },
       take: filter.pageSize,
       skip: filter.page * filter.pageSize,
-    })
+    });
     const totalItems = await this.prisma.project.count({
       where: {
         ...filter.filter,
         enterpriseId,
       },
-    })
+    });
     return {
       data: projects.map((p) => mapProjectToDto(p, p.customer, p.enterprise)),
       totalItems: totalItems,
       page: filter.page,
       pageSize: filter.pageSize,
-    }
+    };
   }
 
   async findAllByCustomerId(
@@ -70,35 +70,35 @@ export default class ProjectService {
       include: { customer: true, enterprise: true },
       take: filter.pageSize,
       skip: filter.page * filter.pageSize,
-    })
+    });
     const totalItems = await this.prisma.project.count({
       where: {
         ...filter.filter,
         customerId,
       },
-    })
+    });
     return {
       data: projects.map((p) => mapProjectToDto(p, p.customer, p.enterprise)),
       totalItems: totalItems,
       page: filter.page,
       pageSize: filter.pageSize,
-    }
+    };
   }
 
   async findById(id: number, enterpriseId?: number, customerId?: number) {
-    let project
+    let project;
     if (enterpriseId) {
       project = await this.prisma.project.findFirst({
         where: { id, enterpriseId },
-      })
+      });
     } else if (customerId) {
       project = await this.prisma.project.findFirst({
         where: { id, customerId },
-      })
+      });
     }
 
-    if (!project) throw new NotFoundException()
-    return mapProjectToDetailDto(project)
+    if (!project) throw new NotFoundException();
+    return mapProjectToDetailDto(project);
   }
 
   async findByIdWithTasksAndColumns(
@@ -117,10 +117,10 @@ export default class ProjectService {
           include: { tasks: { include: { medias: true } } },
         },
       },
-    })
-    if (!project) throw new NotFoundException()
+    });
+    if (!project) throw new NotFoundException();
 
-    return mapProjectWithTasksAndColumns(project, project.columns)
+    return mapProjectWithTasksAndColumns(project, project.columns);
   }
 
   async create(
@@ -128,14 +128,14 @@ export default class ProjectService {
     enterpriseId: number,
     media?: Express.Multer.File,
   ) {
-    if (enterpriseId == null) throw new ForbiddenException()
+    if (enterpriseId == null) throw new ForbiddenException();
     const customer = await this.prisma.enterpriseCustomer.findFirst({
       where: { enterpriseId, customerId: model.customerId, isDeleted: false },
-    })
-    if (!customer) throw new BadRequestException('project.customer.notValid')
+    });
+    if (!customer) throw new BadRequestException('project.customer.notValid');
     const mediaId = media
       ? await this.mediaService.upload(media, `${enterpriseId}/images`)
-      : undefined
+      : undefined;
 
     const project = await this.prisma.project.create({
       data: {
@@ -144,13 +144,13 @@ export default class ProjectService {
         mediaId,
         enterpriseId,
       },
-    })
+    });
 
     if (project.id > 0) {
-      this.columnService.initializeForProject(project.id)
+      this.columnService.initializeForProject(project.id);
     }
 
-    return project.id
+    return project.id;
   }
 
   async createColumn(
@@ -166,8 +166,8 @@ export default class ProjectService {
         ...(enterpriseId !== undefined && { enterpriseId }),
       },
       include: { columns: true },
-    })
-    if (!project) throw new NotFoundException()
+    });
+    if (!project) throw new NotFoundException();
     if (
       project.columns.filter(
         (c) =>
@@ -175,7 +175,7 @@ export default class ProjectService {
           column.name.toLocaleLowerCase().trim(),
       ).length
     ) {
-      throw new BadRequestException('columns.already.exist')
+      throw new BadRequestException('columns.already.exist');
     }
     const columnEntity = await this.prisma.column.create({
       data: {
@@ -183,22 +183,22 @@ export default class ProjectService {
         name: column.name,
         index: project.columns.length,
       },
-    })
-    return mapToColumn(columnEntity)
+    });
+    return mapToColumn(columnEntity);
   }
 
   async reorderColumns(id: number, columnIds: number[]) {
     const project = await this.prisma.project.findFirst({
       where: { id },
       include: { columns: true },
-    })
-    if (!project) throw new NotFoundException()
+    });
+    if (!project) throw new NotFoundException();
 
     const notColumnsInProject = columnIds.filter(
       (c) => !project.columns.map((e) => e.id).includes(c),
-    )
+    );
 
-    if (notColumnsInProject.length > 0) throw new BadRequestException()
+    if (notColumnsInProject.length > 0) throw new BadRequestException();
 
     await this.prisma.$transaction(
       columnIds.map((id, index) =>
@@ -207,7 +207,7 @@ export default class ProjectService {
           data: { index },
         }),
       ),
-    )
+    );
   }
 
   async update(
@@ -218,27 +218,27 @@ export default class ProjectService {
     media?: Express.Multer.File,
   ) {
     if (enterpriseId == null && customerId == null)
-      throw new ForbiddenException()
-    let project
+      throw new ForbiddenException();
+    let project;
     if (enterpriseId) {
       project = await this.prisma.project.findFirst({
         where: { id: projectId, enterpriseId },
-      })
+      });
     } else if (customerId) {
       project = await this.prisma.project.findFirst({
         where: { id: projectId, customerId },
-      })
+      });
     }
-    if (!project) throw new NotFoundException('project.notFound')
+    if (!project) throw new NotFoundException('project.notFound');
     if (enterpriseId) {
       const customer = await this.prisma.enterpriseCustomer.findFirst({
         where: { enterpriseId, customerId: model.customerId, isDeleted: false },
-      })
-      if (!customer) throw new BadRequestException('project.customer.notValid')
+      });
+      if (!customer) throw new BadRequestException('project.customer.notValid');
     }
     const mediaId = media
       ? await this.mediaService.upload(media, `${enterpriseId}/images`)
-      : undefined
+      : undefined;
 
     project = await this.prisma.project.update({
       where: { id: projectId, enterpriseId: enterpriseId },
@@ -248,19 +248,19 @@ export default class ProjectService {
         mediaId: media ? mediaId : project.mediaId,
         enterpriseId,
       },
-    })
+    });
 
-    return project.id
+    return project.id;
   }
 
   async delete(id: number, enterpriseId: number) {
-    if (enterpriseId == null) throw new ForbiddenException()
+    if (enterpriseId == null) throw new ForbiddenException();
     const project = await this.prisma.project.findFirst({
       where: { id: id, enterpriseId },
-    })
-    if (!project) throw new NotFoundException('project.notFound')
+    });
+    if (!project) throw new NotFoundException('project.notFound');
     await this.prisma.project.delete({
       where: { id, enterpriseId },
-    })
+    });
   }
 }

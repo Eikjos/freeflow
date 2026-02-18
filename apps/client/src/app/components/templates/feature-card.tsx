@@ -3,15 +3,15 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-} from '@components/ui/card'
-import { cn } from '../../../lib/utils'
+} from '@components/ui/card';
+import { cn } from '../../../lib/utils';
 
 type FeatureCardProps = {
-  title: string
-  description: string
-  color: string
-  icon: React.ReactNode
-}
+  title: string;
+  description: string;
+  color: string;
+  icon: React.ReactNode;
+};
 
 export default function FeatureCard({
   title,
@@ -38,5 +38,5 @@ export default function FeatureCard({
         <CardDescription className="text-lg">{description}</CardDescription>
       </CardContent>
     </Card>
-  )
+  );
 }

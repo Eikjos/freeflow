@@ -1,29 +1,29 @@
-import { Country, Customer } from '@prisma/client'
-import { CustomerDetailModel, CustomerModel } from '@repo/shared-types'
-import { Transform } from 'class-transformer'
-import { IsInt, IsOptional, IsString } from 'class-validator'
+import { Country, Customer } from '@prisma/client';
+import { CustomerDetailModel, CustomerModel } from '@repo/shared-types';
+import { Transform } from 'class-transformer';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class CustomerDto implements CustomerModel {
   @IsInt()
   @Transform(({ value }) => parseInt(value))
-  id: number
+  id: number;
   @IsString()
-  name: string
+  name: string;
   @IsString()
   @IsOptional()
-  siret?: string
+  siret?: string;
   @IsString()
-  address: string
+  address: string;
   @IsString()
-  city: string
+  city: string;
   @IsString()
-  zipCode: string
+  zipCode: string;
   @IsString()
-  country: string
+  country: string;
   @IsString()
-  email: string
+  email: string;
   @IsString()
-  phone: string
+  phone: string;
 }
 
 export class CustomerDetailDto
@@ -32,20 +32,20 @@ export class CustomerDetailDto
 {
   @IsInt()
   @Transform(({ value }) => parseInt(value))
-  countryId: number
+  countryId: number;
   @IsString()
   tvaNumber: string;
-  [key: string]: string | number
+  [key: string]: string | number;
 }
 
 export function mapCustomerToDto(customer: Customer, country?: Country) {
-  const { createdAt, token, tokenDate, ...c } = customer
-  return { ...c, country: country?.name } as CustomerDetailDto
+  const { createdAt, token, tokenDate, ...c } = customer;
+  return { ...c, country: country?.name } as CustomerDetailDto;
 }
 
 export function mapCustomerToDetailDto(customer: Customer, country?: Country) {
   return {
     ...customer,
     country: country?.name,
-  } as CustomerDetailModel
+  } as CustomerDetailModel;
 }

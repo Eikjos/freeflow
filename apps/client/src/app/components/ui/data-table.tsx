@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
-} from '@tanstack/react-table'
+} from '@tanstack/react-table';
 
 import {
   Table,
@@ -14,20 +14,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from 'components/ui/table'
-import { useTranslations } from 'next-intl'
-import { cn } from '../../../lib/utils'
+} from 'components/ui/table';
+import { useTranslations } from 'next-intl';
+import { cn } from '../../../lib/utils';
 
 interface DataTableProps<TData> {
-  columns: ColumnDef<TData>[]
-  data: TData[]
-  className?: string
-  isLoading?: boolean
+  columns: ColumnDef<TData>[];
+  data: TData[];
+  className?: string;
+  isLoading?: boolean;
 }
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<TData, TValue> {
-    className?: string
+    className?: string;
   }
 }
 
@@ -41,8 +41,8 @@ export function DataTable<TData>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-  })
-  const t = useTranslations()
+  });
+  const t = useTranslations();
 
   return (
     <>
@@ -64,7 +64,7 @@ export function DataTable<TData>({
                             header.getContext(),
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -120,5 +120,5 @@ export function DataTable<TData>({
         </Table>
       </div>
     </>
-  )
+  );
 }

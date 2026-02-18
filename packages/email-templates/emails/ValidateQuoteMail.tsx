@@ -1,13 +1,13 @@
-import { Text } from '@react-email/components'
-import Footer from './components/Footer'
-import Header from './components/Header'
-import TailwindConfig from './components/TailwindConfig'
+import { Text } from '@react-email/components';
+import Footer from './components/Footer';
+import Header from './components/Header';
+import TailwindConfig from './components/TailwindConfig';
 
 type InvoiceMailProps = {
-  clientUrl: string
-  code: string
-  devis: string
-}
+  clientUrl: string;
+  code: string;
+  devis: string;
+};
 
 export function ValidateQuoteMail({
   clientUrl,
@@ -39,5 +39,5 @@ export function ValidateQuoteMail({
       </div>
       <Footer />
     </TailwindConfig>
-  )
+  );
 }

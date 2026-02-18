@@ -1,35 +1,35 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-const MAX_FILE_SIZE = 5000000
+const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = [
   'image/jpeg',
   'image/jpg',
   'image/png',
   'image/webp',
-]
+];
 
 export type EnterpriseInformation = {
-  id: number
-  name: string
-  siret: string
-  address: string
-  zipCode: string
-  mediaId?: number
-  city: string
-  tvaNumber: string
-  juridicShape: string
-  socialCapital?: number
-  countryId: string
-}
+  id: number;
+  name: string;
+  siret: string;
+  address: string;
+  zipCode: string;
+  mediaId?: number;
+  city: string;
+  tvaNumber: string;
+  juridicShape: string;
+  socialCapital?: number;
+  countryId: string;
+};
 
 export type EnterpriseCreateModel = {
-  email: string
-  phone: string
-  prefixeInvoice?: string
-  lastInvoiceNumber?: number
-  logo?: File
-  [key: string]: any
-} & Omit<EnterpriseInformation, 'id'>
+  email: string;
+  phone: string;
+  prefixeInvoice?: string;
+  lastInvoiceNumber?: number;
+  logo?: File;
+  [key: string]: any;
+} & Omit<EnterpriseInformation, 'id'>;
 
 export const EnterpriseCreateValidation = z.object({
   siret: z
@@ -67,40 +67,40 @@ export const EnterpriseCreateValidation = z.object({
     ),
   prefixeInvoice: z.string().optional(),
   lastNumberInvoice: z.coerce.number().optional(),
-})
+});
 
 export type EnterpriseData = {
-  id: number
-  name: string
-  siret: string
-  tvaNumber?: string
-  juridicShapeId: string
-  countryId: number
-  address: string
-  zipCode: string
-  city: string
-  email: string
-  phone: string
-  mediaId?: number
-  invoicePrefixe: string
-  invoiceNumber: number
-}
+  id: number;
+  name: string;
+  siret: string;
+  tvaNumber?: string;
+  juridicShapeId: string;
+  countryId: number;
+  address: string;
+  zipCode: string;
+  city: string;
+  email: string;
+  phone: string;
+  mediaId?: number;
+  invoicePrefixe: string;
+  invoiceNumber: number;
+};
 
 export type EditEnterpriseData = {
-  name: string
-  tvaNumber: string
-  juridicShapeId: string
-  countryId: string
-  address: string
-  city: string
-  zipCode: string
-  email: string
-  phone: string
-  logo?: File
-  invoicePrefixe: string
-  invoiceNumber: number
-  [key: string]: any
-}
+  name: string;
+  tvaNumber: string;
+  juridicShapeId: string;
+  countryId: string;
+  address: string;
+  city: string;
+  zipCode: string;
+  email: string;
+  phone: string;
+  logo?: File;
+  invoicePrefixe: string;
+  invoiceNumber: number;
+  [key: string]: any;
+};
 
 export const EnterpriseEditValidation = z.object({
   name: z.string().min(1, 'Le nom est requis'),
@@ -132,10 +132,10 @@ export const EnterpriseEditValidation = z.object({
     ),
   prefixeInvoice: z.string().optional(),
   lastNumberInvoice: z.coerce.number().optional(),
-})
+});
 
 export type EnterpriseStatData = {
-  sales: number
-  expenses: number
-  profit: number
-}
+  sales: number;
+  expenses: number;
+  profit: number;
+};

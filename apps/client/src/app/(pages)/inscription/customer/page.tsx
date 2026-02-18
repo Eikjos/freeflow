@@ -1,12 +1,12 @@
-import CustomerInscriptionForm from '@components/templates/customer-inscription-form'
-import Footer from '@components/templates/footer'
-import Header from '@components/templates/header'
+import CustomerInscriptionForm from '@components/templates/customer-inscription-form';
+import Footer from '@components/templates/footer';
+import Header from '@components/templates/header';
 
 type InscriptionCustomerPageProps = {
   searchParams: {
-    token: string
-  }
-}
+    token: string;
+  };
+};
 
 export default function InscriptionCustomerPage({
   searchParams,
@@ -22,5 +22,5 @@ export default function InscriptionCustomerPage({
       </div>
       <Footer />
     </div>
-  )
+  );
 }

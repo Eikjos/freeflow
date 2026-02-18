@@ -1,6 +1,6 @@
-import * as React from 'react'
+import * as React from 'react';
 
-import { cn } from '../../../lib/utils'
+import { cn } from '../../../lib/utils';
 import {
   FormControl,
   FormDescription,
@@ -8,8 +8,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './form'
-import { Label } from './label'
+} from './form';
+import { Label } from './label';
 
 const Textarea = React.forwardRef<
   HTMLTextAreaElement,
@@ -50,8 +50,8 @@ const Textarea = React.forwardRef<
         {...props}
       />
     </div>
-  )
-})
-Textarea.displayName = 'Textarea'
+  );
+});
+Textarea.displayName = 'Textarea';
 
-export { Textarea }
+export { Textarea };

@@ -1,12 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { PaginationFilter, PaginationResult } from '@repo/shared-types'
-import { IsInt, IsOptional, IsString } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger';
+import { PaginationFilter, PaginationResult } from '@repo/shared-types';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class PaginationResultDto<T> implements PaginationResult<T> {
-  data: T[]
-  page: number
-  pageSize: number
-  totalItems: number
+  data: T[];
+  page: number;
+  pageSize: number;
+  totalItems: number;
 }
 
 export class PaginationFilterDto<T extends Record<string, any>>
@@ -18,7 +18,7 @@ export class PaginationFilterDto<T extends Record<string, any>>
     required: false,
   })
   @IsOptional()
-  filter?: Partial<T>
+  filter?: Partial<T>;
   @IsString()
   @IsOptional()
   @ApiProperty({
@@ -26,7 +26,7 @@ export class PaginationFilterDto<T extends Record<string, any>>
     required: false,
     type: String,
   })
-  asc?: keyof T
+  asc?: keyof T;
   @IsString()
   @IsOptional()
   @ApiProperty({
@@ -34,11 +34,11 @@ export class PaginationFilterDto<T extends Record<string, any>>
     required: false,
     type: String,
   })
-  desc?: keyof T
+  desc?: keyof T;
   @IsInt()
   @ApiProperty({ description: 'Page number for pagination' })
-  page: number
+  page: number;
   @IsInt()
   @ApiProperty({ description: 'Page size for pagination' })
-  pageSize: number
+  pageSize: number;
 }

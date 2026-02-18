@@ -1,16 +1,16 @@
-'use client'
+'use client';
 
-import { Card } from '@components/ui/card'
-import { TrendingDown, TrendingUp } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { cn, formatPrice } from '../../../lib/utils'
+import { Card } from '@components/ui/card';
+import { TrendingDown, TrendingUp } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { cn, formatPrice } from '../../../lib/utils';
 
 interface KPICardProps {
-  title: string
-  value: number
-  trend?: number
-  type?: 'sale' | 'expense' | 'profit' | 'default'
-  className?: string
+  title: string;
+  value: number;
+  trend?: number;
+  type?: 'sale' | 'expense' | 'profit' | 'default';
+  className?: string;
 }
 
 export const KPICard = ({
@@ -20,38 +20,38 @@ export const KPICard = ({
   type = 'sale',
   className,
 }: KPICardProps) => {
-  const [amount, setAmount] = useState<number>(0)
+  const [amount, setAmount] = useState<number>(0);
   const getTrendColor = () => {
-    if (!trend) return ''
+    if (!trend) return '';
     if (type === 'expense') {
-      return trend > 0 ? 'text-destructive' : 'text-success'
+      return trend > 0 ? 'text-destructive' : 'text-success';
     }
-    return trend > 0 ? 'text-success' : 'text-destructive'
-  }
+    return trend > 0 ? 'text-success' : 'text-destructive';
+  };
 
   useEffect(() => {
-    const duration = 700
-    const start = performance.now()
+    const duration = 700;
+    const start = performance.now();
 
     function update(now: number) {
-      const progress = Math.min((now - start) / duration, 1)
-      setAmount(value * progress)
-      if (progress < 1) requestAnimationFrame(update)
+      const progress = Math.min((now - start) / duration, 1);
+      setAmount(value * progress);
+      if (progress < 1) requestAnimationFrame(update);
     }
 
-    requestAnimationFrame(update)
-  }, [value])
+    requestAnimationFrame(update);
+  }, [value]);
 
   const getCardStyle = () => {
     switch (type) {
       case 'profit':
-        return 'border-l-4 border-l-success'
+        return 'border-l-4 border-l-success';
       case 'expense':
-        return 'border-l-4 border-l-destructive'
+        return 'border-l-4 border-l-destructive';
       default:
-        return 'border-l-4 border-l-primary'
+        return 'border-l-4 border-l-primary';
     }
-  }
+  };
 
   return (
     <Card
@@ -81,5 +81,5 @@ export const KPICard = ({
         </div>
       </div>
     </Card>
-  )
-}
+  );
+};

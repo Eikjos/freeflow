@@ -1,8 +1,8 @@
-import { cn } from '../../../lib/utils'
+import { cn } from '../../../lib/utils';
 
 type FooterProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export default function Footer({ className }: FooterProps) {
   return (
@@ -14,5 +14,5 @@ export default function Footer({ className }: FooterProps) {
     >
       <p className="text-sm">@Freeflow - CGU - 2025</p>
     </div>
-  )
+  );
 }

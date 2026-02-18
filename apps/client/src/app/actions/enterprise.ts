@@ -1,33 +1,33 @@
-'use server'
+'use server';
 
 import {
   AuthResponseData,
   EditEnterpriseData,
   EnterpriseCreateModel,
   EnterpriseInformation,
-} from '@repo/shared-types'
-import { cookies } from 'next/headers'
-import { client } from '../../lib/client'
+} from '@repo/shared-types';
+import { cookies } from 'next/headers';
+import { client } from '../../lib/client';
 
 export const fetchEnterpriseInfo = (siret: string) =>
   client<EnterpriseInformation>(`enterprises/information?siret=${siret}`)
     .then((data) => {
-      return data
+      return data;
     })
     .catch(() => {
-      return null
-    })
+      return null;
+    });
 
 export const createEnterprise = async (
   enterprise: EnterpriseCreateModel,
   logo: File | undefined,
 ) => {
-  const formData = new FormData()
+  const formData = new FormData();
   Object.keys(enterprise).forEach((key) =>
     formData.append(key, enterprise[key] as string),
-  )
-  if (logo) formData.append('logo', logo)
-  const cookieStore = await cookies()
+  );
+  if (logo) formData.append('logo', logo);
+  const cookieStore = await cookies();
   return client<AuthResponseData>(
     `enterprises`,
     {
@@ -37,25 +37,25 @@ export const createEnterprise = async (
     'other',
   ).then((res) => {
     if (res.ok && res.data) {
-      cookieStore.set('access_token', res.data.access_token)
-      cookieStore.set('refreshToken', res.data.refreshToken)
-      return res.data
+      cookieStore.set('access_token', res.data.access_token);
+      cookieStore.set('refreshToken', res.data.refreshToken);
+      return res.data;
     }
-    throw new Error(res.error)
-  })
-}
+    throw new Error(res.error);
+  });
+};
 
 export const updateEnterprise = async (
   id: number,
   enterprise: EditEnterpriseData,
   logo: File | undefined,
 ) => {
-  const formData = new FormData()
+  const formData = new FormData();
   Object.keys(enterprise).forEach((key) =>
     formData.append(key, enterprise[key] as string),
-  )
-  if (logo) formData.append('logo', logo)
-  const cookieStore = await cookies()
+  );
+  if (logo) formData.append('logo', logo);
+  const cookieStore = await cookies();
 
   return client<AuthResponseData>(
     `enterprises/${id}`,
@@ -66,10 +66,10 @@ export const updateEnterprise = async (
     'other',
   ).then((res) => {
     if (res.ok && res.data) {
-      cookieStore.set('access_token', res.data.access_token)
-      cookieStore.set('refreshToken', res.data.refreshToken)
-      return res.data
+      cookieStore.set('access_token', res.data.access_token);
+      cookieStore.set('refreshToken', res.data.refreshToken);
+      return res.data;
     }
-    throw new Error(res.error)
-  })
-}
+    throw new Error(res.error);
+  });
+};

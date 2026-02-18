@@ -1,8 +1,8 @@
-import { Head, Html, Tailwind } from '@react-email/components'
+import { Head, Html, Tailwind } from '@react-email/components';
 
 type TailwindConfigProps = {
-  children: React.ReactNode
-}
+  children: React.ReactNode;
+};
 
 export default function TailwindConfig({ children }: TailwindConfigProps) {
   return (
@@ -80,5 +80,5 @@ export default function TailwindConfig({ children }: TailwindConfigProps) {
         <div className="font-display">{children}</div>
       </Tailwind>
     </Html>
-  )
+  );
 }

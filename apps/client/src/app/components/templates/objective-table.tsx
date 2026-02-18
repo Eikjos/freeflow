@@ -1,5 +1,5 @@
-import { Button } from '@components/ui/button'
-import { DataTable } from '@components/ui/data-table'
+import { Button } from '@components/ui/button';
+import { DataTable } from '@components/ui/data-table';
 import {
   Dialog,
   DialogClose,
@@ -8,22 +8,22 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@components/ui/dialog'
-import { ObjectiveData } from '@repo/shared-types'
-import { ColumnDef } from '@tanstack/react-table'
-import { deleteObjective } from 'actions/objective'
-import dayjs from 'dayjs'
-import { PenBox, Trash } from 'lucide-react'
-import { useTranslations } from 'next-intl'
-import { toast } from 'sonner'
-import CreateObjectiveDialog from './create-objective-dialog'
+} from '@components/ui/dialog';
+import { ObjectiveData } from '@repo/shared-types';
+import { ColumnDef } from '@tanstack/react-table';
+import { deleteObjective } from 'actions/objective';
+import dayjs from 'dayjs';
+import { PenBox, Trash } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
+import CreateObjectiveDialog from './create-objective-dialog';
 
 type ObjectiveTableProps = {
-  data: ObjectiveData[]
-  isLoading: boolean
-  onDelete: () => void
-  onUpdate: () => void
-}
+  data: ObjectiveData[];
+  isLoading: boolean;
+  onDelete: () => void;
+  onUpdate: () => void;
+};
 
 export default function ObjectiveTable({
   data,
@@ -31,7 +31,7 @@ export default function ObjectiveTable({
   onDelete,
   onUpdate,
 }: ObjectiveTableProps) {
-  const t = useTranslations()
+  const t = useTranslations();
   const columnDefs: ColumnDef<ObjectiveData>[] = [
     {
       accessorKey: 'startDate',
@@ -72,16 +72,16 @@ export default function ObjectiveTable({
       header: t('common.status'),
       cell: ({ row }) => {
         if (row.original.currentNumber >= row.original.objectiveNumber) {
-          return <span className="text-green-500">{t('common.success')}</span>
+          return <span className="text-green-500">{t('common.success')}</span>;
         } else if (
           dayjs(row.original.endDate).isBefore(new Date()) &&
           dayjs(row.original.startDate).isBefore(new Date())
         ) {
-          return <span className="text-red-500">{t('common.failed')}</span>
+          return <span className="text-red-500">{t('common.failed')}</span>;
         } else if (dayjs(row.original.startDate).isAfter(new Date())) {
-          return <span className="text-muted">{t('objective.noStart')}</span>
+          return <span className="text-muted">{t('objective.noStart')}</span>;
         } else {
-          return <span>{t('objective.inProgress')}</span>
+          return <span>{t('objective.inProgress')}</span>;
         }
       },
     },
@@ -125,20 +125,20 @@ export default function ObjectiveTable({
         </div>
       ),
     },
-  ]
+  ];
 
   const handleDelete = (id: number) => {
     deleteObjective(id)
       .then(() => {
-        toast.success(t('objective.success.delete'))
-        onDelete()
+        toast.success(t('objective.success.delete'));
+        onDelete();
       })
       .catch((err: Error) => {
-        toast.error(err.message)
-      })
-  }
+        toast.error(err.message);
+      });
+  };
 
   return (
     <DataTable columns={columnDefs} data={data ?? []} isLoading={isLoading} />
-  )
+  );
 }

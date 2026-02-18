@@ -1,26 +1,26 @@
-'use server'
+'use server';
 
-import CustomerTable from '@components/templates/customer-table'
-import { Button } from '@components/ui/button'
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
-import { Plus } from 'lucide-react'
-import { headers } from 'next/headers'
-import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
-import { getAllCustomersQueryOptions } from '../../../../lib/api/customers'
-import getQueryClient from '../../../../lib/query-client'
-import { EnterpriseInfo } from '../../../../types/enterprise-info-type'
+import CustomerTable from '@components/templates/customer-table';
+import { Button } from '@components/ui/button';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { Plus } from 'lucide-react';
+import { headers } from 'next/headers';
+import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
+import { getAllCustomersQueryOptions } from '../../../../lib/api/customers';
+import getQueryClient from '../../../../lib/query-client';
+import { EnterpriseInfo } from '../../../../types/enterprise-info-type';
 
 export default async function CustomerPage() {
-  const t = await getTranslations()
-  const headersEnterprise = (await headers()).get('x-enterprise')
+  const t = await getTranslations();
+  const headersEnterprise = (await headers()).get('x-enterprise');
   const enterprise: EnterpriseInfo | null = headersEnterprise
     ? (JSON.parse(headersEnterprise) as EnterpriseInfo)
-    : null
-  const queryClient = getQueryClient()
+    : null;
+  const queryClient = getQueryClient();
   void queryClient.prefetchQuery(
     getAllCustomersQueryOptions({ page: 0, pageSize: 10 }),
-  )
+  );
 
   return (
     <div className="w-full">
@@ -38,5 +38,5 @@ export default async function CustomerPage() {
         <CustomerTable />
       </HydrationBoundary>
     </div>
-  )
+  );
 }

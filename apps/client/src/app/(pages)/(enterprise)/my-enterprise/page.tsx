@@ -1,10 +1,10 @@
-import EnterpriseSettings from '@components/organisms/enterprise-settings'
-import ObjectiveList from '@components/organisms/objective-list'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
-import { useTranslations } from 'next-intl'
+import EnterpriseSettings from '@components/organisms/enterprise-settings';
+import ObjectiveList from '@components/organisms/objective-list';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
+import { useTranslations } from 'next-intl';
 
 export default function MyEnterprisePage() {
-  const t = useTranslations()
+  const t = useTranslations();
   return (
     <>
       <h1 className="font-amica text-4xl">{t('enterprise.my')}</h1>
@@ -25,5 +25,5 @@ export default function MyEnterprisePage() {
         </TabsContent>
       </Tabs>
     </>
-  )
+  );
 }

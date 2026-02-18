@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import { OTPInput, OTPInputContext, REGEXP_ONLY_DIGITS } from 'input-otp'
-import { Dot } from 'lucide-react'
-import * as React from 'react'
-import { cn } from '../../../lib/utils'
-import { FormField } from './form'
+import { OTPInput, OTPInputContext, REGEXP_ONLY_DIGITS } from 'input-otp';
+import { Dot } from 'lucide-react';
+import * as React from 'react';
+import { cn } from '../../../lib/utils';
+import { FormField } from './form';
 
 const InputOTP = React.forwardRef<
   React.ElementRef<typeof OTPInput>,
@@ -19,23 +19,23 @@ const InputOTP = React.forwardRef<
     className={cn('disabled:cursor-not-allowed', className)}
     {...props}
   />
-))
-InputOTP.displayName = 'InputOTP'
+));
+InputOTP.displayName = 'InputOTP';
 
 const InputOTPGroup = React.forwardRef<
   React.ElementRef<'div'>,
   React.ComponentPropsWithoutRef<'div'>
 >(({ className, ...props }, ref) => (
   <div ref={ref} className={cn('flex items-center', className)} {...props} />
-))
-InputOTPGroup.displayName = 'InputOTPGroup'
+));
+InputOTPGroup.displayName = 'InputOTPGroup';
 
 const InputOTPSlot = React.forwardRef<
   React.ElementRef<'div'>,
   React.ComponentPropsWithoutRef<'div'> & { index: number }
 >(({ index, className, ...props }, ref) => {
-  const inputOTPContext = React.useContext(OTPInputContext)
-  const slot = inputOTPContext.slots[index]!
+  const inputOTPContext = React.useContext(OTPInputContext);
+  const slot = inputOTPContext.slots[index]!;
 
   return (
     <div
@@ -54,9 +54,9 @@ const InputOTPSlot = React.forwardRef<
         </div>
       )}
     </div>
-  )
-})
-InputOTPSlot.displayName = 'InputOTPSlot'
+  );
+});
+InputOTPSlot.displayName = 'InputOTPSlot';
 
 const InputOTPSeparator = React.forwardRef<
   React.ElementRef<'div'>,
@@ -65,14 +65,14 @@ const InputOTPSeparator = React.forwardRef<
   <div ref={ref} role="separator" {...props}>
     <Dot />
   </div>
-))
-InputOTPSeparator.displayName = 'InputOTPSeparator'
+));
+InputOTPSeparator.displayName = 'InputOTPSeparator';
 
 type InputOtpWithControllerProps = {
-  name: string
-  length: number
-  className?: string
-}
+  name: string;
+  length: number;
+  className?: string;
+};
 
 function InputOTPWithController({
   name,
@@ -99,7 +99,7 @@ function InputOTPWithController({
         </InputOTP>
       )}
     />
-  )
+  );
 }
 
 export {
@@ -108,4 +108,4 @@ export {
   InputOTPSeparator,
   InputOTPSlot,
   InputOTPWithController,
-}
+};

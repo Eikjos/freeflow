@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common'
-import ColumnModule from 'columns/columns.module'
-import { MediaModule } from 'media/media.module'
-import { PrismaService } from 'prisma.service'
-import ProjectController from './project.controller'
-import ProjectService from './project.service'
+import { Module } from '@nestjs/common';
+import ColumnModule from 'columns/columns.module';
+import { MediaModule } from 'media/media.module';
+import { PrismaService } from 'prisma.service';
+import ProjectController from './project.controller';
+import ProjectService from './project.service';
 
 @Module({
   controllers: [ProjectController],

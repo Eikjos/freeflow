@@ -1,11 +1,11 @@
-import Footer from '@components/templates/footer'
-import Header from '@components/templates/header'
-import TarifsSection from '@components/templates/tarifs-section'
-import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
+import Footer from '@components/templates/footer';
+import Header from '@components/templates/header';
+import TarifsSection from '@components/templates/tarifs-section';
+import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 
 export default async function TarifsPage() {
-  const t = await getTranslations()
+  const t = await getTranslations();
   return (
     <div>
       <Header displayMenu={false} />
@@ -20,5 +20,5 @@ export default async function TarifsPage() {
       </div>
       <Footer />
     </div>
-  )
+  );
 }

@@ -1,76 +1,76 @@
-import { Button } from '@components/ui/button'
+import { Button } from '@components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@components/ui/dialog'
-import { Form } from '@components/ui/form'
-import { InputOTPWithController } from '@components/ui/input-otp'
-import { zodResolver } from '@hookform/resolvers/zod'
+} from '@components/ui/dialog';
+import { Form } from '@components/ui/form';
+import { InputOTPWithController } from '@components/ui/input-otp';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   InvoiceData,
   QuoteValidateData,
   ValidateQuoteValidation,
-} from '@repo/shared-types'
-import { sendValidationQuote, validateQuote } from 'actions/invoice'
-import { useTranslations } from 'next-intl'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+} from '@repo/shared-types';
+import { sendValidationQuote, validateQuote } from 'actions/invoice';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 type ValidateQuoteDialogProps = {
-  devis: InvoiceData
-  trigger: JSX.Element
-  onValidate: () => void
-}
+  devis: InvoiceData;
+  trigger: JSX.Element;
+  onValidate: () => void;
+};
 
 export default function ValidateQuoteDialog({
   devis,
   onValidate,
   trigger,
 }: ValidateQuoteDialogProps) {
-  const [open, setOpen] = useState(false)
-  const t = useTranslations()
+  const [open, setOpen] = useState(false);
+  const t = useTranslations();
   const form = useForm<QuoteValidateData>({
     defaultValues: {
       code: '',
       value: true,
     },
     resolver: zodResolver(ValidateQuoteValidation),
-  })
+  });
   const handleOpen = (value: boolean) => {
     if (value) {
       sendValidationQuote(devis.id)
         .then(() => {
-          setOpen(value)
+          setOpen(value);
         })
         .catch(() => {
-          toast.error('Une erreur est survenue. Veuillez réessayer plus tard.')
-        })
+          toast.error('Une erreur est survenue. Veuillez réessayer plus tard.');
+        });
     } else {
-      setOpen(value)
+      setOpen(value);
     }
-  }
+  };
 
   const onSubmit = (value: QuoteValidateData) => {
     validateQuote(devis.id, true, value.code)
       .then(() => {
-        onValidate()
-        toast.success(t('devis.success.validate'))
+        onValidate();
+        toast.success(t('devis.success.validate'));
       })
       .catch((e: Error) => {
-        toast.error(e.message)
+        toast.error(e.message);
       })
       .finally(() => {
-        setOpen(false)
-      })
-  }
+        setOpen(false);
+      });
+  };
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
@@ -92,5 +92,5 @@ export default function ValidateQuoteDialog({
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

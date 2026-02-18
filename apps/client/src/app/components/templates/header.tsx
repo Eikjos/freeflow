@@ -1,16 +1,16 @@
-'use client'
+'use client';
 
-import Logo from '@components/molecules/logo'
-import { Button } from '@components/ui/button'
-import Link from 'next/link'
-import { useTranslations } from 'next-intl'
+import Logo from '@components/molecules/logo';
+import { Button } from '@components/ui/button';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 type HeaderProps = {
-  displayMenu: boolean
-  hideLogin?: boolean
-  isLogged?: boolean
-  isCustomer?: boolean
-}
+  displayMenu: boolean;
+  hideLogin?: boolean;
+  isLogged?: boolean;
+  isCustomer?: boolean;
+};
 
 export default function Header({
   displayMenu = false,
@@ -18,7 +18,7 @@ export default function Header({
   isLogged,
   isCustomer,
 }: HeaderProps) {
-  const t = useTranslations()
+  const t = useTranslations();
   return (
     <div className="pl-3 bg-card container rounded-full border border-secondary mt-10 mx-auto flex flew-row justify-between sticky">
       <div className="w-52">
@@ -49,5 +49,5 @@ export default function Header({
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -1,33 +1,33 @@
-import { Button } from '@components/ui/button'
-import { Card, CardContent, CardFooter } from '@components/ui/card'
-import { Checkbox } from '@components/ui/checkbox'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import { Separator } from '@components/ui/separator'
-import { pdf } from '@react-pdf/renderer'
+import { Button } from '@components/ui/button';
+import { Card, CardContent, CardFooter } from '@components/ui/card';
+import { Checkbox } from '@components/ui/checkbox';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { Separator } from '@components/ui/separator';
+import { pdf } from '@react-pdf/renderer';
 import {
   CreateCreditData,
   CreateCreditLineData,
   CreateCreditLineDataValidation,
   InvoiceData,
   InvoiceInformation,
-} from '@repo/shared-types'
-import { createCredit } from 'actions/credit'
-import { Plus, Trash } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { useFieldArray, useFormContext } from 'react-hook-form'
-import { toast } from 'sonner'
-import getQueryClient from '../../../lib/query-client'
-import { formatPrice } from '../../../lib/utils'
-import CreditTemplate from './credit-template'
+} from '@repo/shared-types';
+import { createCredit } from 'actions/credit';
+import { Plus, Trash } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useFieldArray, useFormContext } from 'react-hook-form';
+import { toast } from 'sonner';
+import getQueryClient from '../../../lib/query-client';
+import { formatPrice } from '../../../lib/utils';
+import CreditTemplate from './credit-template';
 
 type CreateCreditFormProps = {
-  invoice: InvoiceData
-  information: InvoiceInformation | undefined
-  totalAmountInvoice: number
-  totalCreditInvoice: number
-}
+  invoice: InvoiceData;
+  information: InvoiceInformation | undefined;
+  totalAmountInvoice: number;
+  totalCreditInvoice: number;
+};
 
 export default function CreateCreditForm({
   invoice,
@@ -35,30 +35,30 @@ export default function CreateCreditForm({
   totalAmountInvoice = 0,
   totalCreditInvoice = 0,
 }: CreateCreditFormProps) {
-  const t = useTranslations()
+  const t = useTranslations();
   const form = useFormContext<
     CreateCreditData & { newLine: CreateCreditLineData; maskName: boolean }
-  >()
-  const queryClient = getQueryClient()
-  const router = useRouter()
+  >();
+  const queryClient = getQueryClient();
+  const router = useRouter();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'creditLines',
-  })
+  });
 
   const addLine = () => {
-    const { newLine } = form.getValues()
-    form.clearErrors('newLine.price')
-    form.clearErrors('newLine.title')
-    const result = CreateCreditLineDataValidation.safeParse(newLine)
+    const { newLine } = form.getValues();
+    form.clearErrors('newLine.price');
+    form.clearErrors('newLine.title');
+    const result = CreateCreditLineDataValidation.safeParse(newLine);
     if (!result.success) {
       result.error.errors.forEach((err) => {
         return form.setError(
           err.path[0] === 'price' ? 'newLine.price' : 'newLine.title',
           { message: err.message },
-        )
-      })
-      return
+        );
+      });
+      return;
     }
 
     // checking that not exceed the amount of invoice
@@ -66,9 +66,9 @@ export default function CreateCreditForm({
       totalCreditInvoice +
       fields
         .map((e) => parseFloat(e.price.toString()))
-        .reduce((e, prev) => e + prev, 0)
+        .reduce((e, prev) => e + prev, 0);
 
-    const totalCredits = parseFloat(newLine.price.toString()) + previousTotal
+    const totalCredits = parseFloat(newLine.price.toString()) + previousTotal;
 
     if (totalAmountInvoice < totalCredits) {
       form.setError('newLine.price', {
@@ -79,25 +79,25 @@ export default function CreateCreditForm({
             'EUR',
           ),
         }),
-      })
+      });
 
-      return
+      return;
     }
 
-    append(result.data)
-    form.setValue('newLine.title', '')
-    form.setValue('newLine.price', 0)
-  }
+    append(result.data);
+    form.setValue('newLine.title', '');
+    form.setValue('newLine.price', 0);
+  };
 
   const handleMaskNameChange = () => {
-    form.setValue('maskName', !form.watch('maskName'))
-  }
+    form.setValue('maskName', !form.watch('maskName'));
+  };
 
   const onSubmit = async (values: CreateCreditData) => {
     // checking if the credit amount not exceed the invoice amount
     const totalCreditAmount = values.creditLines
       .map((cl) => cl.price)
-      .reduce((i, prev) => prev + i, 0)
+      .reduce((i, prev) => prev + i, 0);
     if (totalCreditAmount > totalAmountInvoice - totalCreditInvoice) {
       toast.error(
         t('credit.notExceedAmount', {
@@ -107,8 +107,8 @@ export default function CreateCreditForm({
             'EUR',
           ),
         }),
-      )
-      return
+      );
+      return;
     }
     const creditBlob = await pdf(
       <CreditTemplate
@@ -120,7 +120,7 @@ export default function CreateCreditForm({
         maskName={form.getValues().maskName}
         lines={values.creditLines}
       />,
-    ).toBlob()
+    ).toBlob();
     createCredit(
       {
         ...values,
@@ -130,18 +130,18 @@ export default function CreateCreditForm({
       new File([creditBlob], `credit-AV-${values.number}.pdf`),
     )
       .then(() => {
-        toast.success(t('credit.success.create'))
-        void queryClient.invalidateQueries({ queryKey: ['sales'] })
-        router.push('/invoices')
+        toast.success(t('credit.success.create'));
+        void queryClient.invalidateQueries({ queryKey: ['sales'] });
+        router.push('/invoices');
       })
       .catch((err: Error) => {
-        toast.error(err.message)
-      })
-  }
+        toast.error(err.message);
+      });
+  };
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   return (
     <Form {...form}>
@@ -228,5 +228,5 @@ export default function CreateCreditForm({
         </Card>
       </form>
     </Form>
-  )
+  );
 }

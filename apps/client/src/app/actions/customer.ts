@@ -1,7 +1,7 @@
-'use server'
+'use server';
 
-import { CustomerCreateModel, CustomerModel } from '@repo/shared-types'
-import { client } from '../../lib/client'
+import { CustomerCreateModel, CustomerModel } from '@repo/shared-types';
+import { client } from '../../lib/client';
 
 export const CreateCustomer = (model: CustomerCreateModel) =>
   client<CustomerModel>(`customers`, {
@@ -10,11 +10,11 @@ export const CreateCustomer = (model: CustomerCreateModel) =>
     body: JSON.stringify(model),
   })
     .then((data) => {
-      return data
+      return data;
     })
     .catch(() => {
-      return null
-    })
+      return null;
+    });
 
 export const UpdateCustomer = (id: number, model: CustomerCreateModel) =>
   client<CustomerModel>(`customers/${id}`, {
@@ -23,14 +23,14 @@ export const UpdateCustomer = (id: number, model: CustomerCreateModel) =>
     body: JSON.stringify(model),
   })
     .then((data) => {
-      return data
+      return data;
     })
     .catch(() => {
-      return null
-    })
+      return null;
+    });
 
 export const deleteCustomer = (id: number) =>
-  client(`customers/${id}`, { method: 'DELETE' })
+  client(`customers/${id}`, { method: 'DELETE' });
 
 export const inviteCustomer = async (id: number) =>
-  client(`customers/${id}/invite`, { method: 'POST' })
+  client(`customers/${id}/invite`, { method: 'POST' });

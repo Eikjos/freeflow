@@ -1,4 +1,4 @@
 export type CountryData = {
-  id: number
-  name: string
-}
+  id: number;
+  name: string;
+};

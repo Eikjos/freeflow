@@ -1,24 +1,24 @@
-'use client'
+'use client';
 
-import { Card, CardContent, CardHeader } from '@components/ui/card'
-import { TaskData } from '@repo/shared-types'
-import { ChevronsDown, ChevronsUp, Equal } from 'lucide-react'
-import { useRef, useState } from 'react'
-import { useDrag } from 'react-dnd'
-import { cn } from '../../../lib/utils'
-import TaskDetailSheet from './task-detail-sheet'
+import { Card, CardContent, CardHeader } from '@components/ui/card';
+import { TaskData } from '@repo/shared-types';
+import { ChevronsDown, ChevronsUp, Equal } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { useDrag } from 'react-dnd';
+import { cn } from '../../../lib/utils';
+import TaskDetailSheet from './task-detail-sheet';
 
 type TaskCardProps = {
-  task: TaskData
+  task: TaskData;
   // onDrop: (
   //   task: TaskData,
   //   columnId_src: number,
   //   columnId_dest: number,
   //   index_dest: number
   // ) => void;
-  onEdit: (task: TaskData) => void
-  onDelete: (task: TaskData) => void
-}
+  onEdit: (task: TaskData) => void;
+  onDelete: (task: TaskData) => void;
+};
 
 export default function TaskCard({
   task,
@@ -26,8 +26,8 @@ export default function TaskCard({
   onEdit,
   onDelete,
 }: TaskCardProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
   const [{ opacity }, dragRef] = useDrag(
     () => ({
       type: 'TaskCard',
@@ -37,17 +37,17 @@ export default function TaskCard({
       }),
     }),
     [task.id],
-  )
+  );
 
-  dragRef(ref)
+  dragRef(ref);
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const handleOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   return (
     <div>
@@ -85,5 +85,5 @@ export default function TaskCard({
         onDelete={onDelete}
       />
     </div>
-  )
+  );
 }

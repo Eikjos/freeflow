@@ -5,14 +5,14 @@ import {
   StyleSheet,
   Text,
   View,
-} from '@react-pdf/renderer'
+} from '@react-pdf/renderer';
 import {
   CustomerDetailModel,
   InvoiceInformation,
   InvoiceLineCreateData,
-} from '@repo/shared-types'
-import dayjs from 'dayjs'
-import { formatPrice, getMediaUrl } from '../utils/utils.js'
+} from '@repo/shared-types';
+import dayjs from 'dayjs';
+import { formatPrice, getMediaUrl } from '../utils/utils.js';
 
 const styles = StyleSheet.create({
   page: {
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   enterpriseName: {
     maxWidth: '250px',
   },
-})
+});
 
 export function InvoiceTemplate({
   title,
@@ -142,25 +142,25 @@ export function InvoiceTemplate({
   devisDate,
   apiUrl,
 }: {
-  title?: string
-  number?: string
-  date?: Date
-  customer?: CustomerDetailModel
-  lines: InvoiceLineCreateData[]
-  information?: InvoiceInformation
-  maskName?: boolean
-  excludeTva?: boolean
-  devisNumber?: string
-  devisDate?: Date
-  apiUrl: string
+  title?: string;
+  number?: string;
+  date?: Date;
+  customer?: CustomerDetailModel;
+  lines: InvoiceLineCreateData[];
+  information?: InvoiceInformation;
+  maskName?: boolean;
+  excludeTva?: boolean;
+  devisNumber?: string;
+  devisDate?: Date;
+  apiUrl: string;
 }) {
   const sum = (values: number[]) => {
-    let result = 0
+    let result = 0;
     values.map((v) => {
-      result += v
-    })
-    return result
-  }
+      result += v;
+    });
+    return result;
+  };
 
   return (
     <Document>
@@ -261,9 +261,9 @@ export function InvoiceTemplate({
             {lines &&
               lines.length > 0 &&
               lines.map((line, index) => {
-                const name = line?.name ?? ''
-                const quantity = line?.quantity ?? 0
-                const unitPrice = line?.unitPrice ?? 0
+                const name = line?.name ?? '';
+                const quantity = line?.quantity ?? 0;
+                const unitPrice = line?.unitPrice ?? 0;
 
                 return (
                   <View style={styles.tableRow} key={index}>
@@ -284,7 +284,7 @@ export function InvoiceTemplate({
                       </Text>
                     </View>
                   </View>
-                )
+                );
               })}
           </>
         </View>
@@ -350,5 +350,5 @@ export function InvoiceTemplate({
         </View>
       </Page>
     </Document>
-  )
+  );
 }

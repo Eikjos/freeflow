@@ -10,8 +10,8 @@ export const formatPrice = (
     maximumFractionDigits: 2,
   })
     .format(value)
-    .replace(/\u202F/g, ' ')
+    .replace(/\u202F/g, ' ');
 
 export function getMediaUrl(origin: string, mediaId: number) {
-  return `${origin}/media/${mediaId}`
+  return `${origin}/media/${mediaId}`;
 }

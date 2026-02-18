@@ -1,6 +1,6 @@
-import { EnterpriseInvoiceModel } from '@repo/shared-types'
+import { EnterpriseInvoiceModel } from '@repo/shared-types';
 
 export default class EnterpriseInvoiceDto implements EnterpriseInvoiceModel {
-  id: number
-  name: string
+  id: number;
+  name: string;
 }

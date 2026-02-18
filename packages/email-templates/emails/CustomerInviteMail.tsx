@@ -1,13 +1,13 @@
-import { Button, Text } from '@react-email/components'
-import Footer from './components/Footer'
-import Header from './components/Header'
-import TailwindConfig from './components/TailwindConfig'
+import { Button, Text } from '@react-email/components';
+import Footer from './components/Footer';
+import Header from './components/Header';
+import TailwindConfig from './components/TailwindConfig';
 
 type CustomerInviteMailProps = {
-  clientUrl: string
-  token: string
-  enterpriseName: string
-}
+  clientUrl: string;
+  token: string;
+  enterpriseName: string;
+};
 
 export function CustomerInviteMail({
   clientUrl,
@@ -50,5 +50,5 @@ export function CustomerInviteMail({
       </div>
       <Footer />
     </TailwindConfig>
-  )
+  );
 }

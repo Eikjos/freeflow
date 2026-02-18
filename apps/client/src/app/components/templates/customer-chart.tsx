@@ -3,22 +3,22 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@components/ui/chart'
-import { CustomerStatData } from '@repo/shared-types'
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
-import { stringToDateYear } from '../../../lib/utils'
+} from '@components/ui/chart';
+import { CustomerStatData } from '@repo/shared-types';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { stringToDateYear } from '../../../lib/utils';
 
 type CustomerChartProps = {
-  data: CustomerStatData[]
-  className?: string
-}
+  data: CustomerStatData[];
+  className?: string;
+};
 
 const config = {
   customers: {
     color: 'red',
     label: 'Nombre de client',
   },
-} as ChartConfig
+} as ChartConfig;
 
 export default function CustomerChart({ data, className }: CustomerChartProps) {
   return (
@@ -50,5 +50,5 @@ export default function CustomerChart({ data, className }: CustomerChartProps) {
         />
       </AreaChart>
     </ChartContainer>
-  )
+  );
 }

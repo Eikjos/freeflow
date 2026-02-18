@@ -1,18 +1,18 @@
-import { Button, Text } from '@react-email/components'
-import dayjs from 'dayjs'
-import { formatPrice } from '../utils'
-import Footer from './components/Footer'
-import Header from './components/Header'
-import TailwindConfig from './components/TailwindConfig'
+import { Button, Text } from '@react-email/components';
+import dayjs from 'dayjs';
+import { formatPrice } from '../utils';
+import Footer from './components/Footer';
+import Header from './components/Header';
+import TailwindConfig from './components/TailwindConfig';
 
 type InvoiceMailProps = {
-  clientUrl: string
-  mediaId: number
-  invoiceNumber: string
-  date: Date
-  amount: number
-  name: string
-}
+  clientUrl: string;
+  mediaId: number;
+  invoiceNumber: string;
+  date: Date;
+  amount: number;
+  name: string;
+};
 
 export function InvoiceMail({
   clientUrl,
@@ -61,5 +61,5 @@ export function InvoiceMail({
 
       <Footer />
     </TailwindConfig>
-  )
+  );
 }

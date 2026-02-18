@@ -1,63 +1,63 @@
-'use client'
+'use client';
 
-import NotFoundEnterprise from '(pages)/(enterprise)/not-found'
-import Autocomplete from '@components/molecules/autocomplete'
-import CreateInvoiceLineModal from '@components/organisms/create-invoice-line-dialog'
-import InvoiceLineList from '@components/organisms/invoice-line-list'
-import { Button } from '@components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card'
-import { Checkbox } from '@components/ui/checkbox'
-import { DateInput } from '@components/ui/date-input'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import Loading from '@components/ui/loading'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { CheckedState } from '@radix-ui/react-checkbox'
-import { PDFViewer, pdf } from '@react-pdf/renderer'
-import { DevisTemplate } from '@repo/pdf-templates'
+import NotFoundEnterprise from '(pages)/(enterprise)/not-found';
+import Autocomplete from '@components/molecules/autocomplete';
+import CreateInvoiceLineModal from '@components/organisms/create-invoice-line-dialog';
+import InvoiceLineList from '@components/organisms/invoice-line-list';
+import { Button } from '@components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
+import { Checkbox } from '@components/ui/checkbox';
+import { DateInput } from '@components/ui/date-input';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import Loading from '@components/ui/loading';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CheckedState } from '@radix-ui/react-checkbox';
+import { PDFViewer, pdf } from '@react-pdf/renderer';
+import { DevisTemplate } from '@repo/pdf-templates';
 import {
   InvoiceCreateData,
   InvoiceCreateValidation,
   InvoiceLineCreateData,
-} from '@repo/shared-types'
-import { useQuery } from '@tanstack/react-query'
-import { createInvoice } from 'actions/invoice'
-import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { useEnterprise } from 'providers/enterprise-provider'
-import { ChangeEvent, useEffect, useReducer, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+} from '@repo/shared-types';
+import { useQuery } from '@tanstack/react-query';
+import { createInvoice } from 'actions/invoice';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useEnterprise } from 'providers/enterprise-provider';
+import { ChangeEvent, useEffect, useReducer, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import {
   getAllCustomersQueryOptions,
   getCustomerByIdOptions,
-} from '../../../../../lib/api/customers'
-import { getInformationForDevisQueryOptions } from '../../../../../lib/api/enterprise'
+} from '../../../../../lib/api/customers';
+import { getInformationForDevisQueryOptions } from '../../../../../lib/api/enterprise';
 import {
   getAllTasksQueryOptions,
   getTasksById,
-} from '../../../../../lib/api/tasks'
+} from '../../../../../lib/api/tasks';
 
 export default function CreateDevisPage() {
-  const t = useTranslations()
-  const { enterprise } = useEnterprise()
+  const t = useTranslations();
+  const { enterprise } = useEnterprise();
 
   if (!enterprise) {
-    return <NotFoundEnterprise />
+    return <NotFoundEnterprise />;
   }
 
-  const router = useRouter()
-  const [maskNameOnInvoice, setMaskNameOnInvoice] = useState<boolean>(true)
-  const [update, forceUpdate] = useReducer((x: number) => x + 1, 0)
+  const router = useRouter();
+  const [maskNameOnInvoice, setMaskNameOnInvoice] = useState<boolean>(true);
+  const [update, forceUpdate] = useReducer((x: number) => x + 1, 0);
   const [autocompleteKey, setAutocompleteKey] = useReducer(
     (x: number) => x + 1,
     0,
-  )
-  const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false)
+  );
+  const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
   const { data, isSuccess, isLoading } = useQuery({
     ...getInformationForDevisQueryOptions(enterprise.id),
     enabled: !!enterprise,
-  })
+  });
   const form = useForm<InvoiceCreateData>({
     resolver: zodResolver(InvoiceCreateValidation),
     defaultValues: {
@@ -69,35 +69,35 @@ export default function CreateDevisPage() {
       invoiceLines: [],
       excludeTva: false,
     },
-  })
-  const customerId = form.watch('customerId')
+  });
+  const customerId = form.watch('customerId');
   const customer = useQuery({
     ...getCustomerByIdOptions(customerId ? customerId.toString() : ''),
     enabled: customerId !== undefined,
-  })
+  });
 
   useEffect(() => {
     if (data?.data?.lastNumber !== undefined && isSuccess) {
-      form.setValue('number', (data.data.lastNumber ?? 1).toString())
+      form.setValue('number', (data.data.lastNumber ?? 1).toString());
     }
-    forceUpdate()
-  }, [data?.data])
+    forceUpdate();
+  }, [data?.data]);
 
   const appendInvoiceLine = (value: InvoiceLineCreateData) => {
-    const invoiceLinesOld = form.getValues().invoiceLines
-    form.setValue('invoiceLines', [...invoiceLinesOld, value])
-    forceUpdate()
-  }
+    const invoiceLinesOld = form.getValues().invoiceLines;
+    form.setValue('invoiceLines', [...invoiceLinesOld, value]);
+    forceUpdate();
+  };
 
   const handleChangeInvoiceLine = (values: InvoiceLineCreateData[]) => {
-    form.setValue('invoiceLines', values)
-    forceUpdate()
-  }
+    form.setValue('invoiceLines', values);
+    forceUpdate();
+  };
 
   const handleChangeTask = async (value: number | undefined) => {
     if (value !== undefined) {
-      const invoiceLine = await getTasksById(value)
-      const invoiceLinesOld = form.getValues().invoiceLines
+      const invoiceLine = await getTasksById(value);
+      const invoiceLinesOld = form.getValues().invoiceLines;
       if (
         invoiceLine.ok &&
         !invoiceLinesOld.some((e) => e.name === invoiceLine.data?.name) &&
@@ -106,21 +106,21 @@ export default function CreateDevisPage() {
         form.setValue('invoiceLines', [
           ...invoiceLinesOld,
           { name: invoiceLine.data.name, quantity: 1, unitPrice: 0.0 },
-        ])
+        ]);
       }
-      setAutocompleteKey()
+      setAutocompleteKey();
     }
-  }
+  };
 
   const handleMashNameChange = (checked: CheckedState) => {
-    setMaskNameOnInvoice(checked ? true : false)
-    forceUpdate()
-  }
+    setMaskNameOnInvoice(checked ? true : false);
+    forceUpdate();
+  };
 
   const handleExcludeTvaChange = (checked: CheckedState) => {
-    form.setValue('excludeTva', checked ? true : false)
-    forceUpdate()
-  }
+    form.setValue('excludeTva', checked ? true : false);
+    forceUpdate();
+  };
 
   const onSubmit = async (values: InvoiceCreateData) => {
     const invoiceBlob = await pdf(
@@ -135,7 +135,7 @@ export default function CreateDevisPage() {
         lines={values.invoiceLines}
         apiUrl={process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? ''}
       />,
-    ).toBlob()
+    ).toBlob();
 
     createInvoice(
       {
@@ -147,24 +147,24 @@ export default function CreateDevisPage() {
       new File([invoiceBlob], `devis-${values.number}.pdf`),
     )
       .then(() => {
-        toast.success(t('devis.success.create'))
-        router.push('/invoices')
+        toast.success(t('devis.success.create'));
+        router.push('/invoices');
       })
       .catch((err: Error) => {
-        toast.error(err.message)
-      })
-  }
+        toast.error(err.message);
+      });
+  };
 
   const handleSubmit = () => {
-    void form.handleSubmit(onSubmit)
-  }
+    void form.handleSubmit(onSubmit);
+  };
 
   if (isLoading) {
     return (
       <div className="w-full h-full flex-row flex justify-center items-center">
         <Loading />
       </div>
-    )
+    );
   }
 
   return (
@@ -249,7 +249,7 @@ export default function CreateDevisPage() {
                   onBlur: forceUpdate,
                   value: undefined,
                   onChange: (event: ChangeEvent<HTMLInputElement>) => {
-                    void handleChangeTask(parseInt(event.target.value))
+                    void handleChangeTask(parseInt(event.target.value));
                   },
                 })}
               />
@@ -292,5 +292,5 @@ export default function CreateDevisPage() {
         />
       </PDFViewer>
     </div>
-  )
+  );
 }

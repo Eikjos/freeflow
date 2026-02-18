@@ -1,6 +1,6 @@
-import { cva, VariantProps } from 'class-variance-authority'
-import { ComponentProps, forwardRef } from 'react'
-import { cn } from '../../../lib/utils'
+import { cva, VariantProps } from 'class-variance-authority';
+import { ComponentProps, forwardRef } from 'react';
+import { cn } from '../../../lib/utils';
 import {
   FormControl,
   FormDescription,
@@ -8,15 +8,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from './form'
-import { Label } from './label'
+} from './form';
+import { Label } from './label';
 
 export type InputProps = Omit<ComponentProps<'input'>, 'name'> & {
-  name?: string
-  description?: string
-  label?: string
-  error?: string // Ajout pour les erreurs sans react-hook-form
-} & VariantProps<typeof inputVariant>
+  name?: string;
+  description?: string;
+  label?: string;
+  error?: string; // Ajout pour les erreurs sans react-hook-form
+} & VariantProps<typeof inputVariant>;
 
 const inputVariant = cva(
   'flex h-10 w-full rounded-md text-base file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
@@ -32,14 +32,14 @@ const inputVariant = cva(
       variant: 'default',
     },
   },
-)
+);
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     { className, type, name, description, label, error, variant, ...props },
     ref,
   ) => {
-    const hasError = !!error
+    const hasError = !!error;
 
     return name ? (
       <FormField
@@ -81,10 +81,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
         />
       </div>
-    )
+    );
   },
-)
+);
 
-Input.displayName = 'Input'
+Input.displayName = 'Input';
 
-export { Input }
+export { Input };

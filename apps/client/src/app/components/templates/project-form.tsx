@@ -1,37 +1,37 @@
-'use client'
+'use client';
 
-import Autocomplete from '@components/molecules/autocomplete'
-import { Button } from '@components/ui/button'
-import { Card, CardContent } from '@components/ui/card'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import InputFile from '@components/ui/input-file'
-import { zodResolver } from '@hookform/resolvers/zod'
+import Autocomplete from '@components/molecules/autocomplete';
+import { Button } from '@components/ui/button';
+import { Card, CardContent } from '@components/ui/card';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import InputFile from '@components/ui/input-file';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ProjectCreateData,
   ProjectCreateValidation,
   ProjectDetailData,
-} from '@repo/shared-types'
-import { CreateProject, UpdateProject } from 'actions/project'
-import clsx from 'clsx'
-import { Trash2Icon } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
-import { getAllCustomersQueryOptions } from '../../../lib/api/customers'
-import getQueryClient from '../../../lib/query-client'
-import { cn, getMediaUrl } from '../../../lib/utils'
+} from '@repo/shared-types';
+import { CreateProject, UpdateProject } from 'actions/project';
+import clsx from 'clsx';
+import { Trash2Icon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { getAllCustomersQueryOptions } from '../../../lib/api/customers';
+import getQueryClient from '../../../lib/query-client';
+import { cn, getMediaUrl } from '../../../lib/utils';
 
 type ProjectFormProps = {
-  className?: string
-  data?: ProjectDetailData
-  edit?: boolean
-  projectId?: number
-  isCustomer?: boolean
-}
+  className?: string;
+  data?: ProjectDetailData;
+  edit?: boolean;
+  projectId?: number;
+  isCustomer?: boolean;
+};
 
 export default function ProjectForm({
   className,
@@ -40,9 +40,9 @@ export default function ProjectForm({
   edit = false,
   isCustomer = false,
 }: ProjectFormProps) {
-  const t = useTranslations()
-  const router = useRouter()
-  const queryClient = getQueryClient()
+  const t = useTranslations();
+  const router = useRouter();
+  const queryClient = getQueryClient();
   const form = useForm<ProjectCreateData>({
     resolver: zodResolver(ProjectCreateValidation),
     defaultValues: {
@@ -50,50 +50,50 @@ export default function ProjectForm({
       customerId: data?.customerId ?? undefined,
       media: undefined,
     },
-  })
-  const { media } = form.watch()
+  });
+  const { media } = form.watch();
 
   const onChangeInput = (files: File[]) => {
-    const file = files[files.length - 1]
+    const file = files[files.length - 1];
     if (file) {
-      form.setValue('media', file, { shouldValidate: true })
+      form.setValue('media', file, { shouldValidate: true });
     } else {
-      form.setValue('media', undefined, { shouldValidate: false })
+      form.setValue('media', undefined, { shouldValidate: false });
     }
-  }
+  };
 
   const onSubmit = async (values: ProjectCreateData) => {
     if (edit && projectId) {
       await UpdateProject(projectId, values).then((res) => {
         if (res === null) {
-          toast.error(t('customer.error.create'))
+          toast.error(t('customer.error.create'));
         } else if (!res.ok && res.error) {
-          toast.error(res.error)
+          toast.error(res.error);
         } else {
-          toast.success('Projet a été mis à jour avec succès')
-          router.push('/activities')
+          toast.success('Projet a été mis à jour avec succès');
+          router.push('/activities');
         }
-      })
+      });
     } else {
       await CreateProject(values).then(async (res) => {
         if (res === null) {
-          toast.error(t('customer.error.create'))
+          toast.error(t('customer.error.create'));
         } else if (!res.ok && res.error) {
-          toast.error(res.error)
+          toast.error(res.error);
         } else {
-          toast.success('project.success.create')
+          toast.success('project.success.create');
           await queryClient.invalidateQueries({
             queryKey: ['project', projectId],
-          })
-          router.push('/activities')
+          });
+          router.push('/activities');
         }
-      })
+      });
     }
-  }
+  };
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   return (
     <>
@@ -182,5 +182,5 @@ export default function ProjectForm({
         </form>
       </Form>
     </>
-  )
+  );
 }

@@ -1,53 +1,53 @@
-'use client'
+'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { LoginData, LoginDataValidation } from '@repo/shared-types'
-import { login } from 'actions/login'
-import { RedirectType, redirect } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { cn } from '../../../lib/utils'
-import { Button } from '../ui/button'
-import { Form } from '../ui/form'
-import { Input } from '../ui/input'
-import { SecretInput } from '../ui/secret-input'
+import { zodResolver } from '@hookform/resolvers/zod';
+import { LoginData, LoginDataValidation } from '@repo/shared-types';
+import { login } from 'actions/login';
+import { RedirectType, redirect } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { cn } from '../../../lib/utils';
+import { Button } from '../ui/button';
+import { Form } from '../ui/form';
+import { Input } from '../ui/input';
+import { SecretInput } from '../ui/secret-input';
 
 type LoginFormProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export const LoginForm = ({ className }: LoginFormProps) => {
-  const [error, setError] = useState<string>()
-  const t = useTranslations()
+  const [error, setError] = useState<string>();
+  const t = useTranslations();
   const form = useForm<LoginData>({
     resolver: zodResolver(LoginDataValidation),
     defaultValues: {
       email: '',
       password: '',
     },
-  })
+  });
   const onSubmit = async (values: LoginData) => {
     await login(values).then((data) => {
       if (!data.success) {
-        setError(data.message)
+        setError(data.message);
       }
       if (data.data?.role == 'enterprise') {
         if (data.data.enterpriseId == null) {
-          redirect('/enterprise/create', RedirectType.replace)
+          redirect('/enterprise/create', RedirectType.replace);
         } else {
-          redirect('/dashboard', RedirectType.replace)
+          redirect('/dashboard', RedirectType.replace);
         }
       } else if (data.data?.role == 'customer') {
-        redirect('/customers/dashboard')
+        redirect('/customers/dashboard');
       }
-      redirect('/', RedirectType.replace)
-    })
-  }
+      redirect('/', RedirectType.replace);
+    });
+  };
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   return (
     <Form {...form}>
@@ -82,5 +82,5 @@ export const LoginForm = ({ className }: LoginFormProps) => {
         </Button>
       </form>
     </Form>
-  )
-}
+  );
+};

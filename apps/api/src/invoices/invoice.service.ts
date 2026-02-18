@@ -3,26 +3,26 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common'
-import { Prisma } from '@prisma/client'
-import { mapCustomerToDetailDto } from 'dtos/customers/customer.dto'
-import { InvoiceDto } from 'dtos/invoices/invoice.dto'
+} from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { mapCustomerToDetailDto } from 'dtos/customers/customer.dto';
+import { InvoiceDto } from 'dtos/invoices/invoice.dto';
 import {
   CreateInvoiceDto,
   CreateInvoiceLineDto,
-} from 'dtos/invoices/invoice-create.dto'
-import { InvoiceFilterDataDto } from 'dtos/invoices/invoice-filter.dto'
-import QuoteValidateDto from 'dtos/invoices/quote-validate.dto'
+} from 'dtos/invoices/invoice-create.dto';
+import { InvoiceFilterDataDto } from 'dtos/invoices/invoice-filter.dto';
+import QuoteValidateDto from 'dtos/invoices/quote-validate.dto';
 import {
   PaginationFilterDto,
   PaginationResultDto,
-} from 'dtos/utils/pagination-result.dto'
-import MailingService from 'mailing/mailing.service'
-import { MediaService } from 'media/media.service'
-import ObjectiveService from 'objective/objective.service'
-import { PrismaService } from 'prisma.service'
-import SalesService from 'sales/sales.service'
-import InvoiceFileService from './invoice-file.service'
+} from 'dtos/utils/pagination-result.dto';
+import MailingService from 'mailing/mailing.service';
+import { MediaService } from 'media/media.service';
+import ObjectiveService from 'objective/objective.service';
+import { PrismaService } from 'prisma.service';
+import SalesService from 'sales/sales.service';
+import InvoiceFileService from './invoice-file.service';
 
 @Injectable()
 export default class InvoiceService {
@@ -43,27 +43,27 @@ export default class InvoiceService {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
       include: { juridicShape: true },
-    })
-    if (!enterprise) throw new ForbiddenException()
+    });
+    if (!enterprise) throw new ForbiddenException();
     const customer = await this.prisma.customer.findFirst({
       where: {
         id: invoice.customerId,
       },
-    })
-    if (!customer) throw new BadRequestException('customer.notFound')
+    });
+    if (!customer) throw new BadRequestException('customer.notFound');
 
     if (invoice.devisId) {
       const devis = await this.prisma.invoice.findFirst({
         where: { id: invoice.devisId, type: 'QUOTE' },
-      })
-      if (!devis) throw new BadRequestException('devis.notFound')
+      });
+      if (!devis) throw new BadRequestException('devis.notFound');
     }
 
     // upload invoice
     const mediaId = await this.mediaService.upload(
       invoiceFile,
       `${enterprise.id}/${invoice.type === 'INVOICE' ? 'invoices' : 'devis'}/${invoice.date.getFullYear()}`,
-    )
+    );
     // create invoice in database
     const invoiceEntity = await this.prisma.invoice.create({
       data: {
@@ -88,7 +88,7 @@ export default class InvoiceService {
           })),
         },
       },
-    })
+    });
 
     // If creation OK - increase the number of lastest invoice
     if (invoiceEntity && invoice.type === 'INVOICE') {
@@ -97,27 +97,27 @@ export default class InvoiceService {
         data: {
           lastInvoiceNumber: enterprise.lastInvoiceNumber + 1,
         },
-      })
+      });
       const invoiceAmount = invoice.invoiceLines
         .map((e) => e.quantity * e.unitPrice)
-        .reduce((prev, curr) => prev + curr, 0)
+        .reduce((prev, curr) => prev + curr, 0);
       await this.objectiveService.increaseObjective(
         invoiceAmount * (invoice.excludeTva ? 1 : 1.2),
         enterpriseId,
         'SALES',
-      )
+      );
       // Add in sales when enterprise is not AE or AE with sales > 77700 on precedent years
-      const juridicShapeCode = enterprise.juridicShape.code
+      const juridicShapeCode = enterprise.juridicShape.code;
       const currentSales = await this.salesService.getAmountByYear(
         invoice.date.getFullYear() - 1,
         enterprise.id,
-      )
+      );
       if (juridicShapeCode != '10' && juridicShapeCode != '1000') {
         await this.salesService.updateSalesAmount(
           enterpriseId,
           invoice.date,
           invoiceAmount * (invoice.excludeTva ? 1 : 1.2),
-        )
+        );
       } else if (
         (juridicShapeCode === '1000' || juridicShapeCode === '10') &&
         currentSales < 77700
@@ -126,13 +126,13 @@ export default class InvoiceService {
           enterpriseId,
           invoice.date,
           invoiceAmount * (invoice.excludeTva ? 1 : 1.2),
-        )
+        );
       }
     }
     const amount =
       invoice.invoiceLines
         .map((a) => a.quantity * a.unitPrice)
-        .reduce((prev, cur) => prev + cur, 0) * (invoice.excludeTva ? 1 : 1.2)
+        .reduce((prev, cur) => prev + cur, 0) * (invoice.excludeTva ? 1 : 1.2);
     if (invoiceEntity.type === 'INVOICE') {
       this.mailingService.sendInvoice(
         invoiceEntity.mediaId,
@@ -141,7 +141,7 @@ export default class InvoiceService {
         amount,
         invoice.title,
         customer.email,
-      )
+      );
     } else {
       this.mailingService.sendQuote(
         invoiceEntity.mediaId,
@@ -150,7 +150,7 @@ export default class InvoiceService {
         amount,
         invoice.title,
         customer.email,
-      )
+      );
     }
   }
 
@@ -162,35 +162,35 @@ export default class InvoiceService {
     let filterQuery: Prisma.InvoiceWhereInput = {
       ...(enterpriseId ? { enterpriseId } : {}),
       ...(customerId ? { customerId } : {}),
-    }
+    };
 
     if (filter.filter) {
       if (filter.filter.number && filter.filter.number !== '') {
         filterQuery = {
           ...filterQuery,
           number: { contains: filter.filter.number, mode: 'insensitive' },
-        }
+        };
       }
       if (filter.filter.type) {
-        filterQuery = { ...filterQuery, type: filter.filter.type }
+        filterQuery = { ...filterQuery, type: filter.filter.type };
       }
       if (filter.filter.status) {
-        filterQuery = { ...filterQuery, status: filter.filter.status }
+        filterQuery = { ...filterQuery, status: filter.filter.status };
       }
       if (filter.filter.startDate) {
         filterQuery = {
           ...filterQuery,
           date: { gte: filter.filter.startDate },
-        }
+        };
       }
       if (filter.filter.endDate) {
-        filterQuery = { ...filterQuery, date: { lte: filter.filter.endDate } }
+        filterQuery = { ...filterQuery, date: { lte: filter.filter.endDate } };
       }
       if (filter.filter.customerId) {
         filterQuery = {
           ...filterQuery,
           customerId: parseInt(`${filter.filter.customerId}`),
-        }
+        };
       }
     }
 
@@ -204,11 +204,11 @@ export default class InvoiceService {
       },
       take: filter.pageSize,
       skip: filter.page * filter.pageSize,
-    })
+    });
 
     const totalItems = await this.prisma.invoice.count({
       where: filterQuery,
-    })
+    });
 
     return {
       data: invoices.map(
@@ -224,7 +224,7 @@ export default class InvoiceService {
       totalItems: totalItems,
       page: filter.page,
       pageSize: filter.pageSize,
-    }
+    };
   }
 
   async findById(id: number, enterpriseId: number) {
@@ -236,8 +236,8 @@ export default class InvoiceService {
         enterprise: true,
         credits: { include: { creditLines: true } },
       },
-    })
-    if (!invoice) throw new NotFoundException()
+    });
+    if (!invoice) throw new NotFoundException();
 
     return new InvoiceDto(
       invoice,
@@ -245,7 +245,7 @@ export default class InvoiceService {
       invoice.customer,
       invoice.enterprise,
       invoice.credits,
-    )
+    );
   }
 
   async validate(
@@ -261,24 +261,24 @@ export default class InvoiceService {
         customer: { include: { country: true } },
         enterprise: { include: { juridicShape: true } },
       },
-    })
-    if (!quote) throw new NotFoundException('quote.notFound')
-    const user = await this.prisma.user.findFirst({ where: { id: userId } })
+    });
+    if (!quote) throw new NotFoundException('quote.notFound');
+    const user = await this.prisma.user.findFirst({ where: { id: userId } });
     if (!user) {
-      throw new ForbiddenException()
+      throw new ForbiddenException();
     }
 
     if (!model.value) {
       await this.prisma.invoice.update({
         where: { id, customerId, type: 'QUOTE' },
         data: { status: 'REJECTED' },
-      })
-      return
+      });
+      return;
     }
 
     // Verify the code
     if (model.code !== quote.code || quote.codeDate < new Date()) {
-      throw new BadRequestException('invoice.invalid.code')
+      throw new BadRequestException('invoice.invalid.code');
     }
 
     // remplacer le fichier
@@ -316,18 +316,18 @@ export default class InvoiceService {
       mapCustomerToDetailDto(quote.customer, quote.customer.country),
       quote.enterprise.mediaId !== null,
       user,
-    )
+    );
     const media = await this.prisma.media.findFirst({
       where: { id: quote.mediaId },
-    })
+    });
     const pathname =
-      media.uploadedPath.split('.')[0] + '-validate' + media.extension
-    console.log(pathname)
+      media.uploadedPath.split('.')[0] + '-validate' + media.extension;
+    console.log(pathname);
     const mediaId = await this.mediaService.uploadBuffer(
       file,
       pathname,
       media.extension,
-    )
+    );
 
     await this.prisma.invoice.update({
       where: { id, type: 'QUOTE', customerId },
@@ -339,38 +339,38 @@ export default class InvoiceService {
         code: undefined,
         codeDate: undefined,
       },
-    })
+    });
   }
 
   async sendCode(id: number, customerId: number) {
     const quote = await this.prisma.invoice.findFirst({
       where: { id, customerId, type: 'QUOTE' },
-    })
-    if (!quote) throw new NotFoundException('quote.notFound')
+    });
+    if (!quote) throw new NotFoundException('quote.notFound');
     const customer = await this.prisma.customer.findFirst({
       where: { id: customerId },
-    })
-    if (!customer) throw new ForbiddenException()
+    });
+    if (!customer) throw new ForbiddenException();
 
-    const code = Math.floor(10000 + Math.random() * 90000).toString()
+    const code = Math.floor(10000 + Math.random() * 90000).toString();
     await this.prisma.invoice.update({
       where: { id, customerId, type: 'QUOTE' },
       data: {
         code: code,
         codeDate: new Date(Date.now() + 5 * 60 * 1000),
       },
-    })
-    this.mailingService.sendQuoteValidationMail(customer.email, code, quote)
+    });
+    this.mailingService.sendQuoteValidationMail(customer.email, code, quote);
   }
 
   async pay(id: number, customerId: number) {
     const invoice = await this.prisma.invoice.findFirst({
       where: { id, customerId, type: 'INVOICE' },
-    })
-    if (!invoice) throw new NotFoundException()
+    });
+    if (!invoice) throw new NotFoundException();
     await this.prisma.invoice.update({
       where: { id, customerId, type: 'INVOICE' },
       data: { status: 'PAYED' },
-    })
+    });
   }
 }

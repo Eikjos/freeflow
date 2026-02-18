@@ -1,25 +1,25 @@
-'use client'
+'use client';
 
-import { Button } from '@components/ui/button'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import { Select } from '@components/ui/select'
-import { Separator } from '@components/ui/separator'
+import { Button } from '@components/ui/button';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { Select } from '@components/ui/select';
+import { Separator } from '@components/ui/separator';
 import {
   EnterpriseCreateModel,
   EnterpriseInformation,
-} from '@repo/shared-types'
-import { useQuery } from '@tanstack/react-query'
-import { useTranslations } from 'next-intl'
-import { useFormContext } from 'react-hook-form'
-import { getAllCountriesQueryOptions } from '../../../lib/api/countries'
-import { fetchEnterpriseInfo } from '../../../lib/api/enterprise'
-import { getAllJuridicShapesQueryOptions } from '../../../lib/api/juridic-shapes'
-import { Card, CardContent } from '../ui/card'
+} from '@repo/shared-types';
+import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { useFormContext } from 'react-hook-form';
+import { getAllCountriesQueryOptions } from '../../../lib/api/countries';
+import { fetchEnterpriseInfo } from '../../../lib/api/enterprise';
+import { getAllJuridicShapesQueryOptions } from '../../../lib/api/juridic-shapes';
+import { Card, CardContent } from '../ui/card';
 
 const EnterpriseForm = () => {
-  const t = useTranslations()
-  const form = useFormContext<EnterpriseCreateModel>()
+  const t = useTranslations();
+  const form = useFormContext<EnterpriseCreateModel>();
 
   const updateFormValues = async (
     data: EnterpriseInformation,
@@ -28,7 +28,7 @@ const EnterpriseForm = () => {
     prefixeInvoice?: string,
     lastInvoiceNumber?: number,
   ) => {
-    form.reset({ ...data, email, phone, prefixeInvoice, lastInvoiceNumber })
+    form.reset({ ...data, email, phone, prefixeInvoice, lastInvoiceNumber });
     await form.trigger([
       'siret',
       'name',
@@ -38,11 +38,11 @@ const EnterpriseForm = () => {
       'zipCode',
       'juridicShape',
       'countryId',
-    ])
-  }
+    ]);
+  };
 
-  const { data: countries } = useQuery(getAllCountriesQueryOptions())
-  const { data: juridicShapes } = useQuery(getAllJuridicShapesQueryOptions())
+  const { data: countries } = useQuery(getAllCountriesQueryOptions());
+  const { data: juridicShapes } = useQuery(getAllJuridicShapesQueryOptions());
 
   const fillFormWithEnterpriseinfo = () => {
     void fetchEnterpriseInfo(form.getValues().siret.replace(/\s+/g, '')).then(
@@ -54,11 +54,11 @@ const EnterpriseForm = () => {
             form.getValues().phone,
             form.getValues().prefixeInvoice,
             form.getValues().lastInvoiceNumber,
-          )
+          );
         }
       },
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -211,7 +211,7 @@ const EnterpriseForm = () => {
         </CardContent>
       </Card>
     </>
-  )
-}
+  );
+};
 
-export default EnterpriseForm
+export default EnterpriseForm;

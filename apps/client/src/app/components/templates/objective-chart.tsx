@@ -1,14 +1,14 @@
-import { ObjectiveData } from '@repo/shared-types'
-import dayjs from 'dayjs'
-import { useTranslations } from 'next-intl'
-import PieChart from './pie-chart'
+import { ObjectiveData } from '@repo/shared-types';
+import dayjs from 'dayjs';
+import { useTranslations } from 'next-intl';
+import PieChart from './pie-chart';
 
 type ObjectiveChartProps = {
-  objective: ObjectiveData
-}
+  objective: ObjectiveData;
+};
 
 export default function ObjectiveChart({ objective }: ObjectiveChartProps) {
-  const t = useTranslations()
+  const t = useTranslations();
 
   return (
     <div>
@@ -42,5 +42,5 @@ export default function ObjectiveChart({ objective }: ObjectiveChartProps) {
         type={objective.objectiveCategory === 'SALES' ? 'PRICE' : 'DEFAULT'}
       />
     </div>
-  )
+  );
 }

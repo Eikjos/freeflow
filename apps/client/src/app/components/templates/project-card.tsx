@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import { Button } from '@components/ui/button'
+import { Button } from '@components/ui/button';
 import {
   Card,
   CardContent,
@@ -8,7 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@components/ui/card'
+} from '@components/ui/card';
 import {
   Dialog,
   DialogClose,
@@ -17,20 +17,20 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@components/ui/dialog'
-import { ProjectData } from '@repo/shared-types'
-import { Pen, Trash } from 'lucide-react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { getMediaUrl } from '../../../lib/utils'
+} from '@components/ui/dialog';
+import { ProjectData } from '@repo/shared-types';
+import { Pen, Trash } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { getMediaUrl } from '../../../lib/utils';
 
 type ProjectCardProps = {
-  project: ProjectData
-  isLoading: boolean
-  isCustomer: boolean
-  onDelete: (project: ProjectData) => void
-}
+  project: ProjectData;
+  isLoading: boolean;
+  isCustomer: boolean;
+  onDelete: (project: ProjectData) => void;
+};
 
 export default function ProjectCard({
   project,
@@ -38,15 +38,15 @@ export default function ProjectCard({
   isCustomer,
   onDelete,
 }: ProjectCardProps) {
-  const t = useTranslations()
-  const router = useRouter()
+  const t = useTranslations();
+  const router = useRouter();
   const goToDetails = () => {
     if (isCustomer) {
-      router.push(`/customers/projects/${project.id}`)
+      router.push(`/customers/projects/${project.id}`);
     } else {
-      router.push(`/activities/projects/${project.id}/tasks`)
+      router.push(`/activities/projects/${project.id}/tasks`);
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -66,7 +66,7 @@ export default function ProjectCard({
           </CardFooter>
         </CardContent>
       </Card>
-    )
+    );
   }
   return (
     <Card className="w-92 min-w-92 h-36">
@@ -164,5 +164,5 @@ export default function ProjectCard({
         </CardFooter>
       </CardContent>
     </Card>
-  )
+  );
 }

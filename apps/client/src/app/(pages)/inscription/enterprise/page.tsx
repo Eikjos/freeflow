@@ -1,6 +1,6 @@
-import EnterpriseInscriptionForm from '@components/templates/enterprise-inscription-form'
-import Footer from '@components/templates/footer'
-import Header from '@components/templates/header'
+import EnterpriseInscriptionForm from '@components/templates/enterprise-inscription-form';
+import Footer from '@components/templates/footer';
+import Header from '@components/templates/header';
 
 export default function InscriptionEnterprisePage() {
   return (
@@ -11,5 +11,5 @@ export default function InscriptionEnterprisePage() {
       </div>
       <Footer />
     </div>
-  )
+  );
 }

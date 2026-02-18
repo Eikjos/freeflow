@@ -5,5 +5,5 @@ export default function Loading() {
       <div className="w-1 h-1 bg-secondary animate-pulse"></div>
       <div className="w-1 h-1 bg-primary animate-pulse"></div>
     </div>
-  )
+  );
 }

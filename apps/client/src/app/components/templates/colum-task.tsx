@@ -1,29 +1,29 @@
-'use client'
+'use client';
 
-import { Card, CardContent, CardHeader } from '@components/ui/card'
-import { Input } from '@components/ui/input'
-import { ColumnsData, TaskData } from '@repo/shared-types'
-import { updateColumn } from 'actions/column'
-import { Plus, Trash2Icon } from 'lucide-react'
-import React, { useRef, useState } from 'react'
-import { useDrag, useDrop } from 'react-dnd'
-import { toast } from 'sonner'
-import { cn } from '../../../lib/utils'
-import TaskCard from './task-card'
-import TaksCreateSheet from './task-create-sheet'
+import { Card, CardContent, CardHeader } from '@components/ui/card';
+import { Input } from '@components/ui/input';
+import { ColumnsData, TaskData } from '@repo/shared-types';
+import { updateColumn } from 'actions/column';
+import { Plus, Trash2Icon } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
+import { toast } from 'sonner';
+import { cn } from '../../../lib/utils';
+import TaskCard from './task-card';
+import TaksCreateSheet from './task-create-sheet';
 
 type ColumnTaksProps = {
-  id: number
-  name: string
-  index: number
-  tasks: TaskData[]
+  id: number;
+  name: string;
+  index: number;
+  tasks: TaskData[];
   onDropTask: (
     task: TaskData,
     columnId_dest: number,
     isCreation?: boolean,
-  ) => void
-  onDropColumn: (col: ColumnsData, index_dest: number) => void
-}
+  ) => void;
+  onDropColumn: (col: ColumnsData, index_dest: number) => void;
+};
 
 export default function ColumnTask({
   id,
@@ -33,10 +33,10 @@ export default function ColumnTask({
   onDropTask,
   onDropColumn,
 }: ColumnTaksProps) {
-  const [open, setOpen] = useState(false)
-  const [currentName, setCurrentName] = useState(name)
-  const ref = useRef<HTMLDivElement>(null)
-  const columRef = useRef<HTMLDivElement>(null)
+  const [open, setOpen] = useState(false);
+  const [currentName, setCurrentName] = useState(name);
+  const ref = useRef<HTMLDivElement>(null);
+  const columRef = useRef<HTMLDivElement>(null);
   const [{ opacity }, dragRef] = useDrag(
     () => ({
       type: 'Column',
@@ -46,71 +46,71 @@ export default function ColumnTask({
       }),
     }),
     [id, name, index, tasks],
-  )
+  );
   const [{ isOver }, dropRef] = useDrop<ColumnsData, void, { isOver: boolean }>(
     {
       accept: 'Column',
       drop(item: ColumnsData) {
         if (item.index !== index) {
-          onDropColumn(item, index)
+          onDropColumn(item, index);
         }
       },
       collect(monitor) {
-        const item = monitor.getItem<ColumnsData>()
+        const item = monitor.getItem<ColumnsData>();
         return {
           isOver: monitor.isOver() && item.id !== id,
-        }
+        };
       },
     },
-  )
+  );
   const [, drop] = useDrop(
     () => ({
       accept: 'TaskCard',
       drop: (item: TaskData, monitor) => {
-        const isOver = monitor.isOver()
+        const isOver = monitor.isOver();
         if (isOver) {
-          onDropTask(item, id)
+          onDropTask(item, id);
         }
       },
     }),
     [id],
-  )
-  drop(ref)
-  dragRef(dropRef(columRef))
+  );
+  drop(ref);
+  dragRef(dropRef(columRef));
 
   const openTaskSheet = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const addTask = (task: TaskData) => {
-    onDropTask(task, id, true)
-  }
+    onDropTask(task, id, true);
+  };
 
   const updateTask = (task: TaskData) => {
-    console.log('update', task)
-    onDropTask(task, id, true)
-  }
+    console.log('update', task);
+    onDropTask(task, id, true);
+  };
 
   const onDeleteTask = (task: TaskData) => {
-    onDropTask(task, 0, true)
-  }
+    onDropTask(task, 0, true);
+  };
 
   const handleUpdateColumn = (event: React.FocusEvent<HTMLInputElement>) => {
     updateColumn(id, { name: event.currentTarget.value })
       .then((res) => {
         if (res) {
-          setCurrentName(res.name)
+          setCurrentName(res.name);
         }
       })
       .catch((e: Error) => {
-        toast.error(e.message)
-        setCurrentName(name)
-      })
-  }
+        toast.error(e.message);
+        setCurrentName(name);
+      });
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentName(event.currentTarget.value)
-  }
+    setCurrentName(event.currentTarget.value);
+  };
 
   return (
     <>
@@ -165,5 +165,5 @@ export default function ColumnTask({
         onAddTask={addTask}
       />
     </>
-  )
+  );
 }

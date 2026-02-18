@@ -1,33 +1,33 @@
-'use client'
+'use client';
 
-import { Button } from '@components/ui/button'
-import { Card, CardContent, CardHeader } from '@components/ui/card'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import { SecretInput } from '@components/ui/secret-input'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { CreateUserData, CreateUserDataValidation } from '@repo/shared-types'
-import { createUser } from 'actions/users'
-import { CircleCheckBig, ShieldX } from 'lucide-react'
-import Link from 'next/link'
-import { useTranslations } from 'next-intl'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
-import { cn } from '../../../lib/utils'
+import { Button } from '@components/ui/button';
+import { Card, CardContent, CardHeader } from '@components/ui/card';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import { SecretInput } from '@components/ui/secret-input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CreateUserData, CreateUserDataValidation } from '@repo/shared-types';
+import { createUser } from 'actions/users';
+import { CircleCheckBig, ShieldX } from 'lucide-react';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { cn } from '../../../lib/utils';
 
 type CustomerInscriptionFormProps = {
-  className?: string
-  token: string
-}
+  className?: string;
+  token: string;
+};
 
 export default function CustomerInscriptionForm({
   className,
   token,
 }: CustomerInscriptionFormProps) {
-  const t = useTranslations()
-  const [isOk, setIsOk] = useState(false)
-  const [tokenInvalid, setTokenInvlid] = useState(false)
+  const t = useTranslations();
+  const [isOk, setIsOk] = useState(false);
+  const [tokenInvalid, setTokenInvlid] = useState(false);
   const form = useForm<CreateUserData & { confirmPassword: string }>({
     resolver: zodResolver(CreateUserDataValidation),
     defaultValues: {
@@ -37,19 +37,19 @@ export default function CustomerInscriptionForm({
       email: '',
       confirmPassword: '',
     },
-  })
+  });
 
   const onSubmit = (values: CreateUserData) => {
     void createUser(values, false, token).then((res) => {
       if (res.success) {
-        setIsOk(true)
+        setIsOk(true);
       } else if (res.message == 'customer.token.invalid') {
-        setTokenInvlid(true)
+        setTokenInvlid(true);
       } else {
-        toast.error(res.message)
+        toast.error(res.message);
       }
-    })
-  }
+    });
+  };
 
   if (tokenInvalid) {
     return (
@@ -63,7 +63,7 @@ export default function CustomerInscriptionForm({
           </p>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   // Vérifier que les informations sur le client est OK
@@ -89,12 +89,12 @@ export default function CustomerInscriptionForm({
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   return (
     <Card className={cn(className)}>
@@ -141,5 +141,5 @@ export default function CustomerInscriptionForm({
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

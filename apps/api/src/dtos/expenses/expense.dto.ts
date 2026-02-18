@@ -1,14 +1,14 @@
-import { Expense, ExpenseCategory } from '@prisma/client'
-import { ExpenseData } from '@repo/shared-types'
-import ExpenseCategoryDto from '../expense-categories/expense-category.dto'
+import { Expense, ExpenseCategory } from '@prisma/client';
+import { ExpenseData } from '@repo/shared-types';
+import ExpenseCategoryDto from '../expense-categories/expense-category.dto';
 
 export class ExpenseDto implements ExpenseData {
-  id: number
-  name: string
-  description?: string
-  date: Date
-  amount: number
-  category: ExpenseCategoryDto
+  id: number;
+  name: string;
+  description?: string;
+  date: Date;
+  amount: number;
+  category: ExpenseCategoryDto;
 }
 
 export const toExpenseDto = (
@@ -28,5 +28,5 @@ export const toExpenseDto = (
       recoverablePercent: category.recoverablePercent,
       tva: category.tva,
     },
-  }
-}
+  };
+};

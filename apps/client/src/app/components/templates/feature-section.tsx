@@ -3,12 +3,12 @@ import {
   FileSpreadsheet,
   ReceiptEuro,
   UsersRound,
-} from 'lucide-react'
-import { getTranslations } from 'next-intl/server'
-import FeatureCard from './feature-card'
+} from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import FeatureCard from './feature-card';
 
 export default async function FeatureSection() {
-  const t = await getTranslations()
+  const t = await getTranslations();
   return (
     <div className="mt-10 border-t bg-card px-10 py-5" id="features">
       <h1 className="text-center text-2xl text-secondary">
@@ -48,5 +48,5 @@ export default async function FeatureSection() {
         />
       </div>
     </div>
-  )
+  );
 }

@@ -1,53 +1,53 @@
-'use client'
+'use client';
 
-import { Card, CardContent } from '@components/ui/card'
-import { Input } from '@components/ui/input'
-import InputFile from '@components/ui/input-file'
-import Loading from '@components/ui/loading'
-import { Select } from '@components/ui/select'
-import { Separator } from '@components/ui/separator'
-import { EditEnterpriseData, EnterpriseData } from '@repo/shared-types'
-import { useQuery } from '@tanstack/react-query'
-import { useTranslations } from 'next-intl'
-import { useFormContext } from 'react-hook-form'
-import { getAllCountriesQueryOptions } from '../../../lib/api/countries'
-import { getAllJuridicShapesQueryOptions } from '../../../lib/api/juridic-shapes'
-import { getMediaUrl } from '../../../lib/utils'
+import { Card, CardContent } from '@components/ui/card';
+import { Input } from '@components/ui/input';
+import InputFile from '@components/ui/input-file';
+import Loading from '@components/ui/loading';
+import { Select } from '@components/ui/select';
+import { Separator } from '@components/ui/separator';
+import { EditEnterpriseData, EnterpriseData } from '@repo/shared-types';
+import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { useFormContext } from 'react-hook-form';
+import { getAllCountriesQueryOptions } from '../../../lib/api/countries';
+import { getAllJuridicShapesQueryOptions } from '../../../lib/api/juridic-shapes';
+import { getMediaUrl } from '../../../lib/utils';
 
 type MyEnterpriseFormProps = {
-  className?: string
-  enterprise: EnterpriseData
-}
+  className?: string;
+  enterprise: EnterpriseData;
+};
 
 export default function MyEnterpriseForm({
   className,
   enterprise,
 }: MyEnterpriseFormProps) {
-  const form = useFormContext<EditEnterpriseData>()
-  const t = useTranslations()
-  const { logo } = form.watch()
+  const form = useFormContext<EditEnterpriseData>();
+  const t = useTranslations();
+  const { logo } = form.watch();
 
   const handleFileChange = (files: File[]) => {
-    const file = files[files.length - 1]
+    const file = files[files.length - 1];
     if (file) {
-      form.setValue('logo', file, { shouldValidate: true })
+      form.setValue('logo', file, { shouldValidate: true });
     } else {
-      form.setValue('logo', undefined, { shouldValidate: false })
+      form.setValue('logo', undefined, { shouldValidate: false });
     }
-  }
+  };
 
   const { data: countryData, isLoading: isLoadingCountry } = useQuery(
     getAllCountriesQueryOptions(),
-  )
+  );
 
   const { data: juridicShapeData, isLoading: isLoadingJuridicShape } = useQuery(
     getAllJuridicShapesQueryOptions(),
-  )
+  );
 
   if (isLoadingCountry || isLoadingJuridicShape) {
-    ;<div className="w-full h-96 flex flex-row justify-center items-center">
+    <div className="w-full h-96 flex flex-row justify-center items-center">
       <Loading />
-    </div>
+    </div>;
   }
 
   return (
@@ -148,5 +148,5 @@ export default function MyEnterpriseForm({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

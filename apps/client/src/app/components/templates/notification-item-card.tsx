@@ -1,9 +1,9 @@
-import { Card, CardContent, CardHeader } from '@components/ui/card'
-import { cn } from '../../../lib/utils'
+import { Card, CardContent, CardHeader } from '@components/ui/card';
+import { cn } from '../../../lib/utils';
 
 type NotificationItemCardProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export default function NotifcationItemCard({
   className,
@@ -18,5 +18,5 @@ export default function NotifcationItemCard({
         <div className="h-2 w-2 bg-secondary rounded-full absolute top-1/2 right-5"></div>
       </CardContent>
     </Card>
-  )
+  );
 }

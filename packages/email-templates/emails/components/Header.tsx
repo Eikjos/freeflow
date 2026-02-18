@@ -1,8 +1,8 @@
-import { Img } from '@react-email/components'
+import { Img } from '@react-email/components';
 
 type HeaderProps = {
-  clientUrl: string
-}
+  clientUrl: string;
+};
 
 export default function Header({ clientUrl }: HeaderProps) {
   return (
@@ -10,5 +10,5 @@ export default function Header({ clientUrl }: HeaderProps) {
       <Img src={`${clientUrl}/assets/freeflow.png`} width="50" height="50" />
       <span className="text-4xl font-amica font-semibold ml-4">Freeflow</span>
     </div>
-  )
+  );
 }

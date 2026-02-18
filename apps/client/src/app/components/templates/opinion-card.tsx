@@ -1,15 +1,15 @@
-import StarRating from '@components/molecules/start-rating'
-import { Card, CardContent, CardHeader } from '@components/ui/card'
-import { Separator } from '@components/ui/separator'
-import { useTranslations } from 'next-intl'
-import NotificationItemCard from './notification-item-card'
+import StarRating from '@components/molecules/start-rating';
+import { Card, CardContent, CardHeader } from '@components/ui/card';
+import { Separator } from '@components/ui/separator';
+import { useTranslations } from 'next-intl';
+import NotificationItemCard from './notification-item-card';
 
 type OpinionCardProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export default function OpinionCard({ className }: OpinionCardProps) {
-  const t = useTranslations()
+  const t = useTranslations();
   return (
     <Card className={className}>
       <CardContent>
@@ -44,5 +44,5 @@ export default function OpinionCard({ className }: OpinionCardProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

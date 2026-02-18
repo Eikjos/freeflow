@@ -1,35 +1,35 @@
-'use client'
+'use client';
 
-import { Button } from '@components/ui/button'
-import { Card, CardContent, CardFooter } from '@components/ui/card'
-import { DateInput } from '@components/ui/date-input'
-import { Form } from '@components/ui/form'
-import { Input } from '@components/ui/input'
-import InputFile from '@components/ui/input-file'
-import Loading from '@components/ui/loading'
-import { Select } from '@components/ui/select'
-import { Textarea } from '@components/ui/textarea'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@components/ui/button';
+import { Card, CardContent, CardFooter } from '@components/ui/card';
+import { DateInput } from '@components/ui/date-input';
+import { Form } from '@components/ui/form';
+import { Input } from '@components/ui/input';
+import InputFile from '@components/ui/input-file';
+import Loading from '@components/ui/loading';
+import { Select } from '@components/ui/select';
+import { Textarea } from '@components/ui/textarea';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CreateExpenseData,
   CreateExpenseDataValidation,
-} from '@repo/shared-types'
-import { useQuery } from '@tanstack/react-query'
-import { createExpense } from 'actions/expense'
-import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
-import { fetchExpenseCategories } from '../../../lib/api/expense-categories'
-import { formatPrice } from '../../../lib/utils'
+} from '@repo/shared-types';
+import { useQuery } from '@tanstack/react-query';
+import { createExpense } from 'actions/expense';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { fetchExpenseCategories } from '../../../lib/api/expense-categories';
+import { formatPrice } from '../../../lib/utils';
 
 type ExpenseFormProps = {
-  className?: string
-}
+  className?: string;
+};
 
 export default function ExpenseForm({ className }: ExpenseFormProps) {
-  const t = useTranslations()
-  const router = useRouter()
+  const t = useTranslations();
+  const router = useRouter();
   const form = useForm<CreateExpenseData>({
     resolver: zodResolver(CreateExpenseDataValidation),
     defaultValues: {
@@ -39,54 +39,54 @@ export default function ExpenseForm({ className }: ExpenseFormProps) {
       date: new Date(),
       categoryId: undefined,
     },
-  })
-  const amount = form.watch('amount')
-  const categoryId = form.watch('categoryId')
-  const expenseFile = form.watch('expense')
+  });
+  const amount = form.watch('amount');
+  const categoryId = form.watch('categoryId');
+  const expenseFile = form.watch('expense');
   const { data, isLoading } = useQuery({
     queryFn: () => fetchExpenseCategories(),
     queryKey: ['expense', 'category'],
-  })
+  });
 
   const onChangeInput = (files: File[]) => {
-    const file = files[files.length - 1]
+    const file = files[files.length - 1];
     if (file) {
-      form.setValue('expense', file, { shouldValidate: true })
+      form.setValue('expense', file, { shouldValidate: true });
     } else {
-      form.setValue('expense', undefined, { shouldValidate: false })
+      form.setValue('expense', undefined, { shouldValidate: false });
     }
-  }
+  };
 
   const onSubmit = (values: CreateExpenseData) => {
     createExpense(values)
       .then(() => {
-        toast.success(t('expence.success.create'))
-        router.push('/expenses')
+        toast.success(t('expence.success.create'));
+        router.push('/expenses');
       })
       .catch((e: Error) => {
-        toast.error(e.message)
-      })
-  }
+        toast.error(e.message);
+      });
+  };
 
   const calculateTvaRecoverablePrice = (categoryId: number) => {
-    const category = data?.data?.filter((d) => d.id == categoryId)[0]
+    const category = data?.data?.filter((d) => d.id == categoryId)[0];
     if (category) {
-      const amountTva = amount * (0 + category.tva / 100)
-      return amountTva * (category.recoverablePercent / 100)
+      const amountTva = amount * (0 + category.tva / 100);
+      return amountTva * (category.recoverablePercent / 100);
     }
-    return 0
-  }
+    return 0;
+  };
 
   const handleSubmit = () => {
-    form.handleSubmit(onSubmit)
-  }
+    form.handleSubmit(onSubmit);
+  };
 
   if (isLoading)
     return (
       <div className="w-full h-full flex items-center justify-center">
         <Loading />
       </div>
-    )
+    );
 
   return (
     <Form {...form}>
@@ -169,5 +169,5 @@ export default function ExpenseForm({ className }: ExpenseFormProps) {
         </Card>
       </form>
     </Form>
-  )
+  );
 }
