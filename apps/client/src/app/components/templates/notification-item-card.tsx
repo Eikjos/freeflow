@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader } from '@components/ui/card';
+import { NotificationData } from '@repo/shared-types';
 import { cn } from '../../../lib/utils';
 
 type NotificationItemCardProps = {
+  notification: NotificationData;
   className?: string;
 };
 

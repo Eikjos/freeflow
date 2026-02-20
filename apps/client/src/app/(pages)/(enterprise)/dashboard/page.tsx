@@ -5,9 +5,21 @@ import OpinionCard from '@components/templates/opinion-card';
 import PrevisionsCard from '@components/templates/previsions-card';
 import UrgentTaskCard from '@components/templates/urgent-task-card';
 import { getTranslations } from 'next-intl/server';
+import { headers } from 'next/headers';
 import { client } from '../../../../lib/client';
+import { EnterpriseInfo } from '../../../../types/enterprise-info-type';
+import NotFoundEnterprise from '../not-found';
 
 export default async function Home() {
+  const headersEnterprise = (await headers()).get('x-enterprise');
+  const enterprise: EnterpriseInfo | null = headersEnterprise
+    ? (JSON.parse(headersEnterprise) as EnterpriseInfo)
+    : null;
+
+  if (!enterprise) {
+    return <NotFoundEnterprise />;
+  }
+
   const customer = await client<number>('customers/count');
   const project = await client<number>('projects/count');
   const sale = await client<number>('sales/total');
@@ -71,7 +83,7 @@ export default async function Home() {
           mt-5
         "
       >
-        <NotificationCard className="w-full" />
+        <NotificationCard className="w-full" enterpriseId={enterprise.id} />
         <UrgentTaskCard className="w-full" />
       </div>
 
