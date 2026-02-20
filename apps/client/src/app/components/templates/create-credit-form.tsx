@@ -14,8 +14,8 @@ import {
 } from '@repo/shared-types';
 import { createCredit } from 'actions/credit';
 import { Plus, Trash } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { toast } from 'sonner';
 import getQueryClient from '../../../lib/query-client';
@@ -139,13 +139,9 @@ export default function CreateCreditForm({
       });
   };
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
-  };
-
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card>
           <CardContent className="py-2 px-4">
             <div className="flex flex-row justify-end mt-2">

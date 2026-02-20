@@ -15,10 +15,10 @@ import {
 import { CreateProject, UpdateProject } from 'actions/project';
 import clsx from 'clsx';
 import { Trash2Icon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { getAllCustomersQueryOptions } from '../../../lib/api/customers';
@@ -91,14 +91,10 @@ export default function ProjectForm({
     }
   };
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
-  };
-
   return (
     <>
       <Form {...form}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card className={cn('p-5', className)}>
             <CardContent>
               <div className="flex flex-row items-center">

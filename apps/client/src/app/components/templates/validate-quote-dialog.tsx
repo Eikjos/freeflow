@@ -68,10 +68,6 @@ export default function ValidateQuoteDialog({
       });
   };
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
-  };
-
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -81,7 +77,7 @@ export default function ValidateQuoteDialog({
             {t('devis.validateTitle', { number: devis.number })}
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <Form {...form}>
             <div className="flex flex-col items-center">
               <p className="text-sm my-5">{t('devis.validateContent')}</p>

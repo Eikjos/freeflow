@@ -22,10 +22,10 @@ import {
 } from '@repo/shared-types';
 import { useQuery } from '@tanstack/react-query';
 import { createInvoice } from 'actions/invoice';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { useEnterprise } from 'providers/enterprise-provider';
-import { ChangeEvent, useEffect, useReducer, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
@@ -48,11 +48,6 @@ export default function CreateDevisPage() {
 
   const router = useRouter();
   const [maskNameOnInvoice, setMaskNameOnInvoice] = useState<boolean>(true);
-  const [update, forceUpdate] = useReducer((x: number) => x + 1, 0);
-  const [autocompleteKey, setAutocompleteKey] = useReducer(
-    (x: number) => x + 1,
-    0,
-  );
   const [modalTaskOpen, setModalTaskOpen] = useState<boolean>(false);
   const { data, isSuccess, isLoading } = useQuery({
     ...getInformationForDevisQueryOptions(enterprise.id),
@@ -70,7 +65,12 @@ export default function CreateDevisPage() {
       excludeTva: false,
     },
   });
+  const title = form.watch('title');
+  const number = form.watch('number');
   const customerId = form.watch('customerId');
+  const date = form.watch('date');
+  const invoiceLines = form.watch('invoiceLines');
+  const excludeTva = form.watch('excludeTva');
   const customer = useQuery({
     ...getCustomerByIdOptions(customerId ? customerId.toString() : ''),
     enabled: customerId !== undefined,
@@ -80,24 +80,21 @@ export default function CreateDevisPage() {
     if (data?.data?.lastNumber !== undefined && isSuccess) {
       form.setValue('number', (data.data.lastNumber ?? 1).toString());
     }
-    forceUpdate();
   }, [data?.data]);
 
   const appendInvoiceLine = (value: InvoiceLineCreateData) => {
-    const invoiceLinesOld = form.getValues().invoiceLines;
+    const invoiceLinesOld = invoiceLines;
     form.setValue('invoiceLines', [...invoiceLinesOld, value]);
-    forceUpdate();
   };
 
   const handleChangeInvoiceLine = (values: InvoiceLineCreateData[]) => {
     form.setValue('invoiceLines', values);
-    forceUpdate();
   };
 
   const handleChangeTask = async (value: number | undefined) => {
     if (value !== undefined) {
       const invoiceLine = await getTasksById(value);
-      const invoiceLinesOld = form.getValues().invoiceLines;
+      const invoiceLinesOld = invoiceLines;
       if (
         invoiceLine.ok &&
         !invoiceLinesOld.some((e) => e.name === invoiceLine.data?.name) &&
@@ -108,18 +105,15 @@ export default function CreateDevisPage() {
           { name: invoiceLine.data.name, quantity: 1, unitPrice: 0.0 },
         ]);
       }
-      setAutocompleteKey();
     }
   };
 
   const handleMashNameChange = (checked: CheckedState) => {
     setMaskNameOnInvoice(checked ? true : false);
-    forceUpdate();
   };
 
   const handleExcludeTvaChange = (checked: CheckedState) => {
     form.setValue('excludeTva', checked ? true : false);
-    forceUpdate();
   };
 
   const onSubmit = async (values: InvoiceCreateData) => {
@@ -155,10 +149,6 @@ export default function CreateDevisPage() {
       });
   };
 
-  const handleSubmit = () => {
-    void form.handleSubmit(onSubmit);
-  };
-
   if (isLoading) {
     return (
       <div className="w-full h-full flex-row flex justify-center items-center">
@@ -184,7 +174,7 @@ export default function CreateDevisPage() {
               'Entrepreneur individuel' && (
               <Checkbox
                 label={t('invoice.notIncludeTva')}
-                checked={form.getValues().excludeTva}
+                checked={excludeTva}
                 onCheckedChange={handleExcludeTvaChange}
               />
             )}
@@ -194,14 +184,12 @@ export default function CreateDevisPage() {
               <Input
                 label={t('common.title')}
                 placeholder={t('devis.title')}
-                {...form.register('title', {
-                  onBlur: forceUpdate,
-                })}
+                {...form.register('title')}
               />
               <DateInput
                 label={t('common.number')}
                 placeholder={t('devis.number')}
-                {...form.register('date', { onBlur: forceUpdate })}
+                {...form.register('date')}
               />
               <Autocomplete
                 label={t('common.customer')}
@@ -220,10 +208,9 @@ export default function CreateDevisPage() {
                 render={(item) => item.name}
                 filterField="name"
                 fieldIdentifier="id"
-                {...form.register('customerId', { onChange: forceUpdate })}
+                {...form.register('customerId')}
               />
               <Autocomplete
-                key={autocompleteKey}
                 queryOptions={(filter) =>
                   getAllTasksQueryOptions({
                     page: 0,
@@ -246,7 +233,6 @@ export default function CreateDevisPage() {
                 onAdd={() => setModalTaskOpen(true)}
                 addLabel={t('task.add')}
                 {...form.register('invoiceLine', {
-                  onBlur: forceUpdate,
                   value: undefined,
                   onChange: (event: ChangeEvent<HTMLInputElement>) => {
                     void handleChangeTask(parseInt(event.target.value));
@@ -255,17 +241,19 @@ export default function CreateDevisPage() {
               />
             </form>
           </Form>
-          {form.getValues().invoiceLines.length > 0 && (
+          {invoiceLines.length > 0 && (
             <div className="mt-4">
               <p>{t('invoice.lines.title')}</p>
               <InvoiceLineList
-                invoices={form.getValues().invoiceLines}
+                invoices={invoiceLines}
                 handleChange={handleChangeInvoiceLine}
               />
             </div>
           )}
           <div className="flex flex-row justify-end mt-4">
-            <Button onClick={handleSubmit}>{t('common.submitAndSend')}</Button>
+            <Button onClick={form.handleSubmit(onSubmit)}>
+              {t('common.submitAndSend')}
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -274,20 +262,16 @@ export default function CreateDevisPage() {
         handleOpen={(value) => setModalTaskOpen(value)}
         handleSubmit={(value) => appendInvoiceLine(value)}
       />
-      <PDFViewer
-        className="w-full h-5/6 rounded-md"
-        showToolbar={false}
-        key={update}
-      >
+      <PDFViewer className="w-full h-5/6 rounded-md" showToolbar={false}>
         <DevisTemplate
-          title={form.getValues().title}
-          number={form.getValues().number}
-          date={form.getValues().date}
+          title={title}
+          number={number}
+          date={date}
           customer={customer?.data?.data}
           information={data?.data}
           maskName={maskNameOnInvoice}
-          excludeTva={form.getValues().excludeTva}
-          lines={form.getValues().invoiceLines}
+          excludeTva={excludeTva}
+          lines={invoiceLines}
           apiUrl={process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? ''}
         />
       </PDFViewer>

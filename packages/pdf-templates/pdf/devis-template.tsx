@@ -175,9 +175,11 @@ export function DevisTemplate({
                 style={styles.logo}
               />
             )}
-            {!maskName && information?.enterprise.mediaId && (
-              <Text>{information?.enterprise.name}</Text>
-            )}
+            <Text>
+              {!maskName && information?.enterprise.mediaId
+                ? information?.enterprise.name
+                : ''}
+            </Text>
           </View>
         </View>
         <View style={styles.containerHeader}>

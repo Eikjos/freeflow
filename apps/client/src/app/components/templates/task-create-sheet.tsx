@@ -73,10 +73,6 @@ export default function TaksCreateSheet({
     form.setValue('files', files, { shouldDirty: true, shouldValidate: true });
   };
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
-  };
-
   return (
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent className="overflow-y-auto pb-5">
@@ -88,7 +84,7 @@ export default function TaksCreateSheet({
         <Form {...form}>
           <form
             className="flex flex-col items-center mt-5"
-            onSubmit={handleSubmit}
+            onSubmit={form.handleSubmit(onSubmit)}
           >
             <Input
               type="text"

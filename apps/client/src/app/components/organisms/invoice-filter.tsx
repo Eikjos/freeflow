@@ -71,14 +71,10 @@ export default function InvoiceFilter({
     form.reset();
   };
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
-  };
-
   return (
     <Card className={clsx('pt-5 shadow-sm bg-slate-100/45', className)}>
       <CardContent className="">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <Form {...form}>
             <h4 className="font-semibold">{t('common.filters')}</h4>
             <div className="flex flex-row w-full gap-10">

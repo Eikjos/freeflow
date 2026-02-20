@@ -9,8 +9,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateUserData, CreateUserDataValidation } from '@repo/shared-types';
 import { createUser } from 'actions/users';
 import { CircleCheckBig } from 'lucide-react';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -67,18 +67,13 @@ export default function EnterpriseInscriptionForm({
       </Card>
     );
   }
-
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
-  };
-
   return (
     <Card className={cn(className)}>
       <CardContent>
         <CardHeader className="pl-0 text-xl font-semibold">
           {t('inscription.form.title')}
         </CardHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <Form {...form}>
             <Input
               type="text"

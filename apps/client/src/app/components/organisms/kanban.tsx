@@ -136,10 +136,6 @@ export function Board({ className, projectId, columns }: KanbanProps) {
     setOpen(false);
   };
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmitCreateColumn);
-  };
-
   return (
     <div className="w-full flex flex-col items-end">
       <Dialog open={open} onOpenChange={(value) => setOpen(value)}>
@@ -148,7 +144,7 @@ export function Board({ className, projectId, columns }: KanbanProps) {
         </DialogTrigger>
         <DialogContent>
           <Form {...form}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={form.handleSubmit(onSubmitCreateColumn)}>
               <DialogTitle className="text-3xl">
                 {t('column.createTitle')}
               </DialogTitle>

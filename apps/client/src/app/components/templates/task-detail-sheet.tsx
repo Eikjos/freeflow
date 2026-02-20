@@ -157,10 +157,6 @@ export default function TaskDetailSheet({
       });
   };
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
-  };
-
   return (
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent className="overflow-x-auto">
@@ -172,7 +168,7 @@ export default function TaskDetailSheet({
         <Form {...form}>
           <form
             className="flex flex-col items-center mt-5"
-            onSubmit={handleSubmit}
+            onSubmit={form.handleSubmit(onSubmit)}
           >
             <Input
               type="text"

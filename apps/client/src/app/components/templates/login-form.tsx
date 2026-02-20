@@ -3,8 +3,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginData, LoginDataValidation } from '@repo/shared-types';
 import { login } from 'actions/login';
-import { RedirectType, redirect } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { RedirectType, redirect } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { cn } from '../../../lib/utils';
@@ -31,6 +31,7 @@ export const LoginForm = ({ className }: LoginFormProps) => {
     await login(values).then((data) => {
       if (!data.success) {
         setError(data.message);
+        return;
       }
       if (data.data?.role == 'enterprise') {
         if (data.data.enterpriseId == null) {
@@ -45,14 +46,10 @@ export const LoginForm = ({ className }: LoginFormProps) => {
     });
   };
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
-  };
-
   return (
     <Form {...form}>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={form.handleSubmit(onSubmit)}
         className={cn('px-10 flex flex-col items-center gap-7', className)}
       >
         {error && (

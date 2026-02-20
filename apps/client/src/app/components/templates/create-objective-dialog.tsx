@@ -80,10 +80,6 @@ export default function CreateObjectiveDialog({
     }
   };
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
-  };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <Form {...form}>
@@ -131,7 +127,9 @@ export default function CreateObjectiveDialog({
                   {t('common.cancel')}
                 </Button>
               </DialogClose>
-              <Button onClick={handleSubmit}>{t('common.save')}</Button>
+              <Button onClick={form.handleSubmit(onSubmit)}>
+                {t('common.save')}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </form>

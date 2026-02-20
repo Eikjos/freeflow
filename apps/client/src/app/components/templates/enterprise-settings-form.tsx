@@ -55,12 +55,8 @@ export default function EnterpriseSettingsForm({
       .catch((e: Error) => toast.error(e.message));
   };
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
       <Form {...form}>
         <FormProvider {...form}>
           <MyEnterpriseForm className="mt-2" enterprise={enterprise} />

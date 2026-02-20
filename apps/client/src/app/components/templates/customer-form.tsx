@@ -14,8 +14,8 @@ import {
 } from '@repo/shared-types';
 import { useQuery } from '@tanstack/react-query';
 import { CreateCustomer, UpdateCustomer } from 'actions/customer';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { getAllCountriesQueryOptions } from '../../../lib/api/countries';
@@ -119,13 +119,9 @@ export default function CustomerForm({
     );
   };
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
-  };
-
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card className={className}>
           <CardContent>
             <div className="flex flew-row gap-4 pt-4">

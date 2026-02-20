@@ -16,8 +16,8 @@ import {
 } from '@repo/shared-types';
 import { useQuery } from '@tanstack/react-query';
 import { createExpense } from 'actions/expense';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { fetchExpenseCategories } from '../../../lib/api/expense-categories';
@@ -77,10 +77,6 @@ export default function ExpenseForm({ className }: ExpenseFormProps) {
     return 0;
   };
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
-  };
-
   if (isLoading)
     return (
       <div className="w-full h-full flex items-center justify-center">
@@ -90,7 +86,7 @@ export default function ExpenseForm({ className }: ExpenseFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card className={className}>
           <CardContent className="px-8 py-6">
             <Input

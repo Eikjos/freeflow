@@ -15,8 +15,8 @@ import {
 } from '@repo/shared-types';
 import { useQuery } from '@tanstack/react-query';
 import { UpdateCustomer } from 'actions/customer';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { getAllCountriesQueryOptions } from '../../../lib/api/countries';
@@ -106,14 +106,10 @@ export default function CustomerFormVerif({
     });
   };
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit);
-  };
-
   return (
     <Card className="w-1/2 mx-auto mt-10 mb-28">
       <Form {...form}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent>
             <CardHeader className="font-semibold p-0 my-5 text-xl">
               <h1>{t('customer.verif.title')}</h1>
