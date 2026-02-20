@@ -3,6 +3,7 @@ import {
   EnterpriseInformation,
   EnterpriseStatData,
   InvoiceInformation,
+  NotificationData,
 } from '@repo/shared-types';
 import { queryOptions } from '@tanstack/react-query';
 import { client } from '../client';
@@ -54,4 +55,14 @@ export const getEnterpriseStatQueryOptions = (year?: number) =>
     queryKey: ['enterprise', 'stat', year],
     retry: false,
     queryFn: () => getEnterpriseStat(year),
+  });
+
+export const getEnterpriseNotifications =  async (id :number) => 
+  await client<NotificationData[]>(`enterprises/${id}/notifications`);
+
+export const getEnterpriseNotificationsQueryOptions = (id : number) => 
+  queryOptions({
+    queryKey: ['enterprise', 'notifications'],
+    retry: false,
+    queryFn: () => getEnterpriseNotifications(id)
   });

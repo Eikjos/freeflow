@@ -18,6 +18,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Project } from '@prisma/client';
 import { Request } from 'express';
+import { EnterpriseGuard } from 'guards/enterprise.guard';
+import NotificationService from 'notifications/notification.service';
 import { CreateEnterpriseDto } from '../dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from '../dtos/enterprises/enterprise-information.dto';
 import EnterpriseUpdateDto from '../dtos/enterprises/enterprise-update.dto';
@@ -35,6 +37,7 @@ export default class EnterprisesController {
     private readonly enterpriseService: EnterpriseService,
     private readonly projectService: ProjectService,
     private readonly mailingService: MailingService,
+    private readonly notificationService: NotificationService
   ) {}
 
   @UseGuards(AccessTokenGuard)
@@ -135,5 +138,12 @@ export default class EnterprisesController {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     const userId = parseInt(req.user['sub']);
     return this.enterpriseService.update(id, model, enterpriseId, userId, logo);
+  }
+
+  @UseGuards(EnterpriseGuard)
+  @Get(":id/notifications")
+  getNotificaitons(@Param("id", ParseIntPipe) id : number, @Req() req : Request) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return this.notificationService.findAllForEnterpriseId(enterpriseId);
   }
 }

@@ -18,4 +18,5 @@ model Customer {
   opinions    Opinion[]
   projects    Project[]
   users       User[]
+  notifications Notification[]
 }
