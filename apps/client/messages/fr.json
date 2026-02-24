@@ -603,6 +603,11 @@
     },
     "notFound": "Le projet n'a pas été trouvé."
   },
+  "notification": {
+    "validated": "Le devis {referenceName} a été validé par le client {customer}.",
+    "refused": "Le devis {referenceName} a été refusé par le client {customer}.",
+    "payed": "La facture {referenceName} a été payée par le client {customer}."
+  },
   "sales": {
     "previsionTitle": "La prévision du chiffre d'affaire",
     "real": "CA réél",

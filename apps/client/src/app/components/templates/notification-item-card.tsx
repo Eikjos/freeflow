@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader } from '@components/ui/card';
 import { NotificationData } from '@repo/shared-types';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { cn } from '../../../lib/utils';
 
@@ -60,6 +61,7 @@ const NotificationInvoicePayed = ({
   notification,
   className,
 }: NotificationItemCardProps) => {
+  const t = useTranslations();
   return (
     <Link href={`invoices`} className={className}>
       <Card className={'h-24'}>
@@ -68,8 +70,10 @@ const NotificationInvoicePayed = ({
             {notification.customer}
           </CardHeader>
           <p className="text-sm pl-2">
-            La facture {notification.referenceName} a été payée par le client{' '}
-            {notification.customer}.
+            {t('notification.payed', {
+              referenceName: notification.referenceName,
+              customer: notification.customer,
+            })}
           </p>
           <div className="h-2 w-2 bg-secondary rounded-full absolute top-1/2 right-5"></div>
         </CardContent>
@@ -82,6 +86,7 @@ const NotificationQuoteValidated = ({
   notification,
   className,
 }: NotificationItemCardProps) => {
+  const t = useTranslations();
   return (
     <Link href={`invoices`} className={className}>
       <Card className={'h-24'}>
@@ -90,8 +95,10 @@ const NotificationQuoteValidated = ({
             {notification.customer}
           </CardHeader>
           <p className="text-sm pl-2">
-            Le devis {notification.referenceName} a été validé par le client{' '}
-            {notification.customer}.
+            {t('notification.validated', {
+              referenceName: notification.referenceName,
+              customer: notification.customer,
+            })}
           </p>
           <div className="h-2 w-2 bg-secondary rounded-full absolute top-1/2 right-5"></div>
         </CardContent>
@@ -104,6 +111,7 @@ const NotificationQuoteRefused = ({
   notification,
   className,
 }: NotificationItemCardProps) => {
+  const t = useTranslations();
   return (
     <Link href={`invoices`} className={className}>
       <Card className={'h-24'}>
@@ -112,8 +120,10 @@ const NotificationQuoteRefused = ({
             {notification.customer}
           </CardHeader>
           <p className="text-sm pl-2">
-            Le devis {notification.referenceName} a été refusé par le client{' '}
-            {notification.customer}.
+            {t('notification.validated', {
+              referenceName: notification.referenceName,
+              customer: notification.customer,
+            })}
           </p>
           <div className="h-2 w-2 bg-secondary rounded-full absolute top-1/2 right-5"></div>
         </CardContent>
