@@ -2,7 +2,6 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "module": "commonjs",
-    "types": ["node", "Multer"],
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,

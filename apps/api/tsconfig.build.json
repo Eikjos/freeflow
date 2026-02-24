@@ -1,5 +1,4 @@
 {
   "extends": "./tsconfig.json",
-  "types": ["node", "Multer"],
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
 }
