@@ -1,0 +1,25 @@
+model Notification {
+  id            Int @id() @default(autoincrement())
+  type          NotificationTypeEnum
+  to            NotificationToEnum
+  enterpriseId  Int
+  customerId    Int
+  referenceId   Int
+  createdAt     DateTime @default(now())
+  enterprise    Enterprise @relation(fields: [enterpriseId], references: [id])
+  customer      Customer @relation(fields: [customerId], references: [id])
+}
+
+enum NotificationToEnum { 
+  ENTERPRISE
+  CUSTOMER
+}
+
+enum NotificationTypeEnum {
+  PAYED
+  VALIDATED
+  REFUSED
+  NEW_INVOICE
+  NEW_QUOTE
+  RELANCE_PAYED
+}

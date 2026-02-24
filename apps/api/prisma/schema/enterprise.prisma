@@ -26,6 +26,7 @@ model Enterprise {
   sales          Sales[]
   users          User[]
   objectives     Objective[]
+  notifications  Notification[]
 }
 
 model EnterpriseCustomer {

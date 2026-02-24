@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import AuthModule from 'auth/auth.module';
+import NotificationModule from 'notifications/notification.module';
 import ColumnModule from './columns/columns.module';
 import CountryModule from './countries/country.module';
 import CreditModule from './credits/credit.module';
@@ -22,6 +23,7 @@ import { UserModule } from './users/user.module';
   imports: [
     MailingModule,
     MediaModule,
+    NotificationModule,
     ConfigModule.forRoot(),
     UserModule,
     AuthModule,

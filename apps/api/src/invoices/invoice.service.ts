@@ -19,6 +19,7 @@ import {
 } from 'dtos/utils/pagination-result.dto';
 import MailingService from 'mailing/mailing.service';
 import { MediaService } from 'media/media.service';
+import NotificationService from 'notifications/notification.service';
 import ObjectiveService from 'objective/objective.service';
 import { PrismaService } from 'prisma.service';
 import SalesService from 'sales/sales.service';
@@ -33,6 +34,7 @@ export default class InvoiceService {
     private readonly salesService: SalesService,
     private readonly mailingService: MailingService,
     private readonly invoiceFileService: InvoiceFileService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async createInvoice(
@@ -273,7 +275,12 @@ export default class InvoiceService {
         where: { id, customerId, type: 'QUOTE' },
         data: { status: 'REJECTED' },
       });
-      return;
+      this.notificationService.createEntepriseNotification(
+        quote.enterpriseId,
+        'REFUSED',
+        customerId,
+        id,
+      );
     }
 
     // Verify the code
@@ -340,6 +347,13 @@ export default class InvoiceService {
         codeDate: undefined,
       },
     });
+
+    this.notificationService.createEntepriseNotification(
+      quote.enterpriseId,
+      'VALIDATED',
+      customerId,
+      id,
+    );
   }
 
   async sendCode(id: number, customerId: number) {
@@ -372,5 +386,11 @@ export default class InvoiceService {
       where: { id, customerId, type: 'INVOICE' },
       data: { status: 'PAYED' },
     });
+    this.notificationService.createEntepriseNotification(
+      invoice.enterpriseId,
+      'PAYED',
+      customerId,
+      id,
+    );
   }
 }

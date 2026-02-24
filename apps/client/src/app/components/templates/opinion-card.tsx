@@ -2,7 +2,6 @@ import StarRating from '@components/molecules/start-rating';
 import { Card, CardContent, CardHeader } from '@components/ui/card';
 import { Separator } from '@components/ui/separator';
 import { useTranslations } from 'next-intl';
-import NotificationItemCard from './notification-item-card';
 
 type OpinionCardProps = {
   className?: string;
@@ -39,7 +38,7 @@ export default function OpinionCard({ className }: OpinionCardProps) {
 
           {/* Avis récents */}
           <div className="bg-gray-300/10 rounded-md p-2 h-[250px] lg:h-[300px] w-full">
-            <NotificationItemCard />
+            {/* <NotificationItemCard /> */}
           </div>
         </div>
       </CardContent>
