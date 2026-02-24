@@ -6,12 +6,12 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { mapCustomerToDetailDto } from 'dtos/customers/customer.dto';
+import { InvoiceDto } from 'dtos/invoices/invoice.dto';
 import {
   CreateInvoiceDto,
   CreateInvoiceLineDto,
 } from 'dtos/invoices/invoice-create.dto';
 import { InvoiceFilterDataDto } from 'dtos/invoices/invoice-filter.dto';
-import { InvoiceDto } from 'dtos/invoices/invoice.dto';
 import QuoteValidateDto from 'dtos/invoices/quote-validate.dto';
 import {
   PaginationFilterDto,
@@ -34,7 +34,7 @@ export default class InvoiceService {
     private readonly salesService: SalesService,
     private readonly mailingService: MailingService,
     private readonly invoiceFileService: InvoiceFileService,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
   ) {}
 
   async createInvoice(
@@ -275,7 +275,12 @@ export default class InvoiceService {
         where: { id, customerId, type: 'QUOTE' },
         data: { status: 'REJECTED' },
       });
-      this.notificationService.createEntepriseNotification(quote.enterpriseId, "REFUSED", customerId, id);
+      this.notificationService.createEntepriseNotification(
+        quote.enterpriseId,
+        'REFUSED',
+        customerId,
+        id,
+      );
     }
 
     // Verify the code
@@ -343,7 +348,12 @@ export default class InvoiceService {
       },
     });
 
-    this.notificationService.createEntepriseNotification(quote.enterpriseId, "VALIDATED", customerId, id);
+    this.notificationService.createEntepriseNotification(
+      quote.enterpriseId,
+      'VALIDATED',
+      customerId,
+      id,
+    );
   }
 
   async sendCode(id: number, customerId: number) {
@@ -376,6 +386,11 @@ export default class InvoiceService {
       where: { id, customerId, type: 'INVOICE' },
       data: { status: 'PAYED' },
     });
-    this.notificationService.createEntepriseNotification(invoice.enterpriseId, "PAYED", customerId, id);
+    this.notificationService.createEntepriseNotification(
+      invoice.enterpriseId,
+      'PAYED',
+      customerId,
+      id,
+    );
   }
 }

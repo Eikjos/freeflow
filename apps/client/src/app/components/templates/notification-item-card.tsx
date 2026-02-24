@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from '@components/ui/card';
 import { NotificationData } from '@repo/shared-types';
-import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { cn } from '../../../lib/utils';
 
 type NotificationItemCardProps = {

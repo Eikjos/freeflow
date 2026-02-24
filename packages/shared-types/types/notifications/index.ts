@@ -1,4 +1,4 @@
-export type NotificationData =  {
+export type NotificationData = {
   id: number;
   type: NotificationTypeEnum;
   enterprise: string;
@@ -6,6 +6,12 @@ export type NotificationData =  {
   createdAt: Date;
   referenceId: number;
   referenceName: string;
-}
+};
 
-export type NotificationTypeEnum = "PAYED" | "NEW_QUOTE" | "NEW_INVOICE" | "VALIDATED" | "REFUSED" | "RELANCE_PAYED"
+export type NotificationTypeEnum =
+  | 'PAYED'
+  | 'NEW_QUOTE'
+  | 'NEW_INVOICE'
+  | 'VALIDATED'
+  | 'REFUSED'
+  | 'RELANCE_PAYED';

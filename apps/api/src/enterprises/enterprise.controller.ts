@@ -37,7 +37,7 @@ export default class EnterprisesController {
     private readonly enterpriseService: EnterpriseService,
     private readonly projectService: ProjectService,
     private readonly mailingService: MailingService,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
   ) {}
 
   @UseGuards(AccessTokenGuard)
@@ -141,8 +141,8 @@ export default class EnterprisesController {
   }
 
   @UseGuards(EnterpriseGuard)
-  @Get(":id/notifications")
-  getNotificaitons(@Param("id", ParseIntPipe) id : number, @Req() req : Request) {
+  @Get(':id/notifications')
+  getNotificaitons(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.notificationService.findAllForEnterpriseId(enterpriseId);
   }
