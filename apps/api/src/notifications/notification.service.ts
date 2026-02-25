@@ -51,13 +51,12 @@ export default class NotificationService {
           c.name AS "customer",
           CASE
               WHEN n."type" = 'VALIDATED' OR n."type" = 'REFUSED' THEN i.number
-              ELSE ex.name
+              ELSE 0
           END AS "referenceName"
       FROM "Notification" n
       INNER JOIN "Customer" c ON c.id = n."customerId"
       INNER JOIN "Enterprise" e ON e.id = n."enterpriseId"
       LEFT JOIN "Invoice" i ON i.id = n."referenceId"
-      LEFT JOIN "Expense" ex ON ex.id = n."referenceId"
       WHERE n."to" = 'ENTERPRISE' AND n."enterpriseId" = ${enterpriseId}
       ORDER BY n."createdAt" DESC;
     `;
