@@ -606,7 +606,9 @@
   "notification": {
     "validated": "Le devis {referenceName} a été validé par le client {customer}.",
     "refused": "Le devis {referenceName} a été refusé par le client {customer}.",
-    "payed": "La facture {referenceName} a été payée par le client {customer}."
+    "payed": "La facture {referenceName} a été payée par le client {customer}.",
+    "newQuote": "Un nouveau devis est disponible émis par {enterprise}.",
+    "newInvoice": "Une nouvelle facture est disponible émis par {enterprise}"
   },
   "sales": {
     "previsionTitle": "La prévision du chiffre d'affaire",

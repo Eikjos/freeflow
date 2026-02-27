@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from '@components/ui/card';
 import { NotificationData } from '@repo/shared-types';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { cn } from '../../../lib/utils';
 
 type NotificationItemCardProps = {
@@ -35,6 +35,20 @@ export default function NotifcationItemCard({
     case 'REFUSED':
       return (
         <NotificationQuoteRefused
+          notification={notification}
+          className={className}
+        />
+      );
+    case 'NEW_INVOICE':
+      return (
+        <NotificationNewInvoice
+          notification={notification}
+          className={className}
+        />
+      );
+    case 'NEW_QUOTE':
+      return (
+        <NotificationNewQuote
           notification={notification}
           className={className}
         />
@@ -123,6 +137,54 @@ const NotificationQuoteRefused = ({
             {t('notification.validated', {
               referenceName: notification.referenceName,
               customer: notification.customer,
+            })}
+          </p>
+          <div className="h-2 w-2 bg-secondary rounded-full absolute top-1/2 right-5"></div>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+};
+
+const NotificationNewInvoice = ({
+  notification,
+  className,
+}: NotificationItemCardProps) => {
+  const t = useTranslations();
+  return (
+    <Link href={`invoices`} className={className}>
+      <Card className={'h-24'}>
+        <CardContent className="p-1 relative">
+          <CardHeader className="p-1 text-primary">
+            {notification.customer}
+          </CardHeader>
+          <p className="text-sm pl-2">
+            {t('notification.newInvoice', {
+              enterprise: notification.enterprise,
+            })}
+          </p>
+          <div className="h-2 w-2 bg-secondary rounded-full absolute top-1/2 right-5"></div>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+};
+
+const NotificationNewQuote = ({
+  notification,
+  className,
+}: NotificationItemCardProps) => {
+  const t = useTranslations();
+  return (
+    <Link href={`invoices`} className={className}>
+      <Card className={'h-24'}>
+        <CardContent className="p-1 relative">
+          <CardHeader className="p-1 text-primary">
+            {notification.customer}
+          </CardHeader>
+          <p className="text-sm pl-2">
+            {t('notification.newQuote', {
+              enterprise: notification.enterprise,
             })}
           </p>
           <div className="h-2 w-2 bg-secondary rounded-full absolute top-1/2 right-5"></div>
