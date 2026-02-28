@@ -6,12 +6,12 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { mapCustomerToDetailDto } from 'dtos/customers/customer.dto';
+import { InvoiceDto } from 'dtos/invoices/invoice.dto';
 import {
   CreateInvoiceDto,
   CreateInvoiceLineDto,
 } from 'dtos/invoices/invoice-create.dto';
 import { InvoiceFilterDataDto } from 'dtos/invoices/invoice-filter.dto';
-import { InvoiceDto } from 'dtos/invoices/invoice.dto';
 import QuoteValidateDto from 'dtos/invoices/quote-validate.dto';
 import {
   PaginationFilterDto,
