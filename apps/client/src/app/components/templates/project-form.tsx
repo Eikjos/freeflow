@@ -81,7 +81,7 @@ export default function ProjectForm({
         } else if (!res.ok && res.error) {
           toast.error(res.error);
         } else {
-          toast.success('project.success.create');
+          toast.success(t('project.success.create'));
           await queryClient.invalidateQueries({
             queryKey: ['project', projectId],
           });

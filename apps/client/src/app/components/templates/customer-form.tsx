@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter } from '@components/ui/card';
 import { Form } from '@components/ui/form';
 import { Input } from '@components/ui/input';
 import { Select } from '@components/ui/select';
+import { Separator } from '@components/ui/separator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CustomerCreateModel,
@@ -59,9 +60,10 @@ export default function CustomerForm({
     data?: EnterpriseInformation,
   ) => {
     if (data) {
-      const { juridicShape, ...customerInfo } = data;
+      const { juridicShape, name, ...customerInfo } = data;
       form.reset({
         ...customerInfo,
+        companyName: name,
         email,
         phone,
       });
@@ -69,7 +71,7 @@ export default function CustomerForm({
       form.reset({ email, phone, siret });
     }
     await form.trigger([
-      'name',
+      'companyName',
       'address',
       'city',
       'tvaNumber',
@@ -131,6 +133,15 @@ export default function CustomerForm({
                 </h4>
                 <Input
                   type="text"
+                  label="Nom du client (référence interne)"
+                  placeholder="Nom du client (référence interne)"
+                  description="Permet d’identifier le client même si l’entreprise est identique"
+                  className="w-full my-4"
+                  {...form.register('name')}
+                />
+                <Separator className="bg-secondary h-[2px]" />
+                <Input
+                  type="text"
                   label={t('enterprise.siret')}
                   placeholder={t('enterprise.siret')}
                   className="mt-4 w-full"
@@ -149,7 +160,7 @@ export default function CustomerForm({
                   label={t('enterprise.name')}
                   placeholder={t('enterprise.name')}
                   className="mt-[1.8rem] w-full"
-                  {...form.register('name')}
+                  {...form.register('companyName')}
                 />
                 <Input
                   type="text"

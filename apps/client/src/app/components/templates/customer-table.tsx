@@ -86,6 +86,10 @@ export default function CustomerTable() {
       header: t('common.name'),
     },
     {
+      accessorKey: 'companyName',
+      header: t('enterprise.name'),
+    },
+    {
       accessorFn: (row) => row.siret ?? 'Pas renseigné',
       header: t('common.siret'),
     },

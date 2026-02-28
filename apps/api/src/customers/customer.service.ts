@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -157,6 +158,16 @@ export default class CustomerService {
       }
     }
 
+    const customerAlreadyExist = await this.prisma.customer.findFirst({
+      where: {
+        enterprises: { some: { enterpriseId: enterpriseId } },
+        name: model.name,
+      },
+    });
+    if (customerAlreadyExist) {
+      throw new ConflictException('customer.already.exist');
+    }
+
     const customer = await this.prisma.customer.update({
       where: { id: customerId },
       data: {
@@ -174,6 +185,15 @@ export default class CustomerService {
     });
     if (!enterprise) {
       throw new ForbiddenException('access.denied');
+    }
+    const customerAlreadyExist = await this.prisma.customer.findFirst({
+      where: {
+        enterprises: { some: { enterpriseId: enterpriseId } },
+        name: model.name,
+      },
+    });
+    if (customerAlreadyExist) {
+      throw new ConflictException('customer.already.exist');
     }
     const tokenDate = new Date();
     tokenDate.setDate(tokenDate.getDate() + 7);

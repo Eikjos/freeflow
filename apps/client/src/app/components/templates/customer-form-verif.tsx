@@ -38,6 +38,7 @@ export default function CustomerFormVerif({
     resolver: zodResolver(CustomerCreateValidation),
     defaultValues: {
       name: customer.name,
+      companyName: customer.companyName,
       siret: customer.siret,
       tvaNumber: customer.tvaNumber,
       address: customer.address,
@@ -73,9 +74,10 @@ export default function CustomerFormVerif({
     data?: EnterpriseInformation,
   ) => {
     if (data) {
-      const { juridicShape, ...customerInfo } = data;
+      const { juridicShape, name, ...customerInfo } = data;
       form.reset({
         ...customerInfo,
+        companyName: name,
         email,
         phone,
       });
@@ -83,7 +85,7 @@ export default function CustomerFormVerif({
       form.reset({ email, phone });
     }
     await form.trigger([
-      'name',
+      'companyName',
       'address',
       'city',
       'tvaNumber',
@@ -118,7 +120,7 @@ export default function CustomerFormVerif({
               <Input
                 type="text"
                 label={t('enterprise.name')}
-                {...form.register('name')}
+                {...form.register('companyName')}
               />
               <Input
                 type="text"

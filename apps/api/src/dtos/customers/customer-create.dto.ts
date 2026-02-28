@@ -21,6 +21,9 @@ export default class CustomerCreateDto implements CustomerCreateModel {
   @ApiProperty({ description: 'Customer name' })
   @IsString()
   name: string;
+  @ApiProperty({ description: 'Customer company name' })
+  @IsString()
+  companyName: string;
   @ApiProperty({ description: 'Customer address' })
   @IsString()
   address: string;

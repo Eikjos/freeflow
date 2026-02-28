@@ -3,6 +3,7 @@ import { z } from 'zod';
 export type CustomerModel = {
   id: number;
   name: string;
+  companyName: string;
   siret?: string;
   address: string;
   city: string;
@@ -36,10 +37,11 @@ export const CustomerCreateValidation = z.object({
         message: 'Le numéro SIRET doit contenir exactement 14 chiffres',
       },
     ),
-  name: z.string().min(1, 'Le nom est requis'),
+  name: z.string().min(1, 'Le nom du client est requis.'),
+  companyName: z.string().min(1, "Le nom de l'entreprise est requis."),
   address: z.string().min(1, "L'adresse est requis"),
   city: z.string().min(1, 'La ville est requis'),
-  zipCode: z.string().min(1, 'Le nom est requis'),
+  zipCode: z.string().min(1, 'Le code postale est requis'),
   countryId: z.string({ required_error: 'Le pays est requis.' }),
   tvaNumber: z.string().optional(),
   email: z

@@ -35,6 +35,6 @@ model EnterpriseCustomer {
   isDeleted    Boolean    @default(false)
   customer     Customer   @relation(fields: [customerId], references: [id])
   enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
-
+  
   @@id([enterpriseId, customerId])
 }

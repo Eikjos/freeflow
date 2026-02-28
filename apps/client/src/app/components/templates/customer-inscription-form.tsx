@@ -75,14 +75,11 @@ export default function CustomerInscriptionForm({
           <p className="text-center my-5 text-muted-foreground">
             {t('inscription.success.title')}
             <br />
-            {t('inscription.success.subtitle')}
+            {t('inscription.success.subtitleCustomer')}
           </p>
           <div className="text-center mb-10">
-            <Button
-              asChild
-              className="inline-block text-wrap text-center h-[50px] "
-            >
-              <Link href="/customers/recapitulatif">
+            <Button asChild className="text-wrap text-center w-64 py-6">
+              <Link href="/customers/recapitulatif" className="p-4 text-md">
                 {t('inscription.recapCustomer')}
               </Link>
             </Button>
