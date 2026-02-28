@@ -3,8 +3,8 @@
 import { Card, CardContent } from '@components/ui/card';
 import InputFile from '@components/ui/input-file';
 import { EnterpriseCreateModel } from '@repo/shared-types';
-import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { useFormContext } from 'react-hook-form';
 
 const EnterpriseLogoForm = () => {
