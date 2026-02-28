@@ -144,6 +144,12 @@ export default class InvoiceService {
         invoice.title,
         customer.email,
       );
+      this.notificationService.createCustomerNotification(
+        invoice.customerId,
+        'NEW_INVOICE',
+        enterpriseId,
+        invoiceEntity.id,
+      );
     } else {
       this.mailingService.sendQuote(
         invoiceEntity.mediaId,
@@ -152,6 +158,12 @@ export default class InvoiceService {
         amount,
         invoice.title,
         customer.email,
+      );
+      this.notificationService.createCustomerNotification(
+        invoice.customerId,
+        'NEW_QUOTE',
+        enterpriseId,
+        invoiceEntity.id,
       );
     }
   }

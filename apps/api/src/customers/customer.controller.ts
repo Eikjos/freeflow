@@ -19,9 +19,9 @@ import CustomerCreateDto from 'dtos/customers/customer-create.dto';
 import { CustomerFilterDto } from 'dtos/customers/customer-filter.dto';
 import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
 import { Request } from 'express';
-import { AccessTokenGuard } from 'guards/access-token.guard';
 import { CustomerGuard } from 'guards/customer.guard';
 import { EnterpriseGuard } from 'guards/enterprise.guard';
+import NotificationService from 'notifications/notification.service';
 import ProjectService from 'projects/project.service';
 import CustomerService from './customer.service';
 
@@ -31,17 +31,18 @@ export default class CustomerController {
   constructor(
     private readonly customerService: CustomerService,
     private readonly projectService: ProjectService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   @Get('stats')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   getStats(@Query('months', ParseIntPipe) months: number, @Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.customerService.getStats(enterpriseId, months);
   }
 
   @Get()
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   findAll(
     @Query()
     filter: PaginationFilterDto<CustomerFilterDto>,
@@ -52,14 +53,14 @@ export default class CustomerController {
   }
 
   @Post()
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @HttpCode(200)
   create(@Body() model: CustomerCreateDto, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
     return this.customerService.create(enterpriseId, model);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get('count')
   count(@Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
@@ -67,7 +68,7 @@ export default class CustomerController {
   }
 
   @Put(':id')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() model: CustomerCreateDto,
@@ -97,7 +98,7 @@ export default class CustomerController {
 
   @Delete(':id')
   @HttpCode(204)
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   delete(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
     return this.customerService.delete(id, enterpriseId);
@@ -105,7 +106,7 @@ export default class CustomerController {
 
   @Post(':customerId/invite')
   @HttpCode(204)
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   inviteCustomer(
     @Param('customerId', ParseIntPipe) customerId: number,
     @Req() req: Request,
@@ -127,12 +128,18 @@ export default class CustomerController {
   }
 
   @Get(':year/stats')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   getStatsByYear(
     @Param('year', ParseIntPipe) year: number,
     @Req() req: Request,
   ) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.customerService.getStatsByYear(year, enterpriseId);
+  }
+
+  @Get(':id/notifications')
+  @UseGuards(CustomerGuard)
+  getNotifications(@Param('id', ParseIntPipe) id: number) {
+    return this.notificationService.findAllForCustomerId(id);
   }
 }
