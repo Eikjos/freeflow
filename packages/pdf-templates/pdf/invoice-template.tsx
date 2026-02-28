@@ -213,7 +213,7 @@ export function InvoiceTemplate({
                 <Text style={styles.text}>Facturé à</Text>
                 <View>
                   <Text style={[styles.textImportant, styles.enterpriseName]}>
-                    {customer?.name}
+                    {customer?.companyName}
                   </Text>
                   <Text style={styles.text}>
                     {customer.address} {'\n'}

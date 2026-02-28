@@ -52,9 +52,6 @@ const InputFile = ({
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles: FileList | null = event.target.files;
-    if (ref.current) {
-      ref.current.value = '';
-    }
     const safeFiles: File[] = [];
     if (selectedFiles) {
       for (const file of selectedFiles) {
@@ -66,6 +63,9 @@ const InputFile = ({
       }
       onFilesSelected([...files, ...safeFiles]);
       setFiles((prev) => [...prev, ...safeFiles]);
+    }
+    if (ref.current) {
+      ref.current.value = '';
     }
   };
   const handleDrop = (event: DragEvent<HTMLDivElement>) => {

@@ -1,18 +1,19 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { randomBytes } from 'crypto';
+import CustomerCreateDto from 'dtos/customers/customer-create.dto';
+import { CustomerFilterDto } from 'dtos/customers/customer-filter.dto';
+import CustomerStatDto from 'dtos/customers/customer-stat.dto';
 import {
   CustomerDto,
   mapCustomerToDetailDto,
   mapCustomerToDto,
 } from 'dtos/customers/customer.dto';
-import CustomerCreateDto from 'dtos/customers/customer-create.dto';
-import { CustomerFilterDto } from 'dtos/customers/customer-filter.dto';
-import CustomerStatDto from 'dtos/customers/customer-stat.dto';
 import {
   PaginationFilterDto,
   PaginationResultDto,
@@ -157,6 +158,16 @@ export default class CustomerService {
       }
     }
 
+    const customerAlreadyExist = await this.prisma.customer.findFirst({
+      where: {
+        enterprises: { some: { enterpriseId: enterpriseId } },
+        name: model.name,
+      },
+    });
+    if (customerAlreadyExist) {
+      throw new ConflictException('customer.already.exist');
+    }
+
     const customer = await this.prisma.customer.update({
       where: { id: customerId },
       data: {
@@ -174,6 +185,15 @@ export default class CustomerService {
     });
     if (!enterprise) {
       throw new ForbiddenException('access.denied');
+    }
+    const customerAlreadyExist = await this.prisma.customer.findFirst({
+      where: {
+        enterprises: { some: { enterpriseId: enterpriseId } },
+        name: model.name,
+      },
+    });
+    if (customerAlreadyExist) {
+      throw new ConflictException('customer.already.exist');
     }
     const tokenDate = new Date();
     tokenDate.setDate(tokenDate.getDate() + 7);

@@ -37,7 +37,7 @@ const CreateEnterprisePage = () => {
     <>
       <Header displayMenu={false} hideLogin={true} />
       <div className="min-h-[calc(100vh-170px)]">
-        <h1 className="text-center font-bold font-amica text-5xl mt-10">
+        <h1 className="text-center font-amica text-5xl mt-10">
           {t('enterprise.create')}
         </h1>
         <FormProvider {...form}>

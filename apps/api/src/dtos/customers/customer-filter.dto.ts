@@ -13,6 +13,8 @@ export class CustomerFilterDto
   @IsString()
   name: string;
   @IsString()
+  companyName: string;
+  @IsString()
   siret: string;
   @IsString()
   tvaNumber: string;

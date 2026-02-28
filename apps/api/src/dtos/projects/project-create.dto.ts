@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ProjectCreateData } from '@repo/shared-types';
-import { IsInt, IsString } from 'class-validator';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export default class ProjectCreateDto implements ProjectCreateData {
   @ApiProperty({
@@ -8,6 +8,7 @@ export default class ProjectCreateDto implements ProjectCreateData {
     type: 'string',
     format: 'binary',
   })
+  @IsOptional()
   media?: File;
   @ApiProperty({ description: 'Project name' })
   @IsString()

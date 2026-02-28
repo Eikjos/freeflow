@@ -25,8 +25,8 @@ import { useQuery } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
 import { deleteCustomer, inviteCustomer } from 'actions/customer';
 import { Mails, PenBoxIcon, Trash } from 'lucide-react';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { getAllCustomersQueryOptions } from '../../../lib/api/customers';
@@ -84,6 +84,10 @@ export default function CustomerTable() {
     {
       accessorKey: 'name',
       header: t('common.name'),
+    },
+    {
+      accessorKey: 'companyName',
+      header: t('enterprise.name'),
     },
     {
       accessorFn: (row) => row.siret ?? 'Pas renseigné',

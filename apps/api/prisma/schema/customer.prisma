@@ -1,22 +1,23 @@
 model Customer {
-  id          Int                  @id @default(autoincrement())
-  name        String
-  siret       String?
-  tvaNumber   String?
-  address     String
-  city        String
-  countryId   Int
-  zipCode     String
-  email       String
-  phone       String
-  token       String?
-  tokenDate   DateTime?
-  createdAt   DateTime             @default(now())
-  country     Country              @relation(fields: [countryId], references: [id])
-  enterprises EnterpriseCustomer[]
-  invoices    Invoice[]
-  opinions    Opinion[]
-  projects    Project[]
-  users       User[]
+  id            Int                  @id @default(autoincrement())
+  name          String
+  companyName   String
+  siret         String?
+  tvaNumber     String?
+  address       String
+  city          String
+  countryId     Int
+  zipCode       String
+  email         String
+  phone         String
+  token         String?
+  tokenDate     DateTime?
+  createdAt     DateTime             @default(now())
+  country       Country              @relation(fields: [countryId], references: [id])
+  enterprises   EnterpriseCustomer[]
+  invoices      Invoice[]
+  opinions      Opinion[]
+  projects      Project[]
+  users         User[]
   notifications Notification[]
 }

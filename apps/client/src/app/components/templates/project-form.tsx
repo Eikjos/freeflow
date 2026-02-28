@@ -15,10 +15,10 @@ import {
 import { CreateProject, UpdateProject } from 'actions/project';
 import clsx from 'clsx';
 import { Trash2Icon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { getAllCustomersQueryOptions } from '../../../lib/api/customers';
@@ -81,7 +81,7 @@ export default function ProjectForm({
         } else if (!res.ok && res.error) {
           toast.error(res.error);
         } else {
-          toast.success('project.success.create');
+          toast.success(t('project.success.create'));
           await queryClient.invalidateQueries({
             queryKey: ['project', projectId],
           });
