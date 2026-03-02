@@ -2,6 +2,7 @@ import { HttpModule } from '@nestjs/axios';
 import { forwardRef, Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import NotificationModule from 'notifications/notification.module';
+import OpinionModule from 'opinions/opinion.module';
 import AuthModule from '../auth/auth.module';
 import ExpenseModule from '../expenses/expense.module';
 import MailingModule from '../mailing/mailing.module';
@@ -18,6 +19,7 @@ import EnterpriseService from './enterprise.service';
     HttpModule,
     MediaModule,
     ProjectModule,
+    OpinionModule,
     ExpenseModule,
     SalesModule,
     MailingModule,
