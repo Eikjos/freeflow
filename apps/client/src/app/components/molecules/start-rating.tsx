@@ -10,12 +10,14 @@ interface StarRatingProps {
   readOnly?: boolean;
   onChange?: (value: number) => void;
   className?: string;
+  withValueDisplay?: boolean;
 }
 
 export default function StarRating({
   value: controlledValue,
   defaultValue = 0,
   readOnly = false,
+  withValueDisplay = false,
   onChange,
   className = '',
 }: StarRatingProps) {
@@ -42,9 +44,11 @@ export default function StarRating({
       ref={containerRef}
       className={cn('flex flex-col items-center', className)}
     >
-      <div className="font-medium text-primary text-3xl" aria-hidden>
-        {value.toString().replace('.', ',')} / {max}
-      </div>
+      {withValueDisplay && (
+        <div className="font-medium text-primary text-3xl" aria-hidden>
+          {value.toString().replace('.', ',')} / {max}
+        </div>
+      )}
       <div
         aria-label={
           readOnly ? `Note: ${value} sur ${max}` : `Note : ${value} sur ${max}`

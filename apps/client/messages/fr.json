@@ -580,6 +580,7 @@
     }
   },
   "opinion": {
+    "empty": "Il n'y a pas encore d'avis.",
     "last": {
       "title": "Les derniers avis"
     }

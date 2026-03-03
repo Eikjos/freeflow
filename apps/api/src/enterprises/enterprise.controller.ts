@@ -150,19 +150,19 @@ export default class EnterprisesController {
   }
 
   @UseGuards(EnterpriseGuard)
-  @Get(':id/opinions')
-  getOpinions(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
-    const enterpriseId = parseInt(req.user['enterpriseId']);
-    return this.opinionService.findAllByEnterprise(enterpriseId, false);
-  }
-
-  @UseGuards(EnterpriseGuard)
-  @Get(':id/opinions-average-rate')
+  @Get(':id/average-opinions-rate')
   getOptinionsAverageRate(
     @Param('id', ParseIntPipe) id: number,
     @Req() req: Request,
   ) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.opinionService.getRateAverage(enterpriseId);
+  }
+
+  @UseGuards(EnterpriseGuard)
+  @Get(':id/opinions')
+  getOpinions(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return this.opinionService.findAllByEnterprise(enterpriseId, false);
   }
 }

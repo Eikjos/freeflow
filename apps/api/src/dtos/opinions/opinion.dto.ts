@@ -20,7 +20,7 @@ export default class OpinionDto implements OpinionData {
     this.id = opinion.id;
     this.content = opinion.content;
     this.rate = opinion.rate.toNumber();
-    this.customer = customer.companyName;
+    this.customer = customer.name;
     this.createdAt = opinion.createdAt;
     this.enterpriseId = opinion.enterpriseId;
   }

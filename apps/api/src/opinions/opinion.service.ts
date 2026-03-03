@@ -38,7 +38,7 @@ export default class OpinionService {
       _avg: { rate: true },
       where: { enterpriseId },
     });
-    return data._avg;
+    return data._avg.rate;
   }
 
   async create(
