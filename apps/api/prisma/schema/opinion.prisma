@@ -6,4 +6,5 @@ model Opinion {
   enterpriseId Int
   customer     Customer   @relation(fields: [customerId], references: [id])
   enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
+  createdAt    DateTime   @default(now())
 }

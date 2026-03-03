@@ -20,6 +20,7 @@ import { Project } from '@prisma/client';
 import { Request } from 'express';
 import { EnterpriseGuard } from 'guards/enterprise.guard';
 import NotificationService from 'notifications/notification.service';
+import OpinionService from 'opinions/opinion.service';
 import { CreateEnterpriseDto } from '../dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from '../dtos/enterprises/enterprise-information.dto';
 import EnterpriseUpdateDto from '../dtos/enterprises/enterprise-update.dto';
@@ -38,6 +39,7 @@ export default class EnterprisesController {
     private readonly projectService: ProjectService,
     private readonly mailingService: MailingService,
     private readonly notificationService: NotificationService,
+    private readonly opinionService: OpinionService,
   ) {}
 
   @UseGuards(AccessTokenGuard)
@@ -145,5 +147,22 @@ export default class EnterprisesController {
   getNotificaitons(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.notificationService.findAllForEnterpriseId(enterpriseId);
+  }
+
+  @UseGuards(EnterpriseGuard)
+  @Get(':id/average-opinions-rate')
+  getOptinionsAverageRate(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request,
+  ) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return this.opinionService.getRateAverage(enterpriseId);
+  }
+
+  @UseGuards(EnterpriseGuard)
+  @Get(':id/opinions')
+  getOpinions(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    const enterpriseId = parseInt(req.user['enterpriseId']);
+    return this.opinionService.findAllByEnterprise(enterpriseId, false);
   }
 }
