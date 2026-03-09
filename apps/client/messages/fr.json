@@ -278,6 +278,7 @@
     "start": "Commencer",
     "serviceProvider": "Prestataire",
     "subscribe": "Souscrire",
+    "submit": "Soumettre",
     "validate": "Valider"
   },
   "column": {
@@ -581,6 +582,8 @@
   },
   "opinion": {
     "empty": "Il n'y a pas encore d'avis.",
+    "give": "Donnez votre avis sur l'entreprise : {enterprise}",
+    "contentLabel": "Contenu de l'avis",
     "last": {
       "title": "Les derniers avis"
     }

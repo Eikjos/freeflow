@@ -12,6 +12,7 @@ import {
   CreateOpinionDataValidation,
 } from '@repo/shared-types';
 import { createOpinion } from 'actions/opinion';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -23,6 +24,7 @@ type CreateOpinionFormProps = {
 export default function CreateOpinionForm({
   entepriseId,
 }: CreateOpinionFormProps) {
+  const t = useTranslations();
   const router = useRouter();
   const form = useForm<CreateOpinionData>({
     defaultValues: {
@@ -65,11 +67,11 @@ export default function CreateOpinionForm({
             />
             <div className="w-full flex flex-col justify-between h-full gap-7">
               <Textarea
-                label={"Contenu de l'avis"}
+                label={t('opinion.contentLabel')}
                 className="w-full min-h-[200px]"
                 {...form.register('content')}
               />
-              <Button className="w-1/4 mx-auto">Soumettre</Button>
+              <Button className="w-1/4 mx-auto">{t('common.submit')}</Button>
             </div>
           </CardContent>
         </Card>
