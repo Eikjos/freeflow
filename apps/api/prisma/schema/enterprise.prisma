@@ -35,6 +35,8 @@ model EnterpriseCustomer {
   isDeleted    Boolean    @default(false)
   customer     Customer   @relation(fields: [customerId], references: [id])
   enterprise   Enterprise @relation(fields: [enterpriseId], references: [id])
+  emailReviewSent Boolean @default(false)
+  createdAt    DateTime   @default(now())
   
   @@id([enterpriseId, customerId])
 }

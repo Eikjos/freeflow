@@ -5,6 +5,7 @@ import {
   CustomerInviteMail,
   InscriptionMail,
   InvoiceMail,
+  OpinionMail,
   QuoteMail,
   ValidateQuoteMail,
 } from '@repo/email-templates';
@@ -124,6 +125,22 @@ export default class MailingService {
       from: 'ne-pas-repondre@freeflow.fr',
       to,
       subject: 'Création du compte Client sur la plateforme Freeflow',
+      html: emailHtml,
+    });
+  }
+
+  async sendReviewMail(to: string, enterpriseId: number, enterprise: string) {
+    const emailHtml = await render(
+      <OpinionMail
+        clientUrl={this.clientUrl}
+        enterpriseName={enterprise}
+        enterpriseId={enterpriseId}
+      />,
+    );
+    this.transporter.sendMail({
+      from: 'ne-pas-repondre@freeflow.fr',
+      to,
+      subject: `Donner votre avis sur l'entreprise ${enterprise}`,
       html: emailHtml,
     });
   }

@@ -3,8 +3,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginData, LoginDataValidation } from '@repo/shared-types';
 import { login } from 'actions/login';
-import { RedirectType, redirect } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { RedirectType, redirect } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { cn } from '../../../lib/utils';
@@ -15,9 +15,10 @@ import { SecretInput } from '../ui/secret-input';
 
 type LoginFormProps = {
   className?: string;
+  returnUrl?: string;
 };
 
-export const LoginForm = ({ className }: LoginFormProps) => {
+export const LoginForm = ({ className, returnUrl }: LoginFormProps) => {
   const [error, setError] = useState<string>();
   const t = useTranslations();
   const form = useForm<LoginData>({
@@ -33,16 +34,20 @@ export const LoginForm = ({ className }: LoginFormProps) => {
         setError(data.message);
         return;
       }
-      if (data.data?.role == 'enterprise') {
-        if (data.data.enterpriseId == null) {
-          redirect('/enterprise/create', RedirectType.replace);
-        } else {
-          redirect('/dashboard', RedirectType.replace);
+      if (returnUrl && returnUrl !== '') {
+        redirect(returnUrl);
+      } else {
+        if (data.data?.role == 'enterprise') {
+          if (data.data.enterpriseId == null) {
+            redirect('/enterprise/create', RedirectType.replace);
+          } else {
+            redirect('/dashboard', RedirectType.replace);
+          }
+        } else if (data.data?.role == 'customer') {
+          redirect('/customers/dashboard');
         }
-      } else if (data.data?.role == 'customer') {
-        redirect('/customers/dashboard');
+        redirect('/', RedirectType.replace);
       }
-      redirect('/', RedirectType.replace);
     });
   };
 
