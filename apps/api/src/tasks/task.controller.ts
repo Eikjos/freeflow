@@ -18,8 +18,7 @@ import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import CreateTaskDto from 'dtos/tasks/task-create.dto';
 import { TaskPaginationFilterDto } from 'dtos/tasks/task-filter.dto';
 import { Request } from 'express';
-import { AccessTokenGuard } from 'guards/access-token.guard';
-import { CustomerGuard } from 'guards/customer.guard';
+import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import { EnterpriseGuard } from 'guards/enterprise.guard';
 import TaskService from './task.service';
 
@@ -27,7 +26,7 @@ import TaskService from './task.service';
 export default class TasksController {
   constructor(private readonly taskService: TaskService) {}
 
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   @Get()
   getAll(@Query() filter: TaskPaginationFilterDto) {
     return this.taskService.getAll(filter);
@@ -40,13 +39,13 @@ export default class TasksController {
     return this.taskService.getUrgentsTask(enterpriseId);
   }
 
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   @Get(':id')
   findById(@Param('id', ParseIntPipe) id: number) {
     return this.taskService.findById(id);
   }
 
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   @Delete(':id/medias/:mediaId')
   deleteMedia(
     @Param('id', ParseIntPipe) id: number,
@@ -58,7 +57,7 @@ export default class TasksController {
   @UseInterceptors(FilesInterceptor('files'))
   @HttpCode(200)
   @ApiConsumes('multipart/form-data')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   @Put(':id')
   @ApiBody({
     description: 'Mise à jour de la tâche',
@@ -80,7 +79,7 @@ export default class TasksController {
     );
   }
 
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   @Delete(':id')
   @HttpCode(200)
   deleteTask(@Param('id', ParseIntPipe) id: number) {

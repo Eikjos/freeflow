@@ -6,8 +6,10 @@ import {
   CardDescription,
   CardHeader,
 } from '@components/ui/card';
+import { CustomerStatDataProjectInvoice } from '@repo/shared-types';
 import { ChartNoAxesGantt, FileClock } from 'lucide-react';
 import { headers } from 'next/headers';
+import { client } from '../../../../../lib/client';
 import { formatPrice } from '../../../../../lib/utils';
 import { CustomerInfo } from '../../../../../types/customer-info-type';
 import { UserInfoType } from '../../../../../types/user-info-types';
@@ -20,6 +22,10 @@ export default async function CustomerDashboardPage() {
   if (!headerCustomer) return <NotFoundEnterprise />;
   const user = JSON.parse(headerUser) as UserInfoType;
   const customer = JSON.parse(headerCustomer) as CustomerInfo;
+
+  const stats = await client<CustomerStatDataProjectInvoice>(
+    `customers/stats-invoice-project`,
+  );
 
   return (
     <div>
@@ -38,8 +44,10 @@ export default async function CustomerDashboardPage() {
               <span className="text-xl font-light pb-2">Projets</span>
             </CardHeader>
             <CardDescription className="flex flex-row justify-between items-center">
-              <span className="text-3xl">5</span>
-              <span className="text-primary text-xl">10 tickets assignés</span>
+              <span className="text-3xl">
+                {stats.data?.project.number ?? 0}
+              </span>
+              {/* <span className="text-primary text-xl">10 tickets assignés</span> */}
             </CardDescription>
           </CardContent>
         </Card>
@@ -54,9 +62,11 @@ export default async function CustomerDashboardPage() {
               </span>
             </CardHeader>
             <CardDescription className="flex flex-row justify-between items-center">
-              <span className="text-3xl">5</span>
+              <span className="text-3xl">
+                {stats.data?.invoice.number ?? 0}
+              </span>
               <span className="text-primary text-xl">
-                {formatPrice(1500, 'fr-FR', 'EUR')}
+                {formatPrice(stats.data?.invoice.amount ?? 0, 'fr-FR', 'EUR')}
               </span>
             </CardDescription>
           </CardContent>

@@ -57,3 +57,17 @@ export type CustomerStatData = {
   month: string;
   customers: number;
 };
+
+export type CustomerStatDataProjectInvoice = {
+  project: CustomerStatProject;
+  invoice: CustomerStatInvoice;
+};
+
+export type CustomerStatProject = {
+  number: number;
+};
+
+export type CustomerStatInvoice = {
+  number: number;
+  amount: number;
+};

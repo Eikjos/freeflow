@@ -7,15 +7,15 @@ import {
 import { Project } from '@prisma/client';
 import { PaginationFilter } from '@repo/shared-types';
 import ColumnService from 'columns/columns.service';
-import { mapToColumn } from 'dtos/columns/column.dto';
 import CreateColumnDto from 'dtos/columns/column-create.dto';
+import { mapToColumn } from 'dtos/columns/column.dto';
+import ProjectCreateDto from 'dtos/projects/project-create.dto';
+import { mapProjectWithTasksAndColumns } from 'dtos/projects/project-detail.dto';
 import {
   mapProjectToDetailDto,
   mapProjectToDto,
   ProjectDto,
 } from 'dtos/projects/project.dto';
-import ProjectCreateDto from 'dtos/projects/project-create.dto';
-import { mapProjectWithTasksAndColumns } from 'dtos/projects/project-detail.dto';
 import { PaginationResultDto } from 'dtos/utils/pagination-result.dto';
 import { MediaService } from 'media/media.service';
 import { PrismaService } from 'prisma.service';
@@ -29,12 +29,20 @@ export default class ProjectService {
 
   // -
 
-  async count(enterpriseId: number): Promise<number> {
+  async countByEnterpriseId(enterpriseId: number): Promise<number> {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
     });
     if (!enterprise) throw new ForbiddenException();
     return await this.prisma.project.count({ where: { enterpriseId } });
+  }
+
+  async countByCustomerId(customerId: number): Promise<number> {
+    const customer = await this.prisma.customer.findFirst({
+      where: { id: customerId },
+    });
+    if (!customer) throw new ForbiddenException();
+    return await this.prisma.project.count({ where: { customerId } });
   }
 
   async findAllByEnterpriseId(

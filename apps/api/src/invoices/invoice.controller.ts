@@ -20,6 +20,7 @@ import QuoteValidateDto from 'dtos/invoices/quote-validate.dto';
 import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
 import { Request } from 'express';
 import { CustomerGuard } from 'guards/customer.guard';
+import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import { EnterpriseGuard } from 'guards/enterprise.guard';
 import InvoiceService from './invoice.service';
 
@@ -45,18 +46,19 @@ export default class InvoiceController {
   }
 
   @Get()
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   findAll(
     @Query() filter: PaginationFilterDto<InvoiceFilterDataDto>,
     @Req() req: Request,
   ) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     const customerId = parseInt(req.user['customerId']);
+    console.log(customerId, enterpriseId);
     return this.invoiceService.findAll(filter, enterpriseId, customerId);
   }
 
   @Get(':id')
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   findById(@Param('id', ParseIntPipe) id: number, @Req() request: Request) {
     const enterpriseId = parseInt(request.user['enterpriseId']);
     return this.invoiceService.findById(id, enterpriseId);

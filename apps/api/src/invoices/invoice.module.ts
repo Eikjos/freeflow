@@ -5,9 +5,9 @@ import NotificationModule from 'notifications/notification.module';
 import ObjectiveModule from 'objective/objective.module';
 import { PrismaService } from 'prisma.service';
 import { SalesModule } from 'sales/sales.module';
+import InvoiceFileService from './invoice-file.service';
 import InvoiceController from './invoice.controller';
 import InvoiceService from './invoice.service';
-import InvoiceFileService from './invoice-file.service';
 
 @Module({
   imports: [
@@ -19,5 +19,6 @@ import InvoiceFileService from './invoice-file.service';
   ],
   providers: [PrismaService, InvoiceService, InvoiceFileService],
   controllers: [InvoiceController],
+  exports: [InvoiceService],
 })
 export default class InvoiceModule {}

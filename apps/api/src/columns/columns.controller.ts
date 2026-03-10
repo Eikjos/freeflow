@@ -15,8 +15,7 @@ import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import CreateColumnDto from 'dtos/columns/column-create.dto';
 import MoveTaskDto from 'dtos/tasks/move-task.dto';
 import CreateTaskDto from 'dtos/tasks/task-create.dto';
-import { CustomerGuard } from 'guards/customer.guard';
-import { EnterpriseGuard } from 'guards/enterprise.guard';
+import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import ColumnService from './columns.service';
 
 @Controller('columns')
@@ -26,7 +25,7 @@ export default class ColumnsController {
   @UseInterceptors(FilesInterceptor('files'))
   @HttpCode(200)
   @ApiConsumes('multipart/form-data')
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   @Post(':id/tasks')
   @ApiBody({
     description: 'Créer une tâche',
@@ -43,7 +42,7 @@ export default class ColumnsController {
 
   @HttpCode(200)
   @Post(':id')
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   updateColumns(
     @Param('id', ParseIntPipe) id: number,
     @Body() model: CreateColumnDto,
@@ -53,7 +52,7 @@ export default class ColumnsController {
 
   @HttpCode(200)
   @Patch(':id/tasks/:taskId/move')
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   moveTasks(
     @Param('id', ParseIntPipe) id: number,
     @Param('taskId', ParseIntPipe) taskId,

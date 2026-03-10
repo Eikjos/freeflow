@@ -15,21 +15,21 @@ import {
 import CreateObjectiveDto from 'dtos/objectives/create-objective.dto';
 import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
 import { Request } from 'express';
-import { AccessTokenGuard } from 'guards/access-token.guard';
+import { EnterpriseGuard } from 'guards/enterprise.guard';
 import ObjectiveService from './objective.service';
 
 @Controller('objectives')
 export default class ObjectiveController {
   constructor(private readonly objectiveService: ObjectiveService) {}
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get('in-progress')
   getInProgress(@Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.objectiveService.findInProgress(enterpriseId);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Post()
   @HttpCode(200)
   create(@Body() model: CreateObjectiveDto, @Req() request: Request) {
@@ -37,7 +37,7 @@ export default class ObjectiveController {
     return this.objectiveService.create(model, enterpriseId);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Put(':id')
   @HttpCode(200)
   update(
@@ -49,7 +49,7 @@ export default class ObjectiveController {
     return this.objectiveService.update(id, model, enterpriseId);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get()
   findAll(
     @Query() fitler: PaginationFilterDto<undefined>,
@@ -59,7 +59,7 @@ export default class ObjectiveController {
     return this.objectiveService.findAll(fitler, enterpriseId);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Delete(':id')
   delete(@Param('id', ParseIntPipe) id: number, @Req() request: Request) {
     const enterpriseId = parseInt(request.user['enterpriseId']);
