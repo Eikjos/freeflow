@@ -10,7 +10,12 @@ export async function AuthMiddleware(req: NextRequest) {
   const cookiesStorage = req.cookies;
   const authToken = cookiesStorage.get('refreshToken');
   if (!authToken || authToken.value === '') {
-    return NextResponse.redirect(new URL('/login', req.url));
+    const loginUrl = new URL('/login', req.url);
+    loginUrl.searchParams.set(
+      'returnUrl',
+      req.nextUrl.pathname + req.nextUrl.search,
+    );
+    return NextResponse.redirect(loginUrl);
   }
 
   return refresh(authToken.value)

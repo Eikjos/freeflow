@@ -3,13 +3,18 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import CreateOpinionDto from 'dtos/opinions/create-opinion.dto';
 import OpinionDto, { mapForApiPublic } from 'dtos/opinions/opinion.dto';
+import MailingService from 'mailing/mailing.service';
 import { PrismaService } from 'prisma.service';
 
 @Injectable()
 export default class OpinionService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mailingService: MailingService,
+  ) {}
 
   async findAllByEnterprise(enterpriseId: number, isPublic: boolean = false) {
     const enterprise = await this.prisma.enterprise.findFirst({
@@ -64,5 +69,42 @@ export default class OpinionService {
         rate: model.rate,
       },
     });
+  }
+
+  @Cron('0 12 * * *')
+  async sendReviewsMails() {
+    console.log("Début cron job pour envoyer les demandes d'avis");
+
+    const date = new Date();
+    date.setDate(date.getDate() - 30);
+    const relations = await this.prisma.enterpriseCustomer.findMany({
+      where: {
+        emailReviewSent: false,
+        createdAt: { lt: date },
+        isDeleted: false,
+      },
+      include: { customer: true, enterprise: true },
+    });
+
+    for (const relation of relations) {
+      await this.mailingService.sendReviewMail(
+        relation.customer.email,
+        relation.enterpriseId,
+        relation.enterprise.name,
+      );
+      await this.prisma.enterpriseCustomer.update({
+        where: {
+          enterpriseId_customerId: {
+            enterpriseId: relation.enterpriseId,
+            customerId: relation.customerId,
+          },
+        },
+        data: {
+          emailReviewSent: true,
+        },
+      });
+    }
+
+    console.log("Fin cron job pour envoyer les demandes d'avis");
   }
 }

@@ -28,6 +28,7 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/schedule": "^6.1.1",
     "@nestjs/swagger": "^8.0.7",
     "@prisma/client": "^6.1.0",
     "@react-email/render": "^2.0.0",

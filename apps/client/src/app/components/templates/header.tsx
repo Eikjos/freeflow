@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
 type HeaderProps = {
-  displayMenu: boolean;
+  displayMenu?: boolean;
   hideLogin?: boolean;
   isLogged?: boolean;
   isCustomer?: boolean;

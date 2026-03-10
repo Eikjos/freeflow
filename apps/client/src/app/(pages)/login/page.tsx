@@ -1,12 +1,16 @@
-'use client';
-
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
-import { Suspense } from 'react';
+import { getTranslations } from 'next-intl/server';
 import { LoginForm } from '../../components/templates/login-form';
 
-const LoginPage = () => {
-  const t = useTranslations();
+type LoginPageProps = {
+  searchParams: {
+    returnUrl: string;
+  };
+};
+
+const LoginPage = async ({ searchParams }: LoginPageProps) => {
+  const t = await getTranslations();
+  const returnUrl = (await searchParams).returnUrl;
 
   return (
     <div className="flex flew-row items-center h-screen">
@@ -33,9 +37,7 @@ const LoginPage = () => {
           <span className="font-amica text-5xl">Freeflow</span>
         </div>
         <h1 className="text-5xl mt-28 text-center font-amica">{t('signIn')}</h1>
-        <Suspense>
-          <LoginForm className="mt-12 px-10" />
-        </Suspense>
+        <LoginForm className="mt-12 px-10" returnUrl={returnUrl} />
       </div>
     </div>
   );
