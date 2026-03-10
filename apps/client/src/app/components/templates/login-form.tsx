@@ -3,8 +3,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginData, LoginDataValidation } from '@repo/shared-types';
 import { login } from 'actions/login';
-import { useTranslations } from 'next-intl';
 import { RedirectType, redirect } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { cn } from '../../../lib/utils';

@@ -12,8 +12,8 @@ import {
   CreateOpinionDataValidation,
 } from '@repo/shared-types';
 import { createOpinion } from 'actions/opinion';
-import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 

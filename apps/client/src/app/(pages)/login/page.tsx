@@ -1,5 +1,5 @@
-import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
+import { getTranslations } from 'next-intl/server';
 import { LoginForm } from '../../components/templates/login-form';
 
 type LoginPageProps = {

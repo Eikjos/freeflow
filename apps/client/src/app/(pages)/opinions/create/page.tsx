@@ -2,8 +2,8 @@ import NotFoundEnterprise from '(pages)/(enterprise)/not-found';
 import CreateOpinionForm from '@components/templates/create-opinion-form';
 import Footer from '@components/templates/footer';
 import Header from '@components/templates/header';
-import { getTranslations } from 'next-intl/server';
 import { headers } from 'next/headers';
+import { getTranslations } from 'next-intl/server';
 import { getEnterprise } from '../../../../lib/api/enterprise';
 import { CustomerInfo } from '../../../../types/customer-info-type';
 

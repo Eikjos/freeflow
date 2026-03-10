@@ -2,8 +2,8 @@
 
 import Logo from '@components/molecules/logo';
 import { Button } from '@components/ui/button';
-import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 type HeaderProps = {
   displayMenu?: boolean;
