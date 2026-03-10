@@ -21,8 +21,8 @@ import CustomerStatProjectInvoiceDto from 'dtos/customers/customer-stat-project-
 import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
 import { Request } from 'express';
 import { CustomerGuard } from 'guards/customer.guard';
-import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import { EnterpriseGuard } from 'guards/enterprise.guard';
+import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import InvoiceService from 'invoices/invoice.service';
 import NotificationService from 'notifications/notification.service';
 import ProjectService from 'projects/project.service';

@@ -18,8 +18,8 @@ import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import CreateTaskDto from 'dtos/tasks/task-create.dto';
 import { TaskPaginationFilterDto } from 'dtos/tasks/task-filter.dto';
 import { Request } from 'express';
-import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import { EnterpriseGuard } from 'guards/enterprise.guard';
+import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import TaskService from './task.service';
 
 @Controller('/tasks')

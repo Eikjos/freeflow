@@ -21,8 +21,8 @@ import ReorderColumnsDto from 'dtos/customers/reorder-colums.dto';
 import ProjectCreateDto from 'dtos/projects/project-create.dto';
 import { Request } from 'express';
 import { CustomerGuard } from 'guards/customer.guard';
-import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import { EnterpriseGuard } from 'guards/enterprise.guard';
+import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import ProjectService from './project.service';
 
 @Controller('projects')

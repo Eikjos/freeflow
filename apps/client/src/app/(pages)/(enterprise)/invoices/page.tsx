@@ -7,8 +7,8 @@ import { Pagination } from '@components/ui/pagination';
 import { InvoiceFilterData, PaginationFilter } from '@repo/shared-types';
 import { useQuery } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { getAllInvoiceQueryOptions } from '../../../../lib/api/invoices';
 

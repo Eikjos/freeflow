@@ -20,8 +20,8 @@ import QuoteValidateDto from 'dtos/invoices/quote-validate.dto';
 import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
 import { Request } from 'express';
 import { CustomerGuard } from 'guards/customer.guard';
-import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import { EnterpriseGuard } from 'guards/enterprise.guard';
+import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import InvoiceService from './invoice.service';
 
 @Controller('invoices')
