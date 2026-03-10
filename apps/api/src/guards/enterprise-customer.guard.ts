@@ -8,7 +8,10 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
-export class CustomerGuard extends AuthGuard('jwt') implements CanActivate {
+export class EnterpriseOrCustomerGuard
+  extends AuthGuard('jwt')
+  implements CanActivate
+{
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const canActivate = (await super.canActivate(context)) as boolean;
     if (!canActivate) throw new UnauthorizedException();
@@ -16,8 +19,8 @@ export class CustomerGuard extends AuthGuard('jwt') implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    if (user.isCustomer === false) {
-      throw new ForbiddenException('Customer access only');
+    if (user.isEnterprise === 'false' && user.isCustomer === 'false') {
+      throw new ForbiddenException('Enterprise or customer access only');
     }
 
     return true;

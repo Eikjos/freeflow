@@ -20,9 +20,9 @@ import CreateColumnDto from 'dtos/columns/column-create.dto';
 import ReorderColumnsDto from 'dtos/customers/reorder-colums.dto';
 import ProjectCreateDto from 'dtos/projects/project-create.dto';
 import { Request } from 'express';
-import { AccessTokenGuard } from 'guards/access-token.guard';
 import { CustomerGuard } from 'guards/customer.guard';
 import { EnterpriseGuard } from 'guards/enterprise.guard';
+import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import ProjectService from './project.service';
 
 @Controller('projects')
@@ -52,11 +52,11 @@ export default class ProjectController {
     );
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get('count')
   count(@Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
-    return this.projectService.count(enterpriseId);
+    return this.projectService.countByEnterpriseId(enterpriseId);
   }
 
   @UseGuards(CustomerGuard, EnterpriseGuard)
@@ -76,7 +76,7 @@ export default class ProjectController {
   }
 
   @HttpCode(200)
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   @Patch(':id/columns/reorder')
   reorderColums(
     @Param('id', ParseIntPipe) id: number,
@@ -85,7 +85,7 @@ export default class ProjectController {
     return this.projectService.reorderColumns(id, model.orderedColumnIds);
   }
 
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   @Get(':id')
   findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
@@ -93,7 +93,7 @@ export default class ProjectController {
     return this.projectService.findById(id, enterpriseId, customerId);
   }
 
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   @Get(':id/details')
   findAllTasksByProjectId(
     @Param('id', ParseIntPipe) id: number,
@@ -106,7 +106,7 @@ export default class ProjectController {
     );
   }
 
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   @UseInterceptors(FileInterceptor('media'))
   @ApiBody({
     description: 'Mettre à un projet avec un fichier (logo)',

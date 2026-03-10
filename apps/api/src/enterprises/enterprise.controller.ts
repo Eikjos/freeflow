@@ -19,13 +19,13 @@ import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Project } from '@prisma/client';
 import { Request } from 'express';
 import { EnterpriseGuard } from 'guards/enterprise.guard';
+import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import NotificationService from 'notifications/notification.service';
 import OpinionService from 'opinions/opinion.service';
 import { CreateEnterpriseDto } from '../dtos/enterprises/enterprise-create.dto';
 import { EnterpriseInformationDto } from '../dtos/enterprises/enterprise-information.dto';
 import EnterpriseUpdateDto from '../dtos/enterprises/enterprise-update.dto';
 import { PaginationFilterDto } from '../dtos/utils/pagination-result.dto';
-import { AccessTokenGuard } from '../guards/access-token.guard';
 import MailingService from '../mailing/mailing.service';
 import ProjectService from '../projects/project.service';
 import EnterpriseService from './enterprise.service';
@@ -42,7 +42,7 @@ export default class EnterprisesController {
     private readonly opinionService: OpinionService,
   ) {}
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get('stats')
   getStatsByYear(
     @Req() request: Request,
@@ -54,7 +54,7 @@ export default class EnterprisesController {
     return this.enterpriseService.getStatsByYear(enterpriseId, yearNumber);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   @Get('information')
   getInformation(
     @Query('siret') siret: string,
@@ -62,14 +62,14 @@ export default class EnterprisesController {
     return this.enterpriseService.getInformationBySiret(siret);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get('inscription-year')
   getInscriptionYear(@Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.enterpriseService.getInscriptionYear(enterpriseId);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Post()
   @ApiConsumes('multipart/form-data')
   @HttpCode(200)
@@ -91,13 +91,13 @@ export default class EnterprisesController {
     );
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get(':id')
   findById(@Param('id', ParseIntPipe) id: number) {
     return this.enterpriseService.findById(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get(':id/projects')
   getProjectsByEnterpriseId(
     @Param('id', ParseIntPipe) id: number,
@@ -109,19 +109,19 @@ export default class EnterprisesController {
     return this.projectService.findAllByEnterpriseId(enterpriseId, filter);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get(':id/get-information-for-invoice')
   getInformationForInvoice(@Param('id', ParseIntPipe) id: number) {
     return this.enterpriseService.getInformationForInvoice(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get(':id/get-information-for-devis')
   getInformationForDevis(@Param('id', ParseIntPipe) id: number) {
     return this.enterpriseService.getInformationForDevis(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Put(':id')
   @ApiConsumes('multipart/form-data')
   @HttpCode(200)

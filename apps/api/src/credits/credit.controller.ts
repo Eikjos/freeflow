@@ -12,14 +12,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes } from '@nestjs/swagger';
 import CreateCreditDto from 'dtos/credits/create-credit.dto';
 import { Request } from 'express';
-import { AccessTokenGuard } from 'guards/access-token.guard';
+import { EnterpriseGuard } from 'guards/enterprise.guard';
 import CreditService from './credit.service';
 
 @Controller('credits')
 export default class CreditController {
   constructor(private readonly creditService: CreditService) {}
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Post()
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('credit'))

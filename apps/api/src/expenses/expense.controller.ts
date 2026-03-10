@@ -23,14 +23,14 @@ import {
   PaginationResultDto,
 } from 'dtos/utils/pagination-result.dto';
 import { Request } from 'express';
-import { AccessTokenGuard } from 'guards/access-token.guard';
+import { EnterpriseGuard } from 'guards/enterprise.guard';
 import ExpenseService from './expense.service';
 
 @Controller('expenses')
 export default class ExpenseController {
   constructor(private readonly expenseService: ExpenseService) {}
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Post()
   @HttpCode(200)
   @ApiConsumes('multipart/form-data')
@@ -44,7 +44,7 @@ export default class ExpenseController {
     return this.expenseService.create(model, expense, enterpriseId);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get()
   findAll(
     @Query() filter: PaginationFilterDto<ExpenseFilterDto>,
@@ -55,7 +55,7 @@ export default class ExpenseController {
   }
 
   @Delete(':id')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   delete(@Param('id', ParseIntPipe) id: number, @Req() req: Express.Request) {
     const enterpriseId = req.user['entrepriseId'];
     return this.expenseService.delete(id, enterpriseId);

@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
-import { AccessTokenGuard } from '../guards/access-token.guard';
+import { EnterpriseGuard } from 'guards/enterprise.guard';
 import SalesService from './sales.service';
 
 @Controller('sales')
@@ -16,21 +16,21 @@ import SalesService from './sales.service';
 export default class SalesController {
   constructor(private readonly salesService: SalesService) {}
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get()
   findAll(@Query('year', ParseIntPipe) year: number, @Req() req: Request) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     return this.salesService.findAllByYear(year, enterpriseId);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get('previsions')
   getPrevisions(@Req() request: Request) {
     const enterpriseId = parseInt(request.user['enterpriseId']);
     return this.salesService.getPrevisions(enterpriseId);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseGuard)
   @Get('total')
   total(@Req() request: Request) {
     const enterpriseId = parseInt(request.user['enterpriseId']);

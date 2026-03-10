@@ -29,12 +29,20 @@ export default class ProjectService {
 
   // -
 
-  async count(enterpriseId: number): Promise<number> {
+  async countByEnterpriseId(enterpriseId: number): Promise<number> {
     const enterprise = await this.prisma.enterprise.findFirst({
       where: { id: enterpriseId },
     });
     if (!enterprise) throw new ForbiddenException();
     return await this.prisma.project.count({ where: { enterpriseId } });
+  }
+
+  async countByCustomerId(customerId: number): Promise<number> {
+    const customer = await this.prisma.customer.findFirst({
+      where: { id: customerId },
+    });
+    if (!customer) throw new ForbiddenException();
+    return await this.prisma.project.count({ where: { customerId } });
   }
 
   async findAllByEnterpriseId(

@@ -9,7 +9,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from 'dtos/auth/login.dto';
 import { Request } from 'express';
-import { AccessTokenGuard } from 'guards/access-token.guard';
+import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
 import { RefreshTokenGuard } from 'guards/refresh-token.guard';
 import AuthService from './auth.service';
 
@@ -25,7 +25,7 @@ export default class AuthController {
     return this.authService.signIn(model.email, model.password);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   @Post('logout')
   @HttpCode(200)
   logout(@Req() req: Request) {

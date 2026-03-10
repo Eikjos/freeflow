@@ -19,5 +19,6 @@ import InvoiceFileService from './invoice-file.service';
   ],
   providers: [PrismaService, InvoiceService, InvoiceFileService],
   controllers: [InvoiceController],
+  exports: [InvoiceService],
 })
 export default class InvoiceModule {}

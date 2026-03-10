@@ -17,10 +17,13 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { Project } from '@prisma/client';
 import CustomerCreateDto from 'dtos/customers/customer-create.dto';
 import { CustomerFilterDto } from 'dtos/customers/customer-filter.dto';
+import CustomerStatProjectInvoiceDto from 'dtos/customers/customer-stat-project-invoice.dto';
 import { PaginationFilterDto } from 'dtos/utils/pagination-result.dto';
 import { Request } from 'express';
 import { CustomerGuard } from 'guards/customer.guard';
 import { EnterpriseGuard } from 'guards/enterprise.guard';
+import { EnterpriseOrCustomerGuard } from 'guards/enterprise-customer.guard';
+import InvoiceService from 'invoices/invoice.service';
 import NotificationService from 'notifications/notification.service';
 import ProjectService from 'projects/project.service';
 import CustomerService from './customer.service';
@@ -31,6 +34,7 @@ export default class CustomerController {
   constructor(
     private readonly customerService: CustomerService,
     private readonly projectService: ProjectService,
+    private readonly invoiceService: InvoiceService,
     private readonly notificationService: NotificationService,
   ) {}
 
@@ -67,6 +71,23 @@ export default class CustomerController {
     return this.customerService.count(enterpriseId);
   }
 
+  @UseGuards(CustomerGuard)
+  @Get('stats-invoice-project')
+  async getStatsProjectInvoice(
+    @Req() req: Request,
+  ): Promise<CustomerStatProjectInvoiceDto> {
+    const customerId = parseInt(req.user['customerId']);
+    const projectCount =
+      await this.projectService.countByCustomerId(customerId);
+    const invoice = await this.invoiceService.getStatForCustomer(customerId);
+    return {
+      invoice,
+      project: {
+        number: projectCount,
+      },
+    };
+  }
+
   @Put(':id')
   @UseGuards(EnterpriseGuard)
   update(
@@ -83,7 +104,7 @@ export default class CustomerController {
   }
 
   @Get(':id')
-  @UseGuards(EnterpriseGuard, CustomerGuard)
+  @UseGuards(EnterpriseOrCustomerGuard)
   findById(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
     const enterpriseId = req.user['enterpriseId'];
     const customerId = req.user['customerId'];
