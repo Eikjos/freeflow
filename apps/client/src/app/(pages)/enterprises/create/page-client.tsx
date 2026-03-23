@@ -28,7 +28,7 @@ const CreateEnterprisePage = () => {
       juridicShape: '',
       email: '',
       zipCode: '',
-      prefixeInvoice: '',
+      prefixeInvoice: 'FAC',
       lastInvoiceNumber: 0,
     },
   });

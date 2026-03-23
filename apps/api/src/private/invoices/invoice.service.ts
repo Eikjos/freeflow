@@ -342,7 +342,6 @@ export default class InvoiceService {
     });
     const pathname =
       media.uploadedPath.split('.')[0] + '-validate' + media.extension;
-    console.log(pathname);
     const mediaId = await this.mediaService.uploadBuffer(
       file,
       pathname,

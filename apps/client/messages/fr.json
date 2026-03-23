@@ -262,6 +262,7 @@
     "sales": "Chiffre d'affaire",
     "endDate": "Date de fin",
     "success": "Réussi",
+    "tokenAPI": "Token API",
     "months": "mois",
     "failed": "Non accompli",
     "supportedFile": "Fichier(s) supporté(s) :",

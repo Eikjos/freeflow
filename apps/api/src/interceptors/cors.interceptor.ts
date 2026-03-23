@@ -15,7 +15,6 @@ export class CorsInterceptor implements NestInterceptor {
     const response = ctx.getResponse();
 
     if (this.options.origin) {
-      console.log(this.options.origin);
       response.header('Access-Control-Allow-Origin', this.options.origin);
       response.header(
         'Access-Control-Allow-Methods',

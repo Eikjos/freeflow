@@ -3,6 +3,7 @@ import CopyInput from '@components/molecules/copy-input';
 import { Card, CardContent } from '@components/ui/card';
 import Loading from '@components/ui/loading';
 import { Separator } from '@components/ui/separator';
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 import { getApiToken } from '../../../lib/api/enterprise';
 
@@ -14,6 +15,7 @@ export default async function ApiPublicInformation({
   enterpriseId,
 }: ApiPublicInformationProps) {
   const data = await getApiToken(enterpriseId);
+  const t = await getTranslations();
   return (
     <>
       <Card>
@@ -25,7 +27,7 @@ export default async function ApiPublicInformation({
               </div>
             }
           >
-            <h2 className="text-lg">Token API</h2>
+            <h2 className="text-lg">{t('common.tokenAPI')}</h2>
             <CopyInput token={data.data ?? ''} className="w-full" />
             <Separator className="my-5 bg-secondary" />
             <SwaggerViewer url={`${process.env.API_URL}/public/swagger-json`} />

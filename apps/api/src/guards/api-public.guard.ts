@@ -25,7 +25,6 @@ export class ApiPublicGuard implements CanActivate {
   }
 
   extractTokenFromHeader(request: Request) {
-    console.log(request.headers);
     const token = request.headers['x-api-key'];
     return token;
   }

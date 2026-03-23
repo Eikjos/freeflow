@@ -1,5 +1,5 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { ApiAcceptedResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CorsRoute } from 'decorators/cors.decorator';
 import OpinionDto from 'dtos/opinions/opinion.dto';
 import { ApiPublicGuard } from 'guards/api-public.guard';
@@ -14,7 +14,7 @@ export default class OpinionController {
   @ApiSecurity('api-key')
   @UseGuards(ApiPublicGuard)
   @Get('top-5')
-  @ApiAcceptedResponse({
+  @ApiOkResponse({
     type: OpinionDto,
     isArray: true,
   })

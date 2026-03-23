@@ -53,7 +53,6 @@ export default class InvoiceController {
   ) {
     const enterpriseId = parseInt(req.user['enterpriseId']);
     const customerId = parseInt(req.user['customerId']);
-    console.log(customerId, enterpriseId);
     return this.invoiceService.findAll(filter, enterpriseId, customerId);
   }
 
