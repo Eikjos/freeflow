@@ -44,8 +44,8 @@ export const getEntepriseQueryOptions = (id: number) => ({
   retry: false,
 });
 
-export const getEnterpriseStat = async (year?: number) =>
-  await client<EnterpriseStatData>(
+export const getEnterpriseStat = (year?: number) =>
+  client<EnterpriseStatData>(
     `enterprises/stats${year !== undefined ? `?year=${year}` : ''}`,
   );
 
@@ -54,4 +54,14 @@ export const getEnterpriseStatQueryOptions = (year?: number) =>
     queryKey: ['enterprise', 'stat', year],
     retry: false,
     queryFn: () => getEnterpriseStat(year),
+  });
+
+export const getApiToken = (enterpriseId: number) =>
+  client<string>(`enterprises/${enterpriseId}/get-api-token`);
+
+export const getApiTokenQueryOptions = (enterpriseId: number) =>
+  queryOptions({
+    queryKey: ['enterprise', 'token', enterpriseId],
+    retry: false,
+    queryFn: () => getApiToken(enterpriseId),
   });

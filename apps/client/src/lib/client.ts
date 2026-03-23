@@ -42,10 +42,21 @@ export const client = async <T>(
     };
   }
   const responseBody = await response.text();
+  let data: T | undefined = undefined;
+
+  if (responseBody.trim() !== '') {
+    const responseContentType = response.headers.get('content-type');
+
+    if (responseContentType?.includes('application/json')) {
+      data = JSON.parse(responseBody) as T;
+    } else {
+      data = responseBody as T;
+    }
+  }
+
   return {
     ok: true,
-    data:
-      responseBody.trim() !== '' ? (JSON.parse(responseBody) as T) : undefined,
+    data,
     error: undefined,
   };
 };

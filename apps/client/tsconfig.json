@@ -13,6 +13,8 @@
     ]
   },
   "include": [
+    "swagger-ui-react.d.ts",
+    "global.d.ts",
     "next-env.d.ts",
     "next.config.mjs",
     "**/*.ts",

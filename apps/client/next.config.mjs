@@ -13,6 +13,7 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '5mb',
     },
+    transpilePackages: ['swagger-client', 'swagger-ui-react'],
   },
   rewrites() {
     if (apiUrl) {
