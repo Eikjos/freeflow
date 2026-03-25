@@ -45,9 +45,6 @@ export default function OpinionCard({ className }: OpinionCardProps) {
     );
   }
 
-  console.log('rateData', rateData);
-  console.log('opinionData', opinionData);
-
   return (
     <Card className={className}>
       <CardContent>

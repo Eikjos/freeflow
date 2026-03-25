@@ -82,11 +82,9 @@ export function Board({ className, projectId, columns }: KanbanProps) {
       let tasks = [...col.tasks];
       const t = col.tasks.find((t) => t.id);
       if (t) {
-        console.log('trouvé');
         tasks = tasks.filter((t) => t.id !== task.id);
       }
       if (col.id === columnId_dest) {
-        console.log(task);
         tasks.splice(index_dest, 0, task);
       }
       return { ...col, tasks: [...tasks] };

@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import { JSX } from 'react';
 
 type CardListProps<TData> = {
   data: TData[];

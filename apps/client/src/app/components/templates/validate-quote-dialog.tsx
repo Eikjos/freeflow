@@ -16,7 +16,7 @@ import {
 } from '@repo/shared-types';
 import { sendValidationQuote, validateQuote } from 'actions/invoice';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 

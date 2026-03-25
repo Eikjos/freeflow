@@ -87,7 +87,6 @@ export default function ColumnTask({
   };
 
   const updateTask = (task: TaskData) => {
-    console.log('update', task);
     onDropTask(task, id, true);
   };
 
