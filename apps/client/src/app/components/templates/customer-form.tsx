@@ -51,6 +51,7 @@ export default function CustomerForm({
       email: edit ? (data?.email ?? '') : '',
       zipCode: edit ? (data?.zipCode ?? '') : '',
       countryId: edit ? (data?.countryId.toString() ?? '') : '',
+      companyName: edit ? (data?.companyName ?? '') : '',
     },
   });
   const siret = form.watch('siret');
