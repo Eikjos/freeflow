@@ -60,7 +60,7 @@ export default function ExpenseForm({ className }: ExpenseFormProps) {
   const onSubmit = (values: CreateExpenseData) => {
     createExpense(values)
       .then(() => {
-        toast.success(t('expence.success.create'));
+        toast.success(t('expense.success.create'));
         router.push('/expenses');
       })
       .catch((e: Error) => {
