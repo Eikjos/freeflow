@@ -69,6 +69,8 @@ services:
       NODE_ENV: production
       API_URL: ${API_URL}
       NEXT_PUBLIC_API_URL: ${API_URL}
+      HOST: "0.0.0.0"
+      HOSTNAME: "0.0.0.0"
     ports:
       - target: 3000
         published: 3000
