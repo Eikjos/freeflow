@@ -1,12 +1,14 @@
 version: "3.9"
 
 services:
-  db:
-    image: postgres:18.1
+  bdd:
+    image: postgres:18.1-alpine
     environment:
       POSTGRES_USER: freeflow
       POSTGRES_DB: freeflow
       POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    ports:
+      - "127.0.0.1:5432:5432"
     secrets:
       - db_password
     volumes:
@@ -17,51 +19,80 @@ services:
         condition: on-failure
     networks:
       - backend
+
   api:
-    image: ghcr.io/ton-org/api:latest
+    image: ghcr.io/eikjos/freeflow-api:${IMAGE_TAG}
     deploy:
       replicas: 2
       update_config:
         order: start-first
         parallelism: 1
+        failure_action: rollback
       restart_policy:
         condition: on-failure
     environment:
-      DB_HOST: db
+      NODE_ENV: production
+      DB_HOST: bdd
       DB_PORT: 5432
       DB_USER: freeflow
       DB_NAME: freeflow
+      SMTP_URL: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_USER: thomashamelin3@gmail.com
+      CLIENT_URL: ${CLIENT_URL}
     secrets:
       - source: db_password
         target: DB_PASSWORD
+      - source: jwt_secret
+        target: SECRET_JWT
+      - source: jwt_refresh_secret
+        target: JWT_REFRESH_SECRET
+      - source: insee_api_key
+        target: INSEE_API_KEY
+      - source: smtp_password
+        target: SMTP_PASSWORD
     depends_on:
       - db
     networks:
       - backend
       - frontend
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
+
   web:
-    image: ghcr.io/ton-org/web:latest
+    image: ghcr.io/eikjos/freeflow-web:${IMAGE_TAG}
+    environment:
+      NODE_ENV: production
+      API_URL: ${API_URL}
+      NEXT_PUBLIC_API_URL: ${API_URL}
+    ports:
+      - "127.0.0.1:3000:3000" 
     deploy:
       replicas: 2
       update_config:
         order: start-first
         parallelism: 1
+        failure_action: rollback
       restart_policy:
         condition: on-failure
-    environment:
-      NEXT_PUBLIC_API_URL: http://api:3000
-    ports:
-      - "80:3000"
     networks:
       - frontend
 
 volumes:
   db_data:
+
 secrets:
   db_password:
     external: true
+  jwt_secret:
+    external: true
+  jwt_refresh_secret:
+    external: true
+  insee_api_key:
+    external: true
+  smtp_password:
+    external: true
+
 networks:
   backend:
     driver: overlay

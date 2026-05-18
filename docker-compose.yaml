@@ -12,25 +12,31 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGDATA: /data/postgres
       POSTGRES_DB: freeflow
-  api:
-    container_name: freeflow-api
-    build:
-      context: .
-      dockerfile: ./apps/api/Dockerfile
-      target: api
-    ports:
-      - "8080:8080"
+ api:
+    image: ghcr.io/eikjos/freeflow-api:${IMAGE_TAG}
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgresql://freeflow:${DB_PASSWORD}@bdd:5432/freeflow
-      SECRET_JWT: ${SECRET_JWT}
-      JWT_REFRESH_SECRET: ${REFRESH_JWT_SECRET}
-      INSEE_API_KEY: ${INSEE_API_KEY}
+      DB_HOST: bdd
+      DB_PORT: 5432
+      DB_USER: freeflow
+      DB_NAME: freeflow
       SMTP_URL: smtp.gmail.com
       SMTP_PORT: 587
       SMTP_USER: thomashamelin3@gmail.com
-      SMTP_PASSWORD: ${SMTP_PASSWORD}
-      CLIENT_URL: ${CLIENT_URL} # utiliser pour l'envoie des mails 
+      CLIENT_URL: ${CLIENT_URL}
+    secrets:
+      - source: db_password
+        target: DB_PASSWORD
+      - source: jwt_secret
+        target: SECRET_JWT
+      - source: jwt_refresh_secret
+        target: JWT_REFRESH_SECRET
+      - source: insee_api_key
+        target: INSEE_API_KEY
+      - source: smtp_password
+        target: SMTP_PASSWORD
+    ports:
+      - "8080:8080"
     depends_on: 
       - bdd
 
