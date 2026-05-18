@@ -68,7 +68,7 @@ jobs:
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
-    environment: ssh
+    environment: deploy
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
