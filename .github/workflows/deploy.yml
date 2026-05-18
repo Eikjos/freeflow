@@ -97,17 +97,23 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
+          # 1. On déclare les variables GitHub qu'on souhaite envoyer au VPS
+          envs: IMAGE_TAG,NEXT_PUBLIC_API_URL,API_URL
+        env:
+          # 2. On mappe les variables de contexte de GitHub Actions vers l'environnement local
+          IMAGE_TAG: ${{ needs.build-and-push.outputs.image_tag }}
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+          API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+        with: # Le reste de vos paramètres habituels
           script: |
             cd ${{ env.DEPLOY_PATH }}
             
             # Authentification Docker sur le serveur pour pouvoir pull depuis GHCR
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
             
-            # Déploiement/Mise à jour de la stack en injectant les variables requises
-            # On utilise le nom de fichier copié (stack.yml) et on nomme la stack "freeflow"
-            IMAGE_TAG=${{ needs.build-and-push.outputs.image_tag }} \
-            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }} \
-            docker stack deploy --with-registry-auth -c stack.yml freeflow
+            # Plus besoin d'export ici ! Les variables sont déjà injectées proprement par l'action SSH.
+            # L'argument --resolve-image always est la clé pour forcer Swarm à chercher la nouvelle image.
+            docker stack deploy --with-registry-auth --resolve-image always -c stack.yml freeflow
             
             # Nettoyage optionnel des anciennes images non utilisées
             docker image prune -af --filter "until=24h"
