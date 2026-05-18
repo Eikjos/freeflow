@@ -47,16 +47,16 @@ ENV HOST=0.0.0.0
 ENV PORT=8080
 EXPOSE 8080
 
-CMD ["sh", "-c", "\
-  [ -f /run/secrets/DB_PASSWORD ] && export DB_PASSWORD=$(cat /run/secrets/DB_PASSWORD | tr -d '\\r\\n'); \
-  [ -f /run/secrets/SECRET_JWT ] && export SECRET_JWT=$(cat /run/secrets/SECRET_JWT | tr -d '\\r\\n'); \
-  [ -f /run/secrets/JWT_REFRESH_SECRET ] && export JWT_REFRESH_SECRET=$(cat /run/secrets/JWT_REFRESH_SECRET | tr -d '\\r\\n'); \
-  [ -f /run/secrets/INSEE_API_KEY ] && export INSEE_API_KEY=$(cat /run/secrets/INSEE_API_KEY | tr -d '\\r\\n'); \
-  [ -f /run/secrets/SMTP_PASSWORD ] && export SMTP_PASSWORD=$(cat /run/secrets/SMTP_PASSWORD | tr -d '\\r\\n'); \
+CMD ["sh", "-c", '\
+  [ -f /run/secrets/DB_PASSWORD ] && export DB_PASSWORD=$(cat /run/secrets/DB_PASSWORD | tr -d "\\r\\n"); \
+  [ -f /run/secrets/SECRET_JWT ] && export SECRET_JWT=$(cat /run/secrets/SECRET_JWT | tr -d "\\r\\n"); \
+  [ -f /run/secrets/JWT_REFRESH_SECRET ] && export JWT_REFRESH_SECRET=$(cat /run/secrets/JWT_REFRESH_SECRET | tr -d "\\r\\n"); \
+  [ -f /run/secrets/INSEE_API_KEY ] && export INSEE_API_KEY=$(cat /run/secrets/INSEE_API_KEY | tr -d "\\r\\n"); \
+  [ -f /run/secrets/SMTP_PASSWORD ] && export SMTP_PASSWORD=$(cat /run/secrets/SMTP_PASSWORD | tr -d "\\r\\n"); \
   \
-  export DATABASE_URL=\"postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public\"; \
+  export DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public"; \
   \
   cd apps/api && npx prisma migrate deploy && node dist/src/main.js \
-"]
+']
 
 

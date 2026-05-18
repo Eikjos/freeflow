@@ -57,7 +57,7 @@ services:
       - backend
       - frontend
     ports:
-      - "127.0.0.1:8080:8080"
+      - "8080:8080"
 
   web:
     image: ghcr.io/eikjos/freeflow-web:${IMAGE_TAG}
@@ -66,7 +66,7 @@ services:
       API_URL: ${API_URL}
       NEXT_PUBLIC_API_URL: ${API_URL}
     ports:
-      - "127.0.0.1:3000:3000" 
+      - "3000:3000" 
     deploy:
       replicas: 2
       update_config:
