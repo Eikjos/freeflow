@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./api/Dockerfile
+          file: ./apps/api/Dockerfile
           push: true
           tags: ${{ env.IMAGE_API }}:${{ steps.vars.outputs.sha_short }}
           cache-from: type=gha
@@ -54,7 +54,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./client/Dockerfile
+          file: ./apps/client/Dockerfile
           push: true
           tags: ${{ env.IMAGE_WEB }}:${{ steps.vars.outputs.sha_short }}
           build-args: |
