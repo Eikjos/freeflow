@@ -12,7 +12,9 @@ FROM base AS prepare
 # RUN yarn global add turbo@^2
 
 ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+ENV PATH="$PNPM_HOME:$PNPM_HOME/bin:$PATH"
+RUN pnpm config set global-bin-dir /pnpm/bin
+
 RUN pnpm add -g turbo@2.7.5
 COPY . .
 # Add lockfile and package.json's of isolated subworkspace
@@ -22,6 +24,9 @@ RUN turbo prune api --docker
 #COPY apps/api/prisma /app/out/full/apps/api/prisma
 # ---
 FROM base AS builder
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 # First install the dependencies (as they change less often)
 COPY --from=prepare /app/out/json/ .
 RUN pnpm install
