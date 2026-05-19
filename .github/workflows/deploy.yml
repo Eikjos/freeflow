@@ -68,52 +68,26 @@ jobs:
       image_tag: ${{ steps.vars.outputs.sha_short }}
 
   deploy:
-    needs: build-and-push
     runs-on: ubuntu-latest
-    environment: deploy
+    needs: ['build']
+
+    permissions:
+      contents: read
+      packages: read
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      - name: Préparer le dossier sur le serveur
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Deploy stack to the server
+        uses: kitconcept/docker-stack-deploy@1a7a5e778d08cf92bda2ebbd068fe0ca078d09c8
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: mkdir -p ${{ env.DEPLOY_PATH }}
-
-      # On copie le stack.yml à chaque fois pour appliquer les modifications de config
-      - name: Copier le fichier stack.yml
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          source: "stack.yml"
-          target: ${{ env.DEPLOY_PATH }}
-
-      - name: Déploiement Zero-Downtime sur Docker Swarm
-        uses: appleboy/ssh-action@v1.0.3
-        env:
-          # On mappe les variables de contexte GitHub Actions vers l'environnement local de la step
-          IMAGE_TAG: ${{ needs.build-and-push.outputs.image_tag }}
-          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
-          API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          # On liste ici les variables du bloc 'env' ci-dessus pour les envoyer au VPS
-          envs: IMAGE_TAG,NEXT_PUBLIC_API_URL,API_URL
-          script: |
-            cd ${{ env.DEPLOY_PATH }}
-            
-            # Authentification Docker sur le serveur pour pouvoir pull depuis GHCR
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-            
-            # Déploiement de la stack. L'argument --resolve-image forcing Swarm à récupérer le nouveau hash de l'image
-            docker stack deploy --with-registry-auth --resolve-image always -c stack.yml freeflow
-            
-            # Nettoyage optionnel des anciennes images
-            docker image prune -af --filter "until=24h"
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_port: 22
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_private_key: ${{ secrets.SSH_KEY }}
+          stack_file: "stack.yaml"
+          stack_name: "freeflow"
