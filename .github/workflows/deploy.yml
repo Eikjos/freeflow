@@ -90,5 +90,5 @@ jobs:
           remote_port: 22
           remote_user: ${{ secrets.SSH_USER }}
           remote_private_key: ${{ secrets.SSH_KEY }}
-          stack_file: "stack.yaml"
+          stack_file: "stack.yml"
           stack_name: "freeflow"
