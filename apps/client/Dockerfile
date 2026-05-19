@@ -34,8 +34,9 @@ RUN pnpm install
 # Build the project
 COPY --from=prepare /app/out/full/ .
 
-ARG API_URL
-ENV API_URL=$API_URL
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV API_URL=$NEXT_PUBLIC_API_URL
 
 RUN pnpm turbo build --filter=web
 
