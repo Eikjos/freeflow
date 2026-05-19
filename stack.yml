@@ -72,7 +72,6 @@ services:
       HOST: "0.0.0.0"
       HOSTNAME: "0.0.0.0"
       NEXT_SERVER_ACTIONS_ENCRYPTION_KEY: ${ENCRYPTION_KEY}
-    deploy:
     ports:
       - target: 3000
         published: 3000
