@@ -96,4 +96,5 @@ jobs:
           IMAGE_TAG: ${{ needs.build-and-push.outputs.image_tag }}
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
           API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
-          CLIENT_URL: ${{ vars.CLIENT_URL }} # Ajoutez-la si elle est définie dans GitHub
+          CLIENT_URL: ${{ vars.CLIENT_URL }}
+          ENCRYPTION_KEY: ${{ vars.ENCRYPTION_KEY }}
