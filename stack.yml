@@ -67,7 +67,7 @@ services:
     image: ghcr.io/eikjos/freeflow-web:${IMAGE_TAG}
     environment:
       NODE_ENV: production
-      API_URL: ${API_URL}
+      API_URL: http://api:8080
       NEXT_PUBLIC_API_URL: ${API_URL}
       HOST: "0.0.0.0"
       HOSTNAME: "0.0.0.0"

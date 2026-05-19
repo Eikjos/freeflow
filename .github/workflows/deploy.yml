@@ -60,6 +60,7 @@ jobs:
           tags: ${{ env.IMAGE_WEB }}:${{ steps.vars.outputs.sha_short }}
           build-args: |
             NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
+            API_URL=http://api:8080
           cache-from: type=gha
           cache-to: type=gha,mode=max
           
