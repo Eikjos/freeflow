@@ -65,6 +65,31 @@ services:
         protocol: tcp
         mode: ingress
 
+  api-migration:
+    image: ghcr.io/eikjos/freeflow-api:${IMAGE_TAG}
+    environment:
+      DB_HOST: bdd
+      DB_PORT: 5432
+      DB_USER: freeflow
+      DB_NAME: freeflow
+    secrets:
+      - source: db_password
+        target: DB_PASSWORD
+    networks:
+      - backend
+    # 🌟 ON ÉCRASE LE CMD POUR NE FAIRE QUE LA MIGRATION
+    command: >
+      sh -c "
+      export DB_PASSWORD=$$(cat /run/secrets/DB_PASSWORD | tr -d '\r\n');
+      export DATABASE_URL='postgresql://freeflow:'$$DB_PASSWORD'@bdd:5432/freeflow?schema=public';
+      cd apps/api && npx prisma migrate deploy
+      "
+    deploy:
+      replicas: 1
+      # 🌟 RESTART_POLICY AT "NONE" : Le conteneur s'exécute une fois et s'arrête.
+      restart_policy:
+        condition: none
+
   web:
     image: ghcr.io/eikjos/freeflow-web:${IMAGE_TAG}
     environment:

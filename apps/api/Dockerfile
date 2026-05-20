@@ -58,7 +58,7 @@ CMD sh -c ' \
   \
   export DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public&connection_limit=10"; \
   \
-  cd apps/api && npx prisma migrate deploy && node dist/src/main.js \
+  node apps/api/dist/src/main.js \
 '
 
 
