@@ -56,9 +56,7 @@ CMD sh -c ' \
   [ -f /run/secrets/INSEE_API_KEY ] && export INSEE_API_KEY=$(cat /run/secrets/INSEE_API_KEY | tr -d "\r\n"); \
   [ -f /run/secrets/SMTP_PASSWORD ] && export SMTP_PASSWORD=$(cat /run/secrets/SMTP_PASSWORD | tr -d "\r\n"); \
   \
-  echo "DATABASE_URL générée : postgresql://${DB_USER}:******@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public"; \
-  \
-  export DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public"; \
+  export DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public&connection_limit=10"; \
   \
   cd apps/api && npx prisma migrate deploy && node dist/src/main.js \
 '
