@@ -55,7 +55,7 @@ services:
       - source: smtp_password
         target: SMTP_PASSWORD
     depends_on:
-      - db
+      - bdd
     networks:
       - backend
       - frontend
