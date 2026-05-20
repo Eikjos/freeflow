@@ -13,6 +13,7 @@ import { useFormContext } from 'react-hook-form';
 import { toast } from 'sonner';
 import { getCountryByIdQueryOptions } from '../../../lib/api/countries';
 import { getAllJuridicShapesByCodeQueryOptions } from '../../../lib/api/juridic-shapes';
+import { toFormData } from '../../../lib/utils';
 
 export default function RecapEnterpriseForm() {
   const t = useTranslations();
@@ -20,8 +21,7 @@ export default function RecapEnterpriseForm() {
   const router = useRouter();
   const data = form.getValues();
   const onCreateEnterprise = () => {
-    const { logo, ...enterprise } = form.getValues();
-    createEnterprise(enterprise, logo)
+    createEnterprise(toFormData(form.getValues()))
       .then((res) => {
         if (res) {
           router.replace('/dashboard');

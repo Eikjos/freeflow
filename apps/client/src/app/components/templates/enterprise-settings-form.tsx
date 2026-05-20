@@ -13,6 +13,7 @@ import { useTranslations } from 'next-intl';
 import { useEnterprise } from 'providers/enterprise-provider';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { toFormData } from '../../../lib/utils';
 import InvoiceInfoForm from './invoice-info-form';
 import MyEnterpriseForm from './my-enterprise-form';
 
@@ -43,7 +44,7 @@ export default function EnterpriseSettingsForm({
   });
 
   const onSubmit = () => {
-    updateEnterprise(enterprise.id, form.getValues(), form.getValues().logo)
+    updateEnterprise(enterprise.id, toFormData(form.getValues()))
       .then((res) => {
         setEnterprise({
           name: res.enterpriseName ?? '',

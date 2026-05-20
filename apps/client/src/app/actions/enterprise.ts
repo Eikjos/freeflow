@@ -1,11 +1,6 @@
 'use server';
 
-import {
-  AuthResponseData,
-  EditEnterpriseData,
-  EnterpriseCreateModel,
-  EnterpriseInformation,
-} from '@repo/shared-types';
+import { AuthResponseData, EnterpriseInformation } from '@repo/shared-types';
 import { cookies } from 'next/headers';
 import { client } from '../../lib/client';
 
@@ -18,15 +13,7 @@ export const fetchEnterpriseInfo = async (siret: string) =>
       return null;
     });
 
-export const createEnterprise = async (
-  enterprise: EnterpriseCreateModel,
-  logo: File | undefined,
-) => {
-  const formData = new FormData();
-  Object.keys(enterprise).forEach((key) =>
-    formData.append(key, enterprise[key] as string),
-  );
-  if (logo) formData.append('logo', logo);
+export const createEnterprise = async (formData: FormData) => {
   const cookieStore = await cookies();
   return client<AuthResponseData>(
     `enterprises`,
@@ -45,16 +32,7 @@ export const createEnterprise = async (
   });
 };
 
-export const updateEnterprise = async (
-  id: number,
-  enterprise: EditEnterpriseData,
-  logo: File | undefined,
-) => {
-  const formData = new FormData();
-  Object.keys(enterprise).forEach((key) =>
-    formData.append(key, enterprise[key] as string),
-  );
-  if (logo) formData.append('logo', logo);
+export const updateEnterprise = async (id: number, formData: FormData) => {
   const cookieStore = await cookies();
 
   return client<AuthResponseData>(

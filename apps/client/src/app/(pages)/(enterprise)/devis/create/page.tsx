@@ -37,6 +37,7 @@ import {
   getAllTasksQueryOptions,
   getTasksById,
 } from '../../../../../lib/api/tasks';
+import { toFormData } from '../../../../../lib/utils';
 
 export default function CreateDevisPage() {
   const t = useTranslations();
@@ -132,13 +133,13 @@ export default function CreateDevisPage() {
     ).toBlob();
 
     createInvoice(
-      {
+      toFormData({
         ...values,
         type: 'QUOTE',
         excludeTva: values.excludeTva ?? false,
         number: `DEV-${String(values.number).padStart(5, '0')}`,
-      },
-      new File([invoiceBlob], `devis-${values.number}.pdf`),
+        invoice: new File([invoiceBlob], `devis-${values.number}.pdf`),
+      }),
     )
       .then(() => {
         toast.success(t('devis.success.create'));

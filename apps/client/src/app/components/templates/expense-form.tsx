@@ -21,7 +21,7 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { fetchExpenseCategories } from '../../../lib/api/expense-categories';
-import { formatPrice } from '../../../lib/utils';
+import { formatPrice, toFormData } from '../../../lib/utils';
 
 type ExpenseFormProps = {
   className?: string;
@@ -58,7 +58,7 @@ export default function ExpenseForm({ className }: ExpenseFormProps) {
   };
 
   const onSubmit = (values: CreateExpenseData) => {
-    createExpense(values)
+    createExpense(toFormData(values))
       .then(() => {
         toast.success(t('expense.success.create'));
         router.push('/expenses');

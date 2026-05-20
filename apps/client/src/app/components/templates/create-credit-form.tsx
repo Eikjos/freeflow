@@ -19,7 +19,7 @@ import { useTranslations } from 'next-intl';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { toast } from 'sonner';
 import getQueryClient from '../../../lib/query-client';
-import { formatPrice } from '../../../lib/utils';
+import { formatPrice, toFormData } from '../../../lib/utils';
 import CreditTemplate from './credit-template';
 
 type CreateCreditFormProps = {
@@ -122,12 +122,12 @@ export default function CreateCreditForm({
       />,
     ).toBlob();
     createCredit(
-      {
+      toFormData({
         ...values,
         number: `AV-${String(values.number).padStart(5, '0')}`,
         invoiceId: form.getValues().invoiceId,
-      },
-      new File([creditBlob], `credit-AV-${values.number}.pdf`),
+        credit: new File([creditBlob], `credit-AV-${values.number}.pdf`),
+      }),
     )
       .then(() => {
         toast.success(t('credit.success.create'));

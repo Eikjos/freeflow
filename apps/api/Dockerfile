@@ -41,10 +41,12 @@ FROM node:24-alpine AS api
 
 WORKDIR /app
 COPY --from=builder /app .
+RUN mkdir -p /app/uploads && chown 777 /app/uploads
 
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=8080
+ENV UPLOADED_FILE=/app/uploads
 EXPOSE 8080
 
 CMD sh -c ' \

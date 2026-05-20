@@ -1,22 +1,7 @@
-import { InvoiceCreateData, QuoteValidateData } from '@repo/shared-types';
+import { QuoteValidateData } from '@repo/shared-types';
 import { client } from '../../lib/client';
 
-export const createInvoice = (
-  invoice: InvoiceCreateData,
-  invoiceFile: File | undefined,
-) => {
-  const formData = new FormData();
-  const { invoiceLines, ...inv } = invoice;
-  Object.entries(inv).forEach(([key, value]) => {
-    if (value instanceof Date) {
-      formData.append(key, value.toISOString());
-    } else {
-      formData.append(key, value as string);
-    }
-  });
-  formData.append(`invoiceLines`, JSON.stringify(invoiceLines));
-  if (invoiceFile) formData.append('invoice', invoiceFile);
-
+export const createInvoice = (formData: FormData) => {
   return client<void>(
     `invoices`,
     {

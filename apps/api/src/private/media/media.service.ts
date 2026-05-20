@@ -41,7 +41,8 @@ export class MediaService {
     try {
       const extension = path.extname(file.originalname);
       const fileName = `${path.parse(file.originalname).name}-${Date.now()}${extension}`;
-      const uploadPath = `uploads/${pathname}`;
+      const uploadPath =
+        process.env.UPLOADED_PATH ?? 'uploads' + `/${pathname}`;
       const filePath = path.join(uploadPath, fileName);
 
       // Créez le dossier si nécessaire
@@ -102,11 +103,11 @@ export class MediaService {
 
   getUploadPath(extension: string) {
     if (extension === '.jpg' || extension === '.jpeg' || extension === '.png') {
-      return 'uploads/images';
+      return process.env.UPLOADED_PATH ?? 'uploads' + '/images';
     } else if (extension === '.pdf') {
-      return 'uploads/pdfs';
+      return process.env.UPLOADED_PATH ?? 'uploads' + '/pdfs';
     } else {
-      return 'uploads/others';
+      return process.env.UPLOADED_PATH ?? 'uploads' + '/others';
     }
   }
 

@@ -41,6 +41,8 @@ services:
       SMTP_PORT: 587
       SMTP_USER: thomashamelin3@gmail.com
       CLIENT_URL: ${CLIENT_URL}
+    volumes:
+      - /var/www/freeflow/uploads:/app/uploads
     secrets:
       - source: db_password
         target: DB_PASSWORD

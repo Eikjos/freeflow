@@ -39,6 +39,7 @@ import {
   getTasksById,
 } from '../../../../../lib/api/tasks';
 import getQueryClient from '../../../../../lib/query-client';
+import { toFormData } from '../../../../../lib/utils';
 
 export default function CreateInvoicesPage() {
   const queryClient = getQueryClient();
@@ -165,7 +166,7 @@ export default function CreateInvoicesPage() {
     ).toBlob();
 
     createInvoice(
-      {
+      toFormData({
         ...values,
         type: 'INVOICE',
         excludeTva: values.excludeTva ?? false,
@@ -174,11 +175,11 @@ export default function CreateInvoicesPage() {
           devisId !== null && !isNaN(Number(devisId)) && devisId !== null
             ? parseInt(devisId)
             : undefined,
-      },
-      new File(
-        [invoiceBlob],
-        `invoice-${data?.data?.prefixe}-${values.number}.pdf`,
-      ),
+        invoice: new File(
+          [invoiceBlob],
+          `invoice-${data?.data?.prefixe}-${values.number}.pdf`,
+        ),
+      }),
     )
       .then((res) => {
         if (res === null) {

@@ -20,6 +20,7 @@ import { createTask } from 'actions/tasks';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { toFormData } from '../../../lib/utils';
 
 type TaskCreateSheetProps = {
   open: boolean;
@@ -58,7 +59,7 @@ export default function TaksCreateSheet({
         toast.error('uploaded ' + e.message);
       }
     }
-    createTask(columnId, values, form.getValues('files'))
+    createTask(columnId, toFormData(values))
       .then((res) => {
         if (res) {
           onAddTask(res);

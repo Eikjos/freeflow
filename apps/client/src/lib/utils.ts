@@ -141,3 +141,58 @@ export function stringToDateYear(date: string) {
   }
   return date;
 }
+
+export function toFormData(data: any) {
+  const formData = new FormData();
+
+  Object.entries(data).forEach(([key, value]) => {
+    if (value === undefined || value === null) {
+      return;
+    }
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        if (item instanceof File || item instanceof Blob) {
+          formData.append(key, item);
+        } else if (value instanceof Date) {
+          formData.append(key, value.toISOString());
+        } else if (typeof value === 'object') {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, String(item));
+        }
+      });
+    } else if (value instanceof File || value instanceof Blob) {
+      formData.append(key, value);
+    } else if (value instanceof Date) {
+      formData.append(key, value.toISOString());
+    } else if (typeof value === 'object') {
+      formData.append(key, JSON.stringify(value));
+    } else {
+      formData.append(key, String(value));
+    }
+  });
+
+  return formData;
+}
+
+export function generateFilenameFromBase64(base64: string): string {
+  const mimeMatch = base64.match(/^data:(image\/[a-z]+);base64,/);
+  const extension = mimeMatch ? mimeMatch[1]?.split('/')[1] : 'png';
+  const timestamp = Date.now();
+  const random = Math.floor(Math.random() * 10000);
+  return `image-${timestamp}-${random}.${extension}`;
+}
+
+export function base64ToFile(base64: string, filename: string): File {
+  const arr = base64.split(',');
+  const mime = arr[0]?.match(/:(.*?);/)?.[1] || 'image/jpeg';
+  const bstr = atob(arr[1]!);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  return new File([u8arr], filename, { type: mime });
+}

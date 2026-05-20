@@ -4,7 +4,12 @@ import { uploadImg } from 'actions/media';
 import dynamic from 'next/dynamic';
 import { ComponentProps } from 'react';
 import 'react-quill-new/dist/quill.snow.css';
-import { cn, getMediaUrl } from '../../../lib/utils';
+import {
+  base64ToFile,
+  cn,
+  generateFilenameFromBase64,
+  getMediaUrl,
+} from '../../../lib/utils';
 import '../../editor.css';
 import {
   FormControl,
@@ -34,7 +39,11 @@ const uploadAndReplace = async (value?: string) => {
   const uploadedsImages: number[] = [];
   for (const img of images) {
     if (img.src.startsWith('data:')) {
-      const uploadedUrl = await uploadImg(img.src);
+      const filename = generateFilenameFromBase64(img.src);
+      const file = base64ToFile(img.src, filename);
+      const formData = new FormData();
+      formData.append('file', file);
+      const uploadedUrl = await uploadImg(formData);
       img.setAttribute('src', getMediaUrl(uploadedUrl));
       uploadedsImages.push(uploadedUrl);
     }

@@ -25,7 +25,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
-import { getImage } from '../../../lib/utils';
+import { getImage, toFormData } from '../../../lib/utils';
 
 type TaskDetailSheetProps = {
   task: TaskData;
@@ -112,7 +112,7 @@ export default function TaskDetailSheet({
         }
       }
 
-      updateTask(task.id, values, form.getValues('files') ?? [])
+      updateTask(task.id, toFormData(values))
         .then((res) => {
           if (res) {
             if (onEdit) {
