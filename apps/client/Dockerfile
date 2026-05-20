@@ -34,11 +34,6 @@ RUN pnpm install
 # Build the project
 COPY --from=prepare /app/out/full/ .
 
-ARG API_URL
-ARG NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-ENV API_URL=$API_URL
-
 RUN pnpm turbo build --filter=web
 
 
@@ -60,8 +55,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/client/public ./apps/client/
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=3000
-ARG API_URL
-ENV API_URL=$API_URL
 ARG ENCRYPTION_KEY
 ENV NEXT_SERVER_ACTIONS_ENCRYPTION_KEY=$ENCRYPTION_KEY
 
