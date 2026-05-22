@@ -42,7 +42,7 @@ export class MediaService {
       const extension = path.extname(file.originalname);
       const fileName = `${path.parse(file.originalname).name}-${Date.now()}${extension}`;
       const uploadPath =
-        process.env.UPLOADED_PATH ?? 'uploads' + `/${pathname}`;
+        (process.env.UPLOADED_PATH ?? 'uploads') + `/${pathname}`;
       const filePath = path.join(uploadPath, fileName);
 
       // Créez le dossier si nécessaire
@@ -62,7 +62,8 @@ export class MediaService {
       });
 
       return media.id;
-    } catch {
+    } catch (e) {
+      console.error(e);
       return -1;
     }
   }
